@@ -1,0 +1,66 @@
+name: New Service or Upcoming Announcement
+description: Add a newly announced or released cloud service
+title: "[New] "
+labels: ["new-service"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this to propose adding a new service to `matrix.json` (GA) or `upcoming.json` (announced/preview).
+        **Only official public announcements.** No speculation or unverified roadmap leaks.
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options: [GCP, AWS, Azure]
+    validations:
+      required: true
+
+  - type: input
+    id: category
+    attributes:
+      label: Category (from existing list or proposed new)
+      placeholder: "e.g. Generative AI"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options: ["GA (generally available)", "Preview / Beta", "Announced (no date)", "Deprecated / Discontinued"]
+    validations:
+      required: true
+
+  - type: input
+    id: service_name
+    attributes:
+      label: Service name
+      placeholder: "e.g. Amazon Bedrock Agents (GA)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: Details / what it replaces or adds
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Official announcement or documentation URL
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: This is from an official public provider announcement or documentation
+          required: true
+        - label: This does not contain any sensitive, internal, or proprietary information
+          required: true

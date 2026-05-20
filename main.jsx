@@ -1,0 +1,715 @@
+{
+  "_meta": {
+    "version": "3.0.0",
+    "schema": "capability-v1",
+    "last_verified": "2026-05-19",
+    "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
+    "providers": ["aws", "azure", "gcp"],
+    "tiers": ["Personal / Free", "Commercial / SMB", "Enterprise", "Government"],
+    "license": "CC-BY-4.0",
+    "repo": "https://github.com/YOUR_ORG/cloud-matrix"
+  },
+  "tags": {
+    "STANDARD":            { "label": "STANDARD",            "color": "gray",   "description": "Traditional cloud infrastructure or platform service" },
+    "AI_CAPABLE":          { "label": "AI_CAPABLE",          "color": "blue",   "description": "Can support AI workloads but not purpose-built for AI" },
+    "AI_NATIVE":           { "label": "AI_NATIVE",           "color": "purple", "description": "Purpose-built AI/ML service" },
+    "GOV_AVAILABLE":       { "label": "GOV_AVAILABLE",       "color": "green",  "description": "Available in government cloud or region with full parity" },
+    "GOV_LIMITED":         { "label": "GOV_LIMITED",         "color": "amber",  "description": "Available in gov but with feature, model, or region constraints" },
+    "PARITY_LAG":          { "label": "PARITY_LAG",          "color": "red",    "description": "Commercial version is ahead of gov/regulated version" },
+    "COMPLIANCE_RELEVANT": { "label": "COMPLIANCE_RELEVANT", "color": "cyan",   "description": "Architecturally relevant to NIST/CJIS/HIPAA/FedRAMP/FIPS review" },
+    "ENTERPRISE_CORE":     { "label": "ENTERPRISE_CORE",     "color": "slate",  "description": "Common foundational service in enterprise architectures" },
+    "HYBRID_READY":        { "label": "HYBRID_READY",        "color": "teal",   "description": "Strong support for on-prem/cloud integration" },
+    "IDENTITY_CRITICAL":   { "label": "IDENTITY_CRITICAL",   "color": "orange", "description": "Depends heavily on IAM/Entra/SSO/RBAC design" },
+    "COST_SENSITIVE":      { "label": "COST_SENSITIVE",      "color": "yellow", "description": "Can become expensive without active governance" },
+    "LOCK_IN_RISK":        { "label": "LOCK_IN_RISK",        "color": "rose",   "description": "High coupling to provider ecosystem; migration friction" }
+  },
+  "categories": [
+    "Core Infrastructure",
+    "Identity & Access",
+    "Networking",
+    "Storage",
+    "Databases",
+    "Integration & Messaging",
+    "Security & Compliance",
+    "Monitoring & Operations",
+    "Data & Analytics",
+    "AI / ML",
+    "Developer Platform",
+    "Government / Sovereign Cloud",
+    "Hybrid / Edge",
+    "Cost Governance"
+  ],
+  "capabilities": [
+    {
+      "capability": "Virtual Machines",
+      "category": "Core Infrastructure",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "HYBRID_READY"],
+      "architectureNotes": "Foundation of IaaS. All three providers offer comparable general-purpose and memory-optimized shapes. Hybrid extension (Outposts, Arc, Distributed Cloud) differentiates at enterprise scale.",
+      "operationalConsiderations": "Patching overhead scales with fleet size. Reserved/committed pricing requires capacity planning discipline. Sole-tenant/dedicated options incur premium.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "Amazon EC2",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "EC2 GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/ec2/",
+          "pricingUrl": "https://aws.amazon.com/ec2/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+          "tierNotes": {
+            "Personal / Free": "t2.micro free 750 hrs/mo (12 months)",
+            "Commercial / SMB": "T3, M6, C6 family; On-Demand, Reserved, Spot",
+            "Enterprise": "EC2 + Outposts; Dedicated Hosts; Savings Plans; Graviton4",
+            "Government": "GovCloud us-gov-east-1 / us-gov-west-1; FedRAMP High; DoD IL2–IL5"
+          }
+        },
+        "azure": {
+          "service": "Azure Virtual Machines",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Azure Government VMs",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "B1s free 750 hrs/mo (12 months)",
+            "Commercial / SMB": "Dv5, Ev5, Bsv2; Pay-as-you-go; Reserved Instances",
+            "Enterprise": "Dedicated Host; Proximity Placement Groups; Hybrid Benefit (bring own license)",
+            "Government": "US Gov Arizona/Virginia/Texas; FedRAMP High; DoD IL2/IL4/IL5; ITAR"
+          }
+        },
+        "gcp": {
+          "service": "Compute Engine",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Compute Engine (Assured Workloads)",
+          "parityLag": "Minor",
+          "docsUrl": "https://cloud.google.com/compute/docs",
+          "pricingUrl": "https://cloud.google.com/compute/all-pricing",
+          "complianceUrl": "https://cloud.google.com/security/compliance",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "e2-micro free 1 instance/mo",
+            "Commercial / SMB": "N2, E2, T2D; Sustained use discounts; Custom machine types",
+            "Enterprise": "C3, M3 memory-optimized; CUDs; Sole-tenant nodes; Custom shapes",
+            "Government": "Assured Workloads IL2/IL4/IL5; FedRAMP High; operator-access controls"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Serverless Functions",
+      "category": "Core Infrastructure",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "architectureNotes": "Event-driven compute abstraction. AWS Lambda has the largest ecosystem and most mature tooling. Azure Durable Functions provides strong stateful workflow support. GCP Cloud Run offers container-native serverless with stronger portability.",
+      "operationalConsiderations": "Cold start latency matters for latency-sensitive workloads. Debugging distributed serverless functions requires mature observability strategy. Cost can surprise at high invocation volume without concurrency controls.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "AWS Lambda",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Lambda GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/lambda/",
+          "pricingUrl": "https://aws.amazon.com/lambda/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html",
+          "tierNotes": {
+            "Personal / Free": "1M requests/mo free (permanent)",
+            "Commercial / SMB": "Lambda + API Gateway; Step Functions orchestration",
+            "Enterprise": "VPC, SnapStart, arm64; Provisioned Concurrency; EventBridge Pipes",
+            "Government": "GovCloud; FedRAMP High; DoD IL2–IL4"
+          }
+        },
+        "azure": {
+          "service": "Azure Functions",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Azure Functions Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-functions/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/functions/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "1M requests/mo free (Consumption plan)",
+            "Commercial / SMB": "Functions + APIM; Durable Functions for stateful workflows",
+            "Enterprise": "Premium/Dedicated plan; VNET integration; always-on; large SKUs",
+            "Government": "Azure Government; FedRAMP High; DISA IL2/IL4"
+          }
+        },
+        "gcp": {
+          "service": "Cloud Run / Cloud Functions",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud Run (Assured Workloads)",
+          "parityLag": "Minor",
+          "docsUrl": "https://cloud.google.com/run/docs",
+          "pricingUrl": "https://cloud.google.com/run/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "Cloud Functions 2M invocations/mo free",
+            "Commercial / SMB": "Cloud Run (HTTP & event-driven; scale to 0)",
+            "Enterprise": "Cloud Run Enterprise; VPC-SC; CMEK; min instances; IAP",
+            "Government": "Cloud Run on Assured Workloads; FedRAMP High"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Identity & Access Management",
+      "category": "Identity & Access",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL", "GOV_AVAILABLE"],
+      "architectureNotes": "IAM is the architectural foundation everything else depends on. Azure's Entra ID is tightly coupled to the Microsoft ecosystem and assumed by most Azure services. AWS IAM offers the most granular policy model. GCP's IAM integrates with Google Workspace identity. All three support workforce federation and PIV/CAC for government.",
+      "operationalConsiderations": "Misconfigured IAM is the most common enterprise cloud security failure mode. Permission boundaries, SCPs, and resource control policies are essential at scale. PIV/CAC integration requires specific configuration in all three providers.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "AWS IAM + IAM Identity Center",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "IAM GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/iam/",
+          "pricingUrl": "https://aws.amazon.com/iam/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-iam.html",
+          "tierNotes": {
+            "Personal / Free": "IAM (free); IAM Identity Center (free)",
+            "Commercial / SMB": "IAM + Identity Center + Cognito; SCP via Organizations",
+            "Enterprise": "Permission Boundaries + SCPs + Resource Control Policies; Verified Access (ZTNA)",
+            "Government": "GovCloud; PIV/CAC via Identity Center; FedRAMP High; CJIS"
+          }
+        },
+        "azure": {
+          "service": "Microsoft Entra ID",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Entra ID Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/entra/identity/",
+          "pricingUrl": "https://www.microsoft.com/en-us/security/business/microsoft-entra-pricing",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "Entra ID Free (SSO, 500K objects)",
+            "Commercial / SMB": "Entra ID P1 (MFA, Conditional Access, SSO, SSPR); B2C for customer identity",
+            "Enterprise": "Entra ID P2 (PIM, Identity Protection, Entitlement Mgmt); External ID for B2B",
+            "Government": "Entra ID Government; PIV/CAC; HSPD-12; EO 14028 MFA; FedRAMP High; DISA"
+          }
+        },
+        "gcp": {
+          "service": "Cloud IAM + Cloud Identity",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud IAM (Assured Workloads)",
+          "parityLag": "Minor",
+          "docsUrl": "https://cloud.google.com/iam/docs",
+          "pricingUrl": "https://cloud.google.com/iam/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "Cloud IAM (free); Google Workspace Identity free tier",
+            "Commercial / SMB": "Cloud IAM + Cloud Identity + BeyondCorp (Context-Aware Access)",
+            "Enterprise": "Cloud IAM + VPC-SC + Access Context Manager; Workforce Identity Federation",
+            "Government": "Assured Workloads; PIV/CAC via Workforce Identity Federation"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Object Storage",
+      "category": "Storage",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE", "GOV_AVAILABLE"],
+      "architectureNotes": "Foundational storage for data lakes, backup, static assets, and archival. AWS S3 is the de facto standard with the widest ecosystem integration. Azure Blob has strong Microsoft data platform integration. GCS excels with BigQuery native integration. Egress costs are a significant architectural consideration at scale.",
+      "operationalConsiderations": "Egress costs can become substantial at scale. Lifecycle policies are essential for cost control. Object Lock / WORM is important for compliance. Bucket-level public access should be denied by default in enterprise.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "Amazon S3",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "S3 GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/s3/",
+          "pricingUrl": "https://aws.amazon.com/s3/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html",
+          "tierNotes": {
+            "Personal / Free": "5 GB Standard free (12 months)",
+            "Commercial / SMB": "Standard/IA/Glacier/Deep Archive; Intelligent-Tiering auto-moves",
+            "Enterprise": "S3 + Replication + Object Lock; Access Points; Macie for PII; S3 Inventory",
+            "Government": "S3 GovCloud + Object Lock; FedRAMP High; ITAR; CJIS"
+          }
+        },
+        "azure": {
+          "service": "Azure Blob Storage",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Azure Blob Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/storage/blobs/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/storage/blobs/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "5 GB LRS free (12 months)",
+            "Commercial / SMB": "Hot/Cool/Cold/Archive; LRS/ZRS/GRS/RA-GRS redundancy",
+            "Enterprise": "Blob + Immutable Storage + Lifecycle Mgmt; Blob index tags; Azure Defender",
+            "Government": "Azure Blob Government; FedRAMP High; Sovereign regions"
+          }
+        },
+        "gcp": {
+          "service": "Cloud Storage",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud Storage (Assured Workloads)",
+          "parityLag": "Minor",
+          "docsUrl": "https://cloud.google.com/storage/docs",
+          "pricingUrl": "https://cloud.google.com/storage/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "5 GB Standard free (US regions)",
+            "Commercial / SMB": "Standard/Nearline/Coldline/Archive; Multi-region; per-op pricing",
+            "Enterprise": "Cloud Storage + Dual-region + CMEK; Object Versioning; Retention Locks",
+            "Government": "Assured Workloads FedRAMP High; Org Policy constraints"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "category": "Core Infrastructure",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "HYBRID_READY", "COST_SENSITIVE"],
+      "architectureNotes": "GKE is widely considered the most mature managed Kubernetes offering given Google's authorship of Kubernetes. AKS has strong Azure ecosystem integration and free control plane. EKS has the broadest enterprise adoption in AWS shops. All support hybrid extension (Anthos, Arc, Outposts/EKS Anywhere).",
+      "operationalConsiderations": "Kubernetes carries significant operational burden even in managed form. Dedicated platform engineering capability is recommended at enterprise scale. Networking complexity (CNI, service mesh, ingress) is a common friction point. Control plane costs vary significantly.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "Amazon EKS",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "EKS GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/eks/",
+          "pricingUrl": "https://aws.amazon.com/eks/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eks.html",
+          "tierNotes": {
+            "Personal / Free": "No free tier; ECS control plane free",
+            "Commercial / SMB": "EKS / ECS / App Runner; $0.10/hr cluster fee; Fargate or EC2 nodes",
+            "Enterprise": "EKS Anywhere + EKS Distro; Hybrid; BottleRocket OS; Karpenter autoscaling",
+            "Government": "EKS GovCloud; FedRAMP High; DoD IL2/IL4/IL5"
+          }
+        },
+        "azure": {
+          "service": "Azure Kubernetes Service (AKS)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "AKS Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/aks/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/kubernetes-service/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "Free cluster management fee (pay for nodes only)",
+            "Commercial / SMB": "AKS + Container Apps; KEDA + Dapr built-in",
+            "Enterprise": "AKS + Arc-enabled Kubernetes; GitOps; Policy; hybrid/multi-cloud",
+            "Government": "AKS Government; FedRAMP High; IL2/IL4/IL5 regions"
+          }
+        },
+        "gcp": {
+          "service": "Google Kubernetes Engine (GKE)",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "GKE (Assured Workloads)",
+          "parityLag": "None",
+          "docsUrl": "https://cloud.google.com/kubernetes-engine/docs",
+          "pricingUrl": "https://cloud.google.com/kubernetes-engine/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "1 Autopilot cluster free/zone",
+            "Commercial / SMB": "GKE Standard / Autopilot; Release channels; Workload Identity",
+            "Enterprise": "GKE Enterprise (Anthos); Multi-cloud; service mesh; Config Sync",
+            "Government": "GKE Assured Workloads; FedRAMP High; Binary Authorization"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "category": "Databases",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE", "GOV_AVAILABLE"],
+      "architectureNotes": "Aurora (AWS) leads on performance/cost for MySQL/PostgreSQL workloads. Azure SQL has the strongest SQL Server compatibility and enterprise licensing path (Hybrid Benefit). Spanner (GCP) is unique for globally consistent ACID at scale but with significant lock-in.",
+      "operationalConsiderations": "Multi-region HA adds cost and complexity. Read replicas don't provide write HA. RDS Custom (AWS) and Managed Instance (Azure) support lift-and-shift for Oracle/SQL Server with less re-architecture. Cloud Spanner has unique pricing model that requires capacity planning.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "Amazon RDS / Aurora",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "RDS / Aurora GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/rds/",
+          "pricingUrl": "https://aws.amazon.com/rds/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-rds.html",
+          "tierNotes": {
+            "Personal / Free": "RDS t2.micro 750 hrs/mo free (12 months)",
+            "Commercial / SMB": "RDS, Aurora, DynamoDB, ElastiCache; Aurora Serverless v2",
+            "Enterprise": "Aurora Global DB; DynamoDB Global Tables; RDS Custom for Oracle/SQL Server",
+            "Government": "RDS/Aurora GovCloud; FedRAMP High; CJIS; ITAR; HIPAA BAA"
+          }
+        },
+        "azure": {
+          "service": "Azure SQL / PostgreSQL Flexible",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Azure SQL Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-sql/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/azure-sql-database/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "SQL DB free DTU tier",
+            "Commercial / SMB": "Azure SQL + Cosmos DB + PostgreSQL Flexible + Redis Cache",
+            "Enterprise": "Azure SQL Hyperscale; Cosmos DB multi-write; Managed Instance for SQL Server lift",
+            "Government": "Azure SQL Government; FedRAMP High; CJIS; HIPAA BAA"
+          }
+        },
+        "gcp": {
+          "service": "Cloud SQL / Cloud Spanner",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud SQL / Spanner (Assured Workloads)",
+          "parityLag": "None",
+          "docsUrl": "https://cloud.google.com/sql/docs",
+          "pricingUrl": "https://cloud.google.com/sql/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "No Cloud SQL free tier; Firestore 1 GB free",
+            "Commercial / SMB": "Cloud SQL + Spanner + Firestore + Bigtable; AlloyDB PostgreSQL",
+            "Enterprise": "Spanner 99.999% SLA global ACID; AlloyDB Omni; Bigtable HBase compat",
+            "Government": "Assured Workloads; FedRAMP High; CMEK"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "tags": ["AI_NATIVE", "GOV_LIMITED", "PARITY_LAG", "COMPLIANCE_RELEVANT", "COST_SENSITIVE", "LOCK_IN_RISK"],
+      "architectureNotes": "Azure OpenAI has the strongest enterprise/gov deployment story for GPT models. AWS Bedrock provides the widest multi-model choice (Claude, Llama, Mistral, Titan, Nova) without model lock-in. GCP Vertex AI GenAI is tightly integrated with Google data/analytics stack. Government availability is the most active area of parity lag across all three providers.",
+      "operationalConsiderations": "Token costs scale rapidly with usage volume. Prompt engineering and retrieval-augmented generation (RAG) are operationally non-trivial. Data residency and model data retention policies differ significantly and require legal review for regulated workloads. Content filtering and guardrails are essential before enterprise deployment.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "Amazon Bedrock",
+          "status": "GA",
+          "govAvailability": "Limited",
+          "govVariant": "Bedrock GovCloud (expanding)",
+          "parityLag": "Significant",
+          "docsUrl": "https://docs.aws.amazon.com/bedrock/",
+          "pricingUrl": "https://aws.amazon.com/bedrock/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://aws.amazon.com/govcloud-us/",
+          "tierNotes": {
+            "Personal / Free": "No free tier; pay per token; playground only",
+            "Commercial / SMB": "Claude, Llama, Mistral, Titan, Nova; Agents; Knowledge Bases; Guardrails; Flows",
+            "Enterprise": "Provisioned Throughput; Model Eval; Watermark; Custom Model Import; Model Distillation",
+            "Government": "Bedrock GovCloud limited/expanding; FedRAMP Moderate baseline; IL coverage expanding"
+          }
+        },
+        "azure": {
+          "service": "Azure OpenAI / Azure AI Foundry",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Azure OpenAI Government",
+          "parityLag": "Moderate",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/azure-government",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/azure-government",
+          "tierNotes": {
+            "Personal / Free": "Limited free playground; GPT-3.5 free quota",
+            "Commercial / SMB": "GPT-4o, o3, DALL-E 3, Whisper; Content Safety; Prompt Shields",
+            "Enterprise": "Provisioned Throughput Units (PTU); BYOD; Batch API; AI Search RAG; Copilot Studio",
+            "Government": "GPT-4, GPT-4o in Gov regions; FedRAMP High; DISA IL2/IL4; newer models lag 3–6 months"
+          }
+        },
+        "gcp": {
+          "service": "Vertex AI GenAI / Gemini",
+          "status": "GA",
+          "govAvailability": "Limited",
+          "govVariant": "Gemini for Workspace Gov / Vertex AI Assured Workloads",
+          "parityLag": "Significant",
+          "docsUrl": "https://cloud.google.com/vertex-ai/generative-ai/docs",
+          "pricingUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "Gemini API free tier via AI Studio; Flash model rpm limits",
+            "Commercial / SMB": "Gemini 1.5 Pro/Flash, Imagen, Veo; Model Garden 150+ models incl. Claude/Llama",
+            "Enterprise": "RAG Engine, Agent Builder, Grounding; CMEK; VPC-SC; Provisioned Throughput",
+            "Government": "Gemini for Workspace Gov (FedRAMP High); Vertex AI Assured Workloads; Disconnected Cloud option"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "category": "Security & Compliance",
+      "tags": ["STANDARD", "AI_CAPABLE", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL", "GOV_AVAILABLE"],
+      "architectureNotes": "Microsoft Sentinel is the most mature cloud-native SIEM with the broadest connector ecosystem. Chronicle (GCP) is purpose-built for petabyte-scale log ingestion with Google threat intelligence. AWS Security Hub is an aggregator, not a full SIEM — third-party or OpenSearch-based solutions are common in AWS environments.",
+      "operationalConsiderations": "SIEM implementation requires dedicated security operations expertise. Log ingestion costs are a significant operational consideration at scale. Integration with identity systems and incident response workflows is essential. Cloud-native SIEMs reduce infrastructure overhead but increase vendor dependency.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "AWS Security Hub + Amazon OpenSearch (SIEM pattern)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Security Hub GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/securityhub/",
+          "pricingUrl": "https://aws.amazon.com/security-hub/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-security-hub.html",
+          "tierNotes": {
+            "Personal / Free": "Security Hub 30-day trial; Trusted Advisor basic free",
+            "Commercial / SMB": "Security Hub + GuardDuty + Detective + CloudTrail",
+            "Enterprise": "Security Lake; Detective; AWS Config; CloudTrail; CloudHSM; FIPS 140-2/3 endpoints",
+            "Government": "Security Hub GovCloud; CloudTrail GovCloud; FedRAMP High; CJIS log retention"
+          }
+        },
+        "azure": {
+          "service": "Microsoft Sentinel",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Microsoft Sentinel Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/sentinel/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "Defender for Cloud basic free",
+            "Commercial / SMB": "Sentinel + Defender for Cloud + Key Vault + Purview",
+            "Enterprise": "Sentinel + Defender XDR; Confidential Computing; Dedicated HSM; FIPS 140-2/3; Entra PIM",
+            "Government": "Sentinel Government; FedRAMP High; DISA SIEM integration; NIST 800-53"
+          }
+        },
+        "gcp": {
+          "service": "Google Chronicle SIEM",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Chronicle (Assured Workloads)",
+          "parityLag": "Minor",
+          "docsUrl": "https://cloud.google.com/chronicle/docs",
+          "pricingUrl": "https://cloud.google.com/chronicle/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "Security Command Center limited free",
+            "Commercial / SMB": "SCC Standard + Cloud Armor + Secret Manager",
+            "Enterprise": "SCC Premium + Assured Workloads + Chronicle SIEM + CMEK + VPC-SC; FIPS HSMs",
+            "Government": "Assured Workloads (FedRAMP High, DoD IL4/IL5, CJIS, HIPAA); Access Transparency"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "category": "Data & Analytics",
+      "tags": ["AI_CAPABLE", "ENTERPRISE_CORE", "COST_SENSITIVE", "GOV_AVAILABLE"],
+      "architectureNotes": "BigQuery (GCP) offers the best serverless analytics experience and tightest ML integration. Redshift (AWS) is deeply embedded in the AWS data ecosystem and has strong RA3 instance performance. Synapse and Microsoft Fabric (Azure) provide the best integration with Power BI, Office 365, and Microsoft enterprise data estates.",
+      "operationalConsiderations": "Query costs in on-demand models can surprise without governance guardrails. Slot/reservation pricing requires capacity planning. Data egress for cross-cloud or on-prem data movement adds cost. Schema design for distributed analytics differs significantly from traditional RDBMS patterns.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "Amazon Redshift",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Redshift GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/redshift/",
+          "pricingUrl": "https://aws.amazon.com/redshift/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-redshift.html",
+          "tierNotes": {
+            "Personal / Free": "No Redshift free tier; Athena pay-per-query; Glue 1M obj free/mo",
+            "Commercial / SMB": "Redshift + EMR + Glue + Kinesis + QuickSight; Lake Formation governance",
+            "Enterprise": "Redshift Serverless + RA3; Lake Formation; Clean Rooms",
+            "Government": "Redshift GovCloud + Glue GovCloud; FedRAMP High"
+          }
+        },
+        "azure": {
+          "service": "Azure Synapse Analytics / Microsoft Fabric",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Synapse Analytics Government",
+          "parityLag": "Moderate",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/synapse-analytics/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/synapse-analytics/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "Limited Synapse trial; Data Factory 5 low-freq runs free",
+            "Commercial / SMB": "Synapse Analytics + Data Factory + Event Hubs + Power BI",
+            "Enterprise": "Synapse + Purview (governance) + Microsoft Fabric; OneLake unified storage",
+            "Government": "Synapse Government + Power BI Government; FedRAMP High; IL2/IL4; Fabric gov availability limited"
+          }
+        },
+        "gcp": {
+          "service": "BigQuery",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "BigQuery (Assured Workloads)",
+          "parityLag": "None",
+          "docsUrl": "https://cloud.google.com/bigquery/docs",
+          "pricingUrl": "https://cloud.google.com/bigquery/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "10 GB storage + 1 TB query/mo free (best free analytics tier)",
+            "Commercial / SMB": "BigQuery + Dataflow (Beam) + Pub/Sub + Looker Studio",
+            "Enterprise": "BigQuery Enterprise (Reservations, Editions, BI Engine); Dataplex governance; Analytics Hub",
+            "Government": "BigQuery Assured Workloads; FedRAMP High"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Managed File Transfer / Integration",
+      "category": "Integration & Messaging",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "GOV_AVAILABLE"],
+      "architectureNotes": "AWS Transfer Family is the only native cloud MFT service among the three. GCP and Azure lack native MFT equivalents — both rely on partner solutions (GoAnywhere, MuleSoft, Axway). For API management, Apigee (GCP) is the most full-featured. Azure APIM is deeply integrated with the Microsoft enterprise stack.",
+      "operationalConsiderations": "MFT solutions often handle regulated data (CJIS, HIPAA, PII). AS2 for EDI, SFTP for legacy agency integrations, and HTTPS for modern APIs are common in government. Protocol support breadth and audit logging are critical differentiators for compliance. GoAnywhere and similar tools can bridge all three clouds.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "AWS Transfer Family (SFTP/FTPS/AS2)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Transfer Family GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/transfer/",
+          "pricingUrl": "https://aws.amazon.com/aws-transfer-family/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-transfer.html",
+          "tierNotes": {
+            "Personal / Free": "SQS/SNS 1M requests free; EventBridge 1M events free; no native MFT free tier",
+            "Commercial / SMB": "Transfer Family SFTP/FTPS/AS2; SQS/SNS/MQ/Step Functions/EventBridge",
+            "Enterprise": "Transfer Family Enterprise; AppFlow; B2B Messaging (EDI); EventBridge Pipes",
+            "Government": "Transfer Family GovCloud; SQS/SNS GovCloud; MuleSoft GovCloud on AWS"
+          }
+        },
+        "azure": {
+          "service": "Azure APIM + Logic Apps (no native MFT)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "APIM + Logic Apps Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/api-management/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/api-management/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "Service Bus no free tier; Logic Apps 4K actions free",
+            "Commercial / SMB": "Service Bus + Logic Apps + APIM + Data Factory; no native MFT — use partner",
+            "Enterprise": "APIM Premium + Logic Apps Standard + BizTalk migration; Partner: MuleSoft, GoAnywhere",
+            "Government": "APIM + Logic Apps Government; MuleSoft GovCloud on Azure"
+          }
+        },
+        "gcp": {
+          "service": "Apigee X + Pub/Sub (no native MFT)",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Apigee + Pub/Sub (Assured Workloads)",
+          "parityLag": "Minor",
+          "docsUrl": "https://cloud.google.com/apigee/docs",
+          "pricingUrl": "https://cloud.google.com/apigee/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "Cloud Tasks + Pub/Sub 10 GB free; Apigee no free tier",
+            "Commercial / SMB": "Pub/Sub + Apigee API Mgmt + Integration Connectors; no native MFT",
+            "Enterprise": "Apigee X full lifecycle + Datastream (CDC); Partner: MuleSoft, GoAnywhere",
+            "Government": "Apigee + Pub/Sub Assured Workloads; MuleSoft GovCloud on GCP"
+          }
+        }
+      }
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "category": "Developer Platform",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "GOV_AVAILABLE"],
+      "architectureNotes": "Azure DevOps + GitHub (both Microsoft) provide the most integrated enterprise CI/CD ecosystem. AWS CodePipeline is native to AWS but CodeCommit is no longer accepting new customers (July 2024). GCP Cloud Build is solid but less feature-rich than competing platforms — many GCP shops use GitHub Actions or GitLab CI.",
+      "operationalConsiderations": "Supply chain security (SBOM, Binary Authorization, secret scanning) is increasingly a compliance requirement. STIG-hardened build environments are required for government IL2/IL4. DISA STIG-compliant pipeline patterns are available for all three providers. CodeCommit deprecation is a migration concern for existing AWS CI/CD investments.",
+      "lastVerified": "2026-05-19",
+      "providers": {
+        "aws": {
+          "service": "AWS CodePipeline / CodeBuild",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "CodePipeline / CodeBuild GovCloud",
+          "parityLag": "None",
+          "docsUrl": "https://docs.aws.amazon.com/codepipeline/",
+          "pricingUrl": "https://aws.amazon.com/codepipeline/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cp.html",
+          "tierNotes": {
+            "Personal / Free": "CodeBuild 100 build-min/mo free; CodePipeline 1 active pipeline free",
+            "Commercial / SMB": "CodeBuild + CodeDeploy + CodePipeline + CodeArtifact + CodeGuru",
+            "Enterprise": "CodeCatalyst; CodeGuru Security; Inspector SBOM export; Binary Authorization",
+            "Government": "CodePipeline/CodeBuild/CodeDeploy GovCloud; FedRAMP High; DISA STIG build environments"
+          }
+        },
+        "azure": {
+          "service": "Azure DevOps + GitHub Enterprise",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Azure DevOps Government / GitHub Enterprise Government",
+          "parityLag": "None",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/devops/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/devops/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "tierNotes": {
+            "Personal / Free": "Azure DevOps 5 users free; 1 parallel job; 1800 min/mo CI; GitHub Actions 2000 min/mo",
+            "Commercial / SMB": "Azure DevOps (Boards/Repos/Pipelines/Artifacts/Test Plans); GitHub Actions native",
+            "Enterprise": "GitHub Advanced Security (secret scanning, SAST); Defender for DevOps; SBOM support",
+            "Government": "Azure DevOps Government; GitHub Enterprise Government (FedRAMP High); DISA STIG-compliant pipelines; IL2/IL4"
+          }
+        },
+        "gcp": {
+          "service": "Cloud Build + Cloud Deploy",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud Build (Assured Workloads)",
+          "parityLag": "None",
+          "docsUrl": "https://cloud.google.com/build/docs",
+          "pricingUrl": "https://cloud.google.com/build/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "tierNotes": {
+            "Personal / Free": "Cloud Build 120 build-min/day free; Artifact Registry 500 MB free",
+            "Commercial / SMB": "Cloud Build + Cloud Deploy + Artifact Registry; GitHub Actions integration; Skaffold",
+            "Enterprise": "Cloud Build Enterprise; Cloud Deploy multi-target; Binary Authorization; SBOM generation",
+            "Government": "Cloud Build Assured Workloads; FedRAMP High; SLSA framework; STIG-hardened images"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+name: Data Correction
+description: Report incorrect or outdated service information
+title: "[Correction] "
+labels: ["data-correction"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report incorrect, outdated, or missing data in the matrix.
+        **All data must be sourced from official public provider documentation.**
+        Do not include pricing, internal information, or unverified claims.
+
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Provider
+      options: [GCP, AWS, Azure, All]
+    validations:
+      required: true
+
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      placeholder: "e.g. Generative AI"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Tier
+      options: ["Personal / Free", "Commercial / SMB", "Enterprise", "Government", "All tiers"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current (incorrect) value
+      placeholder: "What does the matrix currently say?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: Correct value
+      placeholder: "What should it say?"
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Official source URL
+      placeholder: "https://docs.aws.amazon.com/..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: This information is from official public provider documentation
+          required: true
+        - label: This does not contain any sensitive, internal, or proprietary information
+          required: true

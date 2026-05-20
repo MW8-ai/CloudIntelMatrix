@@ -1,0 +1,69 @@
+name: Check for Cloud Provider Updates
+
+on:
+  schedule:
+    # Every Wednesday at 09:00 UTC
+    - cron: "0 9 * * 3"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Days back to scan"
+        required: false
+        default: "14"
+
+jobs:
+  update-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Scan release note feeds
+        run: |
+          DAYS="${{ github.event.inputs.days || '14' }}"
+          python scripts/check_upcoming.py --days "$DAYS" --output /tmp/issue_body.md
+
+      - name: Create update review issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('/tmp/issue_body.md', 'utf8');
+            const today = new Date().toISOString().split('T')[0];
+
+            // Don't create duplicate open issues for the same week
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'update-review',
+              state: 'open',
+            });
+
+            // If one already exists this week, add a comment instead
+            if (issues.data.length > 0) {
+              const existing = issues.data[0];
+              const created = new Date(existing.created_at);
+              const daysDiff = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24);
+              if (daysDiff < 7) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existing.number,
+                  body: `## Re-scan — ${today}\n\n${body}`,
+                });
+                return;
+              }
+            }
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Update Review] Cloud provider release notes — ${today}`,
+              body,
+              labels: ['update-review'],
+            });
