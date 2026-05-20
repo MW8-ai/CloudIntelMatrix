@@ -7,7 +7,7 @@
     "providers": ["aws", "azure", "gcp"],
     "tiers": ["Personal / Free", "Commercial / SMB", "Enterprise", "Government"],
     "license": "CC-BY-4.0",
-    "repo": "https://github.com/YOUR_ORG/cloud-matrix"
+    "repo": "https://github.com/MW8-ai/CloudIntelMatrix"
   },
   "tags": {
     "STANDARD":            { "label": "STANDARD",            "color": "gray",   "description": "Traditional cloud infrastructure or platform service" },
@@ -516,7 +516,7 @@
           "govVariant": "Chronicle (Assured Workloads)",
           "parityLag": "Minor",
           "docsUrl": "https://cloud.google.com/chronicle/docs",
-          "pricingUrl": "https://cloud.google.com/chronicle/pricing",
+          "pricingUrl": "https://docs.cloud.google.com/chronicle/docs/onboard/understand-billing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
           "tierNotes": {

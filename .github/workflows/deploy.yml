@@ -26,11 +26,22 @@ jobs:
         with:
           node-version: 24
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install dependencies
         run: npm install
 
+      - name: Install Python dependencies
+        run: pip install openpyxl
+
       - name: Build
         run: npm run build
+
+      - name: Generate XLSX
+        run: python scripts/generate_xlsx.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

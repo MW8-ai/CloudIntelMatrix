@@ -645,6 +645,7 @@ export default function App() {
             <span>Data: official provider documentation only</span>
             <span>Last verified: {META.last_verified}</span>
             <span>v{META.version}</span>
+            <a href={`${import.meta.env.BASE_URL}Cloud_Intelligence_Matrix.xlsx`} style={{ color: "var(--link)" }}>↗ Download XLSX</a>
             <a href="https://github.com/MW8-ai/CloudIntelMatrix" target="_blank" rel="noopener noreferrer" style={{ color: "var(--link)" }}>↗ GitHub</a>
             <a href="https://github.com/MW8-ai/CloudIntelMatrix/issues/new/choose" target="_blank" rel="noopener noreferrer" style={{ color: "var(--link)" }}>↗ Report correction</a>
           </div>
