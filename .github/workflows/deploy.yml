@@ -23,11 +23,11 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v4
-       with:
-        node-version: 24
-    
-    - name: Install dependencies
-      run: npm install
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Build
         run: npm run build
