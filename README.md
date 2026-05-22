@@ -2,7 +2,7 @@
 
 > Enterprise and government cloud capability intelligence — AWS · Azure · GCP
 
-**[Live →](https://YOUR_ORG.github.io/cloud-matrix)** &nbsp;|&nbsp; **[XLSX →](https://YOUR_ORG.github.io/cloud-matrix/Cloud_Intelligence_Matrix.xlsx)** &nbsp;|&nbsp; **[Report a correction →](https://github.com/YOUR_ORG/cloud-matrix/issues/new/choose)**
+**[Live →](https://mw8-ai.github.io/CloudIntelMatrix/)** &nbsp;|&nbsp; **[XLSX →](https://mw8-ai.github.io/CloudIntelMatrix/Cloud_Intelligence_Matrix.xlsx)** &nbsp;|&nbsp; **[Report a correction →](https://github.com/MW8-ai/CloudIntelMatrix/issues/new/choose)**
 
 ---
 
@@ -67,6 +67,7 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 - Compliance relevance, not compliance guarantees
 - Parity lag tracked explicitly, not hidden
 - Every URL verifiable by anyone
+- Not legal, compliance, procurement, or security advice
 
 ---
 
@@ -96,4 +97,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions require an official so
 
 Data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · Code: [MIT](LICENSE)
 
-Not affiliated with Amazon, Microsoft, or Google.
+See [DISCLAIMER.md](DISCLAIMER.md). Not affiliated with Amazon, Microsoft, Google, AWS, Azure, or Google Cloud.

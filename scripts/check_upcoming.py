@@ -59,7 +59,7 @@ CATEGORY_KEYWORDS = {
 def fetch_feed(provider, url, max_retries=2):
     for attempt in range(max_retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "cloud-matrix-update-check/1.0"})
+            req = urllib.request.Request(url, headers={"User-Agent": "CloudIntelMatrix-update-check/1.0"})
             with urllib.request.urlopen(req, timeout=15) as resp:
                 return resp.read().decode("utf-8", errors="replace")
         except Exception as e:

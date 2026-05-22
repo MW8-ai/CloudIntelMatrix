@@ -6,6 +6,9 @@ import json, sys, time, urllib.request, urllib.error
 from pathlib import Path
 from datetime import date
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
 
@@ -100,7 +103,7 @@ info(f"upcoming.json: {len(udata.get('upcoming',[]))} items")
 def check(url, label):
     if not url: return
     try:
-        req = urllib.request.Request(url, method="HEAD", headers={"User-Agent":"cloud-matrix-verify/2.0"})
+        req = urllib.request.Request(url, method="HEAD", headers={"User-Agent":"CloudIntelMatrix-verify/2.0"})
         with urllib.request.urlopen(req, timeout=10) as r:
             if r.status >= 400: err(f"HTTP {r.status}: {label}")
     except urllib.error.HTTPError as e:
