@@ -1,141 +1,351 @@
 #!/usr/bin/env python3
-"""
-verify.py — Cloud Intelligence Matrix data validator (schema v3 / capability model)
-"""
-import json, sys, time, urllib.request, urllib.error
-from pathlib import Path
+"""Validate Cloud Intelligence Matrix data and optionally check public links."""
+
+import argparse
+import json
+import sys
+import time
+import urllib.error
+import urllib.request
 from datetime import date
+from pathlib import Path
+from urllib.parse import urlparse
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
+EXPECTED_PROVIDERS = ["aws", "azure", "gcp"]
+CLASSIFICATION_TAGS = {"STANDARD", "AI_CAPABLE", "AI_NATIVE"}
+VALID_GOV = {"Full", "Partial", "Limited", "None", "Unknown"}
+VALID_PARITY = {"None", "Minor", "Moderate", "Significant", "Unknown"}
+VALID_STATUS = {"GA", "Preview", "Deprecated", "Retiring", "Unknown"}
+VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
+VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
+CAP_REQUIRED = [
+    "capability",
+    "category",
+    "tags",
+    "aiClassification",
+    "architectureNotes",
+    "operationalConsiderations",
+    "lastVerified",
+    "providers",
+]
+CAP_ALLOWED = set(CAP_REQUIRED + ["sourceNotes"])
+PROV_REQUIRED = [
+    "service",
+    "status",
+    "govAvailability",
+    "parityLag",
+    "docsUrl",
+    "pricingUrl",
+    "complianceUrl",
+    "tierNotes",
+]
+PROV_ALLOWED = set(PROV_REQUIRED + ["govVariant", "govDocsUrl", "sourceNotes"])
 
-ERRORS, WARNINGS, INFO = [], [], []
-def err(m):  ERRORS.append(f"❌ {m}")
-def warn(m): WARNINGS.append(f"⚠️  {m}")
-def info(m): INFO.append(f"ℹ️  {m}")
+ERRORS = []
+WARNINGS = []
+INFO = []
+
+
+def err(message):
+    ERRORS.append(f"ERROR: {message}")
+
+
+def warn(message):
+    WARNINGS.append(f"WARN: {message}")
+
+
+def info(message):
+    INFO.append(f"INFO: {message}")
+
 
 def load(path):
     try:
-        return json.loads(path.read_text())
+        return json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError:
-        err(f"Missing: {path}"); return None
-    except json.JSONDecodeError as e:
-        err(f"Bad JSON in {path.name}: {e}"); return None
+        err(f"Missing: {path.relative_to(ROOT)}")
+    except json.JSONDecodeError as exc:
+        err(f"Bad JSON in {path.name}: {exc}")
+    return None
 
-mdata = load(DATA / "matrix.json")
-udata = load(DATA / "upcoming.json")
-sdata = load(DATA / "sources.json")
-if not all([mdata, udata, sdata]): print("\n".join(ERRORS)); sys.exit(1)
 
-# ── 1. Meta ────────────────────────────────────────────────────────────────
-meta = mdata.get("_meta", {})
-for k in ["version","schema","last_verified","providers","tiers"]:
-    if k not in meta: err(f"_meta missing: {k}")
+def require_fields(value, fields, label):
+    if not isinstance(value, dict):
+        err(f"{label} must be an object")
+        return
+    for field in fields:
+        if field not in value:
+            err(f"{label} missing field: {field}")
 
-PROVIDERS   = meta.get("providers", ["aws","azure","gcp"])
-TIERS       = meta.get("tiers", [])
-CAPS        = mdata.get("capabilities", [])
-CATEGORIES  = mdata.get("categories", [])
-TAG_DEFS    = mdata.get("tags", {})
 
-# Required capability fields
-CAP_REQUIRED = ["capability","category","tags","architectureNotes","operationalConsiderations","lastVerified","providers"]
-PROV_REQUIRED = ["service","status","govAvailability","parityLag","docsUrl","pricingUrl","complianceUrl"]
-VALID_GOV    = {"Full","Partial","Limited","None"}
-VALID_PARITY = {"None","Minor","Moderate","Significant"}
-VALID_STATUS = {"GA","Preview","Deprecated","Beta","Limited"}
-
-seen_caps = set()
-for cap in CAPS:
-    name = cap.get("capability","MISSING")
-    if name in seen_caps: err(f"Duplicate capability: '{name}'")
-    seen_caps.add(name)
-    for f in CAP_REQUIRED:
-        if f not in cap: err(f"'{name}' missing field: {f}")
-    if cap.get("category") not in CATEGORIES:
-        warn(f"'{name}' category '{cap.get('category')}' not in categories list")
-    for tag in cap.get("tags",[]):
-        if tag not in TAG_DEFS: warn(f"'{name}' unknown tag: {tag}")
-    for pkey in PROVIDERS:
-        prov = cap.get("providers",{}).get(pkey)
-        if not prov:
-            err(f"'{name}' missing provider: {pkey}"); continue
-        for f in PROV_REQUIRED:
-            if f not in prov: err(f"'{name}/{pkey}' missing field: {f}")
-        if prov.get("govAvailability") not in VALID_GOV:
-            warn(f"'{name}/{pkey}' invalid govAvailability: {prov.get('govAvailability')}")
-        if prov.get("parityLag") not in VALID_PARITY:
-            warn(f"'{name}/{pkey}' invalid parityLag: {prov.get('parityLag')}")
-        if prov.get("status") not in VALID_STATUS:
-            warn(f"'{name}/{pkey}' invalid status: {prov.get('status')}")
-        # tier notes completeness check
-        tnotes = prov.get("tierNotes",{})
-        for t in TIERS:
-            if t not in tnotes: warn(f"'{name}/{pkey}' missing tierNotes for: {t}")
-
-info(f"matrix.json: {len(CAPS)} capabilities · {len(PROVIDERS)} providers · schema {meta.get('schema')}")
-
-# ── 2. Upcoming ────────────────────────────────────────────────────────────
-VALID_USTATUS = {"preview","announced","ga","limited","deprecated"}
-VALID_UTYPE   = {"expansion","new_region","new_feature","feature_ga","new_instance","deprecation_notice"}
-seen_ids = set()
-for item in udata.get("upcoming",[]):
-    iid = item.get("id","MISSING")
-    if iid in seen_ids: err(f"Duplicate upcoming id: {iid}")
-    seen_ids.add(iid)
-    for f in ["id","provider","category","title","detail","status","source"]:
-        if f not in item: err(f"upcoming '{iid}' missing: {f}")
-    if item.get("status") not in VALID_USTATUS:
-        warn(f"upcoming '{iid}' unknown status: {item.get('status')}")
-    if item.get("status") == "ga":
-        warn(f"upcoming '{iid}' status=ga — promote to matrix.json and remove")
-    ega = item.get("expected_ga")
-    if ega and len(str(ega)) == 4:
-        if int(ega) < date.today().year:
-            warn(f"upcoming '{iid}' expected_ga={ega} is past — verify or remove")
-
-info(f"upcoming.json: {len(udata.get('upcoming',[]))} items")
-
-# ── 3. URL checks ──────────────────────────────────────────────────────────
-def check(url, label):
-    if not url: return
+def validate_date(value, label):
     try:
-        req = urllib.request.Request(url, method="HEAD", headers={"User-Agent":"CloudIntelMatrix-verify/2.0"})
-        with urllib.request.urlopen(req, timeout=10) as r:
-            if r.status >= 400: err(f"HTTP {r.status}: {label}")
-    except urllib.error.HTTPError as e:
-        if e.code not in (403, 405): err(f"HTTP {e.code}: {label} — {url}")
-    except Exception as e:
-        warn(f"Could not verify {label}: {e}")
+        date.fromisoformat(value)
+    except (TypeError, ValueError):
+        err(f"{label} must be an ISO date (YYYY-MM-DD)")
 
-print("Checking source URLs...")
-for cap in CAPS:
-    for pkey in PROVIDERS:
-        prov = cap.get("providers",{}).get(pkey,{})
-        name = cap.get("capability","?")
-        for field in ["docsUrl","pricingUrl","complianceUrl","govDocsUrl"]:
-            url = prov.get(field)
-            if url: check(url, f"{name}/{pkey}/{field}"); time.sleep(0.2)
 
-for item in udata.get("upcoming",[]):
-    if item.get("source"): check(item["source"], f"upcoming/{item.get('id')}"); time.sleep(0.2)
+def validate_url(value, label, notes_available):
+    if value is None:
+        if not notes_available:
+            err(f"{label} is unavailable; add sourceNotes explaining why")
+        return
+    if not isinstance(value, str) or not value.strip():
+        err(f"{label} must be a URL or null with sourceNotes")
+        return
+    parsed = urlparse(value)
+    if parsed.scheme not in {"https", "http"} or not parsed.netloc:
+        err(f"{label} must be a public HTTP(S) URL: {value}")
 
-# ── Summary ────────────────────────────────────────────────────────────────
-print("\n" + "="*60)
-print("CLOUD INTELLIGENCE MATRIX — VERIFICATION REPORT")
-print("="*60)
-for m in INFO: print(f"  {m}")
-if WARNINGS:
-    print(f"\n⚠️  Warnings ({len(WARNINGS)}):")
-    for m in WARNINGS: print(f"  {m}")
-if ERRORS:
-    print(f"\n❌ Errors ({len(ERRORS)}):")
-    for m in ERRORS: print(f"  {m}")
-    print(f"\nResult: FAILED — {len(ERRORS)} error(s)")
-    sys.exit(1)
-else:
-    print(f"\n✅ PASSED — 0 errors · {len(WARNINGS)} warnings")
-    sys.exit(0)
+
+def validate_schema_contract(schema):
+    if not isinstance(schema, dict):
+        return
+    if schema.get("$schema") != "https://json-schema.org/draft/2020-12/schema":
+        err("data/schema.json must declare JSON Schema draft 2020-12")
+    capability = schema.get("$defs", {}).get("capability", {})
+    provider = schema.get("$defs", {}).get("provider", {})
+    required_caps = set(capability.get("required", []))
+    required_prov = set(provider.get("required", []))
+    if not set(CAP_REQUIRED).issubset(required_caps):
+        err("data/schema.json capability requirements do not cover validator-required fields")
+    if not set(PROV_REQUIRED).issubset(required_prov):
+        err("data/schema.json provider requirements do not cover validator-required fields")
+    info("data/schema.json: capability-v1 contract loaded")
+
+
+def validate_matrix(mdata):
+    require_fields(mdata, ["_meta", "tags", "categories", "capabilities"], "matrix.json")
+    if not isinstance(mdata, dict):
+        return None, [], []
+
+    meta = mdata.get("_meta", {})
+    require_fields(meta, ["version", "schema", "last_verified", "providers", "tiers", "license", "repo"], "_meta")
+    if meta.get("schema") != "capability-v1":
+        err(f"_meta.schema must be capability-v1, got: {meta.get('schema')}")
+    validate_date(meta.get("last_verified"), "_meta.last_verified")
+    validate_url(meta.get("repo"), "_meta.repo", False)
+
+    providers = meta.get("providers", [])
+    if providers != EXPECTED_PROVIDERS:
+        err(f"_meta.providers must be exactly: {EXPECTED_PROVIDERS}")
+        providers = EXPECTED_PROVIDERS
+
+    tiers = meta.get("tiers", [])
+    if not isinstance(tiers, list) or not tiers:
+        err("_meta.tiers must be a non-empty array")
+        tiers = []
+
+    categories = mdata.get("categories", [])
+    if not isinstance(categories, list) or not categories:
+        err("categories must be a non-empty array")
+        categories = []
+    elif len(categories) != len(set(categories)):
+        err("categories contains duplicates")
+
+    tag_defs = mdata.get("tags", {})
+    if not isinstance(tag_defs, dict) or not tag_defs:
+        err("tags must be a non-empty object")
+        tag_defs = {}
+    for tag_key, definition in tag_defs.items():
+        require_fields(definition, ["label", "color", "description"], f"tag '{tag_key}'")
+
+    capabilities = mdata.get("capabilities", [])
+    if not isinstance(capabilities, list) or not capabilities:
+        err("capabilities must be a non-empty array")
+        capabilities = []
+
+    seen_caps = set()
+    for cap in capabilities:
+        name = cap.get("capability", "MISSING") if isinstance(cap, dict) else "MISSING"
+        require_fields(cap, CAP_REQUIRED, f"capability '{name}'")
+        if not isinstance(cap, dict):
+            continue
+        unexpected_cap_fields = set(cap) - CAP_ALLOWED
+        if unexpected_cap_fields:
+            err(f"'{name}' contains unsupported fields: {sorted(unexpected_cap_fields)}")
+        if name in seen_caps:
+            err(f"Duplicate capability: '{name}'")
+        seen_caps.add(name)
+        if cap.get("category") not in categories:
+            err(f"'{name}' category '{cap.get('category')}' not in categories list")
+        validate_date(cap.get("lastVerified"), f"'{name}'.lastVerified")
+
+        tags = cap.get("tags", [])
+        if not isinstance(tags, list) or not tags:
+            err(f"'{name}'.tags must be a non-empty array")
+            tags = []
+        elif len(tags) != len(set(tags)):
+            err(f"'{name}'.tags contains duplicates")
+        for tag in tags:
+            if tag not in tag_defs:
+                err(f"'{name}' unknown tag: {tag}")
+
+        classification = cap.get("aiClassification")
+        if classification not in CLASSIFICATION_TAGS:
+            err(f"'{name}' invalid aiClassification: {classification}")
+        elif classification not in tags:
+            err(f"'{name}' aiClassification '{classification}' must also appear in tags")
+
+        cap_notes = bool(cap.get("sourceNotes"))
+        capability_providers = cap.get("providers", {})
+        if not isinstance(capability_providers, dict):
+            err(f"'{name}'.providers must be an object")
+            continue
+        extra_providers = set(capability_providers) - set(EXPECTED_PROVIDERS)
+        if extra_providers:
+            err(f"'{name}' contains unsupported providers: {sorted(extra_providers)}")
+
+        for pkey in EXPECTED_PROVIDERS:
+            provider = capability_providers.get(pkey)
+            if not provider:
+                err(f"'{name}' missing provider: {pkey}")
+                continue
+            require_fields(provider, PROV_REQUIRED, f"'{name}/{pkey}'")
+            unexpected_provider_fields = set(provider) - PROV_ALLOWED
+            if unexpected_provider_fields:
+                err(f"'{name}/{pkey}' contains unsupported fields: {sorted(unexpected_provider_fields)}")
+            notes_available = cap_notes or bool(provider.get("sourceNotes"))
+
+            if provider.get("status") not in VALID_STATUS:
+                err(f"'{name}/{pkey}' invalid status: {provider.get('status')}")
+            if provider.get("govAvailability") not in VALID_GOV:
+                err(f"'{name}/{pkey}' invalid govAvailability: {provider.get('govAvailability')}")
+            if provider.get("parityLag") not in VALID_PARITY:
+                err(f"'{name}/{pkey}' invalid parityLag: {provider.get('parityLag')}")
+            if any(provider.get(field) == "Unknown" for field in ["status", "govAvailability", "parityLag"]) and not notes_available:
+                err(f"'{name}/{pkey}' has Unknown facts without sourceNotes")
+
+            for field in ["docsUrl", "pricingUrl", "complianceUrl"]:
+                validate_url(provider.get(field), f"'{name}/{pkey}'.{field}", notes_available)
+            if "govDocsUrl" in provider:
+                validate_url(provider.get("govDocsUrl"), f"'{name}/{pkey}'.govDocsUrl", notes_available)
+
+            tier_notes = provider.get("tierNotes", {})
+            if not isinstance(tier_notes, dict):
+                err(f"'{name}/{pkey}'.tierNotes must be an object")
+                continue
+            for tier in tiers:
+                if tier not in tier_notes:
+                    err(f"'{name}/{pkey}' missing tierNotes for: {tier}")
+
+    info(f"matrix.json: {len(capabilities)} capabilities; {len(providers)} providers; schema {meta.get('schema')}")
+    return providers, capabilities, tiers
+
+
+def validate_upcoming(udata):
+    if not isinstance(udata, dict):
+        return []
+    items = udata.get("upcoming", [])
+    if not isinstance(items, list):
+        err("upcoming.json.upcoming must be an array")
+        return []
+    seen_ids = set()
+    for item in items:
+        item_id = item.get("id", "MISSING") if isinstance(item, dict) else "MISSING"
+        require_fields(item, ["id", "provider", "category", "title", "detail", "status", "source"], f"upcoming '{item_id}'")
+        if not isinstance(item, dict):
+            continue
+        if item_id in seen_ids:
+            err(f"Duplicate upcoming id: {item_id}")
+        seen_ids.add(item_id)
+        if item.get("status") not in VALID_USTATUS:
+            err(f"upcoming '{item_id}' invalid status: {item.get('status')}")
+        if "type" in item and item.get("type") not in VALID_UTYPE:
+            err(f"upcoming '{item_id}' invalid type: {item.get('type')}")
+        if item.get("status") == "ga":
+            warn(f"upcoming '{item_id}' status=ga; promote to matrix.json and remove")
+        expected_ga = item.get("expected_ga")
+        if expected_ga and len(str(expected_ga)) == 4 and int(expected_ga) < date.today().year:
+            warn(f"upcoming '{item_id}' expected_ga={expected_ga} is past; verify or remove")
+        validate_url(item.get("source"), f"upcoming '{item_id}'.source", False)
+    info(f"upcoming.json: {len(items)} items")
+    return items
+
+
+def check_link(url, label):
+    if not url:
+        return
+    try:
+        request = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "CloudIntelMatrix-verify/3.0"})
+        with urllib.request.urlopen(request, timeout=10) as response:
+            if response.status >= 400:
+                warn(f"HTTP {response.status}: {label} - {url}")
+    except urllib.error.HTTPError as exc:
+        if exc.code not in (403, 405):
+            warn(f"HTTP {exc.code}: {label} - {url}")
+    except Exception as exc:
+        warn(f"Could not verify {label}: {exc}")
+
+
+def run_link_checks(capabilities, upcoming):
+    print("Checking source URLs (non-blocking)...")
+    for cap in capabilities:
+        for pkey in EXPECTED_PROVIDERS:
+            provider = cap.get("providers", {}).get(pkey, {})
+            for field in ["docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"]:
+                url = provider.get(field)
+                if url:
+                    check_link(url, f"{cap.get('capability', '?')}/{pkey}/{field}")
+                    time.sleep(0.2)
+    for item in upcoming:
+        if item.get("source"):
+            check_link(item["source"], f"upcoming/{item.get('id')}")
+            time.sleep(0.2)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--schema-only", action="store_true", help="Validate data/matrix.json against the capability contract only.")
+    parser.add_argument("--check-links", action="store_true", help="Also check public source URLs; network failures are warnings.")
+    args = parser.parse_args()
+    if args.schema_only and args.check_links:
+        parser.error("--schema-only cannot be combined with --check-links")
+
+    schema = load(DATA / "schema.json")
+    matrix = load(DATA / "matrix.json")
+    if schema is None or matrix is None:
+        print("\n".join(ERRORS))
+        return 1
+    validate_schema_contract(schema)
+    providers, capabilities, _ = validate_matrix(matrix)
+
+    upcoming = []
+    if not args.schema_only:
+        upcoming_data = load(DATA / "upcoming.json")
+        sources_data = load(DATA / "sources.json")
+        if upcoming_data is None or sources_data is None:
+            print("\n".join(ERRORS))
+            return 1
+        upcoming = validate_upcoming(upcoming_data)
+        if isinstance(sources_data, dict):
+            info("sources.json: loaded")
+
+    if args.check_links and not ERRORS:
+        run_link_checks(capabilities, upcoming)
+
+    print("\n" + "=" * 60)
+    print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")
+    print("=" * 60)
+    for message in INFO:
+        print(f"  {message}")
+    if WARNINGS:
+        print(f"\nWarnings ({len(WARNINGS)}):")
+        for message in WARNINGS:
+            print(f"  {message}")
+    if ERRORS:
+        print(f"\nErrors ({len(ERRORS)}):")
+        for message in ERRORS:
+            print(f"  {message}")
+        print(f"\nResult: FAILED - {len(ERRORS)} error(s)")
+        return 1
+    print(f"\nPASSED - 0 errors; {len(WARNINGS)} warnings")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

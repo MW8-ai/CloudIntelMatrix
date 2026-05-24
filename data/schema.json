@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/MW8-ai/CloudIntelMatrix/blob/main/data/schema.json",
+  "title": "Cloud Intelligence Matrix capability-v1",
+  "description": "Schema contract for data/matrix.json. Unknown public-source facts must be explicit and explained with sourceNotes.",
+  "type": "object",
+  "required": ["_meta", "tags", "categories", "capabilities"],
+  "properties": {
+    "_meta": {
+      "type": "object",
+      "required": ["version", "schema", "last_verified", "providers", "tiers", "license", "repo"],
+      "properties": {
+        "version": { "type": "string" },
+        "schema": { "const": "capability-v1" },
+        "last_verified": { "type": "string", "format": "date" },
+        "description": { "type": "string" },
+        "providers": {
+          "type": "array",
+          "items": { "enum": ["aws", "azure", "gcp"] },
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "tiers": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "license": { "type": "string" },
+        "repo": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": true
+    },
+    "tags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "color", "description"],
+        "properties": {
+          "label": { "type": "string", "minLength": 1 },
+          "color": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/capability" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "required": [
+        "capability",
+        "category",
+        "tags",
+        "aiClassification",
+        "architectureNotes",
+        "operationalConsiderations",
+        "lastVerified",
+        "providers"
+      ],
+      "properties": {
+        "capability": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "aiClassification": {
+          "enum": ["STANDARD", "AI_CAPABLE", "AI_NATIVE"]
+        },
+        "architectureNotes": { "type": "string", "minLength": 1 },
+        "operationalConsiderations": { "type": "string", "minLength": 1 },
+        "lastVerified": { "type": "string", "format": "date" },
+        "sourceNotes": { "type": "string", "minLength": 1 },
+        "providers": {
+          "type": "object",
+          "required": ["aws", "azure", "gcp"],
+          "properties": {
+            "aws": { "$ref": "#/$defs/provider" },
+            "azure": { "$ref": "#/$defs/provider" },
+            "gcp": { "$ref": "#/$defs/provider" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "provider": {
+      "type": "object",
+      "required": [
+        "service",
+        "status",
+        "govAvailability",
+        "parityLag",
+        "docsUrl",
+        "pricingUrl",
+        "complianceUrl",
+        "tierNotes"
+      ],
+      "properties": {
+        "service": { "type": "string", "minLength": 1 },
+        "status": {
+          "enum": ["GA", "Preview", "Deprecated", "Retiring", "Unknown"]
+        },
+        "govAvailability": {
+          "enum": ["Full", "Partial", "Limited", "None", "Unknown"]
+        },
+        "govVariant": { "type": "string" },
+        "parityLag": {
+          "enum": ["None", "Minor", "Moderate", "Significant", "Unknown"]
+        },
+        "docsUrl": { "type": ["string", "null"], "format": "uri" },
+        "pricingUrl": { "type": ["string", "null"], "format": "uri" },
+        "complianceUrl": { "type": ["string", "null"], "format": "uri" },
+        "govDocsUrl": { "type": ["string", "null"], "format": "uri" },
+        "sourceNotes": { "type": "string", "minLength": 1 },
+        "tierNotes": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

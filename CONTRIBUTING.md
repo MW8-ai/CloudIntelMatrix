@@ -5,10 +5,10 @@
 1. **Official sources only.** Every data point needs a public provider URL.
 2. **No pricing tables.** We note when cost matters (COST_SENSITIVE tag), not exact prices.
 3. **Compliance relevance, not compliance guarantees.** Tag COMPLIANCE_RELEVANT; don't claim "this is compliant."
-4. **govAvailability must be accurate.** Full / Partial / Limited / None — check the gov cloud docs.
-5. **parityLag must be honest.** If gov is behind commercial, say so.
+4. **govAvailability must be accurate.** Full / Partial / Limited / None / Unknown — check public gov cloud docs and explain unknowns with `sourceNotes`.
+5. **parityLag must be honest.** If gov is behind commercial, say so; use `Unknown` with `sourceNotes` when public information is incomplete.
 6. **No sensitive information.** No internal docs, NDA roadmaps, or customer-specific data.
-7. **verify.py must pass.** Run locally before submitting a PR.
+7. **verify.py must pass.** Run `python scripts/verify.py` locally before submitting a PR; use `--check-links` for a non-blocking public URL review.
 
 ## Schema fields (capability-v1)
 
@@ -17,16 +17,17 @@
   "capability": "Human-readable name",
   "category": "One of the 14 categories",
   "tags": ["STANDARD", "ENTERPRISE_CORE"],
+  "aiClassification": "STANDARD | AI_CAPABLE | AI_NATIVE",
   "architectureNotes": "Architectural context and tradeoffs",
   "operationalConsiderations": "Real-world deployment realities",
   "lastVerified": "YYYY-MM-DD",
   "providers": {
     "aws": {
       "service": "Official service name",
-      "status": "GA | Preview | Deprecated",
-      "govAvailability": "Full | Partial | Limited | None",
+      "status": "GA | Preview | Deprecated | Retiring | Unknown",
+      "govAvailability": "Full | Partial | Limited | None | Unknown",
       "govVariant": "Name of gov cloud offering",
-      "parityLag": "None | Minor | Moderate | Significant",
+      "parityLag": "None | Minor | Moderate | Significant | Unknown",
       "docsUrl": "https://docs.aws.amazon.com/...",
       "pricingUrl": "https://aws.amazon.com/...",
       "complianceUrl": "https://aws.amazon.com/compliance/",
@@ -41,6 +42,8 @@
   }
 }
 ```
+
+Use `sourceNotes` on a capability or provider when an official public source does not state a needed value. Unknowns are allowed; unsupported guesses are not.
 
 ## Tag definitions
 
