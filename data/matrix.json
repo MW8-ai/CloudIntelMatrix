@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.0.0",
+    "version": "3.1.0",
     "schema": "capability-v1",
-    "last_verified": "2026-05-19",
+    "last_verified": "2026-05-24",
     "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
     "providers": ["aws", "azure", "gcp"],
     "tiers": ["Personal / Free", "Commercial / SMB", "Enterprise", "Government"],
@@ -718,6 +718,322 @@
             "Commercial / SMB": "Cloud Build + Cloud Deploy + Artifact Registry; GitHub Actions integration; Skaffold",
             "Enterprise": "Cloud Build Enterprise; Cloud Deploy multi-target; Binary Authorization; SBOM generation",
             "Government": "Cloud Build Assured Workloads; FedRAMP High; SLSA framework; STIG-hardened images"
+          }
+        }
+      }
+    },
+    {
+      "capability": "Virtual Networking & CDN",
+      "category": "Networking",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Virtual networks provide private address spaces, routing, security boundaries, and private connectivity patterns. CDN and edge controls should be selected alongside the network design because internet egress, origin protection, and regulated routing requirements affect architecture.",
+      "operationalConsiderations": "Track internet and cross-region egress costs, centralize network policy ownership, and validate edge or private-connectivity features in the target regulated environment before relying on them.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "Amazon VPC",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html",
+          "pricingUrl": "https://aws.amazon.com/vpc/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud-vpc-endpoints.html",
+          "sourceNotes": "Amazon VPC is documented in AWS GovCloud (US); this row does not assert feature parity for the broader networking and edge design without a service-by-service review.",
+          "tierNotes": {
+            "Personal / Free": "Use a minimal VPC layout and review public-IP and egress charges before deployment.",
+            "Commercial / SMB": "Add centralized routing, private endpoints, edge delivery, and web application controls as needed.",
+            "Enterprise": "Evaluate shared network hubs, private connectivity, traffic inspection, and egress governance.",
+            "Government": "Confirm each required network and edge component in AWS GovCloud documentation before design approval."
+          }
+        },
+        "azure": {
+          "service": "Azure Virtual Network",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/virtual-network/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "sourceNotes": "Azure Government publishes current product availability separately; verify every required networking and edge component for the selected government environment.",
+          "tierNotes": {
+            "Personal / Free": "Use a small virtual network design and inspect billable gateways or outbound traffic.",
+            "Commercial / SMB": "Add private access, controlled ingress, and edge delivery based on application exposure.",
+            "Enterprise": "Evaluate hub-and-spoke or virtual WAN patterns, ExpressRoute, security inspection, and policy controls.",
+            "Government": "Use the Azure Government availability roadmap for the specific network services in scope."
+          }
+        },
+        "gcp": {
+          "service": "Virtual Private Cloud (VPC)",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/vpc/docs/overview",
+          "pricingUrl": "https://cloud.google.com/vpc/network-pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Assured Workloads support is control-package specific; verify VPC and any edge services against the selected package before regulated deployment.",
+          "tierNotes": {
+            "Personal / Free": "Use a small VPC design and review network service and outbound traffic pricing.",
+            "Commercial / SMB": "Add managed load balancing, private access, and edge controls when public workloads require them.",
+            "Enterprise": "Evaluate shared VPC, private connectivity, centralized security policy, and network cost controls.",
+            "Government": "Confirm allowed network services in the applicable Assured Workloads control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "category": "Monitoring & Operations",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE", "COMPLIANCE_RELEVANT"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Managed metrics, logging, tracing, alerting, and dashboards form the operational evidence layer for cloud workloads. A portable telemetry strategy can reduce migration friction while provider-native tools simplify service integration.",
+      "operationalConsiderations": "Define log retention, sampling, alert ownership, and access controls early. Telemetry ingestion and retention can become material operating costs, especially when audit retention requirements apply.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "Amazon CloudWatch",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Amazon CloudWatch Logs in AWS GovCloud (US)",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/cloudwatch/",
+          "pricingUrl": "https://aws.amazon.com/cloudwatch/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cwl.html",
+          "sourceNotes": "AWS documents CloudWatch Logs in AWS GovCloud (US) with feature differences; validate the required CloudWatch features beyond logs for the target workload.",
+          "tierNotes": {
+            "Personal / Free": "Start with essential metrics, alarms, and limited log retention.",
+            "Commercial / SMB": "Standardize dashboards, alert routing, audit logs, and application telemetry.",
+            "Enterprise": "Establish central observability ownership, retention policy, access governance, and cost controls.",
+            "Government": "Review AWS GovCloud feature differences and retention obligations before implementation."
+          }
+        },
+        "azure": {
+          "service": "Azure Monitor",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/monitor/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "sourceNotes": "Microsoft documents Azure Monitor usage in Azure Government and publishes availability by service; verify required Monitor components in the current government roadmap.",
+          "tierNotes": {
+            "Personal / Free": "Capture essential metrics and retain only necessary logs.",
+            "Commercial / SMB": "Use common workspaces, alerts, application telemetry, and operational dashboards.",
+            "Enterprise": "Govern retention, query access, export, and multicloud or hybrid telemetry patterns.",
+            "Government": "Confirm each Azure Monitor component in the Azure Government availability roadmap."
+          }
+        },
+        "gcp": {
+          "service": "Cloud Monitoring and Cloud Logging",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud Monitoring under Assured Workloads control packages",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/monitoring/docs",
+          "pricingUrl": "https://cloud.google.com/monitoring/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google documents Cloud Monitoring support under Assured Workloads with limitations for some features; verify the selected control package and telemetry feature set.",
+          "tierNotes": {
+            "Personal / Free": "Capture essential metrics and logs with deliberate retention.",
+            "Commercial / SMB": "Standardize log routing, alerts, service dashboards, and trace collection.",
+            "Enterprise": "Govern sinks, retention, telemetry access, and cost controls across projects.",
+            "Government": "Check Cloud Monitoring and Logging support for the selected Assured Workloads package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "category": "Government / Sovereign Cloud",
+      "tags": ["STANDARD", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Government and sovereign offerings use provider-specific tenancy, boundary, eligibility, and control models. A comparable workload design must start from the required control regime and supported service inventory rather than assume commercial-cloud equivalence.",
+      "operationalConsiderations": "Confirm account eligibility, identity boundaries, region selection, authorized services, support access constraints, and procurement requirements before selecting a regulated cloud deployment model.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS GovCloud (US)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "AWS GovCloud (US-East and US-West)",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/whatis.html",
+          "pricingUrl": "https://aws.amazon.com/govcloud-us/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS GovCloud (US) is a documented offering; commercial-to-GovCloud parity must be evaluated service by service for a given architecture.",
+          "tierNotes": {
+            "Personal / Free": "Government environment eligibility and onboarding requirements apply.",
+            "Commercial / SMB": "Use standard AWS regions unless a regulated workload requires GovCloud eligibility and controls.",
+            "Enterprise": "Map required services, identities, integrations, and operational boundaries before migration.",
+            "Government": "Use the GovCloud service documentation and compliance materials for the required control regime."
+          }
+        },
+        "azure": {
+          "service": "Azure Government",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Azure Government",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-plan-compliance",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Azure Government is a documented physically isolated cloud; use Microsoft's current availability roadmap to establish feature support for each workload.",
+          "tierNotes": {
+            "Personal / Free": "Government environment eligibility and onboarding requirements apply.",
+            "Commercial / SMB": "Use commercial Azure unless the workload requires Azure Government controls and eligibility.",
+            "Enterprise": "Map dependencies to the current Azure Government availability roadmap before migration.",
+            "Government": "Confirm services and impact-level requirements in Microsoft government documentation."
+          }
+        },
+        "gcp": {
+          "service": "Assured Workloads for Google Cloud",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Assured Workloads control packages",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/assured-workloads/docs/overview",
+          "pricingUrl": "https://cloud.google.com/assured-workloads/pricing",
+          "complianceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Assured Workloads uses control packages with product-specific support; it is not represented here as a separate government cloud partition or universal parity claim.",
+          "tierNotes": {
+            "Personal / Free": "Regulated control packages require workload and eligibility review.",
+            "Commercial / SMB": "Select control packages only where regulatory or sovereignty requirements warrant them.",
+            "Enterprise": "Map each required service to the applicable Assured Workloads supported-product list.",
+            "Government": "Validate control package, allowed services, data boundary, and support requirements."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "category": "Hybrid / Edge",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "HYBRID_READY", "COMPLIANCE_RELEVANT"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Hybrid platforms extend management or provider infrastructure into customer-controlled locations. The options differ materially: managed hardware, connected management planes, and air-gapped deployments create different operating and compliance boundaries.",
+      "operationalConsiderations": "Evaluate site readiness, network dependencies, patching ownership, disconnected operation, capacity planning, and data-boundary requirements before selecting an edge or on-premises extension.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS Outposts",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/outposts/",
+          "pricingUrl": "https://aws.amazon.com/outposts/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://aws.amazon.com/govcloud-us/",
+          "sourceNotes": "Public documentation establishes AWS Outposts and AWS GovCloud offerings; confirm the required regulated deployment availability and service set with AWS before selection.",
+          "tierNotes": {
+            "Personal / Free": "Hardware-backed hybrid deployments are generally outside personal project needs.",
+            "Commercial / SMB": "Assess site, connectivity, support, and minimum capacity requirements.",
+            "Enterprise": "Plan hardware lifecycle, network resilience, local operations, and cloud service dependencies.",
+            "Government": "Validate regulated-environment availability and service support for the intended facility."
+          }
+        },
+        "azure": {
+          "service": "Azure Arc",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-arc/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/azure-arc/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "sourceNotes": "Azure Arc documentation covers hybrid management; verify current Azure Government availability for the exact Arc-enabled resource types and extensions required.",
+          "tierNotes": {
+            "Personal / Free": "Use hybrid management only when off-cloud resources need common governance.",
+            "Commercial / SMB": "Assess agent management, policy, monitoring, and connectivity requirements.",
+            "Enterprise": "Standardize inventory, policy, security, observability, and change control across locations.",
+            "Government": "Confirm the required Arc features and extensions against current Azure Government availability."
+          }
+        },
+        "gcp": {
+          "service": "Google Distributed Cloud",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/distributed-cloud/docs",
+          "pricingUrl": "https://cloud.google.com/distributed-cloud/edge/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch",
+          "sourceNotes": "Google documents connected and air-gapped Distributed Cloud variants; determine applicable regulatory authorization and supported services for the deployment.",
+          "tierNotes": {
+            "Personal / Free": "Dedicated hybrid hardware deployments are generally outside personal project needs.",
+            "Commercial / SMB": "Assess site requirements, hardware model, connectivity, and supported services.",
+            "Enterprise": "Plan fleet management, local operations, data placement, and disconnected-mode needs.",
+            "Government": "Evaluate air-gapped requirements and the authorization scope for the intended workload."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "category": "Cost Governance",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Cost-governance services expose usage, budgets, allocation, optimization guidance, and reporting needed for accountable cloud operation. Their effectiveness depends on organizational scopes, tagging discipline, ownership, and timely review.",
+      "operationalConsiderations": "Establish tagging and account hierarchy early, assign budget and anomaly-review ownership, and treat recommendations as inputs to engineering decisions rather than automatic actions.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS Billing and Cost Management",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/what-is-costmanagement.html",
+          "pricingUrl": "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS documents cost-management tooling and GovCloud separately; verify which billing, reporting, and optimization features are required and available for GovCloud accounts.",
+          "tierNotes": {
+            "Personal / Free": "Use cost visibility and budgets before adding material spend.",
+            "Commercial / SMB": "Standardize account tags, budgets, cost allocation, and routine optimization review.",
+            "Enterprise": "Establish FinOps ownership, multi-account reporting, commitment governance, and anomaly response.",
+            "Government": "Confirm billing and reporting workflows for GovCloud organizations and procurement needs."
+          }
+        },
+        "azure": {
+          "service": "Microsoft Cost Management",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/cost-management-billing/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/calculator/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "sourceNotes": "Microsoft documents Cost Management capabilities and Azure Government independently; verify billing scopes and feature availability in the target government environment.",
+          "tierNotes": {
+            "Personal / Free": "Set budgets and review cost analysis as resources are introduced.",
+            "Commercial / SMB": "Use consistent tags, cost analysis, budgets, and optimization review.",
+            "Enterprise": "Govern billing scopes, allocation, exports, commitments, and anomaly-response ownership.",
+            "Government": "Validate cost-management capabilities and procurement reporting requirements in Azure Government."
+          }
+        },
+        "gcp": {
+          "service": "Cloud Billing",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Cloud Billing API under Assured Workloads control packages",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/billing/docs",
+          "pricingUrl": "https://docs.cloud.google.com/billing/docs/how-to/pricing-table",
+          "complianceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Assured Workloads documentation identifies Cloud Billing API scope and limitations by control package; validate billing workflows for the selected package.",
+          "tierNotes": {
+            "Personal / Free": "Use billing visibility and budgets before introducing sustained spend.",
+            "Commercial / SMB": "Adopt project labeling, budgets, reports, and regular optimization reviews.",
+            "Enterprise": "Govern account exports, allocation, commitments, recommendations, and anomaly response.",
+            "Government": "Confirm billing API and support-case scope for the selected Assured Workloads package."
           }
         }
       }
