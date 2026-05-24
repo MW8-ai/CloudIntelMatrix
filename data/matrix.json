@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.2.1",
+    "version": "3.3.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-24",
     "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
@@ -1293,6 +1293,254 @@
             "Commercial / SMB": "Assess source dependencies, target sizing, testing, cutover, and cost impacts.",
             "Enterprise": "Govern migration waves, data boundaries, target landing zones, rollback, and modernization follow-up.",
             "Government": "Validate migration tools and target products within the selected Assured Workloads control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "category": "Security & Compliance",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL", "HYBRID_READY"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Enterprise cloud adoption begins with resource hierarchy, guardrails, identity boundaries, centralized logging, network foundations, and account or subscription provisioning. These are architecture patterns composed from provider services rather than one-to-one products.",
+      "operationalConsiderations": "Establish ownership for platform guardrails before onboarding application teams. Version policy changes, preserve audit evidence, separate platform and workload responsibilities, and test exception handling and break-glass access.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS Control Tower + AWS Organizations",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html",
+          "pricingUrl": "https://aws.amazon.com/controltower/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS documents Control Tower as a landing-zone service using integrated services and separately publishes GovCloud documentation; validate the required controls, Regions, and integrated services for a regulated foundation.",
+          "tierNotes": {
+            "Personal / Free": "Use account separation and basic identity hygiene before adding shared platform automation.",
+            "Commercial / SMB": "Standardize account vending, logging, guardrails, and cost ownership.",
+            "Enterprise": "Operate a multi-account landing zone with governed OUs, preventive and detective controls, identity federation, and centralized evidence.",
+            "Government": "Confirm Control Tower and every required integrated service in the target AWS GovCloud foundation."
+          }
+        },
+        "azure": {
+          "service": "Azure Landing Zones + Azure Policy",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/azure-policy/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Microsoft describes platform and application landing zones in the Cloud Adoption Framework and maintains Azure Government availability separately; verify Policy and supporting platform components for the selected cloud.",
+          "tierNotes": {
+            "Personal / Free": "Start with subscription organization and policy only where shared workloads justify it.",
+            "Commercial / SMB": "Adopt management groups, policy baselines, logging, identity, and networking conventions.",
+            "Enterprise": "Operate platform and application landing zones with delegated ownership, policy-as-code, and centralized controls.",
+            "Government": "Check required landing-zone components against the current Azure Government product roadmap."
+          }
+        },
+        "gcp": {
+          "service": "Enterprise Foundations Blueprint + Organization Policy",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/architecture/blueprints/security-foundations",
+          "pricingUrl": null,
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google documents the Enterprise Foundations Blueprint as an architecture baseline composed from multiple services; there is no single blueprint price, and Assured Workloads service support must be checked by control package.",
+          "tierNotes": {
+            "Personal / Free": "Use project boundaries and least-privilege identity controls before central platform automation.",
+            "Commercial / SMB": "Standardize folders, projects, organization policies, logging, and shared networking.",
+            "Enterprise": "Deploy and govern the foundation blueprint with policy-as-code, centralized security projects, and private network paths.",
+            "Government": "Validate each foundational product within the applicable Assured Workloads control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "category": "Storage",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Recovery architecture requires protected copies, retention policy, immutability controls, restoration testing, and workload-specific RPO and RTO decisions. Provider backup services protect different resource sets and should be evaluated against the actual recovery plan.",
+      "operationalConsiderations": "A successful backup job is not proof of recoverability. Isolate backup administration, protect vaults against destructive changes, test restores and regional recovery, document key dependencies, and budget for storage and recovery data movement.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS Backup",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html",
+          "pricingUrl": "https://aws.amazon.com/backup/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS documents centralized backup capabilities and Control Tower backup integration; verify protected resource types, Vault Lock, cross-account, cross-Region, and GovCloud support for the workload.",
+          "tierNotes": {
+            "Personal / Free": "Protect essential data and prove at least one restore path.",
+            "Commercial / SMB": "Define backup policy, retention, vault access, restoration testing, and cost review.",
+            "Enterprise": "Govern cross-account protection, vault isolation, immutable retention, recovery testing, and audit reporting.",
+            "Government": "Verify required protected resource types and recovery features for AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "Azure Backup + Azure Site Recovery",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/backup/backup-overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/backup/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Azure Backup and Site Recovery cover related but distinct recovery needs; verify each protected workload, vault security feature, replication requirement, and Azure Government availability.",
+          "tierNotes": {
+            "Personal / Free": "Back up critical resources and rehearse a restore before relying on the service.",
+            "Commercial / SMB": "Set vault policies, backup ownership, restore tests, retention, and recovery objectives.",
+            "Enterprise": "Govern Backup Center, immutability and authorization controls, site recovery, reporting, and regional exercises.",
+            "Government": "Confirm Backup and Site Recovery dependencies in the current Azure Government roadmap."
+          }
+        },
+        "gcp": {
+          "service": "Backup and DR Service",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/backup-disaster-recovery/docs/concepts/backup-dr",
+          "pricingUrl": "https://cloud.google.com/backup-disaster-recovery/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google documents managed backup and recovery plus backup-vault features for supported workloads; validate resource support, location, encryption, and Assured Workloads control-package compatibility.",
+          "tierNotes": {
+            "Personal / Free": "Protect essential instances or data only after defining how they will be restored.",
+            "Commercial / SMB": "Define backup plans, vault locations, recovery tests, reporting, and storage cost control.",
+            "Enterprise": "Govern centralized protection, immutable and indelible vault retention, automation, reporting, and recovery exercises.",
+            "Government": "Confirm Backup and DR Service and dependent products for the selected Assured Workloads package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "category": "Security & Compliance",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Enterprise cryptographic foundations separate keys, application secrets, and certificate lifecycle responsibilities while centralizing authorization, rotation policy, logging, and hardware-protection requirements. The mapped portfolios contain multiple related services.",
+      "operationalConsiderations": "Define key ownership, separation of duties, recovery and deletion controls, rotation, application secret access, certificate renewal, audit collection, HSM requirements, and break-glass operations before workloads depend on the platform.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS KMS + Secrets Manager + AWS Certificate Manager",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
+          "pricingUrl": "https://aws.amazon.com/kms/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "This row groups the AWS key, secret, and certificate services used in a security foundation; KMS pricing is linked as the anchor, and every required service and feature needs GovCloud review.",
+          "tierNotes": {
+            "Personal / Free": "Keep secrets out of code and define ownership for any customer-managed keys.",
+            "Commercial / SMB": "Adopt centralized encryption keys, secret rotation, certificate renewal, and access logging.",
+            "Enterprise": "Govern key administration, HSM needs, service separation, rotation, recovery controls, audit evidence, and application access.",
+            "Government": "Verify KMS, Secrets Manager, ACM, endpoints, and cryptographic requirements in AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "Azure Key Vault + Managed HSM",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/key-vault/general/overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/key-vault/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Azure Key Vault manages keys, secrets, and certificates while Managed HSM has distinct requirements; confirm selected tiers, HSM capabilities, recovery controls, and Azure Government support.",
+          "tierNotes": {
+            "Personal / Free": "Store secrets centrally and use keys only with documented ownership.",
+            "Commercial / SMB": "Standardize vault access, rotation, certificate handling, recovery, and logging.",
+            "Enterprise": "Govern vault isolation, Managed HSM selection, privileged operations, recovery, private access, and audit evidence.",
+            "Government": "Verify Key Vault and Managed HSM tiers and features in Azure Government documentation."
+          }
+        },
+        "gcp": {
+          "service": "Cloud KMS + Secret Manager + Certificate Manager",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/kms/docs/key-management-service",
+          "pricingUrl": "https://cloud.google.com/kms/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "The Enterprise Foundations Blueprint identifies centralized Cloud KMS and Secret Manager projects; this row also includes certificate lifecycle needs, which require separate product and control-package checks.",
+          "tierNotes": {
+            "Personal / Free": "Keep secrets centralized and document any customer-managed encryption key use.",
+            "Commercial / SMB": "Standardize key rings, secret access, rotation, certificate lifecycle, and logging.",
+            "Enterprise": "Govern centralized security projects, HSM requirements, separation of duties, recovery, private access, and evidence.",
+            "Government": "Validate KMS, Secret Manager, and Certificate Manager within the selected control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "category": "Networking",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Private access to managed services, hybrid network extension, and predictable DNS resolution are foundational controls for enterprise workload boundaries. The mapped portfolios combine endpoint, name-resolution, and dedicated-connectivity choices rather than identical products.",
+      "operationalConsiderations": "Centralize address planning and DNS ownership, define egress inspection and failover, test private resolution paths, control endpoint approvals, monitor bandwidth and connection cost, and confirm every service endpoint required by regulated workloads.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html",
+          "pricingUrl": "https://aws.amazon.com/privatelink/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "PrivateLink is the documentation anchor for this portfolio; verify Route 53 Resolver, Direct Connect, endpoint services, Regions, and compliance boundary requirements in AWS GovCloud.",
+          "tierNotes": {
+            "Personal / Free": "Avoid dedicated private connectivity unless workload exposure or hybrid needs justify it.",
+            "Commercial / SMB": "Use private endpoints and governed DNS where service access or hybrid dependencies require them.",
+            "Enterprise": "Operate centralized DNS, endpoint ownership, transit design, dedicated connectivity, inspection, resilience, and cost controls.",
+            "Government": "Confirm each endpoint, DNS path, and dedicated connectivity component for AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "Azure Private Link + Azure Private DNS + ExpressRoute",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/private-link/private-link-overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/private-link/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Private Link anchors the mapping while DNS zones and ExpressRoute complete typical private-connectivity architecture; verify product support, endpoints, and required routing in Azure Government.",
+          "tierNotes": {
+            "Personal / Free": "Use private endpoints only when exposure reduction offsets added network complexity.",
+            "Commercial / SMB": "Standardize private endpoints, DNS zones, access approvals, monitoring, and hybrid routes.",
+            "Enterprise": "Govern hub connectivity, ExpressRoute, private DNS, endpoint policy, inspection, failover, and cost allocation.",
+            "Government": "Confirm Private Link, Private DNS, ExpressRoute, and dependent endpoints in Azure Government."
+          }
+        },
+        "gcp": {
+          "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/vpc/docs/private-service-connect",
+          "pricingUrl": "https://cloud.google.com/vpc/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google's foundation blueprint calls for private network paths; verify Private Service Connect, Cloud DNS, Cloud Interconnect, endpoint targets, and Assured Workloads control-package scope.",
+          "tierNotes": {
+            "Personal / Free": "Add private service access only for workloads needing controlled network boundaries.",
+            "Commercial / SMB": "Standardize service attachments, DNS resolution, access approval, monitoring, and hybrid routes.",
+            "Enterprise": "Govern Shared VPC connectivity, private services, DNS forwarding, Interconnect resilience, inspection, and cost ownership.",
+            "Government": "Confirm all network products and endpoint targets under the selected control package."
           }
         }
       }
