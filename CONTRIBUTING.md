@@ -45,6 +45,15 @@
 
 Use `sourceNotes` on a capability or provider when an official public source does not state a needed value. Unknowns are allowed; unsupported guesses and unsupported comparative rankings are not.
 
+## Architecture patterns
+
+`patterns` are curated planning overlays built from existing capability names. A pattern must:
+
+- Reference only capability rows already present in `data/matrix.json`.
+- Explain its decision boundary and review questions.
+- State that it is not a compliance determination or product-equivalence claim where regulated design is involved.
+- Rely on the official provider framework and foundation sources recorded in `frameworks`; product assertions still belong in the underlying capability rows.
+
 ## Tag definitions
 
 | Tag | Use when |

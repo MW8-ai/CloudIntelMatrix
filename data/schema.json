@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MW8-ai/CloudIntelMatrix/blob/main/data/schema.json",
   "title": "Cloud Intelligence Matrix capability-v1",
-  "description": "Schema contract for data/matrix.json. Unknown public-source facts must be explicit and explained with sourceNotes.",
+  "description": "Schema contract for data/matrix.json, including capability rows and architecture-pattern overlays. Unknown public-source facts must be explicit and explained with sourceNotes.",
   "type": "object",
-  "required": ["_meta", "tags", "categories", "capabilities"],
+  "required": ["_meta", "tags", "categories", "frameworks", "patterns", "capabilities"],
   "properties": {
     "_meta": {
       "type": "object",
@@ -50,6 +50,21 @@
       "minItems": 1,
       "uniqueItems": true
     },
+    "frameworks": {
+      "type": "object",
+      "required": ["aws", "azure", "gcp"],
+      "properties": {
+        "aws": { "$ref": "#/$defs/framework" },
+        "azure": { "$ref": "#/$defs/framework" },
+        "gcp": { "$ref": "#/$defs/framework" }
+      },
+      "additionalProperties": false
+    },
+    "patterns": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/pattern" },
+      "minItems": 1
+    },
     "capabilities": {
       "type": "array",
       "items": { "$ref": "#/$defs/capability" },
@@ -57,6 +72,52 @@
     }
   },
   "$defs": {
+    "framework": {
+      "type": "object",
+      "required": ["framework", "frameworkUrl", "foundation", "foundationUrl", "lastVerified"],
+      "properties": {
+        "framework": { "type": "string", "minLength": 1 },
+        "frameworkUrl": { "type": "string", "format": "uri" },
+        "foundation": { "type": "string", "minLength": 1 },
+        "foundationUrl": { "type": "string", "format": "uri" },
+        "lastVerified": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "pattern": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "summary",
+        "whenToUse",
+        "capabilities",
+        "reviewPrompts",
+        "verificationNote",
+        "lastVerified"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "whenToUse": { "type": "string", "minLength": 1 },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "reviewPrompts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "verificationNote": { "type": "string", "minLength": 1 },
+        "lastVerified": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
     "capability": {
       "type": "object",
       "required": [

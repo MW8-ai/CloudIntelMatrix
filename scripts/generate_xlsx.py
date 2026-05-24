@@ -29,9 +29,12 @@ META       = mdata["_meta"]
 CAPS       = mdata["capabilities"]
 CATEGORIES = mdata["categories"]
 TAG_DEFS   = mdata["tags"]
+FRAMEWORKS = mdata["frameworks"]
+PATTERNS   = mdata["patterns"]
 TIERS      = META["tiers"]
 PROVIDERS  = META["providers"]
 UPCOMING   = udata.get("upcoming", [])
+CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
 
 PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP"}
 PROV_COLORS = {
@@ -104,13 +107,13 @@ def build_matrix_sheet(ws, tier=None):
         cc = ws.cell(row=row, column=1, value=cap["category"] if cat != last_cat else "")
         cc.fill = f("E0F2FE" if cat != last_cat else bg_cat)
         cc.font = Font(name="Arial", bold=True, size=8, color="0369A1")
-        cc.alignment = al("center","center"); cc.border = TB
+        cc.alignment = al("center","center", wrap=True); cc.border = TB
         last_cat = cat
 
         # Capability
         capcel = ws.cell(row=row, column=2, value=cap["capability"])
         capcel.fill = f(bg_cat); capcel.font = ft(bold=True, size=9, color="111827")
-        capcel.alignment = al("left","center"); capcel.border = TB
+        capcel.alignment = al("left","center", wrap=True); capcel.border = TB
 
         # Tags
         tc = ws.cell(row=row, column=3, value=" · ".join(cap.get("tags",[])))
@@ -149,7 +152,7 @@ def build_matrix_sheet(ws, tier=None):
         row += 1
 
     # Widths
-    for col, w in {"A":18,"B":26,"C":36,"D":38,"E":18,"F":38,"G":18,"H":38,"I":18,"J":12}.items():
+    for col, w in {"A":22,"B":30,"C":36,"D":38,"E":18,"F":38,"G":18,"H":38,"I":18,"J":12}.items():
         ws.column_dimensions[col].width = w
 
 def build_detail_sheet(ws):
@@ -236,6 +239,84 @@ def build_gov_sheet(ws):
     for col, w in {"A":16,"B":26,"C":40,"D":14,"E":16,"F":14,"G":16,"H":14,"I":16,"J":12}.items():
         ws.column_dimensions[col].width = w
 
+def build_patterns_sheet(ws):
+    """Architecture planning overlays grounded in the existing capability rows."""
+    ws.sheet_view.showGridLines = False
+    ws.freeze_panes = "C3"
+    hdr(ws, "Architecture Patterns - Provider Framework-Informed Planning Overlays", 9)
+    headers = [
+        "Pattern / Rationale", "When To Use", "Capability",
+        "AWS Service / Gov", "Azure Service / Gov", "GCP Service / Gov",
+        "Review Questions", "Verification Boundary", "Verified",
+    ]
+    for ci, header in enumerate(headers, 1):
+        c = ws.cell(row=2, column=ci, value=header)
+        c.fill = f("1E3A5F")
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    ws.row_dimensions[2].height = 18
+
+    row = 3
+    for pattern in PATTERNS:
+        for index, capability_name in enumerate(pattern["capabilities"]):
+            cap = CAP_MAP[capability_name]
+            is_first = index == 0
+            values = [
+                f"{pattern['name']}\n{pattern['summary']}" if is_first else "",
+                pattern["whenToUse"] if is_first else "",
+                capability_name,
+                f"{cap['providers']['aws']['service']}\nGov: {cap['providers']['aws']['govAvailability']} / Lag: {cap['providers']['aws']['parityLag']}",
+                f"{cap['providers']['azure']['service']}\nGov: {cap['providers']['azure']['govAvailability']} / Lag: {cap['providers']['azure']['parityLag']}",
+                f"{cap['providers']['gcp']['service']}\nGov: {cap['providers']['gcp']['govAvailability']} / Lag: {cap['providers']['gcp']['parityLag']}",
+                "\n".join(pattern["reviewPrompts"]) if is_first else "",
+                pattern["verificationNote"] if is_first else "",
+                pattern["lastVerified"] if is_first else "",
+            ]
+            for ci, value in enumerate(values, 1):
+                c = ws.cell(row=row, column=ci, value=value)
+                c.fill = f("F8FAFC" if is_first else "FFFFFF")
+                c.font = ft(bold=(ci == 3), size=8)
+                c.alignment = al("left", "top", wrap=True)
+                c.border = TB
+            ws.row_dimensions[row].height = 68 if is_first else 34
+            row += 1
+        row += 1
+
+    row += 1
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=9)
+    c = ws.cell(row=row, column=1, value="Official framework and enterprise foundation guidance")
+    c.fill = f("0F1A2E")
+    c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
+    c.alignment = al("left", "center")
+    row += 1
+    source_headers = ["Provider", "Architecture Framework", "Framework URL", "Enterprise Foundation Guidance", "Foundation URL", "Verified"]
+    for ci, header in enumerate(source_headers, 1):
+        c = ws.cell(row=row, column=ci, value=header)
+        c.fill = f("1E3A5F")
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    row += 1
+    for pkey in PROVIDERS:
+        guidance = FRAMEWORKS[pkey]
+        values = [
+            PROV_LABELS[pkey], guidance["framework"], guidance["frameworkUrl"],
+            guidance["foundation"], guidance["foundationUrl"], guidance["lastVerified"],
+        ]
+        for ci, value in enumerate(values, 1):
+            c = ws.cell(row=row, column=ci, value=value)
+            c.fill = f(PROV_COLORS[pkey]["svc"])
+            c.font = ft(size=8, color="2563EB" if ci in [3, 5] else "111827")
+            c.alignment = al("left", "center", wrap=True)
+            c.border = TB
+            if ci in [3, 5]:
+                c.hyperlink = value
+        row += 1
+
+    for col, width in {"A":38, "B":38, "C":32, "D":35, "E":35, "F":35, "G":38, "H":40, "I":14}.items():
+        ws.column_dimensions[col].width = width
+
 def build_upcoming_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "Announced / Preview / Upcoming — Official Sources Only", 10)
@@ -279,6 +360,9 @@ build_detail_sheet(ws_detail)
 
 ws_gov = wb.create_sheet("Gov & Parity")
 build_gov_sheet(ws_gov)
+
+ws_patterns = wb.create_sheet("Architecture Patterns")
+build_patterns_sheet(ws_patterns)
 
 ws_up = wb.create_sheet("Upcoming & Future")
 build_upcoming_sheet(ws_up)
