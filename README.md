@@ -21,6 +21,7 @@ A provider-neutral, fact-first reference for enterprise architects, platform eng
 | Field | Description |
 |---|---|
 | `tags` | STANDARD, AI_CAPABLE, AI_NATIVE, GOV_AVAILABLE, GOV_LIMITED, PARITY_LAG, COMPLIANCE_RELEVANT, ENTERPRISE_CORE, HYBRID_READY, IDENTITY_CRITICAL, COST_SENSITIVE, LOCK_IN_RISK |
+| `aiClassification` | STANDARD / AI_CAPABLE / AI_NATIVE |
 | `govAvailability` | Full / Partial / Limited / None — per provider |
 | `govVariant` | Name of the government cloud offering |
 | `parityLag` | None / Minor / Moderate / Significant — commercial vs gov |
@@ -32,6 +33,7 @@ A provider-neutral, fact-first reference for enterprise architects, platform eng
 | `complianceUrl` | Official compliance/certification page |
 | `govDocsUrl` | Government cloud documentation |
 | `lastVerified` | Date last manually reviewed |
+| `sourceNotes` | Required explanation when a public-source fact is unknown or unavailable |
 
 ### View modes
 
@@ -51,7 +53,7 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 
 | Workflow | Schedule | What it does |
 |---|---|---|
-| `verify.yml` | Every Monday | Schema check + HTTP source validation → opens Issue on failure |
+| `verify.yml` | Every PR/push; weekly link scan | Blocking schema/data validation; non-blocking public URL review |
 | `update-check.yml` | Every Wednesday | Scans official RSS feeds → opens review Issue |
 | `deploy.yml` | Every push to `main` | Generates XLSX + builds React app → deploys to GitHub Pages |
 
@@ -78,7 +80,9 @@ npm install
 pip install openpyxl
 
 npm run dev              # Start dev server
-python scripts/verify.py          # Validate data
+python scripts/verify.py          # Validate data locally (no network)
+python scripts/verify.py --schema-only   # Validate matrix contract only
+python scripts/verify.py --check-links   # Review public links (warnings only)
 python scripts/generate_xlsx.py   # Generate Excel
 python scripts/check_upcoming.py  # Scan for updates
 ```
@@ -89,7 +93,7 @@ python scripts/check_upcoming.py  # Scan for updates
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions require an official source URL. PRs that fail `verify.py` will not be merged.
 
-**Schema:** `data/matrix.json` (capability-v1) — [full schema docs in CONTRIBUTING.md]
+**Schema:** [`data/schema.json`](data/schema.json) defines `data/matrix.json` (capability-v1); see [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance.
 
 ---
 
