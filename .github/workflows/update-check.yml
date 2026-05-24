@@ -1,0 +1,63 @@
+name: Weekly update review
+
+on:
+  schedule:
+    - cron: "0 13 * * 3"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: Days of provider updates to review
+        required: false
+        default: "14"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: weekly-update-review
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate update review summary
+        id: summary
+        env:
+          REVIEW_DAYS: ${{ inputs.days || '14' }}
+        run: |
+          echo "title=Cloud Matrix update review - $(date -u +%F)" >> "$GITHUB_OUTPUT"
+          python scripts/check_upcoming.py --days "$REVIEW_DAYS" --output issue_body.md > /dev/null
+
+      - name: Create review issue unless one already exists today
+        uses: actions/github-script@v7
+        env:
+          ISSUE_TITLE: ${{ steps.summary.outputs.title }}
+        with:
+          script: |
+            const fs = require("fs");
+            const title = process.env.ISSUE_TITLE;
+            const { owner, repo } = context.repo;
+            const existingIssues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: "all",
+              per_page: 100
+            });
+            const existing = existingIssues.find((issue) => !issue.pull_request && issue.title === title);
+            if (existing) {
+              core.notice(`Review issue already exists: #${existing.number}`);
+              return;
+            }
+            const body = fs.readFileSync("issue_body.md", "utf8");
+            const created = await github.rest.issues.create({ owner, repo, title, body });
+            core.notice(`Created review issue #${created.data.number}`);

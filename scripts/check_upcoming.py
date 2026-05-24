@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-check_upcoming.py — Cloud provider release notes scanner
+check_upcoming.py - Cloud provider release notes scanner
 Runs weekly via update-check.yml GitHub Action.
 
-Fetches official RSS/Atom release note feeds from GCP, AWS, and Azure.
-Scans entries from the past N days for keywords matching matrix categories.
-Prints a formatted markdown summary suitable for a GitHub Issue body.
+Fetches available official RSS/Atom release-note feeds, scans entries from
+the past N days for matrix-category keywords, and includes manual-review
+sources where a provider does not expose a compatible feed.
 
 Usage:
   python scripts/check_upcoming.py [--days 14] [--output issue_body.md]
@@ -19,42 +19,42 @@ import urllib.request
 import urllib.error
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone, timedelta
+from email.utils import parsedate_to_datetime
 from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
 
-SOURCES = json.loads((DATA / "sources.json").read_text())
-MATRIX  = json.loads((DATA / "matrix.json").read_text())
+SOURCES = json.loads((DATA / "sources.json").read_text(encoding="utf-8"))
+MATRIX  = json.loads((DATA / "matrix.json").read_text(encoding="utf-8"))
 
-ALL_CATEGORIES = [c for cats in MATRIX["category_groups"].values() for c in cats]
+MATRIX_CATEGORIES = set(MATRIX.get("categories", []))
 
-# Keywords per category — used to flag relevant release notes
+# Keywords per capability-v1 category - used to flag relevant release notes.
 CATEGORY_KEYWORDS = {
-    "Compute":                   ["ec2","compute engine","virtual machine","vm","instance","graviton","c3","m3","n2","outpost"],
-    "Serverless":                ["lambda","cloud functions","cloud run","azure functions","serverless","faas"],
-    "Containers / K8s":          ["eks","gke","aks","kubernetes","container","k8s","anthos","fargate","karpenter"],
-    "Object Storage":            ["s3 ","cloud storage","blob storage","object storage","glacier","nearline"],
-    "Databases":                 ["rds","aurora","dynamodb","cloud sql","spanner","cosmos db","alloydb","postgresql","mysql","redis"],
-    "AI / ML Platform":          ["sagemaker","vertex ai","azure machine learning","mlops","feature store","training","inference"],
-    "Generative AI":             ["bedrock","generative ai","genai","llm","foundation model","claude","gpt","gemini","copilot","prompt"],
-    "Data & Analytics":          ["bigquery","redshift","athena","synapse","databricks","lake formation","dataflow","glue","fabric"],
-    "Networking":                ["vpc","cloudfront","expressroute","direct connect","cloud interconnect","waf","cdn","load balancer","firewall"],
-    "Identity & Access":         ["iam","entra","identity","sso","mfa","rbac","zero trust","pivcac","workforce identity"],
-    "Security & Compliance":     ["fedramp","dod il","cjis","hipaa","nist","fips","soc 2","compliance","security hub","sentinel","defender","guarduty","scc"],
-    "Integration / MFT":         ["apigee","api gateway","service bus","transfer family","eventbridge","mft","sftp","as2","step functions"],
-    "Regions — Geographic":      ["new region","availability zone","local zone","wavelength","edge location","point of presence"],
-    "Regions — Sovereign":       ["govcloud","assured workloads","sovereign","fedramp","disa","itar","cjis","il4","il5","classified"],
-    "Regions — Latency & Edge":  ["edge zone","wavelength","local zone","cloudfront pop","cdn","distributed cloud"],
-    "SDKs & Languages":          ["sdk","client library","boto3","terraform provider","bicep","cdk","pulumi"],
-    "IaC & Query Languages":     ["cloudformation","terraform","bicep","arm template","config connector","deployment manager","cdk"],
-    "Monitoring / Observability":["cloudwatch","cloud monitoring","azure monitor","prometheus","grafana","opentelemetry","siem","chronicle","sentinel"],
-    "Migration Tools":           ["migration","migrate","transfer","replication","dms","database migration","lift and shift","moderniz"],
-    "Cost Management":           ["cost","billing","savings plan","reserved instance","committed use","rightsiz","finops","budget"],
-    "IoT / Edge":                ["iot","edge","greengrass","azure sphere","distributed cloud edge","tpu","industrial","rtos"],
-    "DevOps / CI-CD":            ["codepipeline","cloud build","azure devops","github actions","ci/cd","cicd","binary authorization","sbom","supply chain","devsecops"],
-    "Support":                   ["support plan","premium support","technical account manager","tam","enterprise support"],
+    "Core Infrastructure":       ["ec2", "compute engine", "virtual machine", "lambda", "cloud run", "azure functions", "eks", "gke", "aks", "kubernetes", "container"],
+    "Identity & Access":         ["iam", "entra", "identity", "sso", "mfa", "rbac", "zero trust", "workforce identity"],
+    "Networking":                ["vpc", "cloudfront", "front door", "expressroute", "direct connect", "cloud interconnect", "waf", "cdn", "load balancer", "firewall"],
+    "Storage":                   ["s3 ", "cloud storage", "blob storage", "object storage", "glacier", "archive storage"],
+    "Databases":                 ["rds", "aurora", "dynamodb", "cloud sql", "spanner", "cosmos db", "alloydb", "postgresql", "mysql"],
+    "Integration & Messaging":   ["apigee", "api gateway", "service bus", "eventbridge", "event grid", "pub/sub", "sqs", "sns", "kinesis", "mft", "sftp"],
+    "Security & Compliance":     ["fedramp", "dod il", "cjis", "hipaa", "nist", "fips", "compliance", "security hub", "sentinel", "defender", "guardduty", "security command center"],
+    "Monitoring & Operations":   ["cloudwatch", "cloud monitoring", "azure monitor", "prometheus", "grafana", "opentelemetry", "observability", "logging", "trace"],
+    "Data & Analytics":          ["bigquery", "redshift", "athena", "synapse", "databricks", "lake formation", "dataflow", "glue", "fabric"],
+    "AI / ML":                   ["sagemaker", "vertex ai", "azure machine learning", "bedrock", "generative ai", "genai", "foundation model", "llm", "training", "inference"],
+    "Developer Platform":        ["codepipeline", "codebuild", "cloud build", "azure devops", "github actions", "ci/cd", "cicd", "binary authorization", "sbom", "devsecops"],
+    "Government / Sovereign Cloud": ["govcloud", "assured workloads", "sovereign", "fedramp", "disa", "itar", "il4", "il5", "classified"],
+    "Hybrid / Edge":             ["outposts", "azure arc", "distributed cloud", "edge", "migration", "migrate", "transfer", "replication", "database migration", "moderniz"],
+    "Cost Governance":           ["cost", "billing", "savings plan", "reserved instance", "committed use", "rightsiz", "finops", "budget"],
 }
+
+unmapped_categories = sorted(set(CATEGORY_KEYWORDS) - MATRIX_CATEGORIES)
+if unmapped_categories:
+    raise RuntimeError(f"Scanner categories are not in matrix.json: {', '.join(unmapped_categories)}")
 
 def fetch_feed(provider, url, max_retries=2):
     for attempt in range(max_retries):
@@ -80,7 +80,7 @@ def parse_feed(xml_text, provider, since_dt):
         print(f"[WARN] XML parse error for {provider}: {e}", file=sys.stderr)
         return entries
 
-    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    ns = {"atom": "http://www.w3.org/2005/Atom", "dc": "http://purl.org/dc/elements/1.1/"}
 
     # Atom feed
     atom_entries = root.findall("atom:entry", ns)
@@ -100,32 +100,34 @@ def parse_feed(xml_text, provider, since_dt):
     for item in root.iter("item"):
         title   = (item.findtext("title") or "").strip()
         link    = (item.findtext("link") or "").strip()
-        pub_str = item.findtext("pubDate") or item.findtext("dc:date") or ""
+        pub_str = item.findtext("pubDate") or item.findtext("dc:date", namespaces=ns) or ""
         summary = (item.findtext("description") or "").strip()
         dt = parse_date(pub_str)
         if dt and dt >= since_dt:
             entries.append((title, link, dt, summary[:300]))
     return entries
 
-def parse_date(s):
-    if not s:
+def parse_date(value):
+    if not value:
         return None
-    s = s.strip()
-    formats = [
-        "%a, %d %b %Y %H:%M:%S %z",
-        "%a, %d %b %Y %H:%M:%S GMT",
-        "%Y-%m-%dT%H:%M:%SZ",
-        "%Y-%m-%dT%H:%M:%S%z",
-        "%Y-%m-%d",
-    ]
-    for fmt in formats:
-        try:
-            dt = datetime.strptime(s[:len(fmt)+5], fmt)
-            if dt.tzinfo is None:
-                dt = dt.replace(tzinfo=timezone.utc)
-            return dt
-        except Exception:
-            continue
+    value = value.strip()
+    try:
+        dt = parsedate_to_datetime(value)
+        if dt:
+            return dt.astimezone(timezone.utc)
+    except (TypeError, ValueError):
+        pass
+    try:
+        dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except ValueError:
+        pass
+    try:
+        return datetime.strptime(value[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except ValueError:
+        pass
     return None
 
 def categorize_entry(title, summary):
@@ -136,11 +138,12 @@ def categorize_entry(title, summary):
             if kw in text:
                 matched.append(cat)
                 break
-    return list(set(matched))
+    return sorted(set(matched))
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--days", type=int, default=14, help="How many days back to scan")
+    parser.add_argument("--max-items-per-provider", type=int, default=20, help="Maximum matching entries shown per provider")
     parser.add_argument("--output", type=str, default=None, help="Write issue body to this file")
     args = parser.parse_args()
 
@@ -148,10 +151,14 @@ def main():
     rss_feeds = SOURCES.get("rss_feeds", {})
 
     all_findings = {}  # provider -> list of findings
+    all_matched_counts = {}
+    feed_failures = []
 
     for provider, feed_url in rss_feeds.items():
         print(f"[INFO] Fetching {provider} feed...", file=sys.stderr)
         xml_text = fetch_feed(provider, feed_url)
+        if xml_text is None:
+            feed_failures.append(provider)
         entries  = parse_feed(xml_text, provider, since_dt)
         print(f"[INFO] {provider}: {len(entries)} entries since {since_dt.date()}", file=sys.stderr)
 
@@ -166,14 +173,15 @@ def main():
                     "cats":    cats,
                     "summary": summary,
                 })
-        all_findings[provider] = findings
+        all_matched_counts[provider] = len(findings)
+        all_findings[provider] = findings[:args.max_items_per_provider]
 
     # ── Build issue body ──────────────────────────────────────────────────
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     lines = [
         f"## Cloud Matrix — Update Review ({today})",
         "",
-        f"Automated scan of official release note feeds for the past **{args.days} days**.",
+        f"Automated scan of available official release-note feeds for the past **{args.days} days**.",
         "Review the items below and update `data/matrix.json` or `data/upcoming.json` as needed.",
         "",
         "> **This is an informational summary only.** All changes to data files must be",
@@ -181,13 +189,23 @@ def main():
         "",
     ]
 
-    total = sum(len(v) for v in all_findings.values())
+    total = sum(all_matched_counts.values())
+    if feed_failures:
+        failed = ", ".join(provider.upper() for provider in sorted(feed_failures))
+        lines += [
+            f"> Automatic feed retrieval failed for: **{failed}**. Review that provider's official update source manually.",
+            "",
+        ]
+
     if total == 0:
-        lines.append("*No relevant release notes found in the scan window. No action needed.*")
+        lines.append("*No matching items were found in the automatic feed scan window.*")
     else:
-        for provider in ["GCP", "AWS", "Azure"]:
+        for provider, label in [("gcp", "GCP"), ("aws", "AWS"), ("azure", "Azure")]:
             findings = all_findings.get(provider, [])
-            lines.append(f"### {provider} — {len(findings)} potentially relevant item(s)")
+            if provider not in rss_feeds:
+                continue
+            matched_count = all_matched_counts.get(provider, 0)
+            lines.append(f"### {label} - {matched_count} potentially relevant item(s)")
             if not findings:
                 lines.append("_No items matched matrix categories in this period._")
             else:
@@ -201,7 +219,20 @@ def main():
                         if len(summary) > 200:
                             summary = summary[:200] + "…"
                         lines.append(f"  - _{summary}_")
+                hidden_count = matched_count - len(findings)
+                if hidden_count:
+                    lines.append(f"- _{hidden_count} additional matched item(s) omitted; review the official feed for complete coverage._")
             lines.append("")
+
+    manual_review_pages = SOURCES.get("manual_review_pages", {})
+    if manual_review_pages:
+        lines += ["### Manual Review Sources", ""]
+        for provider, source in manual_review_pages.items():
+            label = source.get("label", provider.upper())
+            lines.append(f"- **{label}:** [{source['url']}]({source['url']})")
+            if source.get("note"):
+                lines.append(f"  - {source['note']}")
+        lines.append("")
 
     lines += [
         "---",
@@ -220,7 +251,7 @@ def main():
     print(body)
 
     if args.output:
-        Path(args.output).write_text(body)
+        Path(args.output).write_text(body, encoding="utf-8")
         print(f"\n[INFO] Issue body written to {args.output}", file=sys.stderr)
 
 if __name__ == "__main__":
