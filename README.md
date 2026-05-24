@@ -24,7 +24,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 26 architecture decision rows across 14 categories in matrix data version `3.4.0`.
+**Current coverage:** 26 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays, in matrix data version `3.5.0`.
 
 ---
 
@@ -54,9 +54,14 @@ Rows are decision aids, not claims that different provider products are identica
 | Mode | Purpose |
 |---|---|
 | **Matrix** | All capabilities by tier, click to expand full detail + links |
+| **Patterns** | Framework-informed planning overlays with provider service maps and review boundaries |
 | **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP) |
 | **Gov / Parity** | Government availability and parity lag focus |
 | **AI Focus** | AI_NATIVE and AI_CAPABLE capabilities only |
+
+### Architecture patterns
+
+Patterns connect sourced capability rows into four practical planning starts: secure internet-facing applications, regulated workload control boundaries, governed data and generative AI platforms, and hybrid migration and recovery paths. They are curated overlays inferred from the official framework and foundation guidance above, not provider-certified blueprints or compliance determinations.
 
 ### Categories (14)
 Core Infrastructure · Identity & Access · Networking · Storage · Databases · Integration & Messaging · Security & Compliance · Monitoring & Operations · Data & Analytics · AI / ML · Developer Platform · Government / Sovereign Cloud · Hybrid / Edge · Cost Governance
@@ -69,7 +74,7 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 |---|---|---|
 | `verify.yml` | Every PR/push; weekly link scan | Blocking schema/data validation; non-blocking public URL review |
 | `update-check.yml` | Every Wednesday; manual dispatch | Opens a review issue from official AWS/GCP feeds plus an Azure Updates manual-review prompt |
-| `deploy.yml` | Every push to `main` | Generates XLSX + builds React app → deploys to GitHub Pages |
+| `deploy.yml` | Every push to `main` | Generates XLSX, including architecture-pattern worksheet, + builds React app → deploys to GitHub Pages |
 
 **Human in the loop:** Automation surfaces changes, humans validate and commit. No automated writes to data files.
 

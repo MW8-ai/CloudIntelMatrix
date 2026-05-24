@@ -2,9 +2,17 @@ import { useState, useMemo, useEffect } from "react";
 import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 
-const { capabilities: CAPABILITIES, categories: CATEGORIES, tags: TAG_DEFS, _meta: META } = matrixData;
+const {
+  capabilities: CAPABILITIES,
+  categories: CATEGORIES,
+  tags: TAG_DEFS,
+  frameworks: FRAMEWORKS,
+  patterns: PATTERNS,
+  _meta: META,
+} = matrixData;
 const UPCOMING = upcomingData.upcoming || [];
 const PROVIDERS = META.providers; // ["aws","azure","gcp"]
+const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
 
 const THEME_STORAGE_KEY = "cloudintel-theme";
 
@@ -377,6 +385,118 @@ function DiffView({ caps, activeProviders }) {
   );
 }
 
+// ── ARCHITECTURE PATTERN VIEW ──────────────────────────────────────────────
+function PatternView({ patterns, activeProviders }) {
+  const [expandedPatternId, setExpandedPatternId] = useState(patterns[0]?.id || null);
+
+  if (!patterns.length) {
+    return <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No architecture patterns match the current filter.</div>;
+  }
+
+  return (
+    <div>
+      <div style={{ padding: "10px 0 14px", fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>
+        Curated enterprise starting points derived from provider-authored architecture-framework and foundation guidance. These overlays organize review decisions; they are not compliance approval or claims of product equivalence.
+      </div>
+      <div style={{ padding: "10px 12px", marginBottom: 12, border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 8 }}>OFFICIAL FRAMEWORK BASIS</div>
+        <div style={{ display: "grid", gridTemplateColumns: activeProviders.map(() => "1fr").join(" "), gap: 12 }}>
+          {activeProviders.map(provKey => {
+            const guidance = FRAMEWORKS[provKey];
+            const pm = PROVIDER_META[provKey];
+            return (
+              <div key={provKey} style={{ borderLeft: `2px solid ${pm.dot}`, paddingLeft: 10, minHeight: 54 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: pm.dot, marginBottom: 4 }}>{pm.label}</div>
+                <a href={guidance.frameworkUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 9, color: "var(--link)", textDecoration: "none", marginBottom: 3 }}>
+                  {guidance.framework}
+                </a>
+                <a href={guidance.foundationUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: 9, color: "var(--link)", textDecoration: "none" }}>
+                  {guidance.foundation}
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {patterns.map(pattern => {
+        const isExpanded = expandedPatternId === pattern.id;
+        const linkedCaps = pattern.capabilities.map(name => CAPABILITY_MAP[name]).filter(Boolean);
+        return (
+          <div key={pattern.id} style={{ marginBottom: 10, border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", overflow: "hidden" }}>
+            <button
+              className="hb"
+              onClick={() => setExpandedPatternId(isExpanded ? null : pattern.id)}
+              aria-expanded={isExpanded}
+              style={{
+                width: "100%", textAlign: "left", padding: "12px 14px", border: "none",
+                background: isExpanded ? "var(--panel-alt)" : "var(--panel)", color: "var(--text)",
+                fontFamily: "inherit",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
+                <div>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 5 }}>{pattern.name}</div>
+                  <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.55, maxWidth: 900 }}>{pattern.summary}</div>
+                </div>
+                <div style={{ flexShrink: 0, textAlign: "right" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: "var(--link)" }}>{isExpanded ? "COLLAPSE" : "EXPAND"}</div>
+                  <VerifiedStamp date={pattern.lastVerified} />
+                </div>
+              </div>
+              <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 8, lineHeight: 1.5 }}>
+                <span style={{ color: "var(--link)", fontWeight: 700 }}>FIT: </span>{pattern.whenToUse}
+              </div>
+            </button>
+            {isExpanded && (
+              <div style={{ borderTop: "1px solid var(--border)", padding: "12px 14px 14px" }}>
+                <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 7 }}>DECISION MAP</div>
+                <div style={{ display: "grid", gridTemplateColumns: `220px ${activeProviders.map(() => "1fr").join(" ")}`, gap: 6, marginBottom: 14 }}>
+                  <div style={{ padding: "6px 8px", background: "var(--panel-alt)", border: "1px solid var(--border)", fontSize: 9, color: "var(--muted)", fontWeight: 700 }}>CAPABILITY</div>
+                  {activeProviders.map(provKey => (
+                    <div key={provKey} style={{ padding: "6px 8px", background: PROVIDER_META[provKey].bg, border: `1px solid ${PROVIDER_META[provKey].border}`, fontSize: 9, color: PROVIDER_META[provKey].dot, fontWeight: 700 }}>
+                      {PROVIDER_META[provKey].label}
+                    </div>
+                  ))}
+                  {linkedCaps.flatMap(cap => [
+                    <div key={`${cap.capability}-label`} style={{ padding: "7px 8px", borderBottom: "1px solid var(--border)" }}>
+                      <div style={{ fontSize: 9, color: "var(--link)" }}>{cap.category}</div>
+                      <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 600, lineHeight: 1.4 }}>{cap.capability}</div>
+                    </div>,
+                    ...activeProviders.map(provKey => {
+                      const provider = cap.providers[provKey];
+                      return (
+                        <div key={`${cap.capability}-${provKey}`} style={{ padding: "7px 8px", borderBottom: "1px solid var(--border)" }}>
+                          <div style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.4, marginBottom: 4 }}>{provider.service}</div>
+                          <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                            <GovBadge avail={provider.govAvailability} />
+                            <ParityBadge parity={provider.parityLag} />
+                          </div>
+                        </div>
+                      );
+                    }),
+                  ])}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+                  <div>
+                    <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 6 }}>REVIEW QUESTIONS</div>
+                    {pattern.reviewPrompts.map(prompt => (
+                      <div key={prompt} style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.5, marginBottom: 6, paddingLeft: 10, borderLeft: "2px solid var(--border)" }}>{prompt}</div>
+                    ))}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 6 }}>VERIFICATION BOUNDARY</div>
+                    <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.65 }}>{pattern.verificationNote}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── UPCOMING BANNER ────────────────────────────────────────────────────────
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
@@ -414,7 +534,7 @@ function UpcomingBanner({ items }) {
 // ── ROOT ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
-  const [mode, setMode] = useState("matrix");   // matrix | diff | gov | ai
+  const [mode, setMode] = useState("matrix");   // matrix | patterns | diff | gov | ai
   const [activeProviders, setActiveProviders] = useState([...PROVIDERS]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -450,12 +570,39 @@ export default function App() {
     return caps;
   }, [selectedCategory, searchQuery]);
 
+  const filteredPatterns = useMemo(() => {
+    let patterns = PATTERNS;
+    if (selectedCategory) {
+      patterns = patterns.filter(pattern =>
+        pattern.capabilities.some(name => CAPABILITY_MAP[name]?.category === selectedCategory)
+      );
+    }
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      patterns = patterns.filter(pattern => {
+        const linkedCaps = pattern.capabilities.map(name => CAPABILITY_MAP[name]).filter(Boolean);
+        return (
+          pattern.name.toLowerCase().includes(q) ||
+          pattern.summary.toLowerCase().includes(q) ||
+          pattern.whenToUse.toLowerCase().includes(q) ||
+          pattern.reviewPrompts.some(prompt => prompt.toLowerCase().includes(q)) ||
+          linkedCaps.some(cap =>
+            cap.capability.toLowerCase().includes(q) ||
+            Object.values(cap.providers).some(provider => provider.service.toLowerCase().includes(q))
+          )
+        );
+      });
+    }
+    return patterns;
+  }, [selectedCategory, searchQuery]);
+
   const govAlertCount = CAPABILITIES.filter(c =>
     Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
   ).length;
 
   const modes = [
     { id: "matrix", label: "MATRIX", desc: "All capabilities by tier" },
+    { id: "patterns", label: "PATTERNS", desc: "Architecture planning overlays" },
     { id: "diff",   label: "EQUIVALENCY", desc: "Side-by-side service mapping" },
     { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
     { id: "ai",     label: "AI FOCUS", desc: "AI_NATIVE and AI_CAPABLE only" },
@@ -488,7 +635,7 @@ export default function App() {
               AWS · Azure · GCP
             </div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-              {CAPABILITIES.length} capabilities · {CATEGORIES.length} categories · fact-first · official sources only
+              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CATEGORIES.length} categories · fact-first · official sources only
             </div>
           </div>
 
@@ -497,7 +644,7 @@ export default function App() {
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search capability, service, tag, compliance term..."
+              placeholder="Search capability, pattern, service, tag..."
               style={{
                 width: "100%", padding: "7px 12px", borderRadius: 4,
                 border: "1px solid var(--border)", background: "var(--panel)",
@@ -521,7 +668,7 @@ export default function App() {
             </button>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: "#f87171" }}>{govAlertCount}</div>
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>GOV GAPS</div>
+              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>GOV REVIEW</div>
             </div>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: "#c084fc" }}>{CAPABILITIES.filter(c => c.tags.includes("AI_NATIVE")).length}</div>
@@ -602,7 +749,7 @@ export default function App() {
           {/* Search result count */}
           {searchQuery.trim().length >= 2 && (
             <div style={{ marginBottom: 10, fontSize: 9, color: "var(--muted)" }}>
-              {filteredCaps.length} result(s) for "{searchQuery}"
+              {mode === "patterns" ? filteredPatterns.length : filteredCaps.length} result(s) for "{searchQuery}"
             </div>
           )}
 
@@ -630,6 +777,7 @@ export default function App() {
           {mode === "diff" && <DiffView caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "gov"  && <GovView  caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "ai"   && <AIView   caps={filteredCaps} activeProviders={activeProviders} />}
+          {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
         </div>
 
         {/* Tag legend */}

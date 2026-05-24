@@ -34,6 +34,19 @@ CAP_REQUIRED = [
     "providers",
 ]
 CAP_ALLOWED = set(CAP_REQUIRED + ["sourceNotes"])
+FRAMEWORK_REQUIRED = ["framework", "frameworkUrl", "foundation", "foundationUrl", "lastVerified"]
+FRAMEWORK_ALLOWED = set(FRAMEWORK_REQUIRED)
+PATTERN_REQUIRED = [
+    "id",
+    "name",
+    "summary",
+    "whenToUse",
+    "capabilities",
+    "reviewPrompts",
+    "verificationNote",
+    "lastVerified",
+]
+PATTERN_ALLOWED = set(PATTERN_REQUIRED)
 PROV_REQUIRED = [
     "service",
     "status",
@@ -109,19 +122,30 @@ def validate_schema_contract(schema):
         err("data/schema.json must declare JSON Schema draft 2020-12")
     capability = schema.get("$defs", {}).get("capability", {})
     provider = schema.get("$defs", {}).get("provider", {})
+    framework = schema.get("$defs", {}).get("framework", {})
+    pattern = schema.get("$defs", {}).get("pattern", {})
     required_caps = set(capability.get("required", []))
     required_prov = set(provider.get("required", []))
+    required_framework = set(framework.get("required", []))
+    required_pattern = set(pattern.get("required", []))
+    required_root = set(schema.get("required", []))
+    if not {"frameworks", "patterns"}.issubset(required_root):
+        err("data/schema.json root requirements must include frameworks and patterns")
     if not set(CAP_REQUIRED).issubset(required_caps):
         err("data/schema.json capability requirements do not cover validator-required fields")
     if not set(PROV_REQUIRED).issubset(required_prov):
         err("data/schema.json provider requirements do not cover validator-required fields")
+    if not set(FRAMEWORK_REQUIRED).issubset(required_framework):
+        err("data/schema.json framework requirements do not cover validator-required fields")
+    if not set(PATTERN_REQUIRED).issubset(required_pattern):
+        err("data/schema.json pattern requirements do not cover validator-required fields")
     info("data/schema.json: capability-v1 contract loaded")
 
 
 def validate_matrix(mdata):
-    require_fields(mdata, ["_meta", "tags", "categories", "capabilities"], "matrix.json")
+    require_fields(mdata, ["_meta", "tags", "categories", "frameworks", "patterns", "capabilities"], "matrix.json")
     if not isinstance(mdata, dict):
-        return None, [], []
+        return None, [], [], {}
 
     meta = mdata.get("_meta", {})
     require_fields(meta, ["version", "schema", "last_verified", "providers", "tiers", "license", "repo"], "_meta")
@@ -153,6 +177,26 @@ def validate_matrix(mdata):
         tag_defs = {}
     for tag_key, definition in tag_defs.items():
         require_fields(definition, ["label", "color", "description"], f"tag '{tag_key}'")
+
+    frameworks = mdata.get("frameworks", {})
+    if not isinstance(frameworks, dict):
+        err("frameworks must be an object")
+        frameworks = {}
+    for pkey in EXPECTED_PROVIDERS:
+        guidance = frameworks.get(pkey)
+        if not guidance:
+            err(f"frameworks missing provider: {pkey}")
+            continue
+        require_fields(guidance, FRAMEWORK_REQUIRED, f"framework '{pkey}'")
+        unexpected_framework_fields = set(guidance) - FRAMEWORK_ALLOWED
+        if unexpected_framework_fields:
+            err(f"framework '{pkey}' contains unsupported fields: {sorted(unexpected_framework_fields)}")
+        validate_url(guidance.get("frameworkUrl"), f"framework '{pkey}'.frameworkUrl", False)
+        validate_url(guidance.get("foundationUrl"), f"framework '{pkey}'.foundationUrl", False)
+        validate_date(guidance.get("lastVerified"), f"framework '{pkey}'.lastVerified")
+    extra_frameworks = set(frameworks) - set(EXPECTED_PROVIDERS)
+    if extra_frameworks:
+        err(f"frameworks contains unsupported providers: {sorted(extra_frameworks)}")
 
     capabilities = mdata.get("capabilities", [])
     if not isinstance(capabilities, list) or not capabilities:
@@ -233,8 +277,41 @@ def validate_matrix(mdata):
                 if tier not in tier_notes:
                     err(f"'{name}/{pkey}' missing tierNotes for: {tier}")
 
-    info(f"matrix.json: {len(capabilities)} capabilities; {len(providers)} providers; schema {meta.get('schema')}")
-    return providers, capabilities, tiers
+    patterns = mdata.get("patterns", [])
+    if not isinstance(patterns, list) or not patterns:
+        err("patterns must be a non-empty array")
+        patterns = []
+    seen_patterns = set()
+    for pattern in patterns:
+        pattern_id = pattern.get("id", "MISSING") if isinstance(pattern, dict) else "MISSING"
+        require_fields(pattern, PATTERN_REQUIRED, f"pattern '{pattern_id}'")
+        if not isinstance(pattern, dict):
+            continue
+        unexpected_pattern_fields = set(pattern) - PATTERN_ALLOWED
+        if unexpected_pattern_fields:
+            err(f"pattern '{pattern_id}' contains unsupported fields: {sorted(unexpected_pattern_fields)}")
+        if pattern_id in seen_patterns:
+            err(f"Duplicate pattern: '{pattern_id}'")
+        seen_patterns.add(pattern_id)
+        validate_date(pattern.get("lastVerified"), f"pattern '{pattern_id}'.lastVerified")
+        refs = pattern.get("capabilities", [])
+        if not isinstance(refs, list) or not refs:
+            err(f"pattern '{pattern_id}'.capabilities must be a non-empty array")
+        elif len(refs) != len(set(refs)):
+            err(f"pattern '{pattern_id}'.capabilities contains duplicates")
+        else:
+            for capability_name in refs:
+                if capability_name not in seen_caps:
+                    err(f"pattern '{pattern_id}' references unknown capability: {capability_name}")
+        prompts = pattern.get("reviewPrompts", [])
+        if not isinstance(prompts, list) or not prompts:
+            err(f"pattern '{pattern_id}'.reviewPrompts must be a non-empty array")
+
+    info(
+        f"matrix.json: {len(capabilities)} capabilities; {len(patterns)} patterns; "
+        f"{len(providers)} providers; schema {meta.get('schema')}"
+    )
+    return providers, capabilities, tiers, frameworks
 
 
 def validate_upcoming(udata):
@@ -282,7 +359,7 @@ def check_link(url, label):
         warn(f"Could not verify {label}: {exc}")
 
 
-def run_link_checks(capabilities, upcoming):
+def run_link_checks(capabilities, upcoming, frameworks):
     print("Checking source URLs (non-blocking)...")
     for cap in capabilities:
         for pkey in EXPECTED_PROVIDERS:
@@ -295,6 +372,10 @@ def run_link_checks(capabilities, upcoming):
     for item in upcoming:
         if item.get("source"):
             check_link(item["source"], f"upcoming/{item.get('id')}")
+            time.sleep(0.2)
+    for pkey, guidance in frameworks.items():
+        for field in ["frameworkUrl", "foundationUrl"]:
+            check_link(guidance.get(field), f"framework/{pkey}/{field}")
             time.sleep(0.2)
 
 
@@ -312,7 +393,7 @@ def main():
         print("\n".join(ERRORS))
         return 1
     validate_schema_contract(schema)
-    providers, capabilities, _ = validate_matrix(matrix)
+    providers, capabilities, _, frameworks = validate_matrix(matrix)
 
     upcoming = []
     if not args.schema_only:
@@ -326,7 +407,7 @@ def main():
             info("sources.json: loaded")
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming)
+        run_link_checks(capabilities, upcoming, frameworks)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.4.0",
+    "version": "3.5.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-24",
     "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
@@ -38,6 +38,126 @@
     "Government / Sovereign Cloud",
     "Hybrid / Edge",
     "Cost Governance"
+  ],
+  "frameworks": {
+    "aws": {
+      "framework": "AWS Well-Architected Framework",
+      "frameworkUrl": "https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html",
+      "foundation": "AWS Control Tower multi-account landing zone",
+      "foundationUrl": "https://docs.aws.amazon.com/controltower/latest/userguide/aws-multi-account-landing-zone.html",
+      "lastVerified": "2026-05-24"
+    },
+    "azure": {
+      "framework": "Azure Well-Architected Framework",
+      "frameworkUrl": "https://learn.microsoft.com/en-us/azure/well-architected/what-is-well-architected-framework",
+      "foundation": "Azure Landing Zones",
+      "foundationUrl": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",
+      "lastVerified": "2026-05-24"
+    },
+    "gcp": {
+      "framework": "Google Cloud Well-Architected Framework",
+      "frameworkUrl": "https://docs.cloud.google.com/architecture/framework",
+      "foundation": "Enterprise foundations blueprint",
+      "foundationUrl": "https://docs.cloud.google.com/architecture/blueprints/security-foundations",
+      "lastVerified": "2026-05-24"
+    }
+  },
+  "patterns": [
+    {
+      "id": "secure-internet-facing-application",
+      "name": "Secure Internet-Facing Application Foundation",
+      "summary": "A starting control plane and service path for public web applications that need protected ingress, private service access, operational evidence, and recovery planning.",
+      "whenToUse": "Use for customer or partner applications exposed through public endpoints, before selecting application runtime or delivery implementation details.",
+      "capabilities": [
+        "Landing Zone & Resource Governance",
+        "Identity & Access Management",
+        "Virtual Networking",
+        "Private Connectivity & DNS",
+        "CDN & Edge Application Protection",
+        "Security & Compliance Posture Management",
+        "Observability & Monitoring",
+        "Backup & Disaster Recovery"
+      ],
+      "reviewPrompts": [
+        "Where is the public trust boundary and how is the origin protected?",
+        "Which identity, logging, security-finding, and recovery controls are platform owned?",
+        "Do regulated data paths require product-by-product availability confirmation?"
+      ],
+      "verificationNote": "This is a planning overlay inferred from provider framework and landing-zone guidance. Validate workload threat model, data classification, regions, and regulated-service support before design approval.",
+      "lastVerified": "2026-05-24"
+    },
+    {
+      "id": "regulated-workload-control-boundary",
+      "name": "Regulated Workload Control Boundary",
+      "summary": "A control-focused starting point for workloads whose architecture review must explicitly address identity, encryption, network boundaries, monitoring, security findings, recovery, and sovereign or regulated hosting options.",
+      "whenToUse": "Use while scoping a workload that may handle regulated information or operate under government or sovereign-cloud requirements.",
+      "capabilities": [
+        "Government / Sovereign Cloud Offerings",
+        "Landing Zone & Resource Governance",
+        "Identity & Access Management",
+        "Key, Secret & Certificate Management",
+        "Virtual Networking",
+        "Private Connectivity & DNS",
+        "Security & Compliance Posture Management",
+        "Observability & Monitoring",
+        "Backup & Disaster Recovery"
+      ],
+      "reviewPrompts": [
+        "Which control regime, boundary, and evidence requirements actually apply?",
+        "Which mapped service features are confirmed in the selected regulated environment?",
+        "What recovery, cryptography, identity, and logging evidence must be retained?"
+      ],
+      "verificationNote": "This pattern identifies review areas; it is not a compliance determination or authorization claim. Unknown regulated availability and parity values require direct provider confirmation.",
+      "lastVerified": "2026-05-24"
+    },
+    {
+      "id": "data-generative-ai-platform",
+      "name": "Data & Generative AI Platform Foundation",
+      "summary": "A governed base for enterprise analytics and generative AI initiatives, connecting data storage and analysis with model services, identity, cryptography, private access, monitoring, and FinOps.",
+      "whenToUse": "Use when evaluating internal analytics, retrieval-augmented generation, model training, or governed AI product platforms.",
+      "capabilities": [
+        "Landing Zone & Resource Governance",
+        "Identity & Access Management",
+        "Object Storage",
+        "Data Warehouse / Analytics Platform",
+        "Generative AI / Foundation Models",
+        "ML Platform & Model Training",
+        "Key, Secret & Certificate Management",
+        "Private Connectivity & DNS",
+        "Cloud Cost Management & FinOps"
+      ],
+      "reviewPrompts": [
+        "What data is allowed into model prompts, training, retrieval, and analytics paths?",
+        "Which identity, encryption, private-access, evaluation, and cost controls are mandatory?",
+        "Are selected models and AI features available in the required region or regulated boundary?"
+      ],
+      "verificationNote": "Model catalogs and AI service support can change quickly. Recheck provider documentation, data-handling commitments, regional support, and regulated constraints during architecture review.",
+      "lastVerified": "2026-05-24"
+    },
+    {
+      "id": "hybrid-migration-recovery-path",
+      "name": "Hybrid Migration & Recovery Landing Path",
+      "summary": "A structured starting path for moving existing estates into cloud while maintaining connectivity, identity, recovery, operational visibility, and cost governance.",
+      "whenToUse": "Use during discovery and landing-zone planning for data center migration, hybrid extension, application transition, or staged modernization.",
+      "capabilities": [
+        "Landing Zone & Resource Governance",
+        "Identity & Access Management",
+        "Virtual Networking",
+        "Private Connectivity & DNS",
+        "Hybrid & On-Premises Extension",
+        "Cloud Migration Tooling",
+        "Backup & Disaster Recovery",
+        "Observability & Monitoring",
+        "Cloud Cost Management & FinOps"
+      ],
+      "reviewPrompts": [
+        "What dependencies, recovery objectives, data classifications, and cutover constraints exist?",
+        "Which network, identity, monitoring, and rollback capabilities must exist before migration waves begin?",
+        "How will post-migration ownership, optimization, and modernization decisions be governed?"
+      ],
+      "verificationNote": "Migration tooling maps differ across servers, storage, databases, and applications. Confirm target services, transfer paths, rollback design, and regulated-environment support per workload wave.",
+      "lastVerified": "2026-05-24"
+    }
   ],
   "capabilities": [
     {
