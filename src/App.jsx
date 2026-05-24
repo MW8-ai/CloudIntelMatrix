@@ -60,6 +60,7 @@ const GOV_AVAIL_STYLES = {
   "Partial":     { bg: "#78350f", fg: "#fbbf24", label: "GOV PARTIAL" },
   "Limited":     { bg: "#7c2d12", fg: "#fb923c", label: "GOV LIMITED" },
   "None":        { bg: "#1f2937", fg: "#6b7280", label: "GOV NONE" },
+  "Unknown":     { bg: "#1f2937", fg: "#cbd5e1", label: "GOV UNKNOWN" },
 };
 
 const PARITY_STYLES = {
@@ -67,6 +68,7 @@ const PARITY_STYLES = {
   "Minor":       { bg: "#78350f22", fg: "#f59e0b", label: "LAG MINOR" },
   "Moderate":    { bg: "#7f1d1d22", fg: "#f87171", label: "LAG MODERATE" },
   "Significant": { bg: "#7f1d1d44", fg: "#ef4444", label: "LAG SIGNIFICANT" },
+  "Unknown":     { bg: "#1f293722", fg: "#94a3b8", label: "LAG UNKNOWN" },
 };
 
 const TAG_STYLES = {
