@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.1.0",
+    "version": "3.2.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-24",
     "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
@@ -1034,6 +1034,254 @@
             "Commercial / SMB": "Adopt project labeling, budgets, reports, and regular optimization reviews.",
             "Enterprise": "Govern account exports, allocation, commitments, recommendations, and anomaly response.",
             "Government": "Confirm billing API and support-case scope for the selected Assured Workloads package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE", "COMPLIANCE_RELEVANT"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Managed event services support decoupled integration through publish-subscribe, routing, and streaming patterns. Selection should be based on delivery semantics, ordering, retention, replay, throughput, and integration boundaries rather than service names alone.",
+      "operationalConsiderations": "Document delivery guarantees and retry handling before implementation. Retention, dead-letter processing, replay, encryption, private connectivity, and audit access all affect operational and regulated workload design.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "Amazon EventBridge",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+          "pricingUrl": "https://aws.amazon.com/eventbridge/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS publishes GovCloud service information separately; validate EventBridge features, integrations, and quotas required by a regulated workload before asserting availability or parity.",
+          "tierNotes": {
+            "Personal / Free": "Use simple event routing only where asynchronous integration improves the design.",
+            "Commercial / SMB": "Establish event schemas, retries, dead-letter handling, and cost monitoring.",
+            "Enterprise": "Govern event ownership, routing policies, replay needs, observability, and cross-account access.",
+            "Government": "Confirm EventBridge support and required event targets in the selected AWS GovCloud architecture."
+          }
+        },
+        "azure": {
+          "service": "Azure Event Grid",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/event-grid/overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/event-grid/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Microsoft maintains Azure Government service availability separately; verify Event Grid features and integrations on the current roadmap for the target environment.",
+          "tierNotes": {
+            "Personal / Free": "Use event routing for small integrations with explicit retry behavior.",
+            "Commercial / SMB": "Standardize event subscriptions, delivery handling, private access, and monitoring.",
+            "Enterprise": "Govern event domains, access policy, delivery assurance, and downstream dependencies.",
+            "Government": "Confirm Event Grid and downstream service availability in Azure Government documentation."
+          }
+        },
+        "gcp": {
+          "service": "Pub/Sub",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/pubsub/docs/overview",
+          "pricingUrl": "https://cloud.google.com/pubsub/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Assured Workloads support is defined per control package and may constrain related integrations; confirm Pub/Sub scope for the selected regulated workload.",
+          "tierNotes": {
+            "Personal / Free": "Use topics and subscriptions with deliberate retention and acknowledgement handling.",
+            "Commercial / SMB": "Standardize schemas, dead-letter topics, replay policy, and telemetry.",
+            "Enterprise": "Govern project boundaries, encryption, dataflow integration, throughput, and cost controls.",
+            "Government": "Check Pub/Sub and dependent service support in the applicable Assured Workloads package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "category": "Security & Compliance",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Posture-management services aggregate configuration findings, exposure signals, and security recommendations. This is distinct from SIEM: posture management focuses on resource state and control drift, while SIEM focuses on event collection and investigation workflows.",
+      "operationalConsiderations": "Enabling a posture service is not equivalent to meeting a compliance requirement. Assign remediation ownership, define exception handling, connect findings to ticketing or response processes, and validate the standards or control mappings applicable to the workload.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS Security Hub",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html",
+          "pricingUrl": "https://aws.amazon.com/security-hub/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "Security Hub functionality and integrations must be checked against the required AWS GovCloud region and control scope; broad parity is not asserted here.",
+          "tierNotes": {
+            "Personal / Free": "Use baseline findings only where cloud resources need active review.",
+            "Commercial / SMB": "Assign findings ownership, alert routing, standards review, and remediation tracking.",
+            "Enterprise": "Integrate posture findings with account governance, incident response, and exception workflows.",
+            "Government": "Validate Security Hub and required integrations for the selected AWS GovCloud environment."
+          }
+        },
+        "azure": {
+          "service": "Microsoft Defender for Cloud",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/defender-for-cloud/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Defender for Cloud capabilities and government-cloud availability evolve independently; validate the required plans and regulatory dashboard features in Azure Government.",
+          "tierNotes": {
+            "Personal / Free": "Use basic recommendations to reduce avoidable resource configuration exposure.",
+            "Commercial / SMB": "Define plan selection, remediation workflows, identity ownership, and alert handling.",
+            "Enterprise": "Integrate posture governance with policy, security operations, and exception management.",
+            "Government": "Confirm required Defender for Cloud plans and features on the Azure Government roadmap."
+          }
+        },
+        "gcp": {
+          "service": "Security Command Center",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/security-command-center/docs/concepts-security-command-center-overview",
+          "pricingUrl": "https://cloud.google.com/security-command-center/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Security Command Center use with Assured Workloads must be validated for the chosen control package and finding sources; no universal parity claim is made.",
+          "tierNotes": {
+            "Personal / Free": "Use basic asset and finding visibility where cloud resources need review.",
+            "Commercial / SMB": "Define finding triage, access policy, notification paths, and remediation ownership.",
+            "Enterprise": "Integrate posture findings into organization policy, security operations, and exception workflows.",
+            "Government": "Confirm Security Command Center support and finding sources in the required control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "category": "AI / ML",
+      "tags": ["AI_NATIVE", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "aiClassification": "AI_NATIVE",
+      "architectureNotes": "Managed machine-learning platforms support experiment execution, training jobs, model lifecycle workflows, and deployment operations. Selection depends on supported frameworks, accelerators, governance tooling, data integration, and deployment boundary requirements.",
+      "operationalConsiderations": "Training compute can be expensive and data-intensive. Establish experiment tracking, model lineage, data access controls, evaluation criteria, cost controls, and approval workflows before operational deployment.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "Amazon SageMaker AI",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html",
+          "pricingUrl": "https://aws.amazon.com/sagemaker-ai/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "SageMaker AI capabilities vary by region and environment; confirm required training, governance, endpoint, and accelerator features for AWS GovCloud use.",
+          "tierNotes": {
+            "Personal / Free": "Limit experiments and monitor compute and storage use closely.",
+            "Commercial / SMB": "Standardize training jobs, model registry practice, endpoint controls, and cost review.",
+            "Enterprise": "Govern data access, lineage, evaluation, deployment approval, accelerator allocation, and monitoring.",
+            "Government": "Confirm required SageMaker AI features and permitted model/data workflows in AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "Azure Machine Learning",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/machine-learning/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Azure Machine Learning feature availability must be checked against the current Azure Government roadmap and selected region; parity is not assumed.",
+          "tierNotes": {
+            "Personal / Free": "Control experiment compute and remove unused environments or endpoints.",
+            "Commercial / SMB": "Use managed training, registries, deployment controls, and monitoring with assigned ownership.",
+            "Enterprise": "Govern ML lifecycle, evaluation, data access, identities, compute allocation, and approval pathways.",
+            "Government": "Confirm required Azure Machine Learning components in Azure Government before architecture sign-off."
+          }
+        },
+        "gcp": {
+          "service": "Vertex AI",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/vertex-ai/docs/start/introduction-unified-platform",
+          "pricingUrl": "https://cloud.google.com/vertex-ai/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Vertex AI service and feature support under Assured Workloads is control-package specific; validate training and deployment needs for regulated use.",
+          "tierNotes": {
+            "Personal / Free": "Limit notebooks and training jobs and track accelerator or endpoint charges.",
+            "Commercial / SMB": "Standardize training, registry, deployment, identity, and evaluation practices.",
+            "Enterprise": "Govern model lifecycle, data controls, accelerator allocation, monitoring, and approval processes.",
+            "Government": "Verify Vertex AI features and model/data constraints for the applicable control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "category": "Hybrid / Edge",
+      "tags": ["STANDARD", "HYBRID_READY", "COST_SENSITIVE", "COMPLIANCE_RELEVANT"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Migration tooling supports discovery, assessment, replication, cutover, and modernization planning for moving workloads into cloud environments. Product coverage differs for servers, databases, applications, storage, and offline transfer methods.",
+      "operationalConsiderations": "Inventory dependencies and data classifications before migration. Rehearse cutover and rollback, measure network or transfer appliance constraints, validate identity and encryption boundaries, and budget for post-migration remediation.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "AWS Application Migration Service",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/mgn/latest/ug/what-is-application-migration-service.html",
+          "pricingUrl": "https://aws.amazon.com/application-migration-service/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "Regulated migration designs may require multiple AWS migration and transfer services; verify required services and target support in AWS GovCloud before planning cutover.",
+          "tierNotes": {
+            "Personal / Free": "Use migration tooling only when moving existing hosted workloads is justified.",
+            "Commercial / SMB": "Assess dependencies, test replication, rehearse cutover, and validate cost assumptions.",
+            "Enterprise": "Govern discovery, wave planning, application dependencies, rollback, security review, and modernization follow-up.",
+            "Government": "Confirm target-region and transfer-service support in AWS GovCloud for classified or regulated data."
+          }
+        },
+        "azure": {
+          "service": "Azure Migrate",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/migrate/migrate-services-overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/azure-migrate/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Azure Migrate tools and target services must be confirmed in the selected Azure Government environment; this row does not assert feature parity.",
+          "tierNotes": {
+            "Personal / Free": "Assess migration only for workloads with a clear destination and operating rationale.",
+            "Commercial / SMB": "Use assessment and test migration to validate sizing, dependencies, and downtime planning.",
+            "Enterprise": "Govern migration waves, data movement, identity, landing zones, rollback, and remediation.",
+            "Government": "Confirm Azure Migrate and all target dependencies in Azure Government documentation."
+          }
+        },
+        "gcp": {
+          "service": "Migrate to Virtual Machines",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/migrate/virtual-machines/docs",
+          "pricingUrl": null,
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Migration and target-service support within Assured Workloads depends on the control package and architecture; confirm the required path before moving regulated data. A dedicated public pricing page for Migrate to Virtual Machines was not identified during this review.",
+          "tierNotes": {
+            "Personal / Free": "Use migration tooling only for existing workloads that require a planned move.",
+            "Commercial / SMB": "Assess source dependencies, target sizing, testing, cutover, and cost impacts.",
+            "Enterprise": "Govern migration waves, data boundaries, target landing zones, rollback, and modernization follow-up.",
+            "Government": "Validate migration tools and target products within the selected Assured Workloads control package."
           }
         }
       }
