@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.3.0",
+    "version": "3.4.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-24",
     "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
@@ -608,64 +608,127 @@
       }
     },
     {
-      "capability": "Managed File Transfer / Integration",
+      "capability": "API Management & Integration Gateway",
       "category": "Integration & Messaging",
       "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY"],
       "aiClassification": "STANDARD",
-      "architectureNotes": "This inherited row combines file exchange and API or integration services that are not direct equivalents. It remains useful for identifying integration surface area, but separate managed-file-transfer and API-management comparisons are needed for selection decisions.",
-      "operationalConsiderations": "MFT solutions often handle regulated data (CJIS, HIPAA, PII). AS2 for EDI, SFTP for legacy agency integrations, and HTTPS for modern APIs are common in government. Protocol support breadth and audit logging are critical differentiators for compliance. GoAnywhere and similar tools can bridge all three clouds.",
+      "architectureNotes": "API management services publish, secure, govern, observe, and version APIs for consumers and integration partners. Compare gateway policies, developer access, authentication, private exposure, protocol support, analytics, monetization needs, and lifecycle governance.",
+      "operationalConsiderations": "An API gateway becomes a critical control point. Define ownership of API contracts, identity and secret handling, throttling, schema validation, audit logs, change compatibility, private network access, and incident response.",
       "lastVerified": "2026-05-24",
-      "sourceNotes": "The bundled mapping is retained temporarily for continuity and will be decomposed into direct comparison rows; regulated availability and parity are not asserted for this composite.",
+      "sourceNotes": "This row now compares API management services. Managed file transfer is represented separately because protocol-driven file exchange is a different architecture decision.",
       "providers": {
         "aws": {
-          "service": "AWS Transfer Family (SFTP/FTPS/AS2)",
+          "service": "Amazon API Gateway",
           "status": "GA",
           "govAvailability": "Unknown",
-          "govVariant": "Transfer Family GovCloud",
           "parityLag": "Unknown",
-          "docsUrl": "https://docs.aws.amazon.com/transfer/",
-          "pricingUrl": "https://aws.amazon.com/aws-transfer-family/pricing/",
+          "docsUrl": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html",
+          "pricingUrl": "https://aws.amazon.com/api-gateway/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
-          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-transfer.html",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "Validate required API Gateway endpoint types, integrations, authorizers, and AWS GovCloud support before selecting it for regulated API exposure.",
           "tierNotes": {
-            "Personal / Free": "SQS/SNS 1M requests free; EventBridge 1M events free; no native MFT free tier",
-            "Commercial / SMB": "Transfer Family SFTP/FTPS/AS2; SQS/SNS/MQ/Step Functions/EventBridge",
-            "Enterprise": "Transfer Family Enterprise; AppFlow; B2B Messaging (EDI); EventBridge Pipes",
-            "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
+            "Personal / Free": "Use an API gateway only where a managed public or private API surface is needed.",
+            "Commercial / SMB": "Standardize authentication, throttling, versioning, logs, and backend integration policy.",
+            "Enterprise": "Govern API products, private endpoints, identity boundaries, observability, contract change, and platform ownership.",
+            "Government": "Confirm API Gateway endpoint types and required integrations in the selected AWS GovCloud environment."
           }
         },
         "azure": {
-          "service": "Azure APIM + Logic Apps (no native MFT)",
+          "service": "Azure API Management",
           "status": "GA",
           "govAvailability": "Unknown",
-          "govVariant": "APIM + Logic Apps Government",
           "parityLag": "Unknown",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/api-management/",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/api-management/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
-          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Validate the API Management tier, gateway modes, private networking, policy features, and Azure Government availability for the target design.",
           "tierNotes": {
-            "Personal / Free": "Service Bus no free tier; Logic Apps 4K actions free",
-            "Commercial / SMB": "Service Bus + Logic Apps + APIM + Data Factory; no native MFT — use partner",
-            "Enterprise": "APIM Premium + Logic Apps Standard + BizTalk migration; Partner: MuleSoft, GoAnywhere",
-            "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
+            "Personal / Free": "Use managed API exposure only where an application has stable consumer interfaces.",
+            "Commercial / SMB": "Standardize products, policies, identities, versioning, monitoring, and backend access.",
+            "Enterprise": "Govern gateways, developer portals, hybrid access, private networks, analytics, and API lifecycle ownership.",
+            "Government": "Confirm API Management tier and features on the current Azure Government roadmap."
           }
         },
         "gcp": {
-          "service": "Apigee X + Pub/Sub (no native MFT)",
+          "service": "Apigee",
           "status": "GA",
           "govAvailability": "Unknown",
-          "govVariant": "Apigee + Pub/Sub (Assured Workloads)",
           "parityLag": "Unknown",
-          "docsUrl": "https://cloud.google.com/apigee/docs",
+          "docsUrl": "https://docs.cloud.google.com/apigee/docs/api-platform/get-started/what-apigee",
           "pricingUrl": "https://cloud.google.com/apigee/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
-          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Confirm Apigee deployment model, network attachment, API product features, and Assured Workloads control-package support before regulated selection.",
           "tierNotes": {
-            "Personal / Free": "Cloud Tasks + Pub/Sub 10 GB free; Apigee no free tier",
-            "Commercial / SMB": "Pub/Sub + Apigee API Mgmt + Integration Connectors; no native MFT",
-            "Enterprise": "Apigee X full lifecycle + Datastream (CDC); Partner: MuleSoft, GoAnywhere",
-            "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
+            "Personal / Free": "Use API management only after a stable API surface and consumer need are defined.",
+            "Commercial / SMB": "Standardize proxies, products, authentication, quotas, monitoring, and backend integrations.",
+            "Enterprise": "Govern API lifecycle, private access, analytics, developer onboarding, policy, and organizational ownership.",
+            "Government": "Verify Apigee and dependent services within the selected Assured Workloads control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Managed File Transfer",
+      "category": "Integration & Messaging",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Managed file transfer covers protocol-driven exchange with partners, agencies, or legacy systems. The mapped services are not identical: AWS provides a managed transfer-family endpoint, Azure Blob supports SFTP-based object exchange, and Google Storage Transfer Service is oriented to scheduled data movement rather than hosted partner-facing SFTP.",
+      "operationalConsiderations": "Identify required protocols, partner onboarding, identity model, malware scanning, retention, encryption, nonrepudiation, audit logging, file-size limits, retries, and operational ownership before choosing an exchange pattern.",
+      "lastVerified": "2026-05-24",
+      "sourceNotes": "This row deliberately exposes capability differences rather than implying a native managed-MFT equivalent on every provider.",
+      "providers": {
+        "aws": {
+          "service": "AWS Transfer Family",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html",
+          "pricingUrl": "https://aws.amazon.com/aws-transfer-family/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-transfer.html",
+          "sourceNotes": "AWS Transfer Family documentation establishes managed transfer protocol support; verify protocol, identity-provider, workflow, and AWS GovCloud feature needs for a regulated exchange.",
+          "tierNotes": {
+            "Personal / Free": "Use managed transfer only where a file-exchange protocol requirement exists.",
+            "Commercial / SMB": "Define SFTP, FTPS, or AS2 partners, authentication, storage, processing, monitoring, and retention.",
+            "Enterprise": "Govern partner onboarding, workflows, encryption, audit evidence, scale, resilience, and integration ownership.",
+            "Government": "Confirm required Transfer Family protocols and workflow features in AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "SFTP support for Azure Blob Storage",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/storage/blobs/secure-file-transfer-protocol-support",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/storage/blobs/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Azure documents SFTP access on Blob Storage; this maps an object-storage exchange endpoint and does not claim a complete B2B managed-transfer workflow equivalent.",
+          "tierNotes": {
+            "Personal / Free": "Enable SFTP only where protocol compatibility is required for file exchange.",
+            "Commercial / SMB": "Define local-user or identity handling, containers, lifecycle controls, logging, and processing.",
+            "Enterprise": "Govern partner access, storage isolation, workflow integration, evidence, resilience, and cost.",
+            "Government": "Validate Blob SFTP support and all workflow dependencies on the Azure Government roadmap."
+          }
+        },
+        "gcp": {
+          "service": "Storage Transfer Service (transfer orchestration, not hosted SFTP)",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/storage-transfer/docs/overview",
+          "pricingUrl": "https://cloud.google.com/storage-transfer/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Storage Transfer Service documents managed movement between storage sources and does not serve as a partner-facing hosted SFTP endpoint; use a different pattern or partner product where SFTP ingress is required.",
+          "tierNotes": {
+            "Personal / Free": "Use transfer jobs only for an identified storage-movement requirement.",
+            "Commercial / SMB": "Define source and sink access, scheduling, checksums, logging, and post-transfer processing.",
+            "Enterprise": "Govern large-scale transfer orchestration, network paths, data boundaries, monitoring, and exception workflows.",
+            "Government": "Verify Storage Transfer Service and destination products for the selected Assured Workloads package."
           }
         }
       }
@@ -734,12 +797,12 @@
       }
     },
     {
-      "capability": "Virtual Networking & CDN",
+      "capability": "Virtual Networking",
       "category": "Networking",
       "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
       "aiClassification": "STANDARD",
-      "architectureNotes": "Virtual networks provide private address spaces, routing, security boundaries, and private connectivity patterns. CDN and edge controls should be selected alongside the network design because internet egress, origin protection, and regulated routing requirements affect architecture.",
-      "operationalConsiderations": "Track internet and cross-region egress costs, centralize network policy ownership, and validate edge or private-connectivity features in the target regulated environment before relying on them.",
+      "architectureNotes": "Virtual networks provide address spaces, routing boundaries, security segmentation, service access, and connectivity foundations for cloud workloads. Edge delivery and application protection are represented as a separate decision row.",
+      "operationalConsiderations": "Centralize address planning and network policy ownership, avoid overlapping hybrid ranges, control routes and egress, test name resolution and connectivity failure modes, and review network data-transfer cost.",
       "lastVerified": "2026-05-24",
       "providers": {
         "aws": {
@@ -751,12 +814,12 @@
           "pricingUrl": "https://aws.amazon.com/vpc/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud-vpc-endpoints.html",
-          "sourceNotes": "Amazon VPC is documented in AWS GovCloud (US); this row does not assert feature parity for the broader networking and edge design without a service-by-service review.",
+          "sourceNotes": "Amazon VPC is documented in AWS GovCloud (US); verify the routing, endpoint, inspection, and connectivity features needed for the selected regulated architecture.",
           "tierNotes": {
             "Personal / Free": "Use a minimal VPC layout and review public-IP and egress charges before deployment.",
-            "Commercial / SMB": "Add centralized routing, private endpoints, edge delivery, and web application controls as needed.",
+            "Commercial / SMB": "Add centralized routing and private endpoints as workload boundaries require.",
             "Enterprise": "Evaluate shared network hubs, private connectivity, traffic inspection, and egress governance.",
-            "Government": "Confirm each required network and edge component in AWS GovCloud documentation before design approval."
+            "Government": "Confirm each required VPC and connectivity component in AWS GovCloud documentation before design approval."
           }
         },
         "azure": {
@@ -768,10 +831,10 @@
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/virtual-network/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
-          "sourceNotes": "Azure Government publishes current product availability separately; verify every required networking and edge component for the selected government environment.",
+          "sourceNotes": "Azure Government publishes current product availability separately; verify every required Virtual Network and connectivity component for the selected government environment.",
           "tierNotes": {
             "Personal / Free": "Use a small virtual network design and inspect billable gateways or outbound traffic.",
-            "Commercial / SMB": "Add private access, controlled ingress, and edge delivery based on application exposure.",
+            "Commercial / SMB": "Add private access and controlled ingress based on workload boundaries.",
             "Enterprise": "Evaluate hub-and-spoke or virtual WAN patterns, ExpressRoute, security inspection, and policy controls.",
             "Government": "Use the Azure Government availability roadmap for the specific network services in scope."
           }
@@ -785,12 +848,74 @@
           "pricingUrl": "https://cloud.google.com/vpc/network-pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Assured Workloads support is control-package specific; verify VPC and any edge services against the selected package before regulated deployment.",
+          "sourceNotes": "Assured Workloads support is control-package specific; verify VPC and required connectivity services against the selected package before regulated deployment.",
           "tierNotes": {
             "Personal / Free": "Use a small VPC design and review network service and outbound traffic pricing.",
-            "Commercial / SMB": "Add managed load balancing, private access, and edge controls when public workloads require them.",
+            "Commercial / SMB": "Add managed load balancing and private access when workload boundaries require them.",
             "Enterprise": "Evaluate shared VPC, private connectivity, centralized security policy, and network cost controls.",
             "Government": "Confirm allowed network services in the applicable Assured Workloads control package."
+          }
+        }
+      }
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "category": "Networking",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Edge delivery and web application protection affect latency, origin exposure, cache behavior, DDoS response, and web-layer security policy. They are separate from virtual network design even when both participate in an internet-facing architecture.",
+      "operationalConsiderations": "Define caching and invalidation, origin authentication, TLS and certificate ownership, WAF policy, bot and DDoS response, logging, data-location constraints, false-positive handling, and request or egress cost monitoring.",
+      "lastVerified": "2026-05-24",
+      "providers": {
+        "aws": {
+          "service": "Amazon CloudFront + AWS WAF",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+          "pricingUrl": "https://aws.amazon.com/cloudfront/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "CloudFront is the CDN anchor and AWS WAF is a separately billed protection service; verify region, edge, log, certificate, WAF, and regulated-workload constraints for the design.",
+          "tierNotes": {
+            "Personal / Free": "Use edge delivery only for a public workload that benefits from caching or protection.",
+            "Commercial / SMB": "Define distribution, origin access, TLS, caching, WAF rules, logs, and cost monitoring.",
+            "Enterprise": "Govern edge policy, WAF rule lifecycle, origin protection, incident response, global traffic, evidence, and cost.",
+            "Government": "Validate edge-delivery suitability and required protection controls for the regulated workload."
+          }
+        },
+        "azure": {
+          "service": "Azure Front Door + Web Application Firewall",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/frontdoor/front-door-overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/frontdoor/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Front Door and WAF tier capabilities should be validated together; confirm service suitability and Azure Government availability before using an edge pattern for regulated data.",
+          "tierNotes": {
+            "Personal / Free": "Adopt edge delivery only where a public application benefits from it.",
+            "Commercial / SMB": "Define routes, origins, caching, TLS, WAF policy, monitoring, and cost ownership.",
+            "Enterprise": "Govern global entry points, protection policy, private origins, incident response, evidence, and tier selection.",
+            "Government": "Confirm Front Door and WAF availability and constraints on the current roadmap."
+          }
+        },
+        "gcp": {
+          "service": "Cloud CDN + Cloud Armor",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/cdn/docs/overview",
+          "pricingUrl": "https://cloud.google.com/cdn/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Cloud CDN and Cloud Armor are separate services that combine for edge delivery and protection; confirm target services, locations, logging, and Assured Workloads control-package constraints.",
+          "tierNotes": {
+            "Personal / Free": "Use CDN and edge controls only for an exposed workload with a clear benefit.",
+            "Commercial / SMB": "Define load-balancer origins, cache behavior, certificates, Armor rules, telemetry, and spend.",
+            "Enterprise": "Govern global edge exposure, security policy, DDoS response, evidence, resiliency, and cost controls.",
+            "Government": "Verify Cloud CDN, Cloud Armor, and dependency support for the selected control package."
           }
         }
       }
