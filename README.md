@@ -12,6 +12,20 @@ A provider-neutral, fact-first reference for enterprise architects, platform eng
 
 **Not** a "top cloud" ranking, affiliate content, or AI hype. **Yes** to operational reality, governance visibility, parity lag tracking, and compliance-aware architecture.
 
+### Architecture framework lens
+
+This guide maps comparison decisions against current provider-authored architecture and enterprise-foundation guidance, reviewed on 2026-05-24:
+
+| Provider | Architecture framework | Enterprise foundation guidance |
+|---|---|---|
+| AWS | [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html) | [AWS Control Tower multi-account landing zone](https://docs.aws.amazon.com/controltower/latest/userguide/aws-multi-account-landing-zone.html) |
+| Microsoft Azure | [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/what-is-well-architected-framework) | [Azure Landing Zones](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/) |
+| Google Cloud | [Google Cloud Well-Architected Framework](https://docs.cloud.google.com/architecture/framework) | [Enterprise foundations blueprint](https://docs.cloud.google.com/architecture/blueprints/security-foundations) |
+
+Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
+
+**Current coverage:** 26 architecture decision rows across 14 categories in matrix data version `3.4.0`.
+
 ---
 
 ## What's in it
@@ -58,6 +72,8 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 | `deploy.yml` | Every push to `main` | Generates XLSX + builds React app → deploys to GitHub Pages |
 
 **Human in the loop:** Automation surfaces changes, humans validate and commit. No automated writes to data files.
+
+The update monitor surfaces product changes; additions and revisions to architecture-framework interpretation are reviewed manually against official provider guidance.
 
 ---
 
