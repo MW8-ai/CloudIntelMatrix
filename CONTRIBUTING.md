@@ -5,8 +5,8 @@
 1. **Official sources only.** Every data point needs a public provider URL.
 2. **No pricing tables.** We note when cost matters (COST_SENSITIVE tag), not exact prices.
 3. **Compliance relevance, not compliance guarantees.** Tag COMPLIANCE_RELEVANT; don't claim "this is compliant."
-4. **govAvailability must be accurate.** Full / Partial / Limited / None / Unknown — check public gov cloud docs and explain unknowns with `sourceNotes`.
-5. **parityLag must be honest.** If gov is behind commercial, say so; use `Unknown` with `sourceNotes` when public information is incomplete.
+4. **govAvailability must be accurate.** Full / Partial / Limited / None / Unknown describes documented availability, not commercial-feature parity. Check public regulated-environment docs and explain unknowns with `sourceNotes`.
+5. **parityLag must be separately proven.** Do not infer parity from availability. Use `Unknown` with `sourceNotes` when current public documentation does not establish the comparison.
 6. **No sensitive information.** No internal docs, NDA roadmaps, or customer-specific data.
 7. **verify.py must pass.** Run `python scripts/verify.py` locally before submitting a PR; use `--check-links` for a non-blocking public URL review.
 
@@ -43,7 +43,7 @@
 }
 ```
 
-Use `sourceNotes` on a capability or provider when an official public source does not state a needed value. Unknowns are allowed; unsupported guesses are not.
+Use `sourceNotes` on a capability or provider when an official public source does not state a needed value. Unknowns are allowed; unsupported guesses and unsupported comparative rankings are not.
 
 ## Tag definitions
 
@@ -52,8 +52,8 @@ Use `sourceNotes` on a capability or provider when an official public source doe
 | STANDARD | Traditional cloud infra, not AI-specific |
 | AI_CAPABLE | Can support AI workloads (analytics, search, K8s) but not purpose-built |
 | AI_NATIVE | Purpose-built AI/ML service (Bedrock, Azure OpenAI, Vertex AI) |
-| GOV_AVAILABLE | Full parity in gov region |
-| GOV_LIMITED | Available in gov but feature/model/region constrained |
+| GOV_AVAILABLE | Documented as available in a government or regulated environment |
+| GOV_LIMITED | Documented in government or regulated use with identified constraints |
 | PARITY_LAG | Commercial version is ahead of gov/regulated version |
 | COMPLIANCE_RELEVANT | Important for NIST/CJIS/HIPAA/FedRAMP/FIPS architecture review |
 | ENTERPRISE_CORE | Common foundational service in enterprise architectures |

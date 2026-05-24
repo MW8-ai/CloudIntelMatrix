@@ -22,9 +22,9 @@ A provider-neutral, fact-first reference for enterprise architects, platform eng
 |---|---|
 | `tags` | STANDARD, AI_CAPABLE, AI_NATIVE, GOV_AVAILABLE, GOV_LIMITED, PARITY_LAG, COMPLIANCE_RELEVANT, ENTERPRISE_CORE, HYBRID_READY, IDENTITY_CRITICAL, COST_SENSITIVE, LOCK_IN_RISK |
 | `aiClassification` | STANDARD / AI_CAPABLE / AI_NATIVE |
-| `govAvailability` | Full / Partial / Limited / None — per provider |
+| `govAvailability` | Full / Partial / Limited / None / Unknown - documented regulated-environment availability per provider |
 | `govVariant` | Name of the government cloud offering |
-| `parityLag` | None / Minor / Moderate / Significant — commercial vs gov |
+| `parityLag` | None / Minor / Moderate / Significant / Unknown - separately verified commercial vs regulated comparison |
 | `architectureNotes` | Operational and architectural context |
 | `operationalConsiderations` | Real-world deployment realities |
 | `tierNotes` | Per-tier notes (Personal / SMB / Enterprise / Government) |
@@ -67,6 +67,7 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 - No pricing speculation
 - No "best cloud" opinions
 - Compliance relevance, not compliance guarantees
+- Availability is not parity; unknowns stay visible until official evidence supports a comparison
 - Parity lag tracked explicitly, not hidden
 - Every URL verifiable by anyone
 - Not legal, compliance, procurement, or security advice
