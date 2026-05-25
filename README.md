@@ -24,7 +24,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 26 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays, in matrix data version `3.6.0`.
+**Current coverage:** 26 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays, in matrix data version `3.7.0`.
 
 ---
 
@@ -60,7 +60,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `Limited` | Official evidence establishes availability and also identifies material environment-specific limitations relevant to architecture review. |
 | `Unknown` | Public evidence has not yet established a stronger statement for the mapped service or portfolio. |
 
-The first regulated-foundation verification pass in `3.6.0` applies this rubric to the control-boundary capabilities used in the regulated workload pattern. `parityLag` remains `Unknown` unless an official source independently establishes a comparison.
+The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. `parityLag` remains `Unknown` unless an official source independently establishes a comparison.
 
 ### View modes
 
