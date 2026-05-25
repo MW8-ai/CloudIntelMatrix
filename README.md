@@ -24,7 +24,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 26 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays, in matrix data version `3.5.0`.
+**Current coverage:** 26 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays, in matrix data version `3.6.0`.
 
 ---
 
@@ -48,6 +48,19 @@ Rows are decision aids, not claims that different provider products are identica
 | `govDocsUrl` | Government cloud documentation |
 | `lastVerified` | Date last manually reviewed |
 | `sourceNotes` | Required explanation when a public-source fact is unknown or unavailable |
+
+### Regulated availability reading guide
+
+`govAvailability` records public evidence of product availability in the named government or regulated environment, not approval for a workload and not commercial feature parity:
+
+| Value | Interpretation |
+|---|---|
+| `Full` | Official evidence identifies all mapped products as available in the named environment. Required features and parity still need separate review. |
+| `Partial` | Official evidence establishes some mapped components or product support limited to specified control packages. |
+| `Limited` | Official evidence establishes availability and also identifies material environment-specific limitations relevant to architecture review. |
+| `Unknown` | Public evidence has not yet established a stronger statement for the mapped service or portfolio. |
+
+The first regulated-foundation verification pass in `3.6.0` applies this rubric to the control-boundary capabilities used in the regulated workload pattern. `parityLag` remains `Unknown` unless an official source independently establishes a comparison.
 
 ### View modes
 
