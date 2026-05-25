@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import socket
 import sys
 import time
 import urllib.error
@@ -62,6 +63,7 @@ PROV_ALLOWED = set(PROV_REQUIRED + ["govVariant", "govDocsUrl", "sourceNotes"])
 ERRORS = []
 WARNINGS = []
 INFO = []
+AZURE_PRICING_TIMEOUT_LIMIT = 2
 
 
 def err(message):
@@ -344,9 +346,22 @@ def validate_upcoming(udata):
     return items
 
 
-def check_link(url, label):
+def is_timeout_error(exc):
+    if isinstance(exc, (TimeoutError, socket.timeout)):
+        return True
+    if isinstance(exc, urllib.error.URLError) and isinstance(exc.reason, (TimeoutError, socket.timeout)):
+        return True
+    return "timed out" in str(exc).lower()
+
+
+def is_azure_pricing_url(url):
+    parsed = urlparse(url)
+    return parsed.netloc.lower() == "azure.microsoft.com" and "/pricing" in parsed.path.lower()
+
+
+def check_link(url, label, defer_timeout_warning=False):
     if not url:
-        return
+        return None
     try:
         request = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "CloudIntelMatrix-verify/3.0"})
         with urllib.request.urlopen(request, timeout=10) as response:
@@ -356,27 +371,58 @@ def check_link(url, label):
         if exc.code not in (403, 405):
             warn(f"HTTP {exc.code}: {label} - {url}")
     except Exception as exc:
+        if defer_timeout_warning and is_timeout_error(exc):
+            return "timeout"
         warn(f"Could not verify {label}: {exc}")
+    return None
 
 
 def run_link_checks(capabilities, upcoming, frameworks):
     print("Checking source URLs (non-blocking)...")
+    links = {}
+    azure_pricing_timeouts = []
+    azure_pricing_skipped = []
+
+    def add_link(url, label):
+        if url:
+            links.setdefault(url, []).append(label)
+
     for cap in capabilities:
         for pkey in EXPECTED_PROVIDERS:
             provider = cap.get("providers", {}).get(pkey, {})
             for field in ["docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"]:
-                url = provider.get(field)
-                if url:
-                    check_link(url, f"{cap.get('capability', '?')}/{pkey}/{field}")
-                    time.sleep(0.2)
+                add_link(provider.get(field), f"{cap.get('capability', '?')}/{pkey}/{field}")
     for item in upcoming:
-        if item.get("source"):
-            check_link(item["source"], f"upcoming/{item.get('id')}")
-            time.sleep(0.2)
+        add_link(item.get("source"), f"upcoming/{item.get('id')}")
     for pkey, guidance in frameworks.items():
         for field in ["frameworkUrl", "foundationUrl"]:
-            check_link(guidance.get(field), f"framework/{pkey}/{field}")
-            time.sleep(0.2)
+            add_link(guidance.get(field), f"framework/{pkey}/{field}")
+
+    info(
+        f"public link review: {sum(len(labels) for labels in links.values())} references; "
+        f"{len(links)} distinct URLs checked"
+    )
+    for url, labels in links.items():
+        label = labels[0]
+        if len(labels) > 1:
+            label += f" (+{len(labels) - 1} additional reference(s))"
+        if is_azure_pricing_url(url):
+            if len(azure_pricing_timeouts) >= AZURE_PRICING_TIMEOUT_LIMIT:
+                azure_pricing_skipped.append(label)
+                continue
+            if check_link(url, label, defer_timeout_warning=True) == "timeout":
+                azure_pricing_timeouts.append(label)
+        else:
+            check_link(url, label)
+        time.sleep(0.2)
+
+    if azure_pricing_timeouts or azure_pricing_skipped:
+        warn(
+            "Azure pricing link review remains unverified for this run: "
+            f"{len(azure_pricing_timeouts)} distinct URL(s) timed out and "
+            f"{len(azure_pricing_skipped)} additional URL(s) were skipped "
+            "after repeated timeouts."
+        )
 
 
 def main():

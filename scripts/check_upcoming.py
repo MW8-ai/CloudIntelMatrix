@@ -3,9 +3,9 @@
 check_upcoming.py - Cloud provider release notes scanner
 Runs weekly via update-check.yml GitHub Action.
 
-Fetches available official RSS/Atom release-note feeds, scans entries from
-the past N days for matrix-category keywords, and includes manual-review
-sources where a provider does not expose a compatible feed.
+Fetches official RSS/Atom release-note feeds and Microsoft's documented
+Release Communications MCP source for Azure Updates, then scans entries from
+the past N days for matrix-category keywords.
 
 Usage:
   python scripts/check_upcoming.py [--days 14] [--output issue_body.md]
@@ -68,6 +68,94 @@ def fetch_feed(provider, url, max_retries=2):
             else:
                 print(f"[WARN] Could not fetch {provider} feed: {e}", file=sys.stderr)
     return None
+
+
+def post_mcp_message(url, message):
+    payload = json.dumps(message).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        method="POST",
+        headers={
+            "Accept": "application/json, text/event-stream",
+            "Content-Type": "application/json",
+            "User-Agent": "CloudIntelMatrix-update-check/1.0",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        response_text = resp.read().decode("utf-8", errors="replace")
+    for line in response_text.splitlines():
+        if line.startswith("data:"):
+            response = json.loads(line[5:].strip())
+            if "error" in response:
+                raise RuntimeError(response["error"])
+            return response.get("result", {})
+    raise RuntimeError("MCP source did not return a data event")
+
+
+def fetch_azure_updates(provider, source, since_dt, max_retries=2):
+    """Fetch recently modified Azure Updates using Microsoft's public MRC MCP tool."""
+    timestamp = since_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+    for attempt in range(max_retries):
+        try:
+            entries = []
+            skip = 0
+            while True:
+                result = post_mcp_message(
+                    source["url"],
+                    {
+                        "jsonrpc": "2.0",
+                        "id": skip + 1,
+                        "method": "tools/call",
+                        "params": {
+                            "name": source.get("tool", "get_recent_azure_updates"),
+                            "arguments": {
+                                "filter": f"modified ge {timestamp}",
+                                "skip": skip,
+                                "include_facets": False,
+                            },
+                        },
+                    },
+                )
+                content_text = "".join(
+                    part.get("text", "")
+                    for part in result.get("content", [])
+                    if part.get("type") == "text"
+                )
+                result_payload = json.loads(content_text)
+                items = result_payload.get("items", [])
+                for item in items:
+                    dt = parse_date(item.get("modified") or item.get("created", ""))
+                    if not dt or dt < since_dt:
+                        continue
+                    context = " ".join(
+                        item.get("products", [])
+                        + item.get("productCategories", [])
+                        + item.get("tags", [])
+                    )
+                    summary = (
+                        f"Azure Updates ID {item.get('id', 'unknown')}. "
+                        f"{item.get('description', '')} {context}"
+                    ).strip()
+                    entries.append(
+                        (
+                            item.get("title", "").strip(),
+                            source.get("landing_url", source["url"]),
+                            dt,
+                            summary[:300],
+                        )
+                    )
+                has_more = result_payload.get("hasMore", result_payload.get("HasMore", False))
+                if not has_more or not items:
+                    return entries
+                skip += len(items)
+        except Exception as e:
+            if attempt < max_retries - 1:
+                time.sleep(2)
+            else:
+                print(f"[WARN] Could not fetch {provider} MCP source: {e}", file=sys.stderr)
+    return None
+
 
 def parse_feed(xml_text, provider, since_dt):
     """Parse RSS or Atom feed, return list of (title, link, date, summary) tuples."""
@@ -149,6 +237,7 @@ def main():
 
     since_dt = datetime.now(timezone.utc) - timedelta(days=args.days)
     rss_feeds = SOURCES.get("rss_feeds", {})
+    mcp_sources = SOURCES.get("mcp_sources", {})
 
     all_findings = {}  # provider -> list of findings
     all_matched_counts = {}
@@ -176,12 +265,34 @@ def main():
         all_matched_counts[provider] = len(findings)
         all_findings[provider] = findings[:args.max_items_per_provider]
 
+    for provider, source in mcp_sources.items():
+        print(f"[INFO] Fetching {provider} MCP source...", file=sys.stderr)
+        entries = fetch_azure_updates(provider, source, since_dt)
+        if entries is None:
+            feed_failures.append(provider)
+            entries = []
+        print(f"[INFO] {provider}: {len(entries)} entries since {since_dt.date()}", file=sys.stderr)
+
+        findings = []
+        for title, link, dt, summary in entries:
+            cats = categorize_entry(title, summary)
+            if cats:
+                findings.append({
+                    "title": title,
+                    "link": link,
+                    "date": dt.strftime("%Y-%m-%d"),
+                    "cats": cats,
+                    "summary": summary,
+                })
+        all_matched_counts[provider] = len(findings)
+        all_findings[provider] = findings[:args.max_items_per_provider]
+
     # ── Build issue body ──────────────────────────────────────────────────
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     lines = [
         f"## Cloud Matrix — Update Review ({today})",
         "",
-        f"Automated scan of available official release-note feeds for the past **{args.days} days**.",
+        f"Automated scan of official provider release sources for the past **{args.days} days**.",
         "Review the items below and update `data/matrix.json` or `data/upcoming.json` as needed.",
         "",
         "> **This is an informational summary only.** All changes to data files must be",
@@ -193,7 +304,7 @@ def main():
     if feed_failures:
         failed = ", ".join(provider.upper() for provider in sorted(feed_failures))
         lines += [
-            f"> Automatic feed retrieval failed for: **{failed}**. Review that provider's official update source manually.",
+            f"> Automatic source retrieval failed for: **{failed}**. Review that provider's official update source manually.",
             "",
         ]
 
@@ -202,7 +313,7 @@ def main():
     else:
         for provider, label in [("gcp", "GCP"), ("aws", "AWS"), ("azure", "Azure")]:
             findings = all_findings.get(provider, [])
-            if provider not in rss_feeds:
+            if provider not in rss_feeds and provider not in mcp_sources:
                 continue
             matched_count = all_matched_counts.get(provider, 0)
             lines.append(f"### {label} - {matched_count} potentially relevant item(s)")
@@ -221,8 +332,20 @@ def main():
                         lines.append(f"  - _{summary}_")
                 hidden_count = matched_count - len(findings)
                 if hidden_count:
-                    lines.append(f"- _{hidden_count} additional matched item(s) omitted; review the official feed for complete coverage._")
+                    lines.append(f"- _{hidden_count} additional matched item(s) omitted; review the official source for complete coverage._")
             lines.append("")
+
+    if mcp_sources:
+        lines += ["### Automated Programmatic Sources", ""]
+        for provider, source in mcp_sources.items():
+            label = source.get("label", provider.upper())
+            lines.append(
+                f"- **{label}:** `{source.get('tool', 'tools/call')}` via "
+                f"[Microsoft Release Communications MCP documentation]({source['docs_url']})"
+            )
+            if source.get("note"):
+                lines.append(f"  - {source['note']}")
+        lines.append("")
 
     manual_review_pages = SOURCES.get("manual_review_pages", {})
     if manual_review_pages:

@@ -1,19 +1,20 @@
 {
   "_meta": {
-    "description": "Official update sources for weekly review. RSS/Atom feeds are scanned automatically; sources without a compatible feed are listed for manual review.",
-    "last_verified": "2026-05-24"
+    "description": "Official update sources for weekly review. RSS/Atom feeds and Microsoft's documented Release Communications MCP endpoint are scanned automatically.",
+    "last_verified": "2026-05-25"
   },
   "rss_feeds": {
     "gcp":   "https://cloud.google.com/feeds/gcp-release-notes.xml",
     "aws":   "https://aws.amazon.com/new/feed/"
   },
-  "manual_review_pages": {
+  "mcp_sources": {
     "azure": {
       "label": "Azure Updates",
-      "url": "https://azure.microsoft.com/en-us/updates",
-      "note": "Microsoft now exposes programmatic Azure Updates through the Release Communications MCP server rather than a compatible RSS/Atom feed for this scanner.",
-      "programmatic_url": "https://www.microsoft.com/releasecommunications/mcp",
-      "programmatic_docs": "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/mrc-mcp"
+      "url": "https://www.microsoft.com/releasecommunications/mcp",
+      "tool": "get_recent_azure_updates",
+      "landing_url": "https://azure.microsoft.com/en-us/updates",
+      "docs_url": "https://learn.microsoft.com/en-us/microsoft-365/admin/manage/mrc-mcp?view=o365-worldwide",
+      "note": "Microsoft documents this public MCP endpoint as the programmatic source powering Azure Updates; underlying release information refreshes daily."
     }
   },
   "provider_docs_root": {
