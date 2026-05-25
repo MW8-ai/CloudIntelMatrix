@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.7.0",
+    "version": "3.8.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-25",
     "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
@@ -62,6 +62,95 @@
       "lastVerified": "2026-05-24"
     }
   },
+  "controlLens": {
+    "id": "nist-sp-800-53-rev5",
+    "name": "NIST SP 800-53 Revision 5",
+    "release": "Release 5.2.0",
+    "catalogUrl": "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final",
+    "baselineUrl": "https://csrc.nist.gov/pubs/sp/800/53/b/upd1/final",
+    "oscalUrl": "https://github.com/usnistgov/oscal-content/tree/main/nist.gov/SP800-53/rev5",
+    "scopeNote": "Architecture planning aid only. These mappings identify cloud decisions that can support control implementation and evidence planning; they do not determine applicability, implementation sufficiency, assessment results, or authorization.",
+    "lastVerified": "2026-05-25",
+    "families": [
+      {
+        "id": "AC",
+        "name": "Access Control",
+        "applicability": "Shape application and administrative access boundaries, privileged paths, network-restricted service access, and policy enforcement points.",
+        "capabilities": ["Identity & Access Management", "API Management & Integration Gateway", "Private Connectivity & DNS"],
+        "reviewPrompts": ["Where is authorization enforced for users, workloads, and administrators?", "Which public or private paths must be denied by default and evidenced?"]
+      },
+      {
+        "id": "AU",
+        "name": "Audit and Accountability",
+        "applicability": "Plan traceable audit events, centralized collection, retention, review, and evidentiary access protection.",
+        "capabilities": ["Observability & Monitoring", "Security Information & Event Management (SIEM)"],
+        "reviewPrompts": ["Which application and platform events must be captured and retained?", "Who can alter, query, export, or delete audit evidence?"]
+      },
+      {
+        "id": "CA",
+        "name": "Assessment, Authorization, and Monitoring",
+        "applicability": "Organize continuous posture review, regulated-hosting evidence, findings workflow, and authorization boundary decisions.",
+        "capabilities": ["Security & Compliance Posture Management", "Government / Sovereign Cloud Offerings", "Observability & Monitoring"],
+        "reviewPrompts": ["What boundary and authorization assumptions need evidence?", "Which findings and changes trigger reassessment?"]
+      },
+      {
+        "id": "CM",
+        "name": "Configuration Management",
+        "applicability": "Treat infrastructure definitions, policies, baselines, approvals, drift findings, and changes as controlled artifacts.",
+        "capabilities": ["Infrastructure as Code & Policy as Code", "Landing Zone & Resource Governance", "DevOps / CI-CD Platform"],
+        "reviewPrompts": ["How are Terraform and native policy changes reviewed, approved, deployed, and recovered?", "How is drift identified against approved application and platform baselines?"]
+      },
+      {
+        "id": "CP",
+        "name": "Contingency Planning",
+        "applicability": "Relate workload recovery objectives to backups, restore validation, regional recovery, migration rollback, and dependencies.",
+        "capabilities": ["Backup & Disaster Recovery", "Cloud Migration Tooling"],
+        "reviewPrompts": ["Which application recovery objectives are tested rather than assumed?", "How are recovery dependencies and restoration evidence protected?"]
+      },
+      {
+        "id": "IA",
+        "name": "Identification and Authentication",
+        "applicability": "Design workforce, workload, service, and privileged identities together with key, secret, and certificate handling.",
+        "capabilities": ["Identity & Access Management", "Key, Secret & Certificate Management"],
+        "reviewPrompts": ["How are human and workload identities issued, authenticated, rotated, and revoked?", "Where are application secrets and cryptographic identities stored and audited?"]
+      },
+      {
+        "id": "RA",
+        "name": "Risk Assessment",
+        "applicability": "Expose risks from public attack surface, vulnerable configuration, regulated data location, AI usage, and provider capability constraints.",
+        "capabilities": ["Security & Compliance Posture Management", "CDN & Edge Application Protection", "Generative AI / Foundation Models"],
+        "reviewPrompts": ["Which threats, data flows, and provider limitations materially affect the application?", "How are findings tracked through design and operational review?"]
+      },
+      {
+        "id": "SA",
+        "name": "System and Services Acquisition",
+        "applicability": "Make cloud-service selection, platform standards, secure delivery, and infrastructure automation deliberate acquisition and engineering decisions.",
+        "capabilities": ["Landing Zone & Resource Governance", "Infrastructure as Code & Policy as Code", "DevOps / CI-CD Platform"],
+        "reviewPrompts": ["Which service and tooling requirements must be imposed before application delivery?", "What supply-chain and lifecycle evidence is required from pipelines and modules?"]
+      },
+      {
+        "id": "SC",
+        "name": "System and Communications Protection",
+        "applicability": "Plan segmentation, private access, encryption, key control, edge exposure, and trustworthy communications paths.",
+        "capabilities": ["Virtual Networking", "Private Connectivity & DNS", "Key, Secret & Certificate Management", "CDN & Edge Application Protection"],
+        "reviewPrompts": ["Where do trust boundaries, ingress, egress, and cryptographic protections exist?", "Which managed-service endpoints require private or inspected connectivity?"]
+      },
+      {
+        "id": "SI",
+        "name": "System and Information Integrity",
+        "applicability": "Connect vulnerability and configuration findings with telemetry, incident visibility, and application integrity decisions.",
+        "capabilities": ["Security & Compliance Posture Management", "Observability & Monitoring", "Security Information & Event Management (SIEM)"],
+        "reviewPrompts": ["How are flaws, anomalous behavior, and integrity findings detected and acted on?", "Which application signals and cloud findings are correlated for response?"]
+      },
+      {
+        "id": "SR",
+        "name": "Supply Chain Risk Management",
+        "applicability": "Govern infrastructure modules, pipeline dependencies, artifact provenance, approved components, and deployment paths.",
+        "capabilities": ["Infrastructure as Code & Policy as Code", "DevOps / CI-CD Platform", "Landing Zone & Resource Governance"],
+        "reviewPrompts": ["How are Terraform modules, providers, actions, images, and dependencies approved and pinned?", "What evidence connects a reviewed change to the deployed application environment?"]
+      }
+    ]
+  },
   "patterns": [
     {
       "id": "secure-internet-facing-application",
@@ -94,6 +183,7 @@
       "capabilities": [
         "Government / Sovereign Cloud Offerings",
         "Landing Zone & Resource Governance",
+        "Infrastructure as Code & Policy as Code",
         "Identity & Access Management",
         "Key, Secret & Certificate Management",
         "Virtual Networking",
@@ -930,6 +1020,69 @@
             "Commercial / SMB": "Cloud Build + Cloud Deploy + Artifact Registry; GitHub Actions integration; Skaffold",
             "Enterprise": "Cloud Build Enterprise; Cloud Deploy multi-target; Binary Authorization; SBOM generation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "category": "Developer Platform",
+      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY"],
+      "aiClassification": "STANDARD",
+      "architectureNotes": "Infrastructure as code and policy as code establish repeatable cloud configuration through reviewed source, modules, state, policy checks, and controlled deployment. Terraform is a common multi-cloud workflow; provider-native tools and APIs still determine supported resources and regulated-environment behavior.",
+      "operationalConsiderations": "Treat Terraform state, providers, modules, policy definitions, execution identities, approvals, drift detection, and audit logs as sensitive controlled assets. Pin versions, scan plans and modules, restrict state access, and separate application deployment privileges from platform governance.",
+      "lastVerified": "2026-05-25",
+      "sourceNotes": "Official provider documentation establishes Terraform and native infrastructure-as-code workflows. This row does not assert that each managed target resource, module, runner, or policy feature is supported or equivalent in a government or regulated environment.",
+      "providers": {
+        "aws": {
+          "service": "Terraform AWS Provider / AWS CloudFormation",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Terraform and CloudFormation targeting AWS GovCloud resources",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choose-iac-tool/terraform.html",
+          "pricingUrl": "https://aws.amazon.com/cloudformation/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "sourceNotes": "AWS Prescriptive Guidance documents Terraform as an infrastructure-as-code option for provisioning AWS resources. Confirm provider endpoints, supported GovCloud target services, state handling, and policy integrations for the selected boundary.",
+          "tierNotes": {
+            "Personal / Free": "Use version-controlled modules and protected remote state before creating persistent resources.",
+            "Commercial / SMB": "Standardize Terraform modules or CloudFormation templates with plan review, state protection, and least-privilege execution.",
+            "Enterprise": "Govern reusable modules, policy checks, organizational controls, drift evidence, private runners, and state encryption across accounts.",
+            "Government": "Validate each target AWS GovCloud resource, execution path, module dependency, endpoint, state store, and evidence requirement."
+          }
+        },
+        "azure": {
+          "service": "Terraform on Azure / Bicep",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Terraform and Bicep targeting Azure Government resources",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/developer/terraform/overview",
+          "pricingUrl": null,
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "sourceNotes": "Microsoft documents Terraform on Azure for provisioning and managing Azure infrastructure and documents Bicep as its native declarative language. Confirm Azure Government API versions, resource providers, policy behavior, state storage, and pipeline dependencies separately.",
+          "tierNotes": {
+            "Personal / Free": "Use small reviewed Terraform or Bicep definitions and avoid storing secrets in state or parameter files.",
+            "Commercial / SMB": "Standardize modules, remote state, managed identities, plan approvals, and Azure Policy checks.",
+            "Enterprise": "Operate module registries, deployment identities, policy-as-code gates, landing-zone integration, private runners, and drift review.",
+            "Government": "Validate Azure Government resource providers, API versions, policy definitions, deployment runners, state protection, and evidence paths."
+          }
+        },
+        "gcp": {
+          "service": "Terraform on Google Cloud / Infrastructure Manager",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Terraform deployments targeting Assured Workloads resources",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/docs/terraform",
+          "pricingUrl": "https://cloud.google.com/infrastructure-manager/pricing",
+          "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
+          "sourceNotes": "Google Cloud documents Terraform support and Infrastructure Manager deployments for Terraform configurations. Confirm allowed Assured Workloads products, provider resources, deployment identity, state/storage design, and organization-policy behavior per control package.",
+          "tierNotes": {
+            "Personal / Free": "Use reviewed Terraform configurations with constrained project scope and protected variables.",
+            "Commercial / SMB": "Standardize modules, deployment service accounts, state handling, organization policy, and plan review.",
+            "Enterprise": "Govern module provenance, Infrastructure Manager or pipeline execution, organization policies, drift, evidence, and multi-project foundations.",
+            "Government": "Validate allowed Assured Workloads products, organization policies, state locations, execution identities, and evidence requirements."
           }
         }
       }

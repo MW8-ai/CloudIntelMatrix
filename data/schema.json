@@ -2,9 +2,9 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/MW8-ai/CloudIntelMatrix/blob/main/data/schema.json",
   "title": "Cloud Intelligence Matrix capability-v1",
-  "description": "Schema contract for data/matrix.json, including capability rows and architecture-pattern overlays. Unknown public-source facts must be explicit and explained with sourceNotes.",
+  "description": "Schema contract for data/matrix.json, including capability rows, architecture-pattern overlays, and a control-family planning lens. Unknown public-source facts must be explicit and explained with sourceNotes.",
   "type": "object",
-  "required": ["_meta", "tags", "categories", "frameworks", "patterns", "capabilities"],
+  "required": ["_meta", "tags", "categories", "frameworks", "controlLens", "patterns", "capabilities"],
   "properties": {
     "_meta": {
       "type": "object",
@@ -60,6 +60,7 @@
       },
       "additionalProperties": false
     },
+    "controlLens": { "$ref": "#/$defs/controlLens" },
     "patterns": {
       "type": "array",
       "items": { "$ref": "#/$defs/pattern" },
@@ -115,6 +116,48 @@
         },
         "verificationNote": { "type": "string", "minLength": 1 },
         "lastVerified": { "type": "string", "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "controlLens": {
+      "type": "object",
+      "required": ["id", "name", "release", "catalogUrl", "baselineUrl", "oscalUrl", "scopeNote", "lastVerified", "families"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "release": { "type": "string", "minLength": 1 },
+        "catalogUrl": { "type": "string", "format": "uri" },
+        "baselineUrl": { "type": "string", "format": "uri" },
+        "oscalUrl": { "type": "string", "format": "uri" },
+        "scopeNote": { "type": "string", "minLength": 1 },
+        "lastVerified": { "type": "string", "format": "date" },
+        "families": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/controlFamily" },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "controlFamily": {
+      "type": "object",
+      "required": ["id", "name", "applicability", "capabilities", "reviewPrompts"],
+      "properties": {
+        "id": { "type": "string", "minLength": 2, "maxLength": 2 },
+        "name": { "type": "string", "minLength": 1 },
+        "applicability": { "type": "string", "minLength": 1 },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "reviewPrompts": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "uniqueItems": true
+        }
       },
       "additionalProperties": false
     },
