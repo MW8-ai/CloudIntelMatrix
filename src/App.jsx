@@ -694,6 +694,13 @@ export default function App() {
         a:hover { opacity: 0.8; }
         input::placeholder { color: var(--muted); opacity: 0.72; }
         input:focus { outline: none; border-color: var(--link) !important; }
+        .filter-groups { display: grid; gap: 14px; }
+        .filter-groups.with-context { grid-template-columns: minmax(420px, 1fr) minmax(280px, 370px); }
+        .filter-context { padding-left: 16px; border-left: 1px solid var(--border); }
+        @media (max-width: 980px) {
+          .filter-groups.with-context { grid-template-columns: 1fr; }
+          .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
+        }
       `}</style>
 
       {/* ── HEADER ── */}
@@ -778,40 +785,66 @@ export default function App() {
       </div>
 
       {/* ── FILTER BAR ── */}
-      <div style={{ padding: "8px 24px", borderBottom: "1px solid var(--border)", background: "var(--panel)", display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-        <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", marginRight: 2 }}>CATEGORY</span>
-        <button className="hb" onClick={() => setSelectedCategory(null)} style={{
-          padding: "2px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-          border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
-          background: !selectedCategory ? "#1e3a5f" : "transparent",
-          color: !selectedCategory ? "#93c5fd" : "var(--muted)",
-        }}>ALL ({CAPABILITIES.length})</button>
-        {CATEGORIES.map(cat => {
-          const count = CAPABILITIES.filter(c => c.category === cat).length;
-          return (
-            <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
-              padding: "2px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-              border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
-              background: selectedCategory === cat ? "#1e3a5f" : "transparent",
-              color: selectedCategory === cat ? "#93c5fd" : "var(--muted)",
-            }}>{cat} ({count})</button>
-          );
-        })}
+      <div style={{ padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
+        <div className={`filter-groups ${mode === "matrix" || mode === "controls" ? "with-context" : ""}`}>
+          <div>
+            <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
+              <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                Active: {selectedCategory || "All categories"}
+              </span>
+            </div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+              <button className="hb" onClick={() => setSelectedCategory(null)} style={{
+                padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
+                background: !selectedCategory ? "#1e3a5f" : "transparent",
+                color: !selectedCategory ? "#93c5fd" : "var(--muted)",
+              }}>ALL ({CAPABILITIES.length})</button>
+              {CATEGORIES.map(cat => {
+                const count = CAPABILITIES.filter(c => c.category === cat).length;
+                return (
+                  <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
+                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                    border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
+                    background: selectedCategory === cat ? "#1e3a5f" : "transparent",
+                    color: selectedCategory === cat ? "#93c5fd" : "var(--muted)",
+                  }}>{cat} ({count})</button>
+                );
+              })}
+            </div>
+          </div>
 
-        {/* Tier selector (only relevant for matrix mode) */}
-        {mode === "matrix" && (
-          <>
-            <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", marginLeft: 12 }}>TIER</span>
-            {META.tiers.map(t => (
-              <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
-                padding: "2px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                border: `1px solid ${selectedTier === t ? "#a78bfa" : "var(--border)"}`,
-                background: selectedTier === t ? "#4c1d9533" : "transparent",
-                color: selectedTier === t ? "#a78bfa" : "var(--muted)",
-              }}>{t}</button>
-            ))}
-          </>
-        )}
+          {/* Tier selector (only relevant for matrix mode) */}
+          {mode === "matrix" && (
+            <div className="filter-context">
+              <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>TIER GUIDANCE</span>
+                <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                  Showing: {selectedTier || "All tiers"}
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                {META.tiers.map(t => (
+                  <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
+                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                    border: `1px solid ${selectedTier === t ? (theme === "dark" ? "#a78bfa" : "#7c3aed") : "var(--border)"}`,
+                    background: selectedTier === t ? (theme === "dark" ? "#4c1d9533" : "#ede9fe") : "transparent",
+                    color: selectedTier === t ? (theme === "dark" ? "#c4b5fd" : "#6d28d9") : "var(--muted)",
+                  }}>{t}</button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {mode === "controls" && (
+            <div className="filter-context">
+              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
+              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>NIST CONTROL-FAMILY LENS</div>
+              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Category filters linked capabilities. Tier guidance is not applied in this view.</div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* ── CONTENT ── */}
