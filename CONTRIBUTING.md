@@ -45,6 +45,20 @@
 
 Use `sourceNotes` on a capability or provider when an official public source does not state a needed value. Unknowns are allowed; unsupported guesses and unsupported comparative rankings are not.
 
+## Regulated availability rubric
+
+Use `govAvailability` for public evidence of availability in the named government or regulated environment only. It does not establish workload approval, authorization, or feature parity.
+
+| Value | Required evidence |
+|---|---|
+| `Full` | Official documentation identifies every product in the mapped service or portfolio as available in the stated environment. |
+| `Partial` | Official documentation establishes only part of a combined portfolio, or support varies by a stated control package. |
+| `Limited` | Official documentation establishes availability and identifies material environment-specific feature or workflow constraints. |
+| `None` | Official documentation states the mapped product is unavailable in the stated environment. |
+| `Unknown` | Public official evidence is insufficient for one of the stronger values. |
+
+Keep `parityLag` independent. A service can be `Full`, `Partial`, or `Limited` for availability while parity remains `Unknown`.
+
 ## Architecture patterns
 
 `patterns` are curated planning overlays built from existing capability names. A pattern must:
