@@ -86,7 +86,7 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 | Workflow | Schedule | What it does |
 |---|---|---|
 | `verify.yml` | Every PR/push; weekly link scan | Blocking schema/data validation; non-blocking public URL review |
-| `update-check.yml` | Every Wednesday; manual dispatch | Opens a review issue from official AWS/GCP feeds plus an Azure Updates manual-review prompt |
+| `update-check.yml` | Every Wednesday; manual dispatch | Opens a review issue from official AWS/GCP feeds and Microsoft's documented Azure Updates Release Communications MCP source |
 | `deploy.yml` | Every push to `main` | Generates XLSX, including architecture-pattern worksheet, + builds React app → deploys to GitHub Pages |
 
 **Human in the loop:** Automation surfaces changes, humans validate and commit. No automated writes to data files.
