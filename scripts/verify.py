@@ -36,6 +36,10 @@ CAP_REQUIRED = [
 CAP_ALLOWED = set(CAP_REQUIRED + ["sourceNotes"])
 FRAMEWORK_REQUIRED = ["framework", "frameworkUrl", "foundation", "foundationUrl", "lastVerified"]
 FRAMEWORK_ALLOWED = set(FRAMEWORK_REQUIRED)
+CONTROL_LENS_REQUIRED = ["id", "name", "release", "catalogUrl", "baselineUrl", "oscalUrl", "scopeNote", "lastVerified", "families"]
+CONTROL_LENS_ALLOWED = set(CONTROL_LENS_REQUIRED)
+CONTROL_FAMILY_REQUIRED = ["id", "name", "applicability", "capabilities", "reviewPrompts"]
+CONTROL_FAMILY_ALLOWED = set(CONTROL_FAMILY_REQUIRED)
 PATTERN_REQUIRED = [
     "id",
     "name",
@@ -123,29 +127,37 @@ def validate_schema_contract(schema):
     capability = schema.get("$defs", {}).get("capability", {})
     provider = schema.get("$defs", {}).get("provider", {})
     framework = schema.get("$defs", {}).get("framework", {})
+    control_lens = schema.get("$defs", {}).get("controlLens", {})
+    control_family = schema.get("$defs", {}).get("controlFamily", {})
     pattern = schema.get("$defs", {}).get("pattern", {})
     required_caps = set(capability.get("required", []))
     required_prov = set(provider.get("required", []))
     required_framework = set(framework.get("required", []))
+    required_control_lens = set(control_lens.get("required", []))
+    required_control_family = set(control_family.get("required", []))
     required_pattern = set(pattern.get("required", []))
     required_root = set(schema.get("required", []))
-    if not {"frameworks", "patterns"}.issubset(required_root):
-        err("data/schema.json root requirements must include frameworks and patterns")
+    if not {"frameworks", "controlLens", "patterns"}.issubset(required_root):
+        err("data/schema.json root requirements must include frameworks, controlLens, and patterns")
     if not set(CAP_REQUIRED).issubset(required_caps):
         err("data/schema.json capability requirements do not cover validator-required fields")
     if not set(PROV_REQUIRED).issubset(required_prov):
         err("data/schema.json provider requirements do not cover validator-required fields")
     if not set(FRAMEWORK_REQUIRED).issubset(required_framework):
         err("data/schema.json framework requirements do not cover validator-required fields")
+    if not set(CONTROL_LENS_REQUIRED).issubset(required_control_lens):
+        err("data/schema.json controlLens requirements do not cover validator-required fields")
+    if not set(CONTROL_FAMILY_REQUIRED).issubset(required_control_family):
+        err("data/schema.json controlFamily requirements do not cover validator-required fields")
     if not set(PATTERN_REQUIRED).issubset(required_pattern):
         err("data/schema.json pattern requirements do not cover validator-required fields")
     info("data/schema.json: capability-v1 contract loaded")
 
 
 def validate_matrix(mdata):
-    require_fields(mdata, ["_meta", "tags", "categories", "frameworks", "patterns", "capabilities"], "matrix.json")
+    require_fields(mdata, ["_meta", "tags", "categories", "frameworks", "controlLens", "patterns", "capabilities"], "matrix.json")
     if not isinstance(mdata, dict):
-        return None, [], [], {}
+        return None, [], [], {}, {}
 
     meta = mdata.get("_meta", {})
     require_fields(meta, ["version", "schema", "last_verified", "providers", "tiers", "license", "repo"], "_meta")
@@ -277,6 +289,47 @@ def validate_matrix(mdata):
                 if tier not in tier_notes:
                     err(f"'{name}/{pkey}' missing tierNotes for: {tier}")
 
+    control_lens = mdata.get("controlLens", {})
+    require_fields(control_lens, CONTROL_LENS_REQUIRED, "controlLens")
+    if not isinstance(control_lens, dict):
+        control_lens = {}
+    else:
+        unexpected_lens_fields = set(control_lens) - CONTROL_LENS_ALLOWED
+        if unexpected_lens_fields:
+            err(f"controlLens contains unsupported fields: {sorted(unexpected_lens_fields)}")
+        for field in ["catalogUrl", "baselineUrl", "oscalUrl"]:
+            validate_url(control_lens.get(field), f"controlLens.{field}", False)
+        validate_date(control_lens.get("lastVerified"), "controlLens.lastVerified")
+        families = control_lens.get("families", [])
+        if not isinstance(families, list) or not families:
+            err("controlLens.families must be a non-empty array")
+            families = []
+        seen_families = set()
+        for family in families:
+            family_id = family.get("id", "MISSING") if isinstance(family, dict) else "MISSING"
+            require_fields(family, CONTROL_FAMILY_REQUIRED, f"control family '{family_id}'")
+            if not isinstance(family, dict):
+                continue
+            unexpected_family_fields = set(family) - CONTROL_FAMILY_ALLOWED
+            if unexpected_family_fields:
+                err(f"control family '{family_id}' contains unsupported fields: {sorted(unexpected_family_fields)}")
+            if family_id in seen_families:
+                err(f"Duplicate control family: '{family_id}'")
+            seen_families.add(family_id)
+            refs = family.get("capabilities", [])
+            if not isinstance(refs, list) or not refs:
+                err(f"control family '{family_id}'.capabilities must be a non-empty array")
+            elif len(refs) != len(set(refs)):
+                err(f"control family '{family_id}'.capabilities contains duplicates")
+            else:
+                for capability_name in refs:
+                    if capability_name not in seen_caps:
+                        err(f"control family '{family_id}' references unknown capability: {capability_name}")
+            prompts = family.get("reviewPrompts", [])
+            if not isinstance(prompts, list) or not prompts:
+                err(f"control family '{family_id}'.reviewPrompts must be a non-empty array")
+        info(f"controlLens: {control_lens.get('name', 'unknown')}; {len(families)} selected families")
+
     patterns = mdata.get("patterns", [])
     if not isinstance(patterns, list) or not patterns:
         err("patterns must be a non-empty array")
@@ -311,7 +364,7 @@ def validate_matrix(mdata):
         f"matrix.json: {len(capabilities)} capabilities; {len(patterns)} patterns; "
         f"{len(providers)} providers; schema {meta.get('schema')}"
     )
-    return providers, capabilities, tiers, frameworks
+    return providers, capabilities, tiers, frameworks, control_lens
 
 
 def validate_upcoming(udata):
@@ -359,7 +412,7 @@ def check_link(url, label):
         warn(f"Could not verify {label}: {exc}")
 
 
-def run_link_checks(capabilities, upcoming, frameworks):
+def run_link_checks(capabilities, upcoming, frameworks, control_lens):
     print("Checking source URLs (non-blocking)...")
     for cap in capabilities:
         for pkey in EXPECTED_PROVIDERS:
@@ -377,6 +430,9 @@ def run_link_checks(capabilities, upcoming, frameworks):
         for field in ["frameworkUrl", "foundationUrl"]:
             check_link(guidance.get(field), f"framework/{pkey}/{field}")
             time.sleep(0.2)
+    for field in ["catalogUrl", "baselineUrl", "oscalUrl"]:
+        check_link(control_lens.get(field), f"controlLens/{field}")
+        time.sleep(0.2)
 
 
 def main():
@@ -393,7 +449,7 @@ def main():
         print("\n".join(ERRORS))
         return 1
     validate_schema_contract(schema)
-    providers, capabilities, _, frameworks = validate_matrix(matrix)
+    providers, capabilities, _, frameworks, control_lens = validate_matrix(matrix)
 
     upcoming = []
     if not args.schema_only:
@@ -407,7 +463,7 @@ def main():
             info("sources.json: loaded")
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, frameworks)
+        run_link_checks(capabilities, upcoming, frameworks, control_lens)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")

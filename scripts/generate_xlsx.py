@@ -30,6 +30,7 @@ CAPS       = mdata["capabilities"]
 CATEGORIES = mdata["categories"]
 TAG_DEFS   = mdata["tags"]
 FRAMEWORKS = mdata["frameworks"]
+CONTROL_LENS = mdata["controlLens"]
 PATTERNS   = mdata["patterns"]
 TIERS      = META["tiers"]
 PROVIDERS  = META["providers"]
@@ -317,6 +318,63 @@ def build_patterns_sheet(ws):
     for col, width in {"A":38, "B":38, "C":32, "D":35, "E":35, "F":35, "G":38, "H":40, "I":14}.items():
         ws.column_dimensions[col].width = width
 
+def build_controls_sheet(ws):
+    """Selected NIST SP 800-53 Rev. 5 control families mapped to architecture decisions."""
+    ws.sheet_view.showGridLines = False
+    ws.freeze_panes = "A3"
+    hdr(ws, f"{CONTROL_LENS['name']} - {CONTROL_LENS['release']} Architecture Planning Lens", 6)
+    headers = ["Family", "Implementation Focus", "Linked Capabilities", "Architecture Review Questions", "Boundary", "Verified"]
+    for ci, header in enumerate(headers, 1):
+        c = ws.cell(row=2, column=ci, value=header)
+        c.fill = f("1E3A5F")
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    ws.row_dimensions[2].height = 18
+
+    for row, family in enumerate(CONTROL_LENS["families"], 3):
+        values = [
+            f"{family['id']} - {family['name']}",
+            family["applicability"],
+            "\n".join(family["capabilities"]),
+            "\n".join(family["reviewPrompts"]),
+            CONTROL_LENS["scopeNote"] if row == 3 else "",
+            CONTROL_LENS["lastVerified"],
+        ]
+        bg = "EFF6FF" if row % 2 else "F8FAFC"
+        for ci, value in enumerate(values, 1):
+            c = ws.cell(row=row, column=ci, value=value)
+            c.fill = f(bg)
+            c.font = ft(bold=(ci == 1), size=8)
+            c.alignment = al("left", "top", wrap=True)
+            c.border = TB
+        ws.row_dimensions[row].height = 62
+
+    row = len(CONTROL_LENS["families"]) + 5
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
+    c = ws.cell(row=row, column=1, value="Official NIST reference basis")
+    c.fill = f("0F1A2E")
+    c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
+    c.alignment = al("left", "center")
+    source_rows = [
+        ("Catalog", CONTROL_LENS["catalogUrl"]),
+        ("Control baselines", CONTROL_LENS["baselineUrl"]),
+        ("OSCAL content", CONTROL_LENS["oscalUrl"]),
+    ]
+    for offset, (label, url) in enumerate(source_rows, 1):
+        ws.cell(row=row + offset, column=1, value=label)
+        source_cell = ws.cell(row=row + offset, column=2, value=url)
+        source_cell.hyperlink = url
+        for ci in range(1, 7):
+            cell = ws.cell(row=row + offset, column=ci)
+            cell.fill = f("F8FAFC")
+            cell.font = ft(bold=(ci == 1), size=8, color="2563EB" if ci == 2 else "111827")
+            cell.alignment = al("left", "center", wrap=True)
+            cell.border = TB
+
+    for col, width in {"A":30, "B":55, "C":42, "D":58, "E":58, "F":14}.items():
+        ws.column_dimensions[col].width = width
+
 def build_upcoming_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "Announced / Preview / Upcoming — Official Sources Only", 10)
@@ -363,6 +421,9 @@ build_gov_sheet(ws_gov)
 
 ws_patterns = wb.create_sheet("Architecture Patterns")
 build_patterns_sheet(ws_patterns)
+
+ws_controls = wb.create_sheet("NIST 800-53 Lens")
+build_controls_sheet(ws_controls)
 
 ws_up = wb.create_sheet("Upcoming & Future")
 build_upcoming_sheet(ws_up)

@@ -24,7 +24,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 26 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays, in matrix data version `3.7.0`.
+**Current coverage:** 27 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.8.0`.
 
 ---
 
@@ -48,6 +48,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `govDocsUrl` | Government cloud documentation |
 | `lastVerified` | Date last manually reviewed |
 | `sourceNotes` | Required explanation when a public-source fact is unknown or unavailable |
+| `controlLens` | NIST SP 800-53 Rev. 5 control-family planning mappings to relevant capability decisions; not an assessment result |
 
 ### Regulated availability reading guide
 
@@ -68,6 +69,7 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 |---|---|
 | **Matrix** | All capabilities by tier, click to expand full detail + links |
 | **Patterns** | Framework-informed planning overlays with provider service maps and review boundaries |
+| **NIST 800-53** | Selected Rev. 5 control-family lens mapped to cloud implementation touchpoints and review questions |
 | **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP) |
 | **Gov / Parity** | Government availability and parity lag focus |
 | **AI Focus** | AI_NATIVE and AI_CAPABLE capabilities only |
@@ -75,6 +77,12 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 ### Architecture patterns
 
 Patterns connect sourced capability rows into four practical planning starts: secure internet-facing applications, regulated workload control boundaries, governed data and generative AI platforms, and hybrid migration and recovery paths. They are curated overlays inferred from the official framework and foundation guidance above, not provider-certified blueprints or compliance determinations.
+
+### NIST SP 800-53 Rev. 5 control lens
+
+The control lens maps selected NIST control families to cloud architecture decisions, including an Infrastructure as Code & Policy as Code row that covers Terraform and provider-native IaC workflows. It is intended to help architects identify implementation touchpoints and evidence questions; it is not a control applicability decision, control implementation statement, assessment, or authorization.
+
+Official sources: [NIST SP 800-53 Rev. 5 catalog](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [SP 800-53B control baselines](https://csrc.nist.gov/pubs/sp/800/53/b/upd1/final), and [NIST OSCAL content](https://github.com/usnistgov/oscal-content/tree/main/nist.gov/SP800-53/rev5).
 
 ### Categories (14)
 Core Infrastructure · Identity & Access · Networking · Storage · Databases · Integration & Messaging · Security & Compliance · Monitoring & Operations · Data & Analytics · AI / ML · Developer Platform · Government / Sovereign Cloud · Hybrid / Edge · Cost Governance

@@ -7,6 +7,7 @@ const {
   categories: CATEGORIES,
   tags: TAG_DEFS,
   frameworks: FRAMEWORKS,
+  controlLens: CONTROL_LENS,
   patterns: PATTERNS,
   _meta: META,
 } = matrixData;
@@ -497,7 +498,52 @@ function PatternView({ patterns, activeProviders }) {
   );
 }
 
-// ── UPCOMING BANNER ────────────────────────────────────────────────────────
+// -- NIST CONTROL LENS -------------------------------------------------------
+function ControlLensView({ lens, families }) {
+  return (
+    <div>
+      <div style={{ padding: "12px 14px", margin: "10px 0 14px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--link)", fontWeight: 700, marginBottom: 4 }}>CONTROL FAMILY PLANNING LENS</div>
+        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 700, marginBottom: 5 }}>{lens.name} - {lens.release}</div>
+        <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6, marginBottom: 9 }}>{lens.scopeNote}</div>
+        <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <a href={lens.catalogUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Official catalog</a>
+          <a href={lens.baselineUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Control baselines</a>
+          <a href={lens.oscalUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>OSCAL source</a>
+          <VerifiedStamp date={lens.lastVerified} />
+        </div>
+      </div>
+      {!families.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No control families match the current filter.</div>
+      )}
+      {families.map((family, index) => (
+        <div key={family.id} style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 14, padding: "12px 14px", marginBottom: 8, border: "1px solid var(--border)", borderRadius: 6, background: index % 2 === 0 ? "var(--panel)" : "var(--panel-alt)" }}>
+          <div>
+            <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 700, letterSpacing: "0.1em", marginBottom: 5 }}>FAMILY {family.id}</div>
+            <div style={{ fontSize: 12, color: "var(--text)", fontWeight: 700, marginBottom: 6 }}>{family.name}</div>
+            <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>{family.applicability}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 6 }}>IMPLEMENTATION TOUCHPOINTS</div>
+            <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginBottom: 11 }}>
+              {family.capabilities.map(capabilityName => (
+                <span key={capabilityName} style={{ padding: "4px 7px", border: "1px solid var(--border)", borderRadius: 4, background: "var(--panel)", color: "var(--text)", fontSize: 9 }}>
+                  {capabilityName}
+                </span>
+              ))}
+            </div>
+            <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 6 }}>ARCHITECTURE REVIEW QUESTIONS</div>
+            {family.reviewPrompts.map(prompt => (
+              <div key={prompt} style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.5, marginBottom: 5, paddingLeft: 9, borderLeft: "2px solid var(--border)" }}>{prompt}</div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
   if (!items.length) return null;
@@ -534,7 +580,7 @@ function UpcomingBanner({ items }) {
 // ── ROOT ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
-  const [mode, setMode] = useState("matrix");   // matrix | patterns | diff | gov | ai
+  const [mode, setMode] = useState("matrix");   // matrix | patterns | controls | diff | gov | ai
   const [activeProviders, setActiveProviders] = useState([...PROVIDERS]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -596,6 +642,32 @@ export default function App() {
     return patterns;
   }, [selectedCategory, searchQuery]);
 
+  const filteredControlFamilies = useMemo(() => {
+    let families = CONTROL_LENS.families;
+    if (selectedCategory) {
+      families = families.filter(family =>
+        family.capabilities.some(name => CAPABILITY_MAP[name]?.category === selectedCategory)
+      );
+    }
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      families = families.filter(family => {
+        const linkedCaps = family.capabilities.map(name => CAPABILITY_MAP[name]).filter(Boolean);
+        return (
+          family.id.toLowerCase().includes(q) ||
+          family.name.toLowerCase().includes(q) ||
+          family.applicability.toLowerCase().includes(q) ||
+          family.reviewPrompts.some(prompt => prompt.toLowerCase().includes(q)) ||
+          linkedCaps.some(cap =>
+            cap.capability.toLowerCase().includes(q) ||
+            Object.values(cap.providers).some(provider => provider.service.toLowerCase().includes(q))
+          )
+        );
+      });
+    }
+    return families;
+  }, [selectedCategory, searchQuery]);
+
   const govAlertCount = CAPABILITIES.filter(c =>
     Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
   ).length;
@@ -603,6 +675,7 @@ export default function App() {
   const modes = [
     { id: "matrix", label: "MATRIX", desc: "All capabilities by tier" },
     { id: "patterns", label: "PATTERNS", desc: "Architecture planning overlays" },
+    { id: "controls", label: "NIST 800-53", desc: "NIST SP 800-53 Rev. 5 control-family planning lens" },
     { id: "diff",   label: "EQUIVALENCY", desc: "Side-by-side service mapping" },
     { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
     { id: "ai",     label: "AI FOCUS", desc: "AI_NATIVE and AI_CAPABLE only" },
@@ -635,7 +708,7 @@ export default function App() {
               AWS · Azure · GCP
             </div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CATEGORIES.length} categories · fact-first · official sources only
+              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CONTROL_LENS.families.length} NIST families · {CATEGORIES.length} categories · fact-first · official sources only
             </div>
           </div>
 
@@ -682,7 +755,7 @@ export default function App() {
         </div>
 
         {/* Mode tabs */}
-        <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)" }}>
+        <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
           {modes.map(m => (
             <button key={m.id} className="hb" onClick={() => setMode(m.id)} style={{
               padding: "8px 18px", border: "none", borderBottom: mode === m.id ? "2px solid var(--link)" : "2px solid transparent",
@@ -749,7 +822,7 @@ export default function App() {
           {/* Search result count */}
           {searchQuery.trim().length >= 2 && (
             <div style={{ marginBottom: 10, fontSize: 9, color: "var(--muted)" }}>
-              {mode === "patterns" ? filteredPatterns.length : filteredCaps.length} result(s) for "{searchQuery}"
+              {mode === "patterns" ? filteredPatterns.length : mode === "controls" ? filteredControlFamilies.length : filteredCaps.length} result(s) for "{searchQuery}"
             </div>
           )}
 
@@ -778,6 +851,7 @@ export default function App() {
           {mode === "gov"  && <GovView  caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "ai"   && <AIView   caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
+          {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} />}
         </div>
 
         {/* Tag legend */}
