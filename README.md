@@ -25,7 +25,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 27 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.9.0`.
+**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.10.0`.
 
 ---
 
@@ -62,7 +62,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `Limited` | Official evidence establishes availability and also identifies material environment-specific limitations relevant to architecture review. |
 | `Unknown` | Public evidence has not yet established a stronger statement for the mapped service or portfolio. |
 
-The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager; OCI regulated availability is asserted only when Oracle's U.S. Government Cloud documentation establishes the mapped service. `parityLag` remains `Unknown` unless an official source independently establishes a comparison.
+The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager. The AI architecture depth pass in `3.10.0` adds agent orchestration, vector retrieval/RAG knowledge bases, and accelerated AI/GPU compute across all four providers. Regulated availability and `parityLag` remain `Unknown` for those new AI portfolios unless official feature-specific evidence establishes a firmer statement.
 
 ### View modes
 
@@ -77,11 +77,11 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 
 ### Architecture patterns
 
-Patterns connect sourced capability rows into four practical planning starts: secure internet-facing applications, regulated workload control boundaries, governed data and generative AI platforms, and hybrid migration and recovery paths. They are curated overlays inferred from the official framework and foundation guidance above, not provider-certified blueprints or compliance determinations.
+Patterns connect sourced capability rows into four practical planning starts: secure internet-facing applications, regulated workload control boundaries, governed data and generative AI platforms (including RAG, agents, and accelerator planning), and hybrid migration and recovery paths. They are curated overlays inferred from the official framework and foundation guidance above, not provider-certified blueprints or compliance determinations.
 
 ### NIST SP 800-53 Rev. 5 control lens
 
-The control lens maps selected NIST control families to cloud architecture decisions, including an Infrastructure as Code & Policy as Code row that covers Terraform and provider-native IaC workflows. It is intended to help architects identify implementation touchpoints and evidence questions; it is not a control applicability decision, control implementation statement, assessment, or authorization.
+The control lens maps selected NIST control families to cloud architecture decisions, including Terraform/provider-native IaC workflows and AI touchpoints for agent tool authorization and protected retrieval data paths. It is intended to help architects identify implementation touchpoints and evidence questions; it is not a control applicability decision, control implementation statement, assessment, or authorization.
 
 Official sources: [NIST SP 800-53 Rev. 5 catalog](https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final), [SP 800-53B control baselines](https://csrc.nist.gov/pubs/sp/800/53/b/upd1/final), and [NIST OSCAL content](https://github.com/usnistgov/oscal-content/tree/main/nist.gov/SP800-53/rev5).
 

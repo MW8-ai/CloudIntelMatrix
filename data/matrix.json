@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.9.0",
+    "version": "3.10.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-26",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
@@ -82,20 +82,20 @@
     "baselineUrl": "https://csrc.nist.gov/pubs/sp/800/53/b/upd1/final",
     "oscalUrl": "https://github.com/usnistgov/oscal-content/tree/main/nist.gov/SP800-53/rev5",
     "scopeNote": "Architecture planning aid only. These mappings identify cloud decisions that can support control implementation and evidence planning; they do not determine applicability, implementation sufficiency, assessment results, or authorization.",
-    "lastVerified": "2026-05-25",
+    "lastVerified": "2026-05-26",
     "families": [
       {
         "id": "AC",
         "name": "Access Control",
         "applicability": "Shape application and administrative access boundaries, privileged paths, network-restricted service access, and policy enforcement points.",
-        "capabilities": ["Identity & Access Management", "API Management & Integration Gateway", "Private Connectivity & DNS"],
+        "capabilities": ["Identity & Access Management", "API Management & Integration Gateway", "Private Connectivity & DNS", "AI Agents & Tool Orchestration", "Vector Retrieval & RAG Knowledge Bases"],
         "reviewPrompts": ["Where is authorization enforced for users, workloads, and administrators?", "Which public or private paths must be denied by default and evidenced?"]
       },
       {
         "id": "AU",
         "name": "Audit and Accountability",
         "applicability": "Plan traceable audit events, centralized collection, retention, review, and evidentiary access protection.",
-        "capabilities": ["Observability & Monitoring", "Security Information & Event Management (SIEM)"],
+        "capabilities": ["Observability & Monitoring", "Security Information & Event Management (SIEM)", "AI Agents & Tool Orchestration"],
         "reviewPrompts": ["Which application and platform events must be captured and retained?", "Who can alter, query, export, or delete audit evidence?"]
       },
       {
@@ -130,7 +130,7 @@
         "id": "RA",
         "name": "Risk Assessment",
         "applicability": "Expose risks from public attack surface, vulnerable configuration, regulated data location, AI usage, and provider capability constraints.",
-        "capabilities": ["Security & Compliance Posture Management", "CDN & Edge Application Protection", "Generative AI / Foundation Models"],
+        "capabilities": ["Security & Compliance Posture Management", "CDN & Edge Application Protection", "Generative AI / Foundation Models", "AI Agents & Tool Orchestration", "Vector Retrieval & RAG Knowledge Bases"],
         "reviewPrompts": ["Which threats, data flows, and provider limitations materially affect the application?", "How are findings tracked through design and operational review?"]
       },
       {
@@ -144,7 +144,7 @@
         "id": "SC",
         "name": "System and Communications Protection",
         "applicability": "Plan segmentation, private access, encryption, key control, edge exposure, and trustworthy communications paths.",
-        "capabilities": ["Virtual Networking", "Private Connectivity & DNS", "Key, Secret & Certificate Management", "CDN & Edge Application Protection"],
+        "capabilities": ["Virtual Networking", "Private Connectivity & DNS", "Key, Secret & Certificate Management", "CDN & Edge Application Protection", "Vector Retrieval & RAG Knowledge Bases"],
         "reviewPrompts": ["Where do trust boundaries, ingress, egress, and cryptographic protections exist?", "Which managed-service endpoints require private or inspected connectivity?"]
       },
       {
@@ -215,26 +215,29 @@
     {
       "id": "data-generative-ai-platform",
       "name": "Data & Generative AI Platform Foundation",
-      "summary": "A governed base for enterprise analytics and generative AI initiatives, connecting data storage and analysis with model services, identity, cryptography, private access, monitoring, and FinOps.",
-      "whenToUse": "Use when evaluating internal analytics, retrieval-augmented generation, model training, or governed AI product platforms.",
+      "summary": "A governed base for enterprise analytics and generative AI initiatives, connecting data storage and analysis with models, retrieval, agents, accelerator capacity, identity, cryptography, private access, monitoring, and FinOps.",
+      "whenToUse": "Use when evaluating internal analytics, retrieval-augmented generation, agentic workflows, model training, self-hosted inference, or governed AI product platforms.",
       "capabilities": [
         "Landing Zone & Resource Governance",
         "Identity & Access Management",
         "Object Storage",
         "Data Warehouse / Analytics Platform",
         "Generative AI / Foundation Models",
+        "Vector Retrieval & RAG Knowledge Bases",
+        "AI Agents & Tool Orchestration",
         "ML Platform & Model Training",
+        "Accelerated AI Compute & GPU Infrastructure",
         "Key, Secret & Certificate Management",
         "Private Connectivity & DNS",
         "Cloud Cost Management & FinOps"
       ],
       "reviewPrompts": [
-        "What data is allowed into model prompts, training, retrieval, and analytics paths?",
-        "Which identity, encryption, private-access, evaluation, and cost controls are mandatory?",
+        "What data is allowed into model prompts, training, retrieval, agent memory, tool calls, and analytics paths?",
+        "Which identity, tool authorization, encryption, private-access, evaluation, and cost controls are mandatory?",
         "Are selected models and AI features available in the required region or regulated boundary?"
       ],
       "verificationNote": "Model catalogs and AI service support can change quickly. Recheck provider documentation, data-handling commitments, regional support, and regulated constraints during architecture review.",
-      "lastVerified": "2026-05-24"
+      "lastVerified": "2026-05-26"
     },
     {
       "id": "hybrid-migration-recovery-path",
@@ -843,6 +846,258 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Review model catalog, dedicated AI clusters, endpoints, grounding, data handling, guardrails, quotas, and evaluation before production use.",
             "Government": "Do not assume OCI Generative AI availability for regulated workloads; obtain current Oracle evidence for the selected boundary and model."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "category": "AI / ML",
+      "tags": ["AI_NATIVE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE", "LOCK_IN_RISK"],
+      "aiClassification": "AI_NATIVE",
+      "architectureNotes": "Retrieval-augmented generation grounds model responses in governed enterprise data. Compare ingestion pipelines, supported vector stores, embedding choices, access-control propagation, citations, private networking, evaluation, and data lifecycle controls rather than assuming equivalent RAG behavior.",
+      "operationalConsiderations": "Retrieval quality depends on content preparation, chunking, metadata, embeddings, ranking, and authorization trimming. Sensitive source material can leak through poor access design or prompt/tool behavior. Index refresh, query volume, storage, and embedding generation add ongoing cost.",
+      "lastVerified": "2026-05-26",
+      "sourceNotes": "Official commercial documentation establishes the mapped retrieval and knowledge-base capabilities. This initial decision row does not assert regulated-environment availability, feature parity, or equivalent authorization propagation; each remains to be verified for the selected service boundary.",
+      "providers": {
+        "aws": {
+          "service": "Knowledge Bases for Amazon Bedrock",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "AWS GovCloud (US)",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-retrieval.html",
+          "pricingUrl": "https://aws.amazon.com/bedrock/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS documents retrieval and retrieve-and-generate operations for Knowledge Bases for Amazon Bedrock. This pass did not establish the complete knowledge-base portfolio in AWS GovCloud (US), so government availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Prototype with non-sensitive sample content and measure embedding, storage, and inference cost before committing to a retrieval design.",
+            "Commercial / SMB": "Validate supported data sources, chunking, metadata filters, access model, refresh cadence, citations, and operational cost.",
+            "Enterprise": "Govern knowledge-base ingestion, vector store selection, identity propagation, network boundaries, evaluation, monitoring, and retention.",
+            "Government": "Confirm every Bedrock knowledge-base, embedding-model, vector-store, data-source, and networking dependency in the selected AWS GovCloud environment."
+          }
+        },
+        "azure": {
+          "service": "Azure AI Search (Vector Search)",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Azure Government",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/search/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Microsoft documents vector search in Azure AI Search for generative AI and other similarity-search scenarios. This pass did not establish the required vector-search and model-integration features in Azure Government, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Use representative sample documents and prevent sensitive content from entering prototypes without approval.",
+            "Commercial / SMB": "Validate vector index design, hybrid search, enrichment pipeline, identity filters, capacity, and retrieval quality.",
+            "Enterprise": "Govern Azure AI Search indexing, private access, key management, authorization filtering, evaluation, observability, and capacity planning.",
+            "Government": "Confirm vector search, indexing, model integration, private connectivity, and required data-handling controls in Azure Government."
+          }
+        },
+        "gcp": {
+          "service": "Vertex AI RAG Engine",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Assured Workloads",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/rag-api",
+          "pricingUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+          "complianceUrl": "https://cloud.google.com/security/compliance",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google documents Vertex AI RAG Engine APIs and notes managed database billing for new RAG corpora. This pass did not establish the exact RAG Engine capability set under a required Assured Workloads control package, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Evaluate with non-sensitive documents and monitor embedding, index, and query consumption.",
+            "Commercial / SMB": "Validate corpus ingestion, retrieval quality, metadata controls, model grounding, region, and cost model.",
+            "Enterprise": "Govern corpora, embeddings, access boundaries, VPC controls, evaluation, data retention, and model integration.",
+            "Government": "Confirm Vertex AI RAG Engine, embedding models, storage, and required control-package support before regulated use."
+          }
+        },
+        "oci": {
+          "service": "OCI Generative AI Agents Knowledge Bases",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/list-knowledge-bases.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents knowledge bases in OCI Generative AI Agents, including data-source and vector-store configuration. Generative AI Agents was not identified in the reviewed Oracle U.S. Government Cloud endpoint inventory, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Use approved non-sensitive material for initial retrieval experiments and confirm eligible region and cost behavior.",
+            "Commercial / SMB": "Validate knowledge-base source, vector-store choice, ingestion schedule, endpoint access, retrieval quality, and cost controls.",
+            "Enterprise": "Govern data source permissions, vector stores, private access, model grounding, evaluation, monitoring, and retention.",
+            "Government": "Do not assume OCI Generative AI Agents knowledge-base availability in government cloud; obtain current Oracle evidence for all dependencies."
+          }
+        }
+      }
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "tags": ["AI_NATIVE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL", "COST_SENSITIVE", "LOCK_IN_RISK"],
+      "aiClassification": "AI_NATIVE",
+      "architectureNotes": "Managed AI-agent services orchestrate model reasoning with tools, APIs, knowledge sources, memory, and workflow controls. Compare identity delegation, tool authorization, human approval, action tracing, evaluation, guardrails, interoperability, and runtime isolation before adoption.",
+      "operationalConsiderations": "Agents expand the blast radius of model errors because they can invoke systems and act on data. Require scoped service identities, least-privilege tools, approval gates for consequential operations, audit trails, testing against prompt injection, and clear rollback procedures.",
+      "lastVerified": "2026-05-26",
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. No regulated-service availability or commercial-to-regulated parity is asserted for this new cross-cloud agent row without feature-specific official evidence.",
+      "providers": {
+        "aws": {
+          "service": "Agents for Amazon Bedrock",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "AWS GovCloud (US)",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html",
+          "pricingUrl": "https://aws.amazon.com/bedrock/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+          "sourceNotes": "AWS documents Agents for Amazon Bedrock as an orchestration capability using foundation models, action groups, and knowledge bases. This pass did not establish complete agent support in AWS GovCloud (US), so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Prototype only with low-risk tools and synthetic data; keep every tool action observable and reversible.",
+            "Commercial / SMB": "Define tool allowlists, IAM roles, confirmation steps, tracing, prompt-injection tests, and cost limits.",
+            "Enterprise": "Govern agent identity, action groups, memory and knowledge use, human approval, evaluation, audit logging, and incident response.",
+            "Government": "Confirm Agents, foundation models, action-group dependencies, knowledge bases, IAM, and logging support in AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "Microsoft Foundry Agent Service",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Azure Government",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/agents/overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/ai-foundry/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Microsoft documents Foundry Agent Service for building, deploying, and scaling AI agents with tools and knowledge. This pass did not establish the required agent runtime and connected capabilities in Azure Government, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Limit experimentation to harmless tools and test data with cost and action limits.",
+            "Commercial / SMB": "Validate connected tools, managed identity design, search grounding, tracing, approvals, and runtime cost.",
+            "Enterprise": "Govern agent catalogs, identities, tools, private networking, evaluation, logging, content safety, and human escalation.",
+            "Government": "Confirm Foundry Agent Service, models, search, identity, private access, and monitoring features in Azure Government."
+          }
+        },
+        "gcp": {
+          "service": "Vertex AI Agent Engine",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Assured Workloads",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview",
+          "pricingUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
+          "complianceUrl": "https://cloud.google.com/security/compliance",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google documents Vertex AI Agent Engine for deploying, managing, and scaling agents in production. This pass did not establish required Agent Engine functionality under a selected Assured Workloads control package, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Use sandbox tools and test data while measuring model, tool, and runtime behavior.",
+            "Commercial / SMB": "Validate runtime choice, tools, service accounts, sessions, tracing, model grounding, and consumption.",
+            "Enterprise": "Govern deployed agents, identities, tool privileges, sessions and memory, evaluation, telemetry, and incident controls.",
+            "Government": "Confirm Agent Engine, selected models, tool dependencies, data boundary, and control-package support before use."
+          }
+        },
+        "oci": {
+          "service": "OCI Generative AI Agents",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/overview.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents OCI Generative AI Agents as an AI agent service with knowledge bases, tools, endpoints, and agent runtime concepts. It was not identified in the reviewed U.S. Government Cloud endpoint inventory, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Prototype with low-risk tools and approved data only; validate region, quota, and cost before broader use.",
+            "Commercial / SMB": "Validate agents, tools, knowledge bases, endpoints, IAM, tracing, approvals, and operational ownership.",
+            "Enterprise": "Govern tool permissions, agent endpoints, knowledge sources, model use, private access, audit evidence, and evaluation.",
+            "Government": "Do not assume OCI Generative AI Agents availability in government cloud; obtain current Oracle evidence for the selected design."
+          }
+        }
+      }
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "category": "AI / ML",
+      "tags": ["AI_CAPABLE", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "aiClassification": "AI_CAPABLE",
+      "architectureNotes": "GPU and accelerator-backed compute supports model training, fine-tuning, high-throughput inference, graphics, and scientific workloads outside fully managed model APIs. Compare accelerator families, memory, interconnect, availability zones, scheduling, container stacks, bare-metal options, quotas, and reservation models.",
+      "operationalConsiderations": "Accelerator supply, quota, and utilization dominate cost and delivery risk. Architecture should plan capacity acquisition, image and driver management, orchestration, telemetry, data locality, failover, and a fallback path when a desired accelerator is unavailable.",
+      "lastVerified": "2026-05-26",
+      "sourceNotes": "Commercial compute documentation establishes GPU and accelerator offerings. General cloud-compute availability does not establish required accelerator shapes, quotas, drivers, or regulated-environment support, so all government and parity values begin Unknown.",
+      "providers": {
+        "aws": {
+          "service": "Amazon EC2 Accelerated Computing",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "AWS GovCloud (US)",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html",
+          "pricingUrl": "https://aws.amazon.com/ec2/pricing/",
+          "complianceUrl": "https://aws.amazon.com/compliance/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+          "sourceNotes": "AWS documents accelerated computing instance families for GPU and other hardware acceleration. Although EC2 is documented in AWS GovCloud (US), this new row does not infer availability or parity of required accelerator families, so the regulated value remains Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Use managed APIs or small experiments unless accelerator cost and quota are explicitly approved.",
+            "Commercial / SMB": "Select instance family for workload demand, drivers, container support, scheduling, quota, and spending guardrails.",
+            "Enterprise": "Plan reservations or capacity, AMI and driver lifecycle, cluster scheduling, inference resilience, telemetry, and utilization controls.",
+            "Government": "Confirm specific accelerated instance families, quotas, images, networking, and data controls in AWS GovCloud."
+          }
+        },
+        "azure": {
+          "service": "Azure GPU-Accelerated Virtual Machines",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Azure Government",
+          "parityLag": "Unknown",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/overview",
+          "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/",
+          "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Microsoft documents GPU-accelerated VM families within Azure VM size guidance. This pass did not establish required GPU families, quotas, drivers, or deployment features in Azure Government, so availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Prefer managed model APIs or strictly budgeted experiments unless GPU capacity is necessary.",
+            "Commercial / SMB": "Choose GPU family against model size, driver image, region availability, networking, quota, and spending limits.",
+            "Enterprise": "Govern quota and capacity, approved images and drivers, orchestration, monitoring, resilience, and utilization.",
+            "Government": "Confirm required GPU VM families, images, quota, networking, and operating constraints in Azure Government."
+          }
+        },
+        "gcp": {
+          "service": "Compute Engine GPUs",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Assured Workloads",
+          "parityLag": "Unknown",
+          "docsUrl": "https://cloud.google.com/compute/docs/gpus",
+          "pricingUrl": "https://cloud.google.com/compute/gpus-pricing",
+          "complianceUrl": "https://cloud.google.com/security/compliance",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google documents attaching GPUs and GPU machine types for Compute Engine AI workloads. Compute Engine support under control packages does not by itself establish required GPU families or features, so regulated availability and parity remain Unknown.",
+          "tierNotes": {
+            "Personal / Free": "Restrict GPU experiments with budget alerts, quotas, and automatic shutdown policies.",
+            "Commercial / SMB": "Validate machine and GPU combination, region and quota, drivers, containers, storage locality, and pricing.",
+            "Enterprise": "Govern accelerator capacity, reservations, images, scheduling, inference availability, observability, and utilization.",
+            "Government": "Confirm required GPU models, machine families, regions, quotas, data controls, and control-package scope."
+          }
+        },
+        "oci": {
+          "service": "OCI GPU Compute",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents GPU shapes in OCI Compute for accelerated workloads. The reviewed government endpoint inventory establishes Compute endpoints but not specific GPU shapes, quotas, or parity, so this new accelerated-compute row remains Unknown for regulated availability.",
+          "tierNotes": {
+            "Personal / Free": "Use approved experiments only after confirming eligible GPU shape, tenancy limits, region, and cost.",
+            "Commercial / SMB": "Select GPU shape against model demand, network and storage path, images, quota, availability, and cost controls.",
+            "Enterprise": "Plan GPU capacity, bare-metal or VM choice, cluster networking, images and drivers, inference operations, and utilization evidence.",
+            "Government": "Confirm specific OCI GPU shapes, quotas, region, drivers, data path, and controls with Oracle for government use."
           }
         }
       }

@@ -4,6 +4,13 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-05-26 - v3.10.0 - AI architecture depth
+
+- Added three architect-facing AI capability rows across AWS, Azure, GCP, and OCI: AI agents and tool orchestration, vector retrieval and RAG knowledge bases, and accelerated AI compute and GPU infrastructure.
+- Extended the governed data and generative AI platform pattern to cover agent tool authorization, retrieval data paths, and accelerator-capacity planning.
+- Extended selected NIST SP 800-53 Rev. 5 planning touchpoints for agent authorization and protected retrieval paths.
+- Used official provider product documentation for commercial mappings while keeping new regulated availability and parity statements `Unknown` until feature-specific public evidence is established.
+
 ## 2026-05-26 - v3.9.0 - OCI and AI foundation
 
 - Added Oracle Cloud Infrastructure (OCI) as a fourth compared provider across all 27 architecture decision rows.
