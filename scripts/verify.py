@@ -17,7 +17,7 @@ if hasattr(sys.stdout, "reconfigure"):
 
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
-EXPECTED_PROVIDERS = ["aws", "azure", "gcp"]
+EXPECTED_PROVIDERS = ["aws", "azure", "gcp", "oci"]
 CLASSIFICATION_TAGS = {"STANDARD", "AI_CAPABLE", "AI_NATIVE"}
 VALID_GOV = {"Full", "Partial", "Limited", "None", "Unknown"}
 VALID_PARITY = {"None", "Minor", "Moderate", "Significant", "Unknown"}

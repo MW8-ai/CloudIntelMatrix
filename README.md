@@ -1,6 +1,6 @@
 # ☁️ Cloud Intelligence Matrix
 
-> Enterprise and government cloud capability intelligence — AWS · Azure · GCP
+> Enterprise and government cloud capability intelligence — AWS · Azure · GCP · OCI
 
 **[Live →](https://mw8-ai.github.io/CloudIntelMatrix/)** &nbsp;|&nbsp; **[XLSX →](https://mw8-ai.github.io/CloudIntelMatrix/Cloud_Intelligence_Matrix.xlsx)** &nbsp;|&nbsp; **[Report a correction →](https://github.com/MW8-ai/CloudIntelMatrix/issues/new/choose)**
 
@@ -14,17 +14,18 @@ A provider-neutral, fact-first reference for enterprise architects, platform eng
 
 ### Architecture framework lens
 
-This guide maps comparison decisions against current provider-authored architecture and enterprise-foundation guidance, reviewed on 2026-05-24:
+This guide maps comparison decisions against current provider-authored architecture and enterprise-foundation guidance, reviewed through 2026-05-26:
 
 | Provider | Architecture framework | Enterprise foundation guidance |
 |---|---|---|
 | AWS | [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html) | [AWS Control Tower multi-account landing zone](https://docs.aws.amazon.com/controltower/latest/userguide/aws-multi-account-landing-zone.html) |
 | Microsoft Azure | [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/what-is-well-architected-framework) | [Azure Landing Zones](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/) |
 | Google Cloud | [Google Cloud Well-Architected Framework](https://docs.cloud.google.com/architecture/framework) | [Enterprise foundations blueprint](https://docs.cloud.google.com/architecture/blueprints/security-foundations) |
+| Oracle Cloud Infrastructure | [OCI Well-Architected Framework](https://docs.oracle.com/en/solutions/oci-best-practices/index.html) | [OCI Landing Zones in the Cloud Adoption Framework](https://docs.oracle.com/en-us/iaas/Content/cloud-adoption-framework/oci-landing-zones-overview.htm) |
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 27 architecture decision rows across 14 categories, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.8.0`.
+**Current coverage:** 27 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.9.0`.
 
 ---
 
@@ -61,7 +62,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `Limited` | Official evidence establishes availability and also identifies material environment-specific limitations relevant to architecture review. |
 | `Unknown` | Public evidence has not yet established a stronger statement for the mapped service or portfolio. |
 
-The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. `parityLag` remains `Unknown` unless an official source independently establishes a comparison.
+The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager; OCI regulated availability is asserted only when Oracle's U.S. Government Cloud documentation establishes the mapped service. `parityLag` remains `Unknown` unless an official source independently establishes a comparison.
 
 ### View modes
 
@@ -70,7 +71,7 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 | **Matrix** | All capabilities by tier, click to expand full detail + links |
 | **Patterns** | Framework-informed planning overlays with provider service maps and review boundaries |
 | **NIST 800-53** | Selected Rev. 5 control-family lens mapped to cloud implementation touchpoints and review questions |
-| **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP) |
+| **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP ↔ OCI) |
 | **Gov / Parity** | Government availability and parity lag focus |
 | **AI Focus** | AI_NATIVE and AI_CAPABLE capabilities only |
 
@@ -94,12 +95,12 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 | Workflow | Schedule | What it does |
 |---|---|---|
 | `verify.yml` | Every PR/push; weekly link scan | Blocking schema/data validation; non-blocking public URL review |
-| `update-check.yml` | Every Wednesday; manual dispatch | Opens a review issue from official AWS/GCP feeds and Microsoft's documented Azure Updates Release Communications MCP source |
+| `update-check.yml` | Every Wednesday; manual dispatch | Opens a review issue from official AWS/GCP feeds and Microsoft's documented Azure Updates Release Communications MCP source, with Oracle OCI release notes listed for manual review |
 | `deploy.yml` | Every push to `main` | Generates XLSX, including architecture-pattern worksheet, + builds React app → deploys to GitHub Pages |
 
 **Human in the loop:** Automation surfaces changes, humans validate and commit. No automated writes to data files.
 
-The update monitor surfaces product changes; additions and revisions to architecture-framework interpretation are reviewed manually against official provider guidance.
+The update monitor surfaces product changes; additions and revisions to architecture-framework interpretation are reviewed manually against official provider guidance. Oracle's official OCI release notes are currently a manual-review source until a reliable documented feed or API is adopted.
 
 ---
 
@@ -144,4 +145,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions require an official so
 
 Data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · Code: [MIT](LICENSE)
 
-See [DISCLAIMER.md](DISCLAIMER.md). Not affiliated with Amazon, Microsoft, Google, AWS, Azure, or Google Cloud.
+See [DISCLAIMER.md](DISCLAIMER.md). Not affiliated with Amazon, Microsoft, Google, Oracle, AWS, Azure, Google Cloud, or Oracle Cloud Infrastructure.

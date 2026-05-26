@@ -5,7 +5,9 @@ Runs weekly via update-check.yml GitHub Action.
 
 Fetches official RSS/Atom release-note feeds and Microsoft's documented
 Release Communications MCP source for Azure Updates, then scans entries from
-the past N days for matrix-category keywords.
+the past N days for matrix-category keywords. Official OCI release notes are
+included in generated review issues as a manual-review source until a reliable
+programmatic source is adopted.
 
 Usage:
   python scripts/check_upcoming.py [--days 14] [--output issue_body.md]

@@ -1,10 +1,15 @@
 {
   "_meta": {
-    "version": "3.8.0",
+    "version": "3.9.0",
     "schema": "capability-v1",
-    "last_verified": "2026-05-25",
-    "description": "Enterprise and government cloud capability intelligence matrix. Provider-agnostic. Fact-first. Official sources only.",
-    "providers": ["aws", "azure", "gcp"],
+    "last_verified": "2026-05-26",
+    "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
+    "providers": [
+      "aws",
+      "azure",
+      "gcp",
+      "oci"
+    ],
     "tiers": ["Personal / Free", "Commercial / SMB", "Enterprise", "Government"],
     "license": "CC-BY-4.0",
     "repo": "https://github.com/MW8-ai/CloudIntelMatrix"
@@ -60,6 +65,13 @@
       "foundation": "Enterprise foundations blueprint",
       "foundationUrl": "https://docs.cloud.google.com/architecture/blueprints/security-foundations",
       "lastVerified": "2026-05-24"
+    },
+    "oci": {
+      "framework": "OCI Well-Architected Framework",
+      "frameworkUrl": "https://docs.oracle.com/en/solutions/oci-best-practices/index.html",
+      "foundation": "OCI Landing Zones in the Cloud Adoption Framework",
+      "foundationUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-adoption-framework/oci-landing-zones-overview.htm",
+      "lastVerified": "2026-05-26"
     }
   },
   "controlLens": {
@@ -257,7 +269,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Virtual machine services provide configurable IaaS compute. Compare instance families, processor architecture, licensing, host isolation, image operations, placement controls, and extension into hybrid or regulated environments.",
       "operationalConsiderations": "Patching overhead scales with fleet size. Reserved/committed pricing requires capacity planning discipline. Sole-tenant/dedicated options incur premium.",
-      "lastVerified": "2026-05-25",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Availability classifications identify documented product presence or limitations in regulated environments; instance families, extensions, isolation, migration paths, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -313,6 +325,24 @@
             "Enterprise": "C3, M3 memory-optimized; CUDs; Sole-tenant nodes; Custom shapes",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Compute",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists the Compute API in its U.S. Government Cloud service endpoint inventory, establishing availability for the mapped compute service; feature parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use OCI Compute shapes with tenancy policy, dedicated capacity, image governance, and cost controls.",
+            "Government": "Confirm required Compute shapes, images, endpoints, and controls in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -323,7 +353,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event-driven compute differs by runtime packaging, trigger integrations, state-orchestration options, networking, scaling controls, and container portability. Evaluate those characteristics against the workload rather than assuming service equivalence.",
       "operationalConsiderations": "Cold start latency matters for latency-sensitive workloads. Debugging distributed serverless functions requires mature observability strategy. Cost can surprise at high invocation volume without concurrency controls.",
-      "lastVerified": "2026-05-25",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Availability classifications identify documented runtime support or control-package scope; triggers, runtime versions, integrations, network controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -379,6 +409,24 @@
             "Enterprise": "Cloud Run Enterprise; VPC-SC; CMEK; min instances; IAP",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Functions",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Functions/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists the Functions API in its U.S. Government Cloud endpoint inventory, establishing availability for the mapped service; feature parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate OCI Functions runtime, VCN access, event triggers, scaling, and observability.",
+            "Government": "Confirm functions runtime, trigger, image-registry, logging, and network dependencies in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -388,8 +436,8 @@
       "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
       "aiClassification": "STANDARD",
       "architectureNotes": "Identity and access is a platform foundation. Compare workforce federation, workload identities, privileged administration, account or tenant hierarchy, policy inheritance, conditional access, and authorization boundaries across the mapped services.",
-      "operationalConsiderations": "Misconfigured IAM is the most common enterprise cloud security failure mode. Permission boundaries, SCPs, and resource control policies are essential at scale. PIV/CAC integration requires specific configuration in all three providers.",
-      "lastVerified": "2026-05-24",
+      "operationalConsiderations": "Misconfigured IAM is a common enterprise cloud security failure mode. Policy hierarchy, privileged access, federation, workload identity, and emergency access require provider-specific design and evidence. PIV/CAC integration must be validated for each selected provider and environment.",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Identity capability and regulated-environment support must be assessed feature by feature, including federation and privileged access requirements; no parity conclusion is made here.",
       "providers": {
         "aws": {
@@ -445,6 +493,24 @@
             "Enterprise": "Cloud IAM + VPC-SC + Access Context Manager; Workforce Identity Federation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI IAM with Identity Domains",
+          "status": "GA",
+          "govAvailability": "Limited",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Identity/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents IAM endpoints for U.S. Government Cloud and states that additional identity domains cannot be created in government tenancies, a material service limitation. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Design OCI compartments, identity domains, federation, dynamic groups, policies, and privileged administration together.",
+            "Government": "Account for government-tenancy identity-domain limitations and confirm federation and privileged-access requirements."
+          }
         }
       }
     },
@@ -455,7 +521,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Object storage supports data lakes, backup, static assets, exchange, and archival. Compare lifecycle policy, immutability, replication, encryption controls, event integration, analytics adjacency, data-residency options, and egress behavior.",
       "operationalConsiderations": "Egress costs can become substantial at scale. Lifecycle policies are essential for cost control. Object Lock / WORM is important for compliance. Bucket-level public access should be denied by default in enterprise.",
-      "lastVerified": "2026-05-25",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Availability classifications identify documented mapped-service support; immutability, replication, cryptographic controls, event integration, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -511,6 +577,24 @@
             "Enterprise": "Cloud Storage + Dual-region + CMEK; Object Versioning; Retention Locks",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Object Storage",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Object/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Object Storage API endpoints in its U.S. Government Cloud service inventory, establishing availability for the mapped object-storage service; feature parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use buckets, retention rules, lifecycle policy, replication choices, Vault keys, and audit logging as a governed data foundation.",
+            "Government": "Confirm required Object Storage features, retention policy, encryption, and transfer dependencies in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -521,7 +605,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed Kubernetes reduces control-plane responsibility while retaining cluster design obligations. Compare identity and policy integration, networking, upgrade controls, managed node modes, fleet governance, and hybrid extension requirements.",
       "operationalConsiderations": "Kubernetes carries significant operational burden even in managed form. Dedicated platform engineering capability is recommended at enterprise scale. Networking complexity (CNI, service mesh, ingress) is a common friction point. Control plane costs vary significantly.",
-      "lastVerified": "2026-05-25",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Availability classifications identify documented managed-cluster support or limitations; add-ons, node modes, hybrid options, networking controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -577,6 +661,24 @@
             "Enterprise": "GKE Enterprise (Anthos); Multi-cloud; service mesh; Config Sync",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "Oracle Kubernetes Engine (OKE)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Container Engine API endpoints in its U.S. Government Cloud service inventory, establishing availability for OKE; node, networking, add-on, and feature parity must still be checked. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate OKE cluster mode, node pools, network design, admission policy, image security, upgrades, and operations.",
+            "Government": "Confirm OKE node shapes, networking, registry, logging, and security dependencies in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -587,7 +689,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed relational database choices differ by engine compatibility, licensing, high-availability and failover models, replication, backup recovery, migration path, global distribution, and portability constraints.",
       "operationalConsiderations": "Multi-region HA adds cost and complexity. Read replicas don't provide write HA. RDS Custom (AWS) and Managed Instance (Azure) support lift-and-shift for Oracle/SQL Server with less re-architecture. Cloud Spanner has unique pricing model that requires capacity planning.",
-      "lastVerified": "2026-05-25",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Availability classifications identify documented support for the mapped database products; engine versions, high availability, replication, migration paths, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -643,6 +745,24 @@
             "Enterprise": "Spanner 99.999% SLA global ACID; AlloyDB Omni; Bigtable HBase compat",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Database Services",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists database endpoints in its U.S. Government Cloud inventory, but this broad decision row can include multiple database service variants; availability is recorded as Partial pending variant-specific verification. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Choose among OCI managed database deployment models based on engine, Exadata or Autonomous needs, HA, migration, and licensing.",
+            "Government": "Confirm the exact OCI database service variant, edition, region, encryption, and recovery requirements in government documentation."
+          }
         }
       }
     },
@@ -653,7 +773,7 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed foundation-model platforms differ by offered models, region availability, data-use commitments, grounding and retrieval integrations, evaluation tooling, customization options, safety controls, quotas, and regulated-workload support.",
       "operationalConsiderations": "Token costs scale rapidly with usage volume. Prompt engineering and retrieval-augmented generation (RAG) are operationally non-trivial. Data residency and model data retention policies differ significantly and require legal review for regulated workloads. Content filtering and guardrails are essential before enterprise deployment.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Models, features, and regulated support change frequently and are not inferred from platform documentation alone; government availability and parity remain unknown until directly verified.",
       "providers": {
         "aws": {
@@ -706,6 +826,24 @@
             "Enterprise": "RAG Engine, Agent Builder, Grounding; CMEK; VPC-SC; Provisioned Throughput",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Generative AI",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents OCI Generative AI commercially. It was not identified in the reviewed U.S. Government Cloud service endpoint inventory, so regulated availability and parity remain unknown. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Review model catalog, dedicated AI clusters, endpoints, grounding, data handling, guardrails, quotas, and evaluation before production use.",
+            "Government": "Do not assume OCI Generative AI availability for regulated workloads; obtain current Oracle evidence for the selected boundary and model."
+          }
         }
       }
     },
@@ -716,7 +854,7 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "This row maps security-analytics approaches rather than identical single services: Microsoft Sentinel and Google Security Operations provide SIEM capabilities, while the AWS mapping combines findings aggregation with an analytics pattern. Compare ingestion, correlation, retention, case management, and investigation requirements.",
       "operationalConsiderations": "SIEM implementation requires dedicated security operations expertise. Log ingestion costs are a significant operational consideration at scale. Integration with identity systems and incident response workflows is essential. Cloud-native SIEMs reduce infrastructure overhead but increase vendor dependency.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "The mapped security-analytics approaches are not functional equivalents; availability and parity claims require confirmation for each component used in a regulated design.",
       "providers": {
         "aws": {
@@ -769,6 +907,24 @@
             "Enterprise": "SCC Premium + Assured Workloads + Chronicle SIEM + CMEK + VPC-SC; FIPS HSMs",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Logging Analytics + Cloud Guard (SIEM pattern)",
+          "status": "GA",
+          "govAvailability": "Limited",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Logging/Concepts/loggingoverview.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Cloud Guard and LogAnalytics endpoints for U.S. Government Cloud and identifies a Log Analytics government limitation for sample log content. This row remains a security-analytics pattern rather than a claim of a single SIEM equivalent. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate ingestion coverage, retention, correlation, investigations, case workflow, Cloud Guard findings, and external SOC integrations.",
+            "Government": "Confirm Log Analytics limitations, Cloud Guard integrations, audit retention, and SOC workflow in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -779,7 +935,7 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "Analytics platforms differ in provisioning model, workload isolation, data-lake federation, BI and ML adjacency, query governance, sharing, encryption, and cost controls. Select against workload patterns and data-governance boundaries.",
       "operationalConsiderations": "Query costs in on-demand models can surprise without governance guardrails. Slot/reservation pricing requires capacity planning. Data egress for cross-cloud or on-prem data movement adds cost. Schema design for distributed analytics differs significantly from traditional RDBMS patterns.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Data and analytics capabilities in regulated environments should be evaluated for the exact query, sharing, governance, and ML features required; no blanket parity is asserted.",
       "providers": {
         "aws": {
@@ -832,6 +988,24 @@
             "Enterprise": "BigQuery Enterprise (Reservations, Editions, BI Engine); Dataplex governance; Analytics Hub",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI Autonomous Data Warehouse",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents OCI database services commercially, but this pass did not establish Autonomous Data Warehouse support in the reviewed government service inventory as a distinct mapped product. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate Autonomous Data Warehouse workload isolation, lake integration, security, BI connectivity, AI adjacency, and consumption model.",
+            "Government": "Confirm Autonomous Data Warehouse availability and every data-service dependency in the intended government environment."
+          }
         }
       }
     },
@@ -842,7 +1016,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "API management services publish, secure, govern, observe, and version APIs for consumers and integration partners. Compare gateway policies, developer access, authentication, private exposure, protocol support, analytics, monetization needs, and lifecycle governance.",
       "operationalConsiderations": "An API gateway becomes a critical control point. Define ownership of API contracts, identity and secret handling, throttling, schema validation, audit logs, change compatibility, private network access, and incident response.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "This row now compares API management services. Managed file transfer is represented separately because protocol-driven file exchange is a different architecture decision.",
       "providers": {
         "aws": {
@@ -895,6 +1069,24 @@
             "Enterprise": "Govern API lifecycle, private access, analytics, developer onboarding, policy, and organizational ownership.",
             "Government": "Verify Apigee and dependent services within the selected Assured Workloads control package."
           }
+        },
+        "oci": {
+          "service": "OCI API Gateway",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists API Gateway endpoints in its U.S. Government Cloud inventory, establishing mapped gateway availability; integration-service equivalence is not asserted. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use OCI API Gateway with identity, private endpoints, policies, deployment stages, logs, and backend ownership defined.",
+            "Government": "Confirm gateway features, authentication, private endpoints, certificates, logging, and downstream dependencies in government cloud."
+          }
         }
       }
     },
@@ -905,7 +1097,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed file transfer covers protocol-driven exchange with partners, agencies, or legacy systems. The mapped services are not identical: AWS provides a managed transfer-family endpoint, Azure Blob supports SFTP-based object exchange, and Google Storage Transfer Service is oriented to scheduled data movement rather than hosted partner-facing SFTP.",
       "operationalConsiderations": "Identify required protocols, partner onboarding, identity model, malware scanning, retention, encryption, nonrepudiation, audit logging, file-size limits, retries, and operational ownership before choosing an exchange pattern.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "This row deliberately exposes capability differences rather than implying a native managed-MFT equivalent on every provider.",
       "providers": {
         "aws": {
@@ -958,6 +1150,24 @@
             "Enterprise": "Govern large-scale transfer orchestration, network paths, data boundaries, monitoring, and exception workflows.",
             "Government": "Verify Storage Transfer Service and destination products for the selected Assured Workloads package."
           }
+        },
+        "oci": {
+          "service": "Oracle Integration File Server (SFTP)",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/file-server/",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents File Server for SFTP exchange in Oracle Integration, but this pass did not establish its Oracle U.S. Government Cloud availability in the reviewed service inventory. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate Oracle Integration File Server capacity, partner identity, SFTP keys, retention, malware handling, and audit requirements.",
+            "Government": "Do not assume Oracle Integration File Server availability in government environments without current official service evidence."
+          }
         }
       }
     },
@@ -967,8 +1177,8 @@
       "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT"],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed delivery platforms should be compared by source integration, build execution, deployment targets, artifact controls, identity boundaries, software-supply-chain safeguards, audit evidence, and regulated-environment support.",
-      "operationalConsiderations": "Supply chain security (SBOM, Binary Authorization, secret scanning) is increasingly a compliance requirement. STIG-hardened build environments are required for government IL2/IL4. DISA STIG-compliant pipeline patterns are available for all three providers. CodeCommit deprecation is a migration concern for existing AWS CI/CD investments.",
-      "lastVerified": "2026-05-24",
+      "operationalConsiderations": "Software supply-chain security, artifact provenance, secret protection, scanning, and auditable deployments increasingly affect regulated reviews. Government workloads require explicitly verified build environments and evidence paths; do not infer STIG or impact-level support from commercial CI/CD functionality. CodeCommit deprecation remains a migration concern for existing AWS investments.",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Delivery-service availability and supply-chain controls must be checked in the selected regulated environment; this row makes no cross-provider parity claim.",
       "providers": {
         "aws": {
@@ -1021,6 +1231,24 @@
             "Enterprise": "Cloud Build Enterprise; Cloud Deploy multi-target; Binary Authorization; SBOM generation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
+        },
+        "oci": {
+          "service": "OCI DevOps",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/devops/using/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists DevOps API endpoints in its U.S. Government Cloud inventory, establishing availability for OCI DevOps; execution and integration parity remain unasserted. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate OCI DevOps repositories or external SCM, build runners, artifact flow, deployment controls, approvals, scanning, and evidence.",
+            "Government": "Confirm DevOps endpoints, build execution, artifacts, Vault access, targets, and audit evidence in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -1031,7 +1259,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Infrastructure as code and policy as code establish repeatable cloud configuration through reviewed source, modules, state, policy checks, and controlled deployment. Terraform is a common multi-cloud workflow; provider-native tools and APIs still determine supported resources and regulated-environment behavior.",
       "operationalConsiderations": "Treat Terraform state, providers, modules, policy definitions, execution identities, approvals, drift detection, and audit logs as sensitive controlled assets. Pin versions, scan plans and modules, restrict state access, and separate application deployment privileges from platform governance.",
-      "lastVerified": "2026-05-25",
+      "lastVerified": "2026-05-26",
       "sourceNotes": "Official provider documentation establishes Terraform and native infrastructure-as-code workflows. This row does not assert that each managed target resource, module, runner, or policy feature is supported or equivalent in a government or regulated environment.",
       "providers": {
         "aws": {
@@ -1084,6 +1312,24 @@
             "Enterprise": "Govern module provenance, Infrastructure Manager or pipeline execution, organization policies, drift, evidence, and multi-project foundations.",
             "Government": "Validate allowed Assured Workloads products, organization policies, state locations, execution identities, and evidence requirements."
           }
+        },
+        "oci": {
+          "service": "Terraform on OCI / OCI Resource Manager",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/ResourceManager/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle Resource Manager runs Terraform configurations for OCI, and Oracle lists Resource Manager endpoints in U.S. Government Cloud. Terraform provider-resource parity and dependent-service support remain unasserted. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use reviewed Terraform modules through OCI Resource Manager with protected state, execution identity, policy checks, approvals, and drift handling.",
+            "Government": "Validate OCI Terraform provider resources, Resource Manager endpoints, state protection, target services, and evidence requirements in government cloud."
+          }
         }
       }
     },
@@ -1094,7 +1340,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Virtual networks provide address spaces, routing boundaries, security segmentation, service access, and connectivity foundations for cloud workloads. Edge delivery and application protection are represented as a separate decision row.",
       "operationalConsiderations": "Centralize address planning and network policy ownership, avoid overlapping hybrid ranges, control routes and egress, test name resolution and connectivity failure modes, and review network data-transfer cost.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "Amazon VPC",
@@ -1146,6 +1392,24 @@
             "Enterprise": "Evaluate shared VPC, private connectivity, centralized security policy, and network cost controls.",
             "Government": "Confirm allowed network services in the applicable Assured Workloads control package."
           }
+        },
+        "oci": {
+          "service": "OCI Virtual Cloud Network (VCN)",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Networking API endpoints in its U.S. Government Cloud service inventory, establishing availability for VCN foundations; feature parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Design VCNs, subnets, route tables, NSGs, gateways, firewall controls, and hybrid connectivity under centralized governance.",
+            "Government": "Confirm VCN connectivity, gateways, inspection, endpoints, logging, and routing requirements in Oracle U.S. Government Cloud."
+          }
         }
       }
     },
@@ -1156,7 +1420,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Edge delivery and web application protection affect latency, origin exposure, cache behavior, DDoS response, and web-layer security policy. They are separate from virtual network design even when both participate in an internet-facing architecture.",
       "operationalConsiderations": "Define caching and invalidation, origin authentication, TLS and certificate ownership, WAF policy, bot and DDoS response, logging, data-location constraints, false-positive handling, and request or egress cost monitoring.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "Amazon CloudFront + AWS WAF",
@@ -1208,6 +1472,24 @@
             "Enterprise": "Govern global edge exposure, security policy, DDoS response, evidence, resiliency, and cost controls.",
             "Government": "Verify Cloud CDN, Cloud Armor, and dependency support for the selected control package."
           }
+        },
+        "oci": {
+          "service": "OCI Web Application Firewall",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/WAF/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents OCI Web Application Firewall and lists web application acceleration endpoints for U.S. Government Cloud. This mapping establishes an edge protection component, not a complete CDN-equivalence claim. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate WAF policy, bot and DDoS controls, origin protection, certificates, logging, and any separate delivery or caching requirement.",
+            "Government": "Confirm supported WAF and delivery components, policy behavior, logs, and origin design for the target government environment."
+          }
         }
       }
     },
@@ -1218,7 +1500,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed metrics, logging, tracing, alerting, and dashboards form the operational evidence layer for cloud workloads. A portable telemetry strategy can reduce migration friction while provider-native tools simplify service integration.",
       "operationalConsiderations": "Define log retention, sampling, alert ownership, and access controls early. Telemetry ingestion and retention can become material operating costs, especially when audit retention requirements apply.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "Amazon CloudWatch",
@@ -1272,6 +1554,24 @@
             "Enterprise": "Govern sinks, retention, telemetry access, and cost controls across projects.",
             "Government": "Check Cloud Monitoring and Logging support for the selected Assured Workloads package."
           }
+        },
+        "oci": {
+          "service": "OCI Monitoring + Logging",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Monitoring/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Monitoring and Logging API endpoints in its U.S. Government Cloud inventory, establishing availability for the mapped observability components; feature parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Standardize OCI metrics, logs, alarms, dashboards, service connectors, retention, and OpenTelemetry integration.",
+            "Government": "Confirm monitoring and logging components, retention, access controls, integrations, and evidence exports in government cloud."
+          }
         }
       }
     },
@@ -1282,7 +1582,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Government and sovereign offerings use provider-specific tenancy, boundary, eligibility, and control models. A comparable workload design must start from the required control regime and supported service inventory rather than assume commercial-cloud equivalence.",
       "operationalConsiderations": "Confirm account eligibility, identity boundaries, region selection, authorized services, support access constraints, and procurement requirements before selecting a regulated cloud deployment model.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS GovCloud (US)",
@@ -1337,6 +1637,24 @@
             "Enterprise": "Map each required service to the applicable Assured Workloads supported-product list.",
             "Government": "Validate control package, allowed services, data boundary, and support requirements."
           }
+        },
+        "oci": {
+          "service": "Oracle U.S. Government Cloud",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents U.S. Government Cloud regions and a dedicated service endpoint inventory, establishing the existence of the mapped regulated cloud offering; each workload service still requires separate review. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use OCI commercial regions or sovereign offerings according to data residency, contractual, support, and regulatory requirements.",
+            "Government": "Start with Oracle U.S. Government Cloud service inventory and eligibility requirements, then verify each selected workload service."
+          }
         }
       }
     },
@@ -1347,7 +1665,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Hybrid platforms extend management or provider infrastructure into customer-controlled locations. The options differ materially: managed hardware, connected management planes, and air-gapped deployments create different operating and compliance boundaries.",
       "operationalConsiderations": "Evaluate site readiness, network dependencies, patching ownership, disconnected operation, capacity planning, and data-boundary requirements before selecting an edge or on-premises extension.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS Outposts",
@@ -1399,6 +1717,24 @@
             "Enterprise": "Plan fleet management, local operations, data placement, and disconnected-mode needs.",
             "Government": "Evaluate air-gapped requirements and the authorization scope for the intended workload."
           }
+        },
+        "oci": {
+          "service": "OCI Roving Edge Infrastructure",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/roving-edge-infrastructure/rvr/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents Roving Edge Infrastructure commercially, but this pass did not identify the mapped Roving Edge offering in the reviewed U.S. Government Cloud service inventory; regulated availability therefore remains unknown. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate OCI edge hardware, disconnected operations, data transfer, device lifecycle, identity, patching, and return or destruction requirements.",
+            "Government": "Confirm approved Roving Edge configuration, connected services, data transfer, and handling requirements in the government boundary."
+          }
         }
       }
     },
@@ -1409,7 +1745,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Cost-governance services expose usage, budgets, allocation, optimization guidance, and reporting needed for accountable cloud operation. Their effectiveness depends on organizational scopes, tagging discipline, ownership, and timely review.",
       "operationalConsiderations": "Establish tagging and account hierarchy early, assign budget and anomaly-review ownership, and treat recommendations as inputs to engineering decisions rather than automatic actions.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS Billing and Cost Management",
@@ -1462,6 +1798,24 @@
             "Enterprise": "Govern account exports, allocation, commitments, recommendations, and anomaly response.",
             "Government": "Confirm billing API and support-case scope for the selected Assured Workloads package."
           }
+        },
+        "oci": {
+          "service": "OCI Budgets + Usage Reports",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Billing/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Budgets and usage-reporting endpoints for U.S. Government Cloud, establishing availability for the narrowly mapped cost-management functions; broader FinOps capabilities and feature parity are not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use compartments, tags, budgets, cost analysis, usage reports, and FinOps review workflows to assign ownership and accountability.",
+            "Government": "Confirm government tenancy billing scopes, budgets, usage reports, tagging, procurement reporting, and access controls."
+          }
         }
       }
     },
@@ -1472,7 +1826,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event services support decoupled integration through publish-subscribe, routing, and streaming patterns. Selection should be based on delivery semantics, ordering, retention, replay, throughput, and integration boundaries rather than service names alone.",
       "operationalConsiderations": "Document delivery guarantees and retry handling before implementation. Retention, dead-letter processing, replay, encryption, private connectivity, and audit access all affect operational and regulated workload design.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "Amazon EventBridge",
@@ -1524,6 +1878,24 @@
             "Enterprise": "Govern project boundaries, encryption, dataflow integration, throughput, and cost controls.",
             "Government": "Check Pub/Sub and dependent service support in the applicable Assured Workloads package."
           }
+        },
+        "oci": {
+          "service": "OCI Streaming + Events + Queue",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Streaming/Concepts/streamingoverview.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Streaming, Events, and Queue endpoints in its U.S. Government Cloud inventory, establishing availability for the mapped messaging portfolio; feature parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate ordering, delivery semantics, replay, partitions, dead-letter handling, private connectivity, encryption, and consumers.",
+            "Government": "Confirm Streaming, Events, Queue, targets, retention, endpoints, and audit dependencies in government cloud."
+          }
         }
       }
     },
@@ -1534,7 +1906,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Posture-management services aggregate configuration findings, exposure signals, and security recommendations. This is distinct from SIEM: posture management focuses on resource state and control drift, while SIEM focuses on event collection and investigation workflows.",
       "operationalConsiderations": "Enabling a posture service is not equivalent to meeting a compliance requirement. Assign remediation ownership, define exception handling, connect findings to ticketing or response processes, and validate the standards or control mappings applicable to the workload.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS Security Hub",
@@ -1586,6 +1958,24 @@
             "Enterprise": "Integrate posture findings into organization policy, security operations, and exception workflows.",
             "Government": "Confirm Security Command Center support and finding sources in the required control package."
           }
+        },
+        "oci": {
+          "service": "OCI Cloud Guard",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-guard/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Cloud Guard endpoints in its U.S. Government Cloud inventory, establishing availability for the mapped posture-management service; standards coverage remains a workload review matter. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Design Cloud Guard targets, detector and responder recipes, ownership, exceptions, notifications, and evidence flow.",
+            "Government": "Confirm Cloud Guard configuration, responders, targets, standards interpretation, and evidence handling in government cloud."
+          }
         }
       }
     },
@@ -1596,7 +1986,7 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed machine-learning platforms support experiment execution, training jobs, model lifecycle workflows, and deployment operations. Selection depends on supported frameworks, accelerators, governance tooling, data integration, and deployment boundary requirements.",
       "operationalConsiderations": "Training compute can be expensive and data-intensive. Establish experiment tracking, model lineage, data access controls, evaluation criteria, cost controls, and approval workflows before operational deployment.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "Amazon SageMaker AI",
@@ -1648,6 +2038,24 @@
             "Enterprise": "Govern model lifecycle, data controls, accelerator allocation, monitoring, and approval processes.",
             "Government": "Verify Vertex AI features and model/data constraints for the applicable control package."
           }
+        },
+        "oci": {
+          "service": "OCI Data Science",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/data-science/using/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Data Science endpoints in its U.S. Government Cloud inventory, establishing availability for OCI Data Science; accelerator, deployment, and lifecycle parity remain unasserted. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate OCI Data Science notebooks, jobs, model catalog and deployments, accelerators, lineage, networking, identity, and cost control.",
+            "Government": "Confirm Data Science features, approved accelerators, model and data boundaries, network path, and evidence in government cloud."
+          }
         }
       }
     },
@@ -1658,7 +2066,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Migration tooling supports discovery, assessment, replication, cutover, and modernization planning for moving workloads into cloud environments. Product coverage differs for servers, databases, applications, storage, and offline transfer methods.",
       "operationalConsiderations": "Inventory dependencies and data classifications before migration. Rehearse cutover and rollback, measure network or transfer appliance constraints, validate identity and encryption boundaries, and budget for post-migration remediation.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS Application Migration Service",
@@ -1710,6 +2118,24 @@
             "Enterprise": "Govern migration waves, data boundaries, target landing zones, rollback, and modernization follow-up.",
             "Government": "Validate migration tools and target products within the selected Assured Workloads control package."
           }
+        },
+        "oci": {
+          "service": "Oracle Cloud Migrations",
+          "status": "GA",
+          "govAvailability": "Unknown",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-migration/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents Oracle Cloud Migrations commercially. This initial pass did not establish the exact mapped migration service in the reviewed U.S. Government Cloud inventory, so regulated availability remains unknown. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate discovery, replication, VMware or compute targets, dependencies, test cutover, rollback, identity, encryption, and post-migration work.",
+            "Government": "Confirm Oracle Cloud Migrations support and every source, transfer, target, and recovery dependency for a government migration."
+          }
         }
       }
     },
@@ -1720,7 +2146,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cloud adoption begins with resource hierarchy, guardrails, identity boundaries, centralized logging, network foundations, and account or subscription provisioning. These are architecture patterns composed from provider services rather than one-to-one products.",
       "operationalConsiderations": "Establish ownership for platform guardrails before onboarding application teams. Version policy changes, preserve audit evidence, separate platform and workload responsibilities, and test exception handling and break-glass access.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS Control Tower + AWS Organizations",
@@ -1772,6 +2198,24 @@
             "Enterprise": "Deploy and govern the foundation blueprint with policy-as-code, centralized security projects, and private network paths.",
             "Government": "Validate each foundational product within the applicable Assured Workloads control package."
           }
+        },
+        "oci": {
+          "service": "OCI Landing Zones + Resource Manager",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-adoption-framework/oci-landing-zones-overview.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle documents OCI Landing Zones as Cloud Adoption Framework guidance and lists Resource Manager endpoints in U.S. Government Cloud. The landing zone remains a composed architecture, so full service availability is not asserted. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Use OCI Landing Zones with organization, compartments, identity, network, security, logging, budgets, policy, and Terraform governance.",
+            "Government": "Confirm every landing-zone component, Resource Manager workflow, policy, endpoint, and audit dependency in government cloud."
+          }
         }
       }
     },
@@ -1782,7 +2226,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Recovery architecture requires protected copies, retention policy, immutability controls, restoration testing, and workload-specific RPO and RTO decisions. Provider backup services protect different resource sets and should be evaluated against the actual recovery plan.",
       "operationalConsiderations": "A successful backup job is not proof of recoverability. Isolate backup administration, protect vaults against destructive changes, test restores and regional recovery, document key dependencies, and budget for storage and recovery data movement.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS Backup",
@@ -1834,6 +2278,24 @@
             "Enterprise": "Govern centralized protection, immutable and indelible vault retention, automation, reporting, and recovery exercises.",
             "Government": "Confirm Backup and DR Service and dependent products for the selected Assured Workloads package."
           }
+        },
+        "oci": {
+          "service": "OCI Full Stack Disaster Recovery",
+          "status": "GA",
+          "govAvailability": "Full",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/disaster-recovery/index.html",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Full Stack Disaster Recovery endpoints in its U.S. Government Cloud inventory, establishing availability for the mapped orchestration service; protected-resource support and recovery parity remain unasserted. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate protection groups, dependencies, storage and database backups, switchover plans, testing, isolation, RPO, and RTO.",
+            "Government": "Confirm disaster-recovery orchestration and each protected resource, backup, region, key, and restoration dependency in government cloud."
+          }
         }
       }
     },
@@ -1844,7 +2306,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cryptographic foundations separate keys, application secrets, and certificate lifecycle responsibilities while centralizing authorization, rotation policy, logging, and hardware-protection requirements. The mapped portfolios contain multiple related services.",
       "operationalConsiderations": "Define key ownership, separation of duties, recovery and deletion controls, rotation, application secret access, certificate renewal, audit collection, HSM requirements, and break-glass operations before workloads depend on the platform.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS KMS + Secrets Manager + AWS Certificate Manager",
@@ -1896,6 +2358,24 @@
             "Enterprise": "Govern centralized security projects, HSM requirements, separation of duties, recovery, private access, and evidence.",
             "Government": "Validate KMS, Secret Manager, and Certificate Manager within the selected control package."
           }
+        },
+        "oci": {
+          "service": "OCI Vault + Certificates",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/KeyManagement/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists Key Management endpoints in U.S. Government Cloud and documents Certificates commercially. Because this mapped portfolio combines related products, availability is recorded as Partial pending certificate-specific verification. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Design OCI Vault keys and secrets plus certificate authorities and lifecycle with rotation, HSM, IAM, audit, and deletion protection.",
+            "Government": "Confirm keys, secrets, certificates, HSM requirements, rotation, deletion controls, and endpoint scope in government cloud."
+          }
         }
       }
     },
@@ -1906,7 +2386,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Private access to managed services, hybrid network extension, and predictable DNS resolution are foundational controls for enterprise workload boundaries. The mapped portfolios combine endpoint, name-resolution, and dedicated-connectivity choices rather than identical products.",
       "operationalConsiderations": "Centralize address planning and DNS ownership, define egress inspection and failover, test private resolution paths, control endpoint approvals, monitor bandwidth and connection cost, and confirm every service endpoint required by regulated workloads.",
-      "lastVerified": "2026-05-24",
+      "lastVerified": "2026-05-26",
       "providers": {
         "aws": {
           "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
@@ -1957,6 +2437,24 @@
             "Commercial / SMB": "Standardize service attachments, DNS resolution, access approval, monitoring, and hybrid routes.",
             "Enterprise": "Govern Shared VPC connectivity, private services, DNS forwarding, Interconnect resilience, inspection, and cost ownership.",
             "Government": "Confirm all network products and endpoint targets under the selected control package."
+          }
+        },
+        "oci": {
+          "service": "OCI Private Endpoints + DNS + FastConnect",
+          "status": "GA",
+          "govAvailability": "Partial",
+          "govVariant": "Oracle U.S. Government Cloud",
+          "parityLag": "Unknown",
+          "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/DNS/home.htm",
+          "pricingUrl": null,
+          "complianceUrl": null,
+          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+          "sourceNotes": "Oracle lists networking and DNS endpoints for U.S. Government Cloud and explicitly states DNS is limited to private DNS in those realms. Because this combined mapping also calls for private-endpoint and FastConnect confirmation, availability is recorded as Partial and parity is not inferred. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "tierNotes": {
+            "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
+            "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
+            "Enterprise": "Validate OCI private endpoints, DNS views and resolvers, FastConnect, routing, service access, inspection, failover, and cost.",
+            "Government": "Account for private-only DNS behavior and confirm every private endpoint, resolver, FastConnect, route, and service dependency."
           }
         }
       }

@@ -16,9 +16,9 @@
         "description": { "type": "string" },
         "providers": {
           "type": "array",
-          "items": { "enum": ["aws", "azure", "gcp"] },
-          "minItems": 3,
-          "maxItems": 3,
+          "items": { "enum": ["aws", "azure", "gcp", "oci"] },
+          "minItems": 4,
+          "maxItems": 4,
           "uniqueItems": true
         },
         "tiers": {
@@ -52,11 +52,12 @@
     },
     "frameworks": {
       "type": "object",
-      "required": ["aws", "azure", "gcp"],
+      "required": ["aws", "azure", "gcp", "oci"],
       "properties": {
         "aws": { "$ref": "#/$defs/framework" },
         "azure": { "$ref": "#/$defs/framework" },
-        "gcp": { "$ref": "#/$defs/framework" }
+        "gcp": { "$ref": "#/$defs/framework" },
+        "oci": { "$ref": "#/$defs/framework" }
       },
       "additionalProperties": false
     },
@@ -191,11 +192,12 @@
         "sourceNotes": { "type": "string", "minLength": 1 },
         "providers": {
           "type": "object",
-          "required": ["aws", "azure", "gcp"],
+          "required": ["aws", "azure", "gcp", "oci"],
           "properties": {
             "aws": { "$ref": "#/$defs/provider" },
             "azure": { "$ref": "#/$defs/provider" },
-            "gcp": { "$ref": "#/$defs/provider" }
+            "gcp": { "$ref": "#/$defs/provider" },
+            "oci": { "$ref": "#/$defs/provider" }
           },
           "additionalProperties": false
         }

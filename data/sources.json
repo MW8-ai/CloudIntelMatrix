@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "description": "Official update sources for weekly review. RSS/Atom feeds and Microsoft's documented Release Communications MCP endpoint are scanned automatically.",
-    "last_verified": "2026-05-25"
+    "description": "Official update sources for weekly review. RSS/Atom feeds and Microsoft's documented Release Communications MCP endpoint are scanned automatically; OCI release notes are listed for manual review until a reliable programmatic source is adopted.",
+    "last_verified": "2026-05-26"
   },
   "rss_feeds": {
     "gcp":   "https://cloud.google.com/feeds/gcp-release-notes.xml",
@@ -17,9 +17,17 @@
       "note": "Microsoft documents this public MCP endpoint as the programmatic source powering Azure Updates; underlying release information refreshes daily."
     }
   },
+  "manual_review_pages": {
+    "oci": {
+      "label": "Oracle Cloud Infrastructure Release Notes",
+      "url": "https://docs.oracle.com/en-us/iaas/releasenotes/index.htm",
+      "note": "Oracle publishes current OCI release notes here. Review OCI changes manually until a documented, reliable feed or API is adopted for automation."
+    }
+  },
   "provider_docs_root": {
     "gcp":   "https://cloud.google.com/docs",
     "aws":   "https://docs.aws.amazon.com",
-    "azure": "https://learn.microsoft.com/en-us/azure"
+    "azure": "https://learn.microsoft.com/en-us/azure",
+    "oci":   "https://docs.oracle.com/iaas/"
   }
 }
