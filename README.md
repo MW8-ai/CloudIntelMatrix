@@ -25,7 +25,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.10.0`.
+**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.11.0`.
 
 ---
 
@@ -62,7 +62,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `Limited` | Official evidence establishes availability and also identifies material environment-specific limitations relevant to architecture review. |
 | `Unknown` | Public evidence has not yet established a stronger statement for the mapped service or portfolio. |
 
-The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager. The AI architecture depth pass in `3.10.0` adds agent orchestration, vector retrieval/RAG knowledge bases, and accelerated AI/GPU compute across all four providers. Regulated availability and `parityLag` remain `Unknown` for those new AI portfolios unless official feature-specific evidence establishes a firmer statement.
+The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager. The AI architecture depth pass in `3.10.0` adds agent orchestration, vector retrieval/RAG knowledge bases, and accelerated AI/GPU compute across all four providers. The regulated AI evidence pass in `3.11.0` records supported AWS GovCloud, Azure Government, Google Assured Workloads, and Oracle Integration U.S. Government Cloud statements only where official documentation is specific enough; agent availability, unlisted OCI/GCP products, and all `parityLag` comparisons remain `Unknown` unless directly established.
 
 ### View modes
 

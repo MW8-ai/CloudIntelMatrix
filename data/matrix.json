@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.10.0",
+    "version": "3.11.0",
     "schema": "capability-v1",
     "last_verified": "2026-05-26",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
@@ -777,18 +777,19 @@
       "architectureNotes": "Managed foundation-model platforms differ by offered models, region availability, data-use commitments, grounding and retrieval integrations, evaluation tooling, customization options, safety controls, quotas, and regulated-workload support.",
       "operationalConsiderations": "Token costs scale rapidly with usage volume. Prompt engineering and retrieval-augmented generation (RAG) are operationally non-trivial. Data residency and model data retention policies differ significantly and require legal review for regulated workloads. Content filtering and guardrails are essential before enterprise deployment.",
       "lastVerified": "2026-05-26",
-      "sourceNotes": "Models, features, and regulated support change frequently and are not inferred from platform documentation alone; government availability and parity remain unknown until directly verified.",
+      "sourceNotes": "Official regulated-environment documentation establishes selected platform presence for AWS, Azure, and Google Cloud; mapped portfolio breadth, required models and features, OCI support, and all commercial-to-regulated parity still require direct validation.",
       "providers": {
         "aws": {
           "service": "Amazon Bedrock",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "govVariant": "Bedrock GovCloud (expanding)",
+          "govAvailability": "Limited",
+          "govVariant": "Amazon Bedrock (AWS GovCloud US)",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.aws.amazon.com/bedrock/",
           "pricingUrl": "https://aws.amazon.com/bedrock/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
-          "govDocsUrl": "https://aws.amazon.com/govcloud-us/",
+          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bedrock.html",
+          "sourceNotes": "AWS documents Amazon Bedrock in both AWS GovCloud (US) Regions and identifies environment-specific differences, including cross-region inference behavior and unavailable or restricted features. Availability is recorded as Limited; model and feature parity remain unasserted.",
           "tierNotes": {
             "Personal / Free": "No free tier; pay per token; playground only",
             "Commercial / SMB": "Claude, Llama, Mistral, Titan, Nova; Agents; Knowledge Bases; Guardrails; Flows",
@@ -799,13 +800,14 @@
         "azure": {
           "service": "Azure OpenAI / Azure AI Foundry",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "govVariant": "Azure OpenAI Government",
+          "govAvailability": "Partial",
+          "govVariant": "Foundry Models (Azure Government)",
           "parityLag": "Unknown",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/",
           "complianceUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/azure-government",
-          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/azure-government",
+          "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+          "sourceNotes": "Microsoft's Azure Government roadmap lists Foundry Models as GA for documented government compliance environments. Availability is recorded as Partial because this composite mapping also names Azure OpenAI and does not assert every model or platform feature; parity remains unasserted.",
           "tierNotes": {
             "Personal / Free": "Limited free playground; GPT-3.5 free quota",
             "Commercial / SMB": "GPT-4o, o3, DALL-E 3, Whisper; Content Safety; Prompt Shields",
@@ -816,13 +818,14 @@
         "gcp": {
           "service": "Vertex AI GenAI / Gemini",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "govVariant": "Gemini for Workspace Gov / Vertex AI Assured Workloads",
+          "govAvailability": "Partial",
+          "govVariant": "Generative AI on Vertex AI (Assured Workloads)",
           "parityLag": "Unknown",
           "docsUrl": "https://cloud.google.com/vertex-ai/generative-ai/docs",
           "pricingUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
-          "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+          "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+          "sourceNotes": "Google lists Generative AI on Vertex AI among Assured Workloads supported products for documented control packages. Availability is recorded as Partial because control-package scope and the required model and feature set must be validated separately; parity remains unasserted.",
           "tierNotes": {
             "Personal / Free": "Gemini API free tier via AI Studio; Flash model rpm limits",
             "Commercial / SMB": "Gemini 1.5 Pro/Flash, Imagen, Veo; Model Garden 150+ models incl. Claude/Llama",
@@ -858,19 +861,19 @@
       "architectureNotes": "Retrieval-augmented generation grounds model responses in governed enterprise data. Compare ingestion pipelines, supported vector stores, embedding choices, access-control propagation, citations, private networking, evaluation, and data lifecycle controls rather than assuming equivalent RAG behavior.",
       "operationalConsiderations": "Retrieval quality depends on content preparation, chunking, metadata, embeddings, ranking, and authorization trimming. Sensitive source material can leak through poor access design or prompt/tool behavior. Index refresh, query volume, storage, and embedding generation add ongoing cost.",
       "lastVerified": "2026-05-26",
-      "sourceNotes": "Official commercial documentation establishes the mapped retrieval and knowledge-base capabilities. This initial decision row does not assert regulated-environment availability, feature parity, or equivalent authorization propagation; each remains to be verified for the selected service boundary.",
+      "sourceNotes": "Official regulated-environment documentation establishes limited AWS knowledge-base support and Azure AI Search product presence. The mapped GCP RAG Engine and OCI Agents Knowledge Bases remain unasserted for regulated use; authorization behavior and all parity remain to be verified.",
       "providers": {
         "aws": {
           "service": "Knowledge Bases for Amazon Bedrock",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Limited",
           "govVariant": "AWS GovCloud (US)",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-retrieval.html",
           "pricingUrl": "https://aws.amazon.com/bedrock/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
-          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
-          "sourceNotes": "AWS documents retrieval and retrieve-and-generate operations for Knowledge Bases for Amazon Bedrock. This pass did not establish the complete knowledge-base portfolio in AWS GovCloud (US), so government availability and parity remain Unknown.",
+          "govDocsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html",
+          "sourceNotes": "AWS documents Knowledge Bases support in both AWS GovCloud (US) Regions and identifies a material regional limitation for structured data retrieval. Availability is recorded as Limited; embedding, vector-store, data-source, and feature parity remain unasserted.",
           "tierNotes": {
             "Personal / Free": "Prototype with non-sensitive sample content and measure embedding, storage, and inference cost before committing to a retrieval design.",
             "Commercial / SMB": "Validate supported data sources, chunking, metadata filters, access model, refresh cadence, citations, and operational cost.",
@@ -881,14 +884,14 @@
         "azure": {
           "service": "Azure AI Search (Vector Search)",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "govVariant": "Azure Government",
           "parityLag": "Unknown",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/search/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Microsoft documents vector search in Azure AI Search for generative AI and other similarity-search scenarios. This pass did not establish the required vector-search and model-integration features in Azure Government, so availability and parity remain Unknown.",
+          "sourceNotes": "Microsoft's Azure Government roadmap lists Azure AI Search and related AI enrichment and semantic ranking capabilities as GA. Availability is recorded as Partial because required vector-search and model-integration functionality still requires validation; parity remains unasserted.",
           "tierNotes": {
             "Personal / Free": "Use representative sample documents and prevent sensitive content from entering prototypes without approval.",
             "Commercial / SMB": "Validate vector index design, hybrid search, enrichment pipeline, identity filters, capacity, and retrieval quality.",
@@ -906,7 +909,7 @@
           "pricingUrl": "https://cloud.google.com/vertex-ai/generative-ai/pricing",
           "complianceUrl": "https://cloud.google.com/security/compliance",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Google documents Vertex AI RAG Engine APIs and notes managed database billing for new RAG corpora. This pass did not establish the exact RAG Engine capability set under a required Assured Workloads control package, so availability and parity remain Unknown.",
+          "sourceNotes": "Google documents Vertex AI RAG Engine commercially, and its Assured Workloads catalog lists Vertex AI Vector Search in a specified control-package section. The catalog does not establish the mapped RAG Engine as that supported service, so RAG Engine availability and parity remain Unknown.",
           "tierNotes": {
             "Personal / Free": "Evaluate with non-sensitive documents and monitor embedding, index, and query consumption.",
             "Commercial / SMB": "Validate corpus ingestion, retrieval quality, metadata controls, model grounding, region, and cost model.",
@@ -942,7 +945,7 @@
       "architectureNotes": "Managed AI-agent services orchestrate model reasoning with tools, APIs, knowledge sources, memory, and workflow controls. Compare identity delegation, tool authorization, human approval, action tracing, evaluation, guardrails, interoperability, and runtime isolation before adoption.",
       "operationalConsiderations": "Agents expand the blast radius of model errors because they can invoke systems and act on data. Require scoped service identities, least-privilege tools, approval gates for consequential operations, audit trails, testing against prompt injection, and clear rollback procedures.",
       "lastVerified": "2026-05-26",
-      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. No regulated-service availability or commercial-to-regulated parity is asserted for this new cross-cloud agent row without feature-specific official evidence.",
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row.",
       "providers": {
         "aws": {
           "service": "Agents for Amazon Bedrock",
@@ -972,7 +975,7 @@
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/ai-foundry/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Microsoft documents Foundry Agent Service for building, deploying, and scaling AI agents with tools and knowledge. This pass did not establish the required agent runtime and connected capabilities in Azure Government, so availability and parity remain Unknown.",
+          "sourceNotes": "Microsoft documents Foundry Agent Service commercially, while its Azure Government roadmap lists that service as Forecasted rather than GA. Current Azure Government availability and parity therefore remain Unknown.",
           "tierNotes": {
             "Personal / Free": "Limit experimentation to harmless tools and test data with cost and action limits.",
             "Commercial / SMB": "Validate connected tools, managed identity design, search grounding, tracing, approvals, and runtime cost.",
@@ -1026,19 +1029,19 @@
       "architectureNotes": "GPU and accelerator-backed compute supports model training, fine-tuning, high-throughput inference, graphics, and scientific workloads outside fully managed model APIs. Compare accelerator families, memory, interconnect, availability zones, scheduling, container stacks, bare-metal options, quotas, and reservation models.",
       "operationalConsiderations": "Accelerator supply, quota, and utilization dominate cost and delivery risk. Architecture should plan capacity acquisition, image and driver management, orchestration, telemetry, data locality, failover, and a fallback path when a desired accelerator is unavailable.",
       "lastVerified": "2026-05-26",
-      "sourceNotes": "Commercial compute documentation establishes GPU and accelerator offerings. General cloud-compute availability does not establish required accelerator shapes, quotas, drivers, or regulated-environment support, so all government and parity values begin Unknown.",
+      "sourceNotes": "Official regulated-environment documentation establishes selected accelerated compute presence for AWS and Azure. Required accelerator families, quota, drivers, images, GCP and OCI accelerator scope, and all commercial-to-regulated parity still require validation.",
       "providers": {
         "aws": {
           "service": "Amazon EC2 Accelerated Computing",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Limited",
           "govVariant": "AWS GovCloud (US)",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html",
           "pricingUrl": "https://aws.amazon.com/ec2/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
-          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
-          "sourceNotes": "AWS documents accelerated computing instance families for GPU and other hardware acceleration. Although EC2 is documented in AWS GovCloud (US), this new row does not infer availability or parity of required accelerator families, so the regulated value remains Unknown.",
+          "govDocsUrl": "https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-regions.html",
+          "sourceNotes": "AWS lists accelerated computing instance families in AWS GovCloud (US-East) and AWS GovCloud (US-West), with family availability differing by Region. Availability is recorded as Limited; required family, capacity, and feature parity remain unasserted.",
           "tierNotes": {
             "Personal / Free": "Use managed APIs or small experiments unless accelerator cost and quota are explicitly approved.",
             "Commercial / SMB": "Select instance family for workload demand, drivers, container support, scheduling, quota, and spending guardrails.",
@@ -1049,14 +1052,14 @@
         "azure": {
           "service": "Azure GPU-Accelerated Virtual Machines",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "govVariant": "Azure Government",
           "parityLag": "Unknown",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/overview",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/virtual-machines/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Microsoft documents GPU-accelerated VM families within Azure VM size guidance. This pass did not establish required GPU families, quotas, drivers, or deployment features in Azure Government, so availability and parity remain Unknown.",
+          "sourceNotes": "Microsoft's Azure Government roadmap lists GPU-backed virtual machine series including NC-series offerings as GA in documented government compliance environments. Availability is recorded as Partial because required GPU family, quota, drivers, and feature parity remain to be validated.",
           "tierNotes": {
             "Personal / Free": "Prefer managed model APIs or strictly budgeted experiments unless GPU capacity is necessary.",
             "Commercial / SMB": "Choose GPU family against model size, driver image, region availability, networking, quota, and spending limits.",
@@ -1074,7 +1077,7 @@
           "pricingUrl": "https://cloud.google.com/compute/gpus-pricing",
           "complianceUrl": "https://cloud.google.com/security/compliance",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Google documents attaching GPUs and GPU machine types for Compute Engine AI workloads. Compute Engine support under control packages does not by itself establish required GPU families or features, so regulated availability and parity remain Unknown.",
+          "sourceNotes": "Google documents attaching GPUs and GPU machine types for Compute Engine AI workloads. Its Assured Workloads catalog identifies Compute Engine, but does not establish required GPU families or accelerator features for this mapping, so regulated availability and parity remain Unknown.",
           "tierNotes": {
             "Personal / Free": "Restrict GPU experiments with budget alerts, quotas, and automatic shutdown policies.",
             "Commercial / SMB": "Validate machine and GPU combination, region and quota, drivers, containers, storage locality, and pricing.",
@@ -1353,7 +1356,7 @@
       "architectureNotes": "Managed file transfer covers protocol-driven exchange with partners, agencies, or legacy systems. The mapped services are not identical: AWS provides a managed transfer-family endpoint, Azure Blob supports SFTP-based object exchange, and Google Storage Transfer Service is oriented to scheduled data movement rather than hosted partner-facing SFTP.",
       "operationalConsiderations": "Identify required protocols, partner onboarding, identity model, malware scanning, retention, encryption, nonrepudiation, audit logging, file-size limits, retries, and operational ownership before choosing an exchange pattern.",
       "lastVerified": "2026-05-26",
-      "sourceNotes": "This row deliberately exposes capability differences rather than implying a native managed-MFT equivalent on every provider.",
+      "sourceNotes": "This row deliberately exposes capability differences rather than implying a native managed-MFT equivalent on every provider. Oracle documents File Server availability in Oracle Integration for U.S. Government Cloud with limitations that require design review.",
       "providers": {
         "aws": {
           "service": "AWS Transfer Family",
@@ -1409,19 +1412,19 @@
         "oci": {
           "service": "Oracle Integration File Server (SFTP)",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Limited",
           "govVariant": "Oracle U.S. Government Cloud",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/file-server/",
           "pricingUrl": null,
           "complianceUrl": null,
-          "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
-          "sourceNotes": "Oracle documents File Server for SFTP exchange in Oracle Integration, but this pass did not establish its Oracle U.S. Government Cloud availability in the reviewed service inventory. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle.",
+          "govDocsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/oracle-integration-gov/using-oracle-integration-3-us-government-cloud.pdf",
+          "sourceNotes": "Oracle's Oracle Integration 3 U.S. Government Cloud documentation lists File Server as Available and identifies feature and SFTP-related constraints. Availability is recorded as Limited; integration dependencies, contractual scope, and parity remain unasserted.",
           "tierNotes": {
             "Personal / Free": "Confirm OCI Free Tier eligibility, service-region support, and quota constraints before prototyping.",
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate Oracle Integration File Server capacity, partner identity, SFTP keys, retention, malware handling, and audit requirements.",
-            "Government": "Do not assume Oracle Integration File Server availability in government environments without current official service evidence."
+            "Government": "Validate File Server limits, SFTP key handling, integration dependencies, logging, and evidence requirements in Oracle Integration U.S. Government Cloud."
           }
         }
       }
