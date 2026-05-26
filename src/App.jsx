@@ -12,7 +12,7 @@ const {
   _meta: META,
 } = matrixData;
 const UPCOMING = upcomingData.upcoming || [];
-const PROVIDERS = META.providers; // ["aws","azure","gcp"]
+const PROVIDERS = META.providers;
 const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
 
 const THEME_STORAGE_KEY = "cloudintel-theme";
@@ -62,6 +62,7 @@ const PROVIDER_META = {
   aws:   { label: "AWS",   long: "Amazon Web Services",  dot: "#ff9900", bg: "#ff990011", border: "#ff990033" },
   azure: { label: "Azure", long: "Microsoft Azure",      dot: "#00b4d8", bg: "#00b4d811", border: "#00b4d833" },
   gcp:   { label: "GCP",   long: "Google Cloud",         dot: "#4285f4", bg: "#4285f411", border: "#4285f433" },
+  oci:   { label: "OCI",   long: "Oracle Cloud Infrastructure", dot: "#c74634", bg: "#c7463411", border: "#c7463344" },
 };
 
 const GOV_AVAIL_STYLES = {
@@ -712,7 +713,7 @@ export default function App() {
               ENTERPRISE CLOUD CAPABILITY INTELLIGENCE
             </div>
             <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em" }}>
-              AWS · Azure · GCP
+              {PROVIDERS.map(provider => PROVIDER_META[provider].label).join(" · ")}
             </div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
               {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CONTROL_LENS.families.length} NIST families · {CATEGORIES.length} categories · fact-first · official sources only
@@ -849,7 +850,7 @@ export default function App() {
 
       {/* ── CONTENT ── */}
       <div style={{ padding: "14px 24px 40px", overflowX: "auto" }}>
-        <div style={{ minWidth: 780 }}>
+        <div style={{ minWidth: activeProviders.length > 3 ? 1040 : 780 }}>
           <UpcomingBanner items={UPCOMING} />
 
           {/* Search result count */}

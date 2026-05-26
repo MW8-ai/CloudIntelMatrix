@@ -2,7 +2,7 @@
   "name": "cloud-intelligence-matrix",
   "version": "3.0.0",
   "private": true,
-  "description": "Enterprise and government cloud capability intelligence matrix — AWS, Azure, GCP",
+  "description": "Enterprise and government cloud capability intelligence matrix — AWS, Azure, GCP, OCI",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

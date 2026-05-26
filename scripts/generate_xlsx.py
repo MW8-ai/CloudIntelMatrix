@@ -37,12 +37,14 @@ PROVIDERS  = META["providers"]
 UPCOMING   = udata.get("upcoming", [])
 CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
 
-PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP"}
+PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP","oci":"OCI"}
 PROV_COLORS = {
     "aws":   {"hdr":"B45309","note":"FEF3C7","svc":"FFFBEB"},
     "azure": {"hdr":"0E7490","note":"CFFAFE","svc":"ECFEFF"},
     "gcp":   {"hdr":"1A56A0","note":"DBEAFE","svc":"EFF6FF"},
+    "oci":   {"hdr":"9F3727","note":"FCE7E4","svc":"FFF4F2"},
 }
+MATRIX_COLS = 4 + len(PROVIDERS) * 2
 TAG_FG = {
     "gray":"6B7280","blue":"2563EB","purple":"7C3AED","green":"15803D",
     "amber":"B45309","red":"B91C1C","cyan":"0891B2","slate":"475569",
@@ -77,21 +79,20 @@ def build_matrix_sheet(ws, tier=None):
     ws.sheet_view.showGridLines = False
     ws.freeze_panes = "B3"
     title = f"Cloud Intelligence Matrix — {tier or 'All Tiers'}"
-    hdr(ws, title, 10)  # cat, capability, tags, aws svc, aws gov, azure svc, azure gov, gcp svc, gcp gov, verified
+    hdr(ws, title, MATRIX_COLS)
 
     # Row 2: column headers
     col_headers = [
         ("Category",    "1E3A5F"),
         ("Capability",  "1E3A5F"),
         ("Tags",        "1E3A5F"),
-        ("AWS Service", PROV_COLORS["aws"]["hdr"]),
-        ("AWS Gov",     PROV_COLORS["aws"]["hdr"]),
-        ("Azure Service", PROV_COLORS["azure"]["hdr"]),
-        ("Azure Gov",   PROV_COLORS["azure"]["hdr"]),
-        ("GCP Service", PROV_COLORS["gcp"]["hdr"]),
-        ("GCP Gov",     PROV_COLORS["gcp"]["hdr"]),
-        ("Verified",    "1E3A5F"),
     ]
+    for pkey in PROVIDERS:
+        col_headers.extend([
+            (f"{PROV_LABELS[pkey]} Service", PROV_COLORS[pkey]["hdr"]),
+            (f"{PROV_LABELS[pkey]} Gov", PROV_COLORS[pkey]["hdr"]),
+        ])
+    col_headers.append(("Verified", "1E3A5F"))
     for ci, (h, bg) in enumerate(col_headers, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f(bg); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -122,7 +123,7 @@ def build_matrix_sheet(ws, tier=None):
         tc.alignment = al("left","center", wrap=True); tc.border = TB
 
         # Provider columns (svc + gov)
-        for pi, pkey in enumerate(["aws","azure","gcp"]):
+        for pi, pkey in enumerate(PROVIDERS):
             prov = cap.get("providers",{}).get(pkey,{})
             svc  = prov.get("service","—")
             if tier:
@@ -145,7 +146,7 @@ def build_matrix_sheet(ws, tier=None):
             gc.alignment = al("center","center"); gc.border = TB
 
         # Verified
-        vc = ws.cell(row=row, column=10, value=cap.get("lastVerified",""))
+        vc = ws.cell(row=row, column=MATRIX_COLS, value=cap.get("lastVerified",""))
         vc.fill = f(bg_cat); vc.font = ft(size=8, color="6B7280")
         vc.alignment = al("center","center"); vc.border = TB
 
@@ -153,8 +154,12 @@ def build_matrix_sheet(ws, tier=None):
         row += 1
 
     # Widths
-    for col, w in {"A":22,"B":30,"C":36,"D":38,"E":18,"F":38,"G":18,"H":38,"I":18,"J":12}.items():
+    for col, w in {"A":22,"B":30,"C":36}.items():
         ws.column_dimensions[col].width = w
+    for pi, _ in enumerate(PROVIDERS):
+        ws.column_dimensions[get_column_letter(4 + pi * 2)].width = 38
+        ws.column_dimensions[get_column_letter(5 + pi * 2)].width = 18
+    ws.column_dimensions[get_column_letter(MATRIX_COLS)].width = 12
 
 def build_detail_sheet(ws):
     """Full detail: one row per capability×provider with arch notes and operational considerations."""
@@ -164,7 +169,6 @@ def build_detail_sheet(ws):
 
     hdrs = ["Category","Capability","Provider","Service","Gov Avail","Parity Lag","Gov Variant",
             "Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
-    bg_map = {"aws":PROV_COLORS["aws"]["hdr"],"azure":PROV_COLORS["azure"]["hdr"],"gcp":PROV_COLORS["gcp"]["hdr"]}
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("1E3A5F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -175,7 +179,7 @@ def build_detail_sheet(ws):
     for cap in CAPS:
         for pi, pkey in enumerate(PROVIDERS):
             prov = cap.get("providers",{}).get(pkey,{})
-            bg = [PROV_COLORS[pkey]["svc"],"FFFBEB","EFF6FF"][pi]
+            bg = PROV_COLORS[pkey]["svc"]
             vals = [
                 cap["category"], cap["capability"], PROV_LABELS[pkey],
                 prov.get("service",""), prov.get("govAvailability",""), prov.get("parityLag",""),
@@ -196,8 +200,11 @@ def build_detail_sheet(ws):
 def build_gov_sheet(ws):
     """Government and parity focus sheet."""
     ws.sheet_view.showGridLines = False
-    hdr(ws, "Government / Sovereign Cloud Availability & Parity Lag — Cloud Intelligence Matrix", 10)
-    hdrs = ["Category","Capability","Tags","AWS Gov","AWS Parity","Azure Gov","Azure Parity","GCP Gov","GCP Parity","Verified"]
+    hdr(ws, "Government / Sovereign Cloud Availability & Parity Lag — Cloud Intelligence Matrix", MATRIX_COLS)
+    hdrs = ["Category","Capability","Tags"]
+    for pkey in PROVIDERS:
+        hdrs.extend([f"{PROV_LABELS[pkey]} Gov", f"{PROV_LABELS[pkey]} Parity"])
+    hdrs.append("Verified")
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("7F1D1D"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -218,7 +225,7 @@ def build_gov_sheet(ws):
             c.fill = f(bg); c.font = ft(bold=(ci==2), size=9)
             c.alignment = al("left","center", wrap=True); c.border = TB
 
-        for pi, pkey in enumerate(["aws","azure","gcp"]):
+        for pi, pkey in enumerate(PROVIDERS):
             prov = cap.get("providers",{}).get(pkey,{})
             gov = prov.get("govAvailability","—")
             par = prov.get("parityLag","—")
@@ -231,25 +238,30 @@ def build_gov_sheet(ws):
             pc.fill = f(par_bg); pc.font = ft(bold=(par!="None"), size=8)
             pc.alignment = al("center","center"); pc.border = TB
 
-        vc = ws.cell(row=row, column=10, value=cap.get("lastVerified",""))
+        vc = ws.cell(row=row, column=MATRIX_COLS, value=cap.get("lastVerified",""))
         vc.fill = f(bg); vc.font = ft(size=8, color="6B7280")
         vc.alignment = al("center","center"); vc.border = TB
         ws.row_dimensions[row].height = 28
         row += 1
 
-    for col, w in {"A":16,"B":26,"C":40,"D":14,"E":16,"F":14,"G":16,"H":14,"I":16,"J":12}.items():
+    for col, w in {"A":16,"B":26,"C":40}.items():
         ws.column_dimensions[col].width = w
+    for pi, _ in enumerate(PROVIDERS):
+        ws.column_dimensions[get_column_letter(4 + pi * 2)].width = 14
+        ws.column_dimensions[get_column_letter(5 + pi * 2)].width = 16
+    ws.column_dimensions[get_column_letter(MATRIX_COLS)].width = 12
 
 def build_patterns_sheet(ws):
     """Architecture planning overlays grounded in the existing capability rows."""
     ws.sheet_view.showGridLines = False
     ws.freeze_panes = "C3"
-    hdr(ws, "Architecture Patterns - Provider Framework-Informed Planning Overlays", 9)
+    pattern_cols = 6 + len(PROVIDERS)
+    hdr(ws, "Architecture Patterns - Provider Framework-Informed Planning Overlays", pattern_cols)
     headers = [
         "Pattern / Rationale", "When To Use", "Capability",
-        "AWS Service / Gov", "Azure Service / Gov", "GCP Service / Gov",
-        "Review Questions", "Verification Boundary", "Verified",
     ]
+    headers.extend(f"{PROV_LABELS[pkey]} Service / Gov" for pkey in PROVIDERS)
+    headers.extend(["Review Questions", "Verification Boundary", "Verified"])
     for ci, header in enumerate(headers, 1):
         c = ws.cell(row=2, column=ci, value=header)
         c.fill = f("1E3A5F")
@@ -267,13 +279,16 @@ def build_patterns_sheet(ws):
                 f"{pattern['name']}\n{pattern['summary']}" if is_first else "",
                 pattern["whenToUse"] if is_first else "",
                 capability_name,
-                f"{cap['providers']['aws']['service']}\nGov: {cap['providers']['aws']['govAvailability']} / Lag: {cap['providers']['aws']['parityLag']}",
-                f"{cap['providers']['azure']['service']}\nGov: {cap['providers']['azure']['govAvailability']} / Lag: {cap['providers']['azure']['parityLag']}",
-                f"{cap['providers']['gcp']['service']}\nGov: {cap['providers']['gcp']['govAvailability']} / Lag: {cap['providers']['gcp']['parityLag']}",
+            ]
+            values.extend(
+                f"{cap['providers'][pkey]['service']}\nGov: {cap['providers'][pkey]['govAvailability']} / Lag: {cap['providers'][pkey]['parityLag']}"
+                for pkey in PROVIDERS
+            )
+            values.extend([
                 "\n".join(pattern["reviewPrompts"]) if is_first else "",
                 pattern["verificationNote"] if is_first else "",
                 pattern["lastVerified"] if is_first else "",
-            ]
+            ])
             for ci, value in enumerate(values, 1):
                 c = ws.cell(row=row, column=ci, value=value)
                 c.fill = f("F8FAFC" if is_first else "FFFFFF")
@@ -285,7 +300,7 @@ def build_patterns_sheet(ws):
         row += 1
 
     row += 1
-    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=9)
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=pattern_cols)
     c = ws.cell(row=row, column=1, value="Official framework and enterprise foundation guidance")
     c.fill = f("0F1A2E")
     c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
@@ -315,8 +330,13 @@ def build_patterns_sheet(ws):
                 c.hyperlink = value
         row += 1
 
-    for col, width in {"A":38, "B":38, "C":32, "D":35, "E":35, "F":35, "G":38, "H":40, "I":14}.items():
+    for col, width in {"A":38, "B":38, "C":32}.items():
         ws.column_dimensions[col].width = width
+    for index, _ in enumerate(PROVIDERS, 4):
+        ws.column_dimensions[get_column_letter(index)].width = 35
+    ws.column_dimensions[get_column_letter(4 + len(PROVIDERS))].width = 38
+    ws.column_dimensions[get_column_letter(5 + len(PROVIDERS))].width = 40
+    ws.column_dimensions[get_column_letter(6 + len(PROVIDERS))].width = 14
 
 def build_controls_sheet(ws):
     """Selected NIST SP 800-53 Rev. 5 control families mapped to architecture decisions."""

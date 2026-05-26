@@ -1,6 +1,6 @@
 # Disclaimer
 
-Cloud Intelligence Matrix is an independent public reference project. It is not affiliated with, endorsed by, sponsored by, or approved by Amazon, Amazon Web Services (AWS), Microsoft, Microsoft Azure, Google, or Google Cloud.
+Cloud Intelligence Matrix is an independent public reference project. It is not affiliated with, endorsed by, sponsored by, or approved by Amazon, Amazon Web Services (AWS), Microsoft, Microsoft Azure, Google, Google Cloud, Oracle, or Oracle Cloud Infrastructure (OCI).
 
 The information in this repository is provided for general architecture research and planning. It is not legal advice, compliance advice, procurement advice, security advice, or a guarantee that any service, configuration, workload, or organization satisfies a regulatory requirement.
 
