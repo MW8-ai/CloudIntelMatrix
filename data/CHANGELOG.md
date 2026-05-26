@@ -4,6 +4,14 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-05-26 - v3.11.0 - Regulated AI and OCI evidence depth
+
+- Recorded official AWS GovCloud evidence for Amazon Bedrock, Knowledge Bases for Amazon Bedrock, and accelerated EC2 instance families, classifying their documented environment-specific constraints conservatively as `Limited`.
+- Recorded Azure Government roadmap evidence for Foundry Models, Azure AI Search, and selected GPU-backed virtual machine series as `Partial` mappings; Foundry Agent Service remains `Unknown` because the roadmap identifies it as forecasted rather than currently GA.
+- Recorded Google Assured Workloads support for Generative AI on Vertex AI as a control-package-scoped `Partial` mapping while keeping Vertex AI RAG Engine and Agent Engine unasserted for regulated use.
+- Recorded Oracle Integration U.S. Government Cloud File Server availability with documented limitations; OCI Generative AI, OCI Generative AI Agents, Autonomous Data Warehouse, Roving Edge Infrastructure, and Oracle Cloud Migrations remain `Unknown` absent mapped-product government evidence.
+- Preserved every `parityLag` value as `Unknown`; availability evidence is not commercial feature-parity evidence.
+
 ## 2026-05-26 - v3.10.0 - AI architecture depth
 
 - Added three architect-facing AI capability rows across AWS, Azure, GCP, and OCI: AI agents and tool orchestration, vector retrieval and RAG knowledge bases, and accelerated AI compute and GPU infrastructure.
