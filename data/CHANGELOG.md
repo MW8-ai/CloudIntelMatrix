@@ -4,6 +4,14 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-05-26 - v3.12.0 - Regulated data exchange and ML-platform evidence
+
+- Recorded official regulated-environment evidence for analytics-platform decisions: Amazon Redshift as `Limited`, the Azure Synapse Analytics / Microsoft Fabric composite as `Partial`, and BigQuery under Assured Workloads as `Partial`; OCI Autonomous Data Warehouse remains `Unknown` absent mapped-product government evidence.
+- Recorded managed-transfer evidence for AWS Transfer Family as `Limited`, Azure Blob Storage SFTP support as `Full`, and Google Storage Transfer Service as control-package-scoped `Partial`, complementing the existing OCI File Server `Limited` evidence.
+- Recorded ML platform evidence for Amazon SageMaker AI as `Limited`, Azure Machine Learning as `Full`, and Vertex AI as control-package-scoped `Partial`, alongside existing OCI Data Science evidence.
+- Tightened the AWS Agents for Amazon Bedrock retained-`Unknown` note: current official Agents endpoint tables do not identify AWS GovCloud (US) Regions.
+- Preserved every `parityLag` value as `Unknown`; regulated availability does not establish commercial feature parity.
+
 ## 2026-05-26 - v3.11.0 - Regulated AI and OCI evidence depth
 
 - Recorded official AWS GovCloud evidence for Amazon Bedrock, Knowledge Bases for Amazon Bedrock, and accelerated EC2 instance families, classifying their documented environment-specific constraints conservatively as `Limited`.
