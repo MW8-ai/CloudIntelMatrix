@@ -4,6 +4,13 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-14 - v3.13.0 - Issue #31 update-review triage
+
+- Recorded official AWS European Sovereign Cloud launch evidence in the sovereign-cloud row and added June 2026 AWS S3 Access Grants and AWS Backup for EKS European Sovereign Cloud source notes without inferring parity.
+- Recorded AWS EC2 Capacity Blocks for ML availability in AWS GovCloud (US) Regions as accelerated-compute evidence while preserving `Limited` availability and `Unknown` parity.
+- Recorded AWS Lambda Managed Instances and Amazon Q-powered Cost Explorer / AWS FinOps Agent context as commercial/preview evidence; AWS FinOps Agent remains an `upcoming.json` preview item because it is not GA and excludes GovCloud during preview.
+- Left Azure Functions agent/MCP feature placement, GCP BigQuery AI impact, and Azure Synapse Link retirement as explicit architecture decision questions rather than changing taxonomy silently.
+
 ## 2026-05-26 - v3.12.0 - Regulated data exchange and ML-platform evidence
 
 - Recorded official regulated-environment evidence for analytics-platform decisions: Amazon Redshift as `Limited`, the Azure Synapse Analytics / Microsoft Fabric composite as `Partial`, and BigQuery under Assured Workloads as `Partial`; OCI Autonomous Data Warehouse remains `Unknown` absent mapped-product government evidence.

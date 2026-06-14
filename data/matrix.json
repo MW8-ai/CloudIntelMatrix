@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.12.0",
+    "version": "3.13.0",
     "schema": "capability-v1",
-    "last_verified": "2026-05-26",
+    "last_verified": "2026-06-14",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
     "providers": [
       "aws",
@@ -356,7 +356,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event-driven compute differs by runtime packaging, trigger integrations, state-orchestration options, networking, scaling controls, and container portability. Evaluate those characteristics against the workload rather than assuming service equivalence.",
       "operationalConsiderations": "Cold start latency matters for latency-sensitive workloads. Debugging distributed serverless functions requires mature observability strategy. Cost can surprise at high invocation volume without concurrency controls.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-14",
       "sourceNotes": "Availability classifications identify documented runtime support or control-package scope; triggers, runtime versions, integrations, network controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -369,11 +369,11 @@
           "pricingUrl": "https://aws.amazon.com/lambda/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html",
-          "sourceNotes": "AWS documents Lambda in AWS GovCloud (US) and identifies unavailable function URLs, selected event sources and mappings, selected logging features, deployment-package KMS encryption, and some SnapStart runtimes. Availability is recorded as Limited; parity remains unasserted.",
+          "sourceNotes": "AWS documents Lambda in AWS GovCloud (US) and identifies unavailable function URLs, selected event sources and mappings, selected logging features, deployment-package KMS encryption, and some SnapStart runtimes. AWS also announced Lambda Managed Instances availability across most commercial Regions in June 2026; that commercial expansion does not establish GovCloud parity. Availability is recorded as Limited; parity remains unasserted.",
           "tierNotes": {
             "Personal / Free": "1M requests/mo free (permanent)",
-            "Commercial / SMB": "Lambda + API Gateway; Step Functions orchestration",
-            "Enterprise": "VPC, SnapStart, arm64; Provisioned Concurrency; EventBridge Pipes",
+            "Commercial / SMB": "Lambda + API Gateway; Step Functions orchestration; evaluate Lambda Managed Instances for steady EC2-backed function workloads.",
+            "Enterprise": "VPC, SnapStart, arm64; Provisioned Concurrency; EventBridge Pipes; evaluate Lambda Managed Instances where specialized compute or EC2 pricing models fit.",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
         },
@@ -524,7 +524,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Object storage supports data lakes, backup, static assets, exchange, and archival. Compare lifecycle policy, immutability, replication, encryption controls, event integration, analytics adjacency, data-residency options, and egress behavior.",
       "operationalConsiderations": "Egress costs can become substantial at scale. Lifecycle policies are essential for cost control. Object Lock / WORM is important for compliance. Bucket-level public access should be denied by default in enterprise.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-14",
       "sourceNotes": "Availability classifications identify documented mapped-service support; immutability, replication, cryptographic controls, event integration, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -537,7 +537,7 @@
           "pricingUrl": "https://aws.amazon.com/s3/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html",
-          "sourceNotes": "AWS documents Amazon S3 in AWS GovCloud (US) and identifies material limitations including cross-partition copies, MFA delete, Transfer Acceleration, Express One Zone, and some endpoint behavior. Availability is recorded as Limited; storage-feature parity remains unasserted.",
+          "sourceNotes": "AWS documents Amazon S3 in AWS GovCloud (US) and identifies material limitations including cross-partition copies, MFA delete, Transfer Acceleration, Express One Zone, and some endpoint behavior. AWS also announced S3 Access Grants availability in the AWS European Sovereign Cloud (Germany) Region in June 2026. Availability is recorded as Limited; storage-feature parity remains unasserted.",
           "tierNotes": {
             "Personal / Free": "5 GB Standard free (12 months)",
             "Commercial / SMB": "Standard/IA/Glacier/Deep Archive; Intelligent-Tiering auto-moves",
@@ -1028,7 +1028,7 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "GPU and accelerator-backed compute supports model training, fine-tuning, high-throughput inference, graphics, and scientific workloads outside fully managed model APIs. Compare accelerator families, memory, interconnect, availability zones, scheduling, container stacks, bare-metal options, quotas, and reservation models.",
       "operationalConsiderations": "Accelerator supply, quota, and utilization dominate cost and delivery risk. Architecture should plan capacity acquisition, image and driver management, orchestration, telemetry, data locality, failover, and a fallback path when a desired accelerator is unavailable.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-14",
       "sourceNotes": "Official regulated-environment documentation establishes selected accelerated compute presence for AWS and Azure. Required accelerator families, quota, drivers, images, GCP and OCI accelerator scope, and all commercial-to-regulated parity still require validation.",
       "providers": {
         "aws": {
@@ -1041,12 +1041,12 @@
           "pricingUrl": "https://aws.amazon.com/ec2/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-regions.html",
-          "sourceNotes": "AWS lists accelerated computing instance families in AWS GovCloud (US-East) and AWS GovCloud (US-West), with family availability differing by Region. Availability is recorded as Limited; required family, capacity, and feature parity remain unasserted.",
+          "sourceNotes": "AWS lists accelerated computing instance families in AWS GovCloud (US-East) and AWS GovCloud (US-West), with family availability differing by Region. AWS announced EC2 Capacity Blocks for ML in both AWS GovCloud (US) Regions in June 2026, with P6 availability differing by Region. Availability is recorded as Limited; required family, capacity, and feature parity remain unasserted.",
           "tierNotes": {
             "Personal / Free": "Use managed APIs or small experiments unless accelerator cost and quota are explicitly approved.",
             "Commercial / SMB": "Select instance family for workload demand, drivers, container support, scheduling, quota, and spending guardrails.",
             "Enterprise": "Plan reservations or capacity, AMI and driver lifecycle, cluster scheduling, inference resilience, telemetry, and utilization controls.",
-            "Government": "Confirm specific accelerated instance families, quotas, images, networking, and data controls in AWS GovCloud."
+            "Government": "Confirm specific accelerated instance families, Capacity Blocks eligibility, quotas, images, networking, and data controls in AWS GovCloud."
           }
         },
         "azure": {
@@ -1846,24 +1846,24 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Government and sovereign offerings use provider-specific tenancy, boundary, eligibility, and control models. A comparable workload design must start from the required control regime and supported service inventory rather than assume commercial-cloud equivalence.",
       "operationalConsiderations": "Confirm account eligibility, identity boundaries, region selection, authorized services, support access constraints, and procurement requirements before selecting a regulated cloud deployment model.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-14",
       "providers": {
         "aws": {
-          "service": "AWS GovCloud (US)",
+          "service": "AWS GovCloud (US) / AWS European Sovereign Cloud",
           "status": "GA",
           "govAvailability": "Full",
-          "govVariant": "AWS GovCloud (US-East and US-West)",
+          "govVariant": "AWS GovCloud (US-East and US-West); AWS European Sovereign Cloud (Germany)",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/whatis.html",
           "pricingUrl": "https://aws.amazon.com/govcloud-us/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
-          "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
-          "sourceNotes": "AWS GovCloud (US) is a documented offering; commercial-to-GovCloud parity must be evaluated service by service for a given architecture.",
+          "govDocsUrl": "https://aws.amazon.com/blogs/aws/opening-the-aws-european-sovereign-cloud/",
+          "sourceNotes": "AWS GovCloud (US) is a documented U.S. regulated-cloud offering. AWS announced the AWS European Sovereign Cloud as generally available in January 2026 with its first Region in Germany and a separate aws-eusc partition. Commercial-to-regulated or commercial-to-sovereign parity must be evaluated service by service for a given architecture.",
           "tierNotes": {
             "Personal / Free": "Government environment eligibility and onboarding requirements apply.",
             "Commercial / SMB": "Use standard AWS regions unless a regulated workload requires GovCloud eligibility and controls.",
             "Enterprise": "Map required services, identities, integrations, and operational boundaries before migration.",
-            "Government": "Use the GovCloud service documentation and compliance materials for the required control regime."
+            "Government": "Choose the regulated boundary first: AWS GovCloud (US) for eligible U.S. public-sector/compliance workloads or AWS European Sovereign Cloud for EU sovereignty requirements, then validate each service."
           }
         },
         "azure": {
@@ -2009,7 +2009,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Cost-governance services expose usage, budgets, allocation, optimization guidance, and reporting needed for accountable cloud operation. Their effectiveness depends on organizational scopes, tagging discipline, ownership, and timely review.",
       "operationalConsiderations": "Establish tagging and account hierarchy early, assign budget and anomaly-review ownership, and treat recommendations as inputs to engineering decisions rather than automatic actions.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-14",
       "providers": {
         "aws": {
           "service": "AWS Billing and Cost Management",
@@ -2020,11 +2020,11 @@
           "pricingUrl": "https://aws.amazon.com/aws-cost-management/aws-cost-explorer/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
-          "sourceNotes": "AWS documents cost-management tooling and GovCloud separately; verify which billing, reporting, and optimization features are required and available for GovCloud accounts.",
+          "sourceNotes": "AWS documents cost-management tooling and GovCloud separately; verify which billing, reporting, and optimization features are required and available for GovCloud accounts. AWS Cost Explorer added Amazon Q-powered cost explanations for commercial Regions in June 2026, while AWS FinOps Agent entered preview and explicitly excludes AWS GovCloud (US) and AWS China Regions during preview.",
           "tierNotes": {
             "Personal / Free": "Use cost visibility and budgets before adding material spend.",
             "Commercial / SMB": "Standardize account tags, budgets, cost allocation, and routine optimization review.",
-            "Enterprise": "Establish FinOps ownership, multi-account reporting, commitment governance, and anomaly response.",
+            "Enterprise": "Establish FinOps ownership, multi-account reporting, commitment governance, anomaly response, and controlled evaluation of AI-assisted cost analysis features.",
             "Government": "Confirm billing and reporting workflows for GovCloud organizations and procurement needs."
           }
         },
@@ -2494,7 +2494,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Recovery architecture requires protected copies, retention policy, immutability controls, restoration testing, and workload-specific RPO and RTO decisions. Provider backup services protect different resource sets and should be evaluated against the actual recovery plan.",
       "operationalConsiderations": "A successful backup job is not proof of recoverability. Isolate backup administration, protect vaults against destructive changes, test restores and regional recovery, document key dependencies, and budget for storage and recovery data movement.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-14",
       "providers": {
         "aws": {
           "service": "AWS Backup",
@@ -2505,7 +2505,7 @@
           "pricingUrl": "https://aws.amazon.com/backup/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bkp.html",
-          "sourceNotes": "AWS documents AWS Backup in AWS GovCloud (US) and identifies unavailable restore testing and Backup Audit Manager multi-account, multi-Region reporting. Availability is recorded as Limited; verify protected resource types and recovery controls, and do not infer parity.",
+          "sourceNotes": "AWS documents AWS Backup in AWS GovCloud (US) and identifies unavailable restore testing and Backup Audit Manager multi-account, multi-Region reporting. AWS also announced AWS Backup support for Amazon EKS in the AWS European Sovereign Cloud (Germany) Region in June 2026. Availability is recorded as Limited; verify protected resource types and recovery controls, and do not infer parity.",
           "tierNotes": {
             "Personal / Free": "Protect essential data and prove at least one restore path.",
             "Commercial / SMB": "Define backup policy, retention, vault access, restoration testing, and cost review.",

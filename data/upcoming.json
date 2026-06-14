@@ -1,9 +1,23 @@
 {
   "_meta": {
     "description": "Announced, preview, or upcoming changes. Removed and promoted to matrix.json when GA. Official sources only.",
-    "last_reviewed": "2026-05-19"
+    "last_reviewed": "2026-06-14"
   },
   "upcoming": [
+    {
+      "id": "aws-finops-agent-preview",
+      "provider": "aws",
+      "category": "Cost Governance",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "AWS FinOps Agent preview",
+      "detail": "AWS announced a preview FinOps Agent for AI-assisted cost questions, reporting, optimization recommendations, anomaly investigation, and scheduled FinOps workflows. Preview availability is US East (N. Virginia) and excludes AWS GovCloud (US) and AWS China Regions.",
+      "status": "preview",
+      "announced": "2026-06-09",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-finops-agent-preview/",
+      "verified": true
+    },
     {
       "id": "aws-bedrock-govcloud-il45",
       "provider": "aws",
