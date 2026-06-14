@@ -67,11 +67,11 @@
       "tier": "Government",
       "type": "expansion",
       "title": "Microsoft Fabric — Government region availability",
-      "detail": "Microsoft Fabric (unified analytics) is commercially GA but has delayed availability in Azure Government regions. Timeline not officially confirmed.",
+      "detail": "Microsoft's Azure Government roadmap lists Microsoft Fabric as Forecasted across Azure Government environments. Track this platform-level shift because the matrix maps Azure analytics as Azure Synapse Analytics / Microsoft Fabric. Do not track the narrower Synapse Link for Cosmos DB retirement here because Synapse Link is not a directly mapped capability.",
       "status": "announced",
       "announced": "2025",
       "expected_ga": "2026",
-      "source": "https://learn.microsoft.com/en-us/fabric/get-started/microsoft-fabric-overview",
+      "source": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
       "verified": true
     },
     {

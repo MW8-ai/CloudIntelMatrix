@@ -4,6 +4,14 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-14 - v3.14.0 - Issue #31 boundary decisions
+
+- Resolved the Azure Functions agent/MCP boundary by keeping Azure Functions in Serverless Functions and clarifying Microsoft Foundry Agent Service as the Azure mapping for AI Agents & Tool Orchestration.
+- Strengthened the BigQuery analytics row with official BigQuery ML, Gemini in BigQuery, and BigQuery generative AI function evidence while preserving the existing capability-level `AI_CAPABLE` classification.
+- Kept Synapse Link for Cosmos DB out of `upcoming.json` because it is not directly mapped, and tightened the existing Microsoft Fabric government-availability watch as the platform-level Azure analytics item.
+- Deferred AWS European Sovereign Cloud modeling to a future provider-neutral realm-class dimension; no special AWS-only sovereign profile was added.
+- Preserved all `govAvailability` and `parityLag` values; no parity or regulated-availability inference was made from commercial feature evidence.
+
 ## 2026-06-14 - v3.13.0 - Issue #31 update-review triage
 
 - Recorded official AWS European Sovereign Cloud launch evidence in the sovereign-cloud row and added June 2026 AWS S3 Access Grants and AWS Backup for EKS European Sovereign Cloud source notes without inferring parity.
