@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.13.0",
+    "version": "3.14.0",
     "schema": "capability-v1",
     "last_verified": "2026-06-14",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
@@ -944,8 +944,8 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed AI-agent services orchestrate model reasoning with tools, APIs, knowledge sources, memory, and workflow controls. Compare identity delegation, tool authorization, human approval, action tracing, evaluation, guardrails, interoperability, and runtime isolation before adoption.",
       "operationalConsiderations": "Agents expand the blast radius of model errors because they can invoke systems and act on data. Require scoped service identities, least-privilege tools, approval gates for consequential operations, audit trails, testing against prompt injection, and clear rollback procedures.",
-      "lastVerified": "2026-05-26",
-      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row.",
+      "lastVerified": "2026-06-14",
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Agent tools, connectors, and MCP hosts are treated as orchestration dependencies rather than the serverless-compute platform itself. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row.",
       "providers": {
         "aws": {
           "service": "Agents for Amazon Bedrock",
@@ -975,11 +975,11 @@
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/ai-foundry/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Microsoft documents Foundry Agent Service commercially, while its Azure Government roadmap lists that service as Forecasted rather than GA. Current Azure Government availability and parity therefore remain Unknown.",
+          "sourceNotes": "Microsoft documents Foundry Agent Service as the managed platform for building, deploying, and scaling AI agents. Microsoft also documents Logic Apps connectors, Azure Functions, OpenAPI tools, and Model Context Protocol servers as agent tools or MCP hosts, not the agent platform itself. The Azure Government roadmap lists Foundry Agent Service as Forecasted rather than GA, so current Azure Government availability and parity remain Unknown.",
           "tierNotes": {
             "Personal / Free": "Limit experimentation to harmless tools and test data with cost and action limits.",
             "Commercial / SMB": "Validate connected tools, managed identity design, search grounding, tracing, approvals, and runtime cost.",
-            "Enterprise": "Govern agent catalogs, identities, tools, private networking, evaluation, logging, content safety, and human escalation.",
+            "Enterprise": "Govern Foundry Agent Service, Agent Framework or hosted-agent code, identities, tools, private networking, evaluation, logging, content safety, and human escalation.",
             "Government": "Confirm Foundry Agent Service, models, search, identity, private access, and monitoring features in Azure Government."
           }
         },
@@ -1193,8 +1193,8 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "Analytics platforms differ in provisioning model, workload isolation, data-lake federation, BI and ML adjacency, query governance, sharing, encryption, and cost controls. Select against workload patterns and data-governance boundaries.",
       "operationalConsiderations": "Query costs in on-demand models can surprise without governance guardrails. Slot/reservation pricing requires capacity planning. Data egress for cross-cloud or on-prem data movement adds cost. Schema design for distributed analytics differs significantly from traditional RDBMS patterns.",
-      "lastVerified": "2026-05-26",
-      "sourceNotes": "Official regulated-environment documentation establishes selected AWS, Azure, and Google analytics-platform presence. Required query, sharing, governance, ML-adjacent features, OCI Autonomous Data Warehouse support, and all commercial-to-regulated parity remain to be validated.",
+      "lastVerified": "2026-06-14",
+      "sourceNotes": "Official regulated-environment documentation establishes selected AWS, Azure, and Google analytics-platform presence. Google documentation confirms BigQuery ML, Gemini in BigQuery, and generative AI functions, supporting the existing AI_CAPABLE classification for this analytics capability. Required query, sharing, governance, AI/ML-adjacent features, OCI Autonomous Data Warehouse support, and all commercial-to-regulated parity remain to be validated.",
       "providers": {
         "aws": {
           "service": "Amazon Redshift",
@@ -1242,11 +1242,11 @@
           "pricingUrl": "https://cloud.google.com/bigquery/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Google lists BigQuery among Assured Workloads supported products for documented control packages. Availability is recorded as Partial because control-package scope and required BigQuery capabilities must be validated separately; parity remains unasserted.",
+          "sourceNotes": "Google lists BigQuery among Assured Workloads supported products for documented control packages. Google also documents BigQuery ML, Gemini in BigQuery, and generative AI functions that call Agent Platform models, supporting the existing AI_CAPABLE classification for this row. Availability is recorded as Partial because control-package scope, Gemini support, and required BigQuery capabilities must be validated separately; parity remains unasserted.",
           "tierNotes": {
             "Personal / Free": "10 GB storage + 1 TB query/mo free (best free analytics tier)",
             "Commercial / SMB": "BigQuery + Dataflow (Beam) + Pub/Sub + Looker Studio",
-            "Enterprise": "BigQuery Enterprise (Reservations, Editions, BI Engine); Dataplex governance; Analytics Hub",
+            "Enterprise": "BigQuery Enterprise (Reservations, Editions, BI Engine); BigQuery ML; Gemini in BigQuery; Dataplex governance; Analytics Hub",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           }
         },
