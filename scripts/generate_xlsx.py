@@ -24,6 +24,7 @@ OUTDIR.mkdir(exist_ok=True)
 
 mdata = json.loads((DATA / "matrix.json").read_text())
 udata = json.loads((DATA / "upcoming.json").read_text())
+hdata = json.loads((DATA / "history.json").read_text())
 
 META       = mdata["_meta"]
 CAPS       = mdata["capabilities"]
@@ -35,6 +36,7 @@ PATTERNS   = mdata["patterns"]
 TIERS      = META["tiers"]
 PROVIDERS  = META["providers"]
 UPCOMING   = udata.get("upcoming", [])
+HISTORY    = hdata.get("history", [])
 CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
 
 PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP","oci":"OCI"}
@@ -395,6 +397,61 @@ def build_controls_sheet(ws):
     for col, width in {"A":30, "B":55, "C":42, "D":58, "E":58, "F":14}.items():
         ws.column_dimensions[col].width = width
 
+def build_history_sheet(ws):
+    """Provider journey milestones from official public sources."""
+    ws.sheet_view.showGridLines = False
+    ws.freeze_panes = "A3"
+    hdr(ws, "Cloud Provider History - Commercial, Free, and Government Milestones", 9)
+    headers = ["Provider", "Phase", "Year", "Date", "Milestone", "Scope", "Summary", "Source", "Verified"]
+    for ci, header in enumerate(headers, 1):
+        c = ws.cell(row=2, column=ci, value=header)
+        c.fill = f("1E3A5F")
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    ws.row_dimensions[2].height = 18
+
+    phase_bg = {
+        "Commercial cloud": "DBEAFE",
+        "Personal / Free": "D1FAE5",
+        "Government state/federal": "FEF3C7",
+    }
+    sorted_history = sorted(HISTORY, key=lambda item: (item.get("year", 0), item.get("provider", ""), item.get("date", "")))
+    for ri, item in enumerate(sorted_history, 3):
+        pkey = item.get("provider", "")
+        bg = phase_bg.get(item.get("phase", ""), PROV_COLORS.get(pkey, {}).get("svc", "F9FAFB"))
+        vals = [
+            PROV_LABELS.get(pkey, pkey.upper()),
+            item.get("phase", ""),
+            item.get("year", ""),
+            item.get("dateLabel", item.get("date", "")),
+            item.get("title", ""),
+            " / ".join(item.get("scope", [])),
+            item.get("summary", ""),
+            item.get("sourceUrl", ""),
+            hdata.get("_meta", {}).get("lastVerified", ""),
+        ]
+        for ci, value in enumerate(vals, 1):
+            c = ws.cell(row=ri, column=ci, value=value)
+            c.fill = f(bg)
+            c.font = ft(bold=(ci in [1, 5]), size=8, color="2563EB" if ci == 8 else "111827")
+            c.alignment = al("left", "top" if ci in [5, 7] else "center", wrap=True)
+            c.border = TB
+            if ci == 8 and value:
+                c.hyperlink = value
+        ws.row_dimensions[ri].height = 48
+
+    note_row = len(sorted_history) + 5
+    ws.merge_cells(start_row=note_row, start_column=1, end_row=note_row, end_column=9)
+    c = ws.cell(row=note_row, column=1, value=hdata.get("_meta", {}).get("scopeNote", ""))
+    c.fill = f("F8FAFC")
+    c.font = ft(size=8, italic=True, color="374151")
+    c.alignment = al("left", "center", wrap=True)
+    c.border = TB
+
+    for col, width in {"A":10, "B":22, "C":8, "D":12, "E":38, "F":28, "G":66, "H":58, "I":12}.items():
+        ws.column_dimensions[col].width = width
+
 def build_upcoming_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "Announced / Preview / Upcoming — Official Sources Only", 10)
@@ -444,6 +501,9 @@ build_patterns_sheet(ws_patterns)
 
 ws_controls = wb.create_sheet("NIST 800-53 Lens")
 build_controls_sheet(ws_controls)
+
+ws_history = wb.create_sheet("Cloud History")
+build_history_sheet(ws_history)
 
 ws_up = wb.create_sheet("Upcoming & Future")
 build_upcoming_sheet(ws_up)

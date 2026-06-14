@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
+import historyData  from "../data/history.json";
 
 const {
   capabilities: CAPABILITIES,
@@ -12,6 +13,8 @@ const {
   _meta: META,
 } = matrixData;
 const UPCOMING = upcomingData.upcoming || [];
+const HISTORY = historyData.history || [];
+const HISTORY_META = historyData._meta || {};
 const PROVIDERS = META.providers;
 const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
 
@@ -40,22 +43,15 @@ const THEME_TOKENS = {
   },
 };
 
-function getSystemTheme() {
-  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches) {
-    return "dark";
-  }
-  return "light";
-}
-
 function getInitialTheme() {
   if (typeof window === "undefined") return "light";
   try {
     const saved = window.localStorage.getItem(THEME_STORAGE_KEY);
     if (saved === "light" || saved === "dark") return saved;
   } catch {
-    // Ignore storage access errors and fall back to the system preference.
+    // Ignore storage access errors and use the readable default.
   }
-  return getSystemTheme();
+  return "light";
 }
 
 const PROVIDER_META = {
@@ -94,6 +90,12 @@ const TAG_STYLES = {
   orange: { bg: "#7c2d12", fg: "#fb923c", border: "#c2410c" },
   yellow: { bg: "#713f12", fg: "#facc15", border: "#a16207" },
   rose:   { bg: "#881337", fg: "#fb7185", border: "#be123c" },
+};
+
+const HISTORY_PHASE_STYLES = {
+  "Commercial cloud": { bg: "#1e3a5f22", fg: "#60a5fa", border: "#2563eb55" },
+  "Personal / Free": { bg: "#14532d22", fg: "#22c55e", border: "#15803d55" },
+  "Government state/federal": { bg: "#78350f22", fg: "#f59e0b", border: "#b4530955" },
 };
 
 function TagBadge({ tagKey }) {
@@ -544,6 +546,107 @@ function ControlLensView({ lens, families }) {
   );
 }
 
+// -- CLOUD HISTORY VIEW -------------------------------------------------------
+function HistoryView({ items, meta, activeProviders }) {
+  const years = Array.from(new Set(items.map(item => item.year))).sort((a, b) => a - b);
+  const grouped = activeProviders
+    .map(provider => ({
+      provider,
+      items: items
+        .filter(item => item.provider === provider)
+        .sort((a, b) => a.year - b.year || a.date.localeCompare(b.date)),
+    }))
+    .filter(group => group.items.length);
+
+  if (!items.length) {
+    return <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No history milestones match the current filter.</div>;
+  }
+
+  return (
+    <div>
+      <div style={{ padding: "12px 14px", margin: "10px 0 14px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--link)", fontWeight: 700, marginBottom: 4 }}>PROVIDER HISTORY LENS</div>
+        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 700, marginBottom: 5 }}>Cloud, personal/free, and government timeline</div>
+        <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6, marginBottom: 10 }}>{meta.scopeNote}</div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {Object.entries(HISTORY_PHASE_STYLES).map(([phase, style]) => (
+            <span key={phase} style={{ fontSize: 8, padding: "3px 7px", borderRadius: 4, border: `1px solid ${style.border}`, background: style.bg, color: style.fg, fontWeight: 700, letterSpacing: "0.05em" }}>
+              {phase.toUpperCase()}
+            </span>
+          ))}
+          <VerifiedStamp date={meta.lastVerified} />
+        </div>
+      </div>
+
+      <div style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", overflow: "hidden", marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: `135px repeat(${years.length}, minmax(92px, 1fr))`, borderBottom: "1px solid var(--border)" }}>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", fontSize: 9, color: "var(--muted)", fontWeight: 700 }}>PROVIDER</div>
+          {years.map(year => (
+            <div key={year} style={{ padding: "8px 8px", background: "var(--panel-alt)", borderLeft: "1px solid var(--border)", fontSize: 9, color: "var(--muted)", fontWeight: 700, textAlign: "center" }}>{year}</div>
+          ))}
+        </div>
+        {grouped.map((group, rowIndex) => {
+          const pm = PROVIDER_META[group.provider];
+          return (
+            <div key={group.provider} style={{ display: "grid", gridTemplateColumns: `135px repeat(${years.length}, minmax(92px, 1fr))`, borderBottom: rowIndex === grouped.length - 1 ? "none" : "1px solid var(--border)" }}>
+              <div style={{ padding: "10px", background: rowIndex % 2 === 0 ? "var(--panel)" : "var(--panel-alt)", borderRight: "1px solid var(--border)" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: pm.dot }}>{pm.label}</div>
+                <div style={{ fontSize: 8, color: "var(--muted)", lineHeight: 1.4 }}>{pm.long}</div>
+              </div>
+              {years.map(year => {
+                const hits = group.items.filter(item => item.year === year);
+                return (
+                  <div key={`${group.provider}-${year}`} style={{ minHeight: 82, padding: 6, background: rowIndex % 2 === 0 ? "var(--panel)" : "var(--panel-alt)", borderLeft: "1px solid var(--border)" }}>
+                    {hits.map(item => {
+                      const phaseStyle = HISTORY_PHASE_STYLES[item.phase] || HISTORY_PHASE_STYLES["Commercial cloud"];
+                      return (
+                        <a key={item.id} href={item.sourceUrl} target="_blank" rel="noopener noreferrer" title={item.summary} style={{ display: "block", textDecoration: "none", padding: "6px 7px", borderRadius: 4, border: `1px solid ${phaseStyle.border}`, borderLeft: `3px solid ${pm.dot}`, background: phaseStyle.bg, marginBottom: 5 }}>
+                          <div style={{ fontSize: 7, color: phaseStyle.fg, fontWeight: 700, letterSpacing: "0.06em", marginBottom: 3 }}>{item.phase.toUpperCase()}</div>
+                          <div style={{ fontSize: 9, color: "var(--text)", lineHeight: 1.35, fontWeight: 700 }}>{item.title}</div>
+                          <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 3 }}>{item.dateLabel}</div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 10 }}>
+        {grouped.map(group => {
+          const pm = PROVIDER_META[group.provider];
+          return (
+            <div key={`${group.provider}-detail`} style={{ border: `1px solid ${pm.border}`, borderRadius: 6, background: pm.bg, padding: "11px 12px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: pm.dot, marginBottom: 8 }}>{pm.label} milestones</div>
+              {group.items.map(item => {
+                const phaseStyle = HISTORY_PHASE_STYLES[item.phase] || HISTORY_PHASE_STYLES["Commercial cloud"];
+                return (
+                  <div key={`${item.id}-detail`} style={{ padding: "8px 0", borderTop: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline", marginBottom: 4 }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "var(--text)", lineHeight: 1.35 }}>{item.title}</span>
+                      <span style={{ fontSize: 8, color: phaseStyle.fg, fontWeight: 700, whiteSpace: "nowrap" }}>{item.dateLabel}</span>
+                    </div>
+                    <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55, marginBottom: 5 }}>{item.summary}</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center" }}>
+                      {item.scope.map(scope => (
+                        <span key={scope} style={{ fontSize: 7, padding: "2px 5px", borderRadius: 3, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--muted)", fontWeight: 700 }}>{scope}</span>
+                      ))}
+                      <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 8, color: "var(--link)", textDecoration: "none", marginLeft: 4 }}>{item.sourceLabel}</a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
@@ -581,7 +684,7 @@ function UpcomingBanner({ items }) {
 // ── ROOT ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
-  const [mode, setMode] = useState("matrix");   // matrix | patterns | controls | diff | gov | ai
+  const [mode, setMode] = useState("matrix");   // matrix | patterns | controls | history | diff | gov | ai
   const [activeProviders, setActiveProviders] = useState([...PROVIDERS]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -669,14 +772,37 @@ export default function App() {
     return families;
   }, [selectedCategory, searchQuery]);
 
+  const filteredHistory = useMemo(() => {
+    let items = HISTORY.filter(item => activeProviders.includes(item.provider));
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.title.toLowerCase().includes(q) ||
+        item.summary.toLowerCase().includes(q) ||
+        item.phase.toLowerCase().includes(q) ||
+        item.provider.toLowerCase().includes(q) ||
+        item.scope.some(scope => scope.toLowerCase().includes(q)) ||
+        item.sourceLabel.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [activeProviders, searchQuery]);
+
   const govAlertCount = CAPABILITIES.filter(c =>
     Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
   ).length;
+
+  const resultCount =
+    mode === "patterns" ? filteredPatterns.length :
+    mode === "controls" ? filteredControlFamilies.length :
+    mode === "history" ? filteredHistory.length :
+    filteredCaps.length;
 
   const modes = [
     { id: "matrix", label: "MATRIX", desc: "All capabilities by tier" },
     { id: "patterns", label: "PATTERNS", desc: "Architecture planning overlays" },
     { id: "controls", label: "NIST 800-53", desc: "NIST SP 800-53 Rev. 5 control-family planning lens" },
+    { id: "history", label: "HISTORY", desc: "Provider cloud journey milestones" },
     { id: "diff",   label: "EQUIVALENCY", desc: "Side-by-side service mapping" },
     { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
     { id: "ai",     label: "AI FOCUS", desc: "AI_NATIVE and AI_CAPABLE only" },
@@ -716,7 +842,7 @@ export default function App() {
               {PROVIDERS.map(provider => PROVIDER_META[provider].label).join(" · ")}
             </div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CONTROL_LENS.families.length} NIST families · {CATEGORIES.length} categories · fact-first · official sources only
+              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CONTROL_LENS.families.length} NIST families · {HISTORY.length} history milestones · {CATEGORIES.length} categories · fact-first · official sources only
             </div>
           </div>
 
@@ -850,13 +976,13 @@ export default function App() {
 
       {/* ── CONTENT ── */}
       <div style={{ padding: "14px 24px 40px", overflowX: "auto" }}>
-        <div style={{ minWidth: activeProviders.length > 3 ? 1040 : 780 }}>
+        <div style={{ minWidth: mode === "history" ? 1080 : activeProviders.length > 3 ? 1040 : 780 }}>
           <UpcomingBanner items={UPCOMING} />
 
           {/* Search result count */}
           {searchQuery.trim().length >= 2 && (
             <div style={{ marginBottom: 10, fontSize: 9, color: "var(--muted)" }}>
-              {mode === "patterns" ? filteredPatterns.length : mode === "controls" ? filteredControlFamilies.length : filteredCaps.length} result(s) for "{searchQuery}"
+              {resultCount} result(s) for "{searchQuery}"
             </div>
           )}
 
@@ -886,6 +1012,7 @@ export default function App() {
           {mode === "ai"   && <AIView   caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} />}
+          {mode === "history" && <HistoryView items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
         </div>
 
         {/* Tag legend */}
