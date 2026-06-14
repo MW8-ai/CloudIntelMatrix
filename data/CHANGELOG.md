@@ -4,6 +4,12 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-14 - v3.13.0 - Per-view export tooling
+
+- Added client-side CSV and XLSX exports plus print/save-as-PDF output for the current visible app view without changing any matrix facts.
+- Added build-time per-view CSV generation for matrix, equivalency, government/parity, AI focus, architecture patterns, NIST controls, and history.
+- Added repo-root agent/task/compliance seed briefs to keep future work aligned to official-source guardrails.
+
 ## 2026-06-14 - v3.13.0 - Issue #31 update-review triage
 
 - Recorded official AWS European Sovereign Cloud launch evidence in the sovereign-cloud row and added June 2026 AWS S3 Access Grants and AWS Backup for EKS European Sovereign Cloud source notes without inferring parity.
