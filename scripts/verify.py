@@ -24,6 +24,7 @@ VALID_PARITY = {"None", "Minor", "Moderate", "Significant", "Unknown"}
 VALID_STATUS = {"GA", "Preview", "Deprecated", "Retiring", "Unknown"}
 VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
+VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
 CAP_REQUIRED = [
     "capability",
     "category",
@@ -52,6 +53,20 @@ PATTERN_REQUIRED = [
     "lastVerified",
 ]
 PATTERN_ALLOWED = set(PATTERN_REQUIRED)
+HISTORY_REQUIRED = [
+    "id",
+    "provider",
+    "phase",
+    "year",
+    "date",
+    "dateLabel",
+    "title",
+    "summary",
+    "scope",
+    "sourceLabel",
+    "sourceUrl",
+]
+HISTORY_ALLOWED = set(HISTORY_REQUIRED)
 PROV_REQUIRED = [
     "service",
     "status",
@@ -399,6 +414,69 @@ def validate_upcoming(udata):
     return items
 
 
+def validate_history(hdata):
+    if not isinstance(hdata, dict):
+        err("history.json must be an object")
+        return []
+    meta = hdata.get("_meta", {})
+    require_fields(meta, ["version", "lastVerified", "scopeNote"], "history.json._meta")
+    if isinstance(meta, dict):
+        validate_date(meta.get("lastVerified"), "history.json._meta.lastVerified")
+        if not str(meta.get("scopeNote", "")).strip():
+            err("history.json._meta.scopeNote must not be empty")
+
+    items = hdata.get("history", [])
+    if not isinstance(items, list) or not items:
+        err("history.json.history must be a non-empty array")
+        return []
+
+    seen_ids = set()
+    seen_provider_phase = set()
+    current_year = date.today().year
+    for item in items:
+        item_id = item.get("id", "MISSING") if isinstance(item, dict) else "MISSING"
+        require_fields(item, HISTORY_REQUIRED, f"history '{item_id}'")
+        if not isinstance(item, dict):
+            continue
+        unexpected_fields = set(item) - HISTORY_ALLOWED
+        if unexpected_fields:
+            err(f"history '{item_id}' contains unsupported fields: {sorted(unexpected_fields)}")
+        if item_id in seen_ids:
+            err(f"Duplicate history id: {item_id}")
+        seen_ids.add(item_id)
+
+        provider = item.get("provider")
+        phase = item.get("phase")
+        provider_phase = (provider, phase)
+        if provider not in EXPECTED_PROVIDERS:
+            err(f"history '{item_id}' invalid provider: {provider}")
+        if phase not in VALID_HISTORY_PHASE:
+            err(f"history '{item_id}' invalid phase: {phase}")
+        if provider_phase in seen_provider_phase:
+            warn(f"history provider/phase repeated: {provider}/{phase}")
+        seen_provider_phase.add(provider_phase)
+
+        year = item.get("year")
+        if not isinstance(year, int) or year < 2000 or year > current_year:
+            err(f"history '{item_id}'.year must be an integer from 2000 through {current_year}")
+        validate_date(item.get("date"), f"history '{item_id}'.date")
+        if not str(item.get("dateLabel", "")).strip():
+            err(f"history '{item_id}'.dateLabel must not be empty")
+        if not str(item.get("title", "")).strip():
+            err(f"history '{item_id}'.title must not be empty")
+        if not str(item.get("summary", "")).strip():
+            err(f"history '{item_id}'.summary must not be empty")
+        if not str(item.get("sourceLabel", "")).strip():
+            err(f"history '{item_id}'.sourceLabel must not be empty")
+        scope = item.get("scope", [])
+        if not isinstance(scope, list) or not scope or not all(isinstance(entry, str) and entry.strip() for entry in scope):
+            err(f"history '{item_id}'.scope must be a non-empty array of labels")
+        validate_url(item.get("sourceUrl"), f"history '{item_id}'.sourceUrl", False)
+
+    info(f"history.json: {len(items)} milestones")
+    return items
+
+
 def is_timeout_error(exc):
     if isinstance(exc, (TimeoutError, socket.timeout)):
         return True
@@ -430,7 +508,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, frameworks, control_lens):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -447,6 +525,8 @@ def run_link_checks(capabilities, upcoming, frameworks, control_lens):
                 add_link(provider.get(field), f"{cap.get('capability', '?')}/{pkey}/{field}")
     for item in upcoming:
         add_link(item.get("source"), f"upcoming/{item.get('id')}")
+    for item in history:
+        add_link(item.get("sourceUrl"), f"history/{item.get('id')}")
     for pkey, guidance in frameworks.items():
         for field in ["frameworkUrl", "foundationUrl"]:
             add_link(guidance.get(field), f"framework/{pkey}/{field}")
@@ -497,18 +577,21 @@ def main():
     providers, capabilities, _, frameworks, control_lens = validate_matrix(matrix)
 
     upcoming = []
+    history = []
     if not args.schema_only:
         upcoming_data = load(DATA / "upcoming.json")
+        history_data = load(DATA / "history.json")
         sources_data = load(DATA / "sources.json")
-        if upcoming_data is None or sources_data is None:
+        if upcoming_data is None or history_data is None or sources_data is None:
             print("\n".join(ERRORS))
             return 1
         upcoming = validate_upcoming(upcoming_data)
+        history = validate_history(history_data)
         if isinstance(sources_data, dict):
             info("sources.json: loaded")
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, frameworks, control_lens)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")
