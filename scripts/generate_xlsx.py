@@ -2,9 +2,11 @@
 """
 generate_xlsx.py — Generates Cloud_Intelligence_Matrix.xlsx from data/matrix.json
 Reads new capability-v1 schema.
-Output: dist/Cloud_Intelligence_Matrix.xlsx
+Output: dist/Cloud_Intelligence_Matrix.xlsx plus dated per-view CSV files
 """
+import csv
 import json, sys
+from datetime import date
 from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -40,6 +42,7 @@ HISTORY    = hdata.get("history", [])
 CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
 
 PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP","oci":"OCI"}
+EXPORT_DATE = date.today().isoformat()
 PROV_COLORS = {
     "aws":   {"hdr":"B45309","note":"FEF3C7","svc":"FFFBEB"},
     "azure": {"hdr":"0E7490","note":"CFFAFE","svc":"ECFEFF"},
@@ -479,6 +482,150 @@ def build_upcoming_sheet(ws):
         ws.column_dimensions[col].width = w
 
 # ── Build ──────────────────────────────────────────────────────────────────
+MATRIX_EXPORT_HEADERS = [
+    "capability", "category", "tags", "aiClassification", "provider", "service",
+    "status", "govAvailability", "parityLag", "govVariant", "docsUrl", "govDocsUrl",
+    "complianceUrl", "pricingUrl", "lastVerified", "sourceNotes",
+]
+PATTERN_EXPORT_HEADERS = [
+    "pattern", "summary", "whenToUse", "capability", "category", "provider",
+    "service", "govAvailability", "parityLag", "providerFramework", "frameworkUrl",
+    "providerFoundation", "foundationUrl", "reviewPrompts", "verificationNote", "lastVerified",
+]
+CONTROL_EXPORT_HEADERS = [
+    "familyId", "familyName", "applicability", "linkedCapabilities", "reviewPrompts",
+    "scopeNote", "catalogUrl", "baselineUrl", "oscalUrl", "lastVerified",
+]
+HISTORY_EXPORT_HEADERS = [
+    "provider", "phase", "year", "date", "dateLabel", "title", "summary",
+    "scope", "sourceLabel", "sourceUrl", "lastVerified",
+]
+
+def cell_text(value):
+    if value is None:
+        return ""
+    if isinstance(value, list):
+        return "; ".join(str(item) for item in value)
+    return str(value)
+
+def export_notes(*parts):
+    return " ".join(cell_text(part).strip() for part in parts if cell_text(part).strip())
+
+def matrix_export_rows(caps):
+    rows = []
+    for cap in caps:
+        for pkey in PROVIDERS:
+            provider = cap.get("providers", {}).get(pkey, {})
+            rows.append({
+                "capability": cap.get("capability", ""),
+                "category": cap.get("category", ""),
+                "tags": cap.get("tags", []),
+                "aiClassification": cap.get("aiClassification", ""),
+                "provider": PROV_LABELS.get(pkey, pkey.upper()),
+                "service": provider.get("service", ""),
+                "status": provider.get("status", ""),
+                "govAvailability": provider.get("govAvailability", ""),
+                "parityLag": provider.get("parityLag", ""),
+                "govVariant": provider.get("govVariant", ""),
+                "docsUrl": provider.get("docsUrl", ""),
+                "govDocsUrl": provider.get("govDocsUrl", ""),
+                "complianceUrl": provider.get("complianceUrl", ""),
+                "pricingUrl": provider.get("pricingUrl", ""),
+                "lastVerified": cap.get("lastVerified", ""),
+                "sourceNotes": export_notes(cap.get("sourceNotes", ""), provider.get("sourceNotes", "")),
+            })
+    return rows
+
+def pattern_export_rows():
+    rows = []
+    for pattern in PATTERNS:
+        for capability_name in pattern.get("capabilities", []):
+            cap = CAP_MAP.get(capability_name)
+            if not cap:
+                continue
+            for pkey in PROVIDERS:
+                provider = cap.get("providers", {}).get(pkey, {})
+                framework = FRAMEWORKS.get(pkey, {})
+                rows.append({
+                    "pattern": pattern.get("name", ""),
+                    "summary": pattern.get("summary", ""),
+                    "whenToUse": pattern.get("whenToUse", ""),
+                    "capability": capability_name,
+                    "category": cap.get("category", ""),
+                    "provider": PROV_LABELS.get(pkey, pkey.upper()),
+                    "service": provider.get("service", ""),
+                    "govAvailability": provider.get("govAvailability", ""),
+                    "parityLag": provider.get("parityLag", ""),
+                    "providerFramework": framework.get("framework", ""),
+                    "frameworkUrl": framework.get("frameworkUrl", ""),
+                    "providerFoundation": framework.get("foundation", ""),
+                    "foundationUrl": framework.get("foundationUrl", ""),
+                    "reviewPrompts": pattern.get("reviewPrompts", []),
+                    "verificationNote": pattern.get("verificationNote", ""),
+                    "lastVerified": pattern.get("lastVerified", ""),
+                })
+    return rows
+
+def control_export_rows():
+    return [
+        {
+            "familyId": family.get("id", ""),
+            "familyName": family.get("name", ""),
+            "applicability": family.get("applicability", ""),
+            "linkedCapabilities": family.get("capabilities", []),
+            "reviewPrompts": family.get("reviewPrompts", []),
+            "scopeNote": CONTROL_LENS.get("scopeNote", ""),
+            "catalogUrl": CONTROL_LENS.get("catalogUrl", ""),
+            "baselineUrl": CONTROL_LENS.get("baselineUrl", ""),
+            "oscalUrl": CONTROL_LENS.get("oscalUrl", ""),
+            "lastVerified": CONTROL_LENS.get("lastVerified", ""),
+        }
+        for family in CONTROL_LENS.get("families", [])
+    ]
+
+def history_export_rows():
+    return [
+        {
+            "provider": PROV_LABELS.get(item.get("provider", ""), item.get("provider", "").upper()),
+            "phase": item.get("phase", ""),
+            "year": item.get("year", ""),
+            "date": item.get("date", ""),
+            "dateLabel": item.get("dateLabel", ""),
+            "title": item.get("title", ""),
+            "summary": item.get("summary", ""),
+            "scope": item.get("scope", []),
+            "sourceLabel": item.get("sourceLabel", ""),
+            "sourceUrl": item.get("sourceUrl", ""),
+            "lastVerified": hdata.get("_meta", {}).get("lastVerified", ""),
+        }
+        for item in sorted(HISTORY, key=lambda entry: (entry.get("year", 0), entry.get("provider", ""), entry.get("date", "")))
+    ]
+
+def write_view_csv(view_id, headers, rows):
+    out = OUTDIR / f"cloudintelmatrix-{view_id}-{EXPORT_DATE}.csv"
+    stable_out = OUTDIR / f"cloudintelmatrix-{view_id}.csv"
+    for target in [out, stable_out]:
+        with target.open("w", encoding="utf-8-sig", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=headers, extrasaction="ignore")
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({header: cell_text(row.get(header, "")) for header in headers})
+    print(f"Saved CSV: {out} ({len(rows)} row(s))")
+
+def write_view_csvs():
+    matrix_rows = matrix_export_rows(CAPS)
+    write_view_csv("matrix", MATRIX_EXPORT_HEADERS, matrix_rows)
+    write_view_csv("diff", MATRIX_EXPORT_HEADERS, matrix_rows)
+    write_view_csv("gov", MATRIX_EXPORT_HEADERS, matrix_rows)
+    write_view_csv(
+        "ai",
+        MATRIX_EXPORT_HEADERS,
+        matrix_export_rows([cap for cap in CAPS if any(tag in {"AI_NATIVE", "AI_CAPABLE"} for tag in cap.get("tags", []))]),
+    )
+    write_view_csv("patterns", PATTERN_EXPORT_HEADERS, pattern_export_rows())
+    write_view_csv("controls", CONTROL_EXPORT_HEADERS, control_export_rows())
+    write_view_csv("history", HISTORY_EXPORT_HEADERS, history_export_rows())
+
 wb = Workbook()
 wb.remove(wb.active)
 
@@ -510,4 +657,5 @@ build_upcoming_sheet(ws_up)
 
 out = OUTDIR / "Cloud_Intelligence_Matrix.xlsx"
 wb.save(out)
+write_view_csvs()
 print(f"✅ Saved: {out}  ({out.stat().st_size // 1024} KB)")
