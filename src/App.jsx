@@ -2,6 +2,15 @@ import { useState, useMemo, useEffect } from "react";
 import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 import historyData  from "../data/history.json";
+import {
+  controlExport,
+  downloadCsv,
+  downloadXlsx,
+  historyExport,
+  matrixExport,
+  patternExport,
+  printExport,
+} from "./exportHelpers";
 
 const {
   capabilities: CAPABILITIES,
@@ -140,6 +149,64 @@ function VerifiedStamp({ date }) {
 }
 
 // ── CAPABILITY ROW ─────────────────────────────────────────────────────────
+function ExportToolbar({ exportData }) {
+  const disabled = !exportData?.rows?.length;
+  const buttonStyle = {
+    padding: "5px 9px",
+    borderRadius: 4,
+    border: "1px solid var(--border)",
+    background: disabled ? "var(--panel-alt)" : "var(--panel)",
+    color: disabled ? "var(--muted)" : "var(--text)",
+    fontSize: 9,
+    fontWeight: 700,
+    fontFamily: "inherit",
+    letterSpacing: "0.05em",
+  };
+
+  return (
+    <div className="export-toolbar" style={{ marginBottom: 12, padding: "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+      <div>
+        <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 700, letterSpacing: "0.1em" }}>EXPORT VISIBLE VIEW</div>
+        <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>{exportData.label} - {exportData.rows.length} row(s)</div>
+      </div>
+      <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+        <button className="hb" disabled={disabled} onClick={() => downloadCsv(exportData)} style={buttonStyle}>CSV</button>
+        <button className="hb" disabled={disabled} onClick={() => downloadXlsx(exportData)} style={buttonStyle}>XLSX</button>
+        <button className="hb" disabled={disabled} onClick={() => printExport(exportData)} style={buttonStyle}>PDF</button>
+      </div>
+    </div>
+  );
+}
+
+function PrintableExport({ exportData }) {
+  return (
+    <section className="print-export" aria-hidden="true">
+      <h1>CloudIntelMatrix - {exportData.label}</h1>
+      <p>Generated {exportData.generatedOn}. Visible filtered rows only. Official-source matrix data remains the source of truth.</p>
+      <table>
+        <thead>
+          <tr>
+            {exportData.columns.map(column => <th key={column}>{column}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {exportData.rows.length ? exportData.rows.map((row, index) => (
+            <tr key={index}>
+              {exportData.columns.map(column => (
+                <td key={column}>{Array.isArray(row[column]) ? row[column].join("; ") : row[column] ?? ""}</td>
+              ))}
+            </tr>
+          )) : (
+            <tr>
+              <td colSpan={exportData.columns.length}>No rows match the current filters.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
 function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }) {
   const isExpanded = expandedId === cap.capability;
 
@@ -788,6 +855,21 @@ export default function App() {
     return items;
   }, [activeProviders, searchQuery]);
 
+  const filteredAiCaps = useMemo(
+    () => filteredCaps.filter(c => c.tags.some(t => ["AI_NATIVE","AI_CAPABLE"].includes(t))),
+    [filteredCaps]
+  );
+
+  const exportData = useMemo(() => {
+    if (mode === "patterns") return patternExport(filteredPatterns, activeProviders, CAPABILITY_MAP, FRAMEWORKS);
+    if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies);
+    if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
+    if (mode === "diff") return matrixExport("diff", "Service Equivalency", filteredCaps, activeProviders, selectedTier);
+    if (mode === "gov") return matrixExport("gov", "Government Availability and Parity", filteredCaps, activeProviders, selectedTier);
+    if (mode === "ai") return matrixExport("ai", "AI Focus", filteredAiCaps, activeProviders, selectedTier);
+    return matrixExport("matrix", "Capability Matrix", filteredCaps, activeProviders, selectedTier);
+  }, [activeProviders, filteredAiCaps, filteredCaps, filteredControlFamilies, filteredHistory, filteredPatterns, mode, selectedTier]);
+
   const govAlertCount = CAPABILITIES.filter(c =>
     Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
   ).length;
@@ -796,6 +878,7 @@ export default function App() {
     mode === "patterns" ? filteredPatterns.length :
     mode === "controls" ? filteredControlFamilies.length :
     mode === "history" ? filteredHistory.length :
+    mode === "ai" ? filteredAiCaps.length :
     filteredCaps.length;
 
   const modes = [
@@ -828,7 +911,39 @@ export default function App() {
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
+        .print-export { display: none; }
+        @media print {
+          @page { size: landscape; margin: 0.35in; }
+          body { background: #ffffff !important; }
+          .app-screen { display: none !important; }
+          .print-export {
+            display: block !important;
+            color: #111827;
+            background: #ffffff;
+            font-family: Arial, sans-serif;
+          }
+          .print-export h1 { margin: 0 0 6px; font-size: 16px; }
+          .print-export p { margin: 0 0 12px; color: #374151; font-size: 9px; }
+          .print-export table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 7px;
+          }
+          .print-export thead { display: table-header-group; }
+          .print-export th,
+          .print-export td {
+            border: 1px solid #cbd5e1;
+            padding: 3px 4px;
+            text-align: left;
+            vertical-align: top;
+            word-break: break-word;
+          }
+          .print-export th { background: #e2e8f0; font-weight: 700; }
+        }
       `}</style>
+
+      <div className="app-screen">
 
       {/* ── HEADER ── */}
       <div style={{ borderBottom: "1px solid var(--border)", padding: "14px 24px 0", background: "var(--header-bg)" }}>
@@ -986,6 +1101,8 @@ export default function App() {
             </div>
           )}
 
+          <ExportToolbar exportData={exportData} />
+
           {mode === "matrix" && (
             <div>
               {/* Provider header */}
@@ -1009,7 +1126,7 @@ export default function App() {
 
           {mode === "diff" && <DiffView caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "gov"  && <GovView  caps={filteredCaps} activeProviders={activeProviders} />}
-          {mode === "ai"   && <AIView   caps={filteredCaps} activeProviders={activeProviders} />}
+          {mode === "ai"   && <AIView   caps={filteredAiCaps} activeProviders={activeProviders} />}
           {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} />}
           {mode === "history" && <HistoryView items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
@@ -1036,6 +1153,8 @@ export default function App() {
           </div>
         </div>
       </div>
+      </div>
+      <PrintableExport exportData={exportData} />
     </div>
   );
 }
