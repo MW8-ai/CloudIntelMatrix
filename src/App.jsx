@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 import historyData  from "../data/history.json";
+import transparencyData from "../data/transparency.json";
 import {
   controlExport,
   downloadCsv,
@@ -10,6 +11,7 @@ import {
   matrixExport,
   patternExport,
   printExport,
+  transparencyExport,
 } from "./exportHelpers";
 
 const {
@@ -25,6 +27,8 @@ const {
 const UPCOMING = upcomingData.upcoming || [];
 const HISTORY = historyData.history || [];
 const HISTORY_META = historyData._meta || {};
+const TRANSPARENCY = transparencyData.mandates || [];
+const TRANSPARENCY_META = transparencyData._meta || {};
 const PROVIDERS = META.providers;
 const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
 
@@ -122,6 +126,16 @@ const COMPLIANCE_STATUS_STYLES = {
   Superseded: { bg: "#1f293722", fg: "#64748b", border: "#64748b55" },
 };
 
+const TRANSPARENCY_STATUS_ORDER = ["All", "Active", "Proposed", "Repealed", "None on record", "Unknown"];
+
+const TRANSPARENCY_STATUS_STYLES = {
+  Active: { bg: "#14532d22", fg: "#16a34a", border: "#15803d55" },
+  Proposed: { bg: "#78350f22", fg: "#d97706", border: "#b4530955" },
+  Repealed: { bg: "#7f1d1d22", fg: "#dc2626", border: "#b91c1c55" },
+  "None on record": { bg: "#1f293722", fg: "#64748b", border: "#64748b55" },
+  Unknown: { bg: "#33415522", fg: "#64748b", border: "#64748b55" },
+};
+
 function TagBadge({ tagKey }) {
   const def = TAG_DEFS[tagKey];
   if (!def) return null;
@@ -157,6 +171,15 @@ function ParityBadge({ parity }) {
 
 function ComplianceStatusBadge({ status }) {
   const style = COMPLIANCE_STATUS_STYLES[status] || COMPLIANCE_STATUS_STYLES.Active;
+  return (
+    <span style={{ fontSize: 8, padding: "3px 7px", borderRadius: 4, fontWeight: 700, letterSpacing: "0.06em", background: style.bg, color: style.fg, border: `1px solid ${style.border}`, whiteSpace: "nowrap" }}>
+      {status}
+    </span>
+  );
+}
+
+function TransparencyStatusBadge({ status }) {
+  const style = TRANSPARENCY_STATUS_STYLES[status] || TRANSPARENCY_STATUS_STYLES.Unknown;
   return (
     <span style={{ fontSize: 8, padding: "3px 7px", borderRadius: 4, fontWeight: 700, letterSpacing: "0.06em", background: style.bg, color: style.fg, border: `1px solid ${style.border}`, whiteSpace: "nowrap" }}>
       {status}
@@ -791,6 +814,84 @@ function HistoryView({ items, meta, activeProviders }) {
   );
 }
 
+// -- STATE AI TRANSPARENCY VIEW --------------------------------------------
+function TransparencyView({ items, meta }) {
+  const federalContext = meta.federalContext || {};
+  const counts = TRANSPARENCY_STATUS_ORDER
+    .filter(status => status !== "All")
+    .map(status => ({ status, count: items.filter(item => item.status === status).length }))
+    .filter(item => item.count);
+
+  return (
+    <div>
+      <div style={{ padding: "12px 14px", margin: "10px 0 14px", border: "1px solid #b45309", borderRadius: 6, background: "var(--panel)" }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "#b45309", fontWeight: 700, marginBottom: 4 }}>POINT-IN-TIME STATE AI RECORD</div>
+        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 700, marginBottom: 5 }}>State AI governance and transparency mandates</div>
+        <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6, marginBottom: 8 }}>{meta.scopeNote}</div>
+        <div style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.6, marginBottom: 8 }}>
+          Federal-state AI policy is volatile as of {meta.last_verified}. Context: {federalContext.citation} ({federalContext.title}).
+        </div>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+          {federalContext.url && <a href={federalContext.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Federal Register source</a>}
+          <VerifiedStamp date={federalContext.lastVerified || meta.last_verified} />
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+        {counts.map(({ status, count }) => (
+          <span key={status} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--panel)" }}>
+            <TransparencyStatusBadge status={status} />
+            <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>{count}</span>
+          </span>
+        ))}
+      </div>
+
+      {!items.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No state transparency rows match the current filters.</div>
+      )}
+
+      <div style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "160px 120px 170px minmax(210px,1fr) minmax(360px,1.5fr) 140px", minWidth: 1140 }}>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>STATE</div>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>STATUS</div>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>INSTRUMENT</div>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>TITLE / CITATION</div>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>SUMMARY</div>
+          <div style={{ padding: "8px 10px", background: "var(--panel-alt)", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>SOURCE</div>
+          {items.map((item, index) => {
+            const bg = index % 2 === 0 ? "var(--panel)" : "var(--panel-alt)";
+            return [
+              <div key={`${item.state}-state`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                <div style={{ fontSize: 11, color: "var(--text)", fontWeight: 700 }}>{item.stateName}</div>
+                <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 3 }}>{item.state}</div>
+              </div>,
+              <div key={`${item.state}-status`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                <TransparencyStatusBadge status={item.status} />
+              </div>,
+              <div key={`${item.state}-instrument`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg, fontSize: 9, color: "var(--text)", lineHeight: 1.45 }}>{item.instrument}</div>,
+              <div key={`${item.state}-title`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, lineHeight: 1.45 }}>{item.title}</div>
+                {item.citation && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 5, lineHeight: 1.45 }}>{item.citation}</div>}
+              </div>,
+              <div key={`${item.state}-summary`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg, fontSize: 9, color: "var(--text)", lineHeight: 1.55 }}>{item.summary}</div>,
+              <div key={`${item.state}-source`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                {item.url ? (
+                  <>
+                    <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none", fontWeight: 700 }}>Official source</a>
+                    <div style={{ marginTop: 6 }}><VerifiedStamp date={item.lastVerified} /></div>
+                  </>
+                ) : (
+                  <VerifiedStamp date={item.lastVerified} />
+                )}
+              </div>,
+            ];
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
@@ -834,6 +935,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedId, setExpandedId] = useState(null);
   const [selectedTier, setSelectedTier] = useState("Enterprise");
+  const [selectedTransparencyStatus, setSelectedTransparencyStatus] = useState("All");
   const themeVars = THEME_TOKENS[theme];
 
   useEffect(() => {
@@ -950,6 +1052,26 @@ export default function App() {
     return items;
   }, [activeProviders, searchQuery]);
 
+  const filteredTransparency = useMemo(() => {
+    let items = TRANSPARENCY;
+    if (selectedTransparencyStatus !== "All") {
+      items = items.filter(item => item.status === selectedTransparencyStatus);
+    }
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.state.toLowerCase().includes(q) ||
+        item.stateName.toLowerCase().includes(q) ||
+        item.instrument.toLowerCase().includes(q) ||
+        item.title.toLowerCase().includes(q) ||
+        item.citation.toLowerCase().includes(q) ||
+        item.status.toLowerCase().includes(q) ||
+        item.summary.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [searchQuery, selectedTransparencyStatus]);
+
   const filteredAiCaps = useMemo(
     () => filteredCaps.filter(c => c.tags.some(t => ["AI_NATIVE","AI_CAPABLE"].includes(t))),
     [filteredCaps]
@@ -959,11 +1081,12 @@ export default function App() {
     if (mode === "patterns") return patternExport(filteredPatterns, activeProviders, CAPABILITY_MAP, FRAMEWORKS);
     if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies, filteredComplianceFrameworks);
     if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
+    if (mode === "transparency") return transparencyExport(filteredTransparency);
     if (mode === "diff") return matrixExport("diff", "Service Equivalency", filteredCaps, activeProviders, selectedTier);
     if (mode === "gov") return matrixExport("gov", "Government Availability and Parity", filteredCaps, activeProviders, selectedTier);
     if (mode === "ai") return matrixExport("ai", "AI Focus", filteredAiCaps, activeProviders, selectedTier);
     return matrixExport("matrix", "Capability Matrix", filteredCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredPatterns, mode, selectedTier]);
+  }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredPatterns, filteredTransparency, mode, selectedTier]);
 
   const govAlertCount = CAPABILITIES.filter(c =>
     Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
@@ -973,6 +1096,7 @@ export default function App() {
     mode === "patterns" ? filteredPatterns.length :
     mode === "controls" ? filteredControlFamilies.length + filteredComplianceFrameworks.length :
     mode === "history" ? filteredHistory.length :
+    mode === "transparency" ? filteredTransparency.length :
     mode === "ai" ? filteredAiCaps.length :
     filteredCaps.length;
 
@@ -981,6 +1105,7 @@ export default function App() {
     { id: "patterns", label: "PATTERNS", desc: "Architecture planning overlays" },
     { id: "controls", label: "COMPLIANCE", desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history", label: "HISTORY", desc: "Provider cloud journey milestones" },
+    { id: "transparency", label: "TRANSPARENCY", desc: "State AI governance public record" },
     { id: "diff",   label: "EQUIVALENCY", desc: "Side-by-side service mapping" },
     { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
     { id: "ai",     label: "AI FOCUS", desc: "AI_NATIVE and AI_CAPABLE only" },
@@ -1052,7 +1177,7 @@ export default function App() {
               {PROVIDERS.map(provider => PROVIDER_META[provider].label).join(" · ")}
             </div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {COMPLIANCE_FRAMEWORKS.length} compliance frameworks · {CONTROL_LENS.families.length} NIST families · {HISTORY.length} history milestones · {CATEGORIES.length} categories · fact-first · official sources only
+              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {COMPLIANCE_FRAMEWORKS.length} compliance frameworks · {CONTROL_LENS.families.length} NIST families · {HISTORY.length} history milestones · {TRANSPARENCY.length} state AI rows · {CATEGORIES.length} categories · fact-first · official sources only
             </div>
           </div>
 
@@ -1061,7 +1186,7 @@ export default function App() {
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search capability, pattern, service, tag..."
+              placeholder="Search capability, pattern, state, service, tag..."
               style={{
                 width: "100%", padding: "7px 12px", borderRadius: 4,
                 border: "1px solid var(--border)", background: "var(--panel)",
@@ -1123,33 +1248,59 @@ export default function App() {
 
       {/* ── FILTER BAR ── */}
       <div style={{ padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-        <div className={`filter-groups ${mode === "matrix" || mode === "controls" ? "with-context" : ""}`}>
+        <div className={`filter-groups ${mode === "matrix" || mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
           <div>
-            <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
-              <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
-                Active: {selectedCategory || "All categories"}
-              </span>
-            </div>
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-              <button className="hb" onClick={() => setSelectedCategory(null)} style={{
-                padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
-                background: !selectedCategory ? "#1e3a5f" : "transparent",
-                color: !selectedCategory ? "#93c5fd" : "var(--muted)",
-              }}>ALL ({CAPABILITIES.length})</button>
-              {CATEGORIES.map(cat => {
-                const count = CAPABILITIES.filter(c => c.category === cat).length;
-                return (
-                  <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
+            {mode === "transparency" ? (
+              <>
+                <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
+                  <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                    Active: {selectedTransparencyStatus}
+                  </span>
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                  {TRANSPARENCY_STATUS_ORDER.map(status => {
+                    const count = status === "All" ? TRANSPARENCY.length : TRANSPARENCY.filter(item => item.status === status).length;
+                    return (
+                      <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
+                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        border: `1px solid ${selectedTransparencyStatus === status ? "var(--link)" : "var(--border)"}`,
+                        background: selectedTransparencyStatus === status ? "#1e3a5f" : "transparent",
+                        color: selectedTransparencyStatus === status ? "#93c5fd" : "var(--muted)",
+                      }}>{status} ({count})</button>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
+                  <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                    Active: {selectedCategory || "All categories"}
+                  </span>
+                </div>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                  <button className="hb" onClick={() => setSelectedCategory(null)} style={{
                     padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
-                    background: selectedCategory === cat ? "#1e3a5f" : "transparent",
-                    color: selectedCategory === cat ? "#93c5fd" : "var(--muted)",
-                  }}>{cat} ({count})</button>
-                );
-              })}
-            </div>
+                    border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
+                    background: !selectedCategory ? "#1e3a5f" : "transparent",
+                    color: !selectedCategory ? "#93c5fd" : "var(--muted)",
+                  }}>ALL ({CAPABILITIES.length})</button>
+                  {CATEGORIES.map(cat => {
+                    const count = CAPABILITIES.filter(c => c.category === cat).length;
+                    return (
+                      <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
+                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
+                        background: selectedCategory === cat ? "#1e3a5f" : "transparent",
+                        color: selectedCategory === cat ? "#93c5fd" : "var(--muted)",
+                      }}>{cat} ({count})</button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Tier selector (only relevant for matrix mode) */}
@@ -1181,12 +1332,20 @@ export default function App() {
               <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
             </div>
           )}
+
+          {mode === "transparency" && (
+            <div className="filter-context">
+              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
+              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>STATE AI TRANSPARENCY</div>
+              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.</div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* ── CONTENT ── */}
       <div style={{ padding: "14px 24px 40px", overflowX: "auto" }}>
-        <div style={{ minWidth: mode === "history" || mode === "controls" ? 1080 : activeProviders.length > 3 ? 1040 : 780 }}>
+        <div style={{ minWidth: mode === "history" || mode === "controls" || mode === "transparency" ? 1080 : activeProviders.length > 3 ? 1040 : 780 }}>
           <UpcomingBanner items={UPCOMING} />
 
           {/* Search result count */}
@@ -1225,6 +1384,7 @@ export default function App() {
           {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
           {mode === "history" && <HistoryView items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
+          {mode === "transparency" && <TransparencyView items={filteredTransparency} meta={TRANSPARENCY_META} />}
         </div>
 
         {/* Tag legend */}

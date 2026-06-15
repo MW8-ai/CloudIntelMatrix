@@ -27,6 +27,7 @@ OUTDIR.mkdir(exist_ok=True)
 mdata = json.loads((DATA / "matrix.json").read_text())
 udata = json.loads((DATA / "upcoming.json").read_text())
 hdata = json.loads((DATA / "history.json").read_text())
+tdata = json.loads((DATA / "transparency.json").read_text())
 
 META       = mdata["_meta"]
 CAPS       = mdata["capabilities"]
@@ -40,6 +41,8 @@ TIERS      = META["tiers"]
 PROVIDERS  = META["providers"]
 UPCOMING   = udata.get("upcoming", [])
 HISTORY    = hdata.get("history", [])
+TRANSPARENCY = tdata.get("mandates", [])
+TRANSPARENCY_META = tdata.get("_meta", {})
 CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
 
 PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP","oci":"OCI"}
@@ -482,6 +485,71 @@ def build_history_sheet(ws):
     for col, width in {"A":10, "B":22, "C":8, "D":12, "E":38, "F":28, "G":66, "H":58, "I":12}.items():
         ws.column_dimensions[col].width = width
 
+def build_transparency_sheet(ws):
+    """State AI governance and transparency public-record scaffold."""
+    ws.sheet_view.showGridLines = False
+    ws.freeze_panes = "A4"
+    hdr(ws, "State AI Transparency - Official State Sources", 9)
+
+    federal = TRANSPARENCY_META.get("federalContext", {})
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=9)
+    c = ws.cell(row=2, column=1, value=f"Volatility note: {federal.get('citation', '')} - {federal.get('summary', '')}")
+    c.fill = f("FEF3C7")
+    c.font = ft(size=8, color="78350F", italic=True)
+    c.alignment = al("left", "center", wrap=True)
+    c.border = TB
+    ws.row_dimensions[2].height = 34
+
+    headers = ["State", "Status", "Instrument", "Title", "Citation", "Summary", "Official Source", "Verified", "Federal Context"]
+    for ci, header in enumerate(headers, 1):
+        c = ws.cell(row=3, column=ci, value=header)
+        c.fill = f("1E3A5F")
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    ws.row_dimensions[3].height = 18
+
+    status_bg = {
+        "Active": "D1FAE5",
+        "Proposed": "FEF3C7",
+        "Repealed": "FEE2E2",
+        "None on record": "E5E7EB",
+        "Unknown": "F8FAFC",
+    }
+    for ri, item in enumerate(TRANSPARENCY, 4):
+        bg = status_bg.get(item.get("status", ""), "F8FAFC")
+        vals = [
+            f"{item.get('state', '')} - {item.get('stateName', '')}",
+            item.get("status", ""),
+            item.get("instrument", ""),
+            item.get("title", ""),
+            item.get("citation", ""),
+            item.get("summary", ""),
+            item.get("url", ""),
+            item.get("lastVerified", ""),
+            federal.get("url", "") if ri == 4 else "",
+        ]
+        for ci, value in enumerate(vals, 1):
+            c = ws.cell(row=ri, column=ci, value=value)
+            c.fill = f(bg)
+            c.font = ft(bold=(ci in [1, 2]), size=8, color="2563EB" if ci in [7, 9] and value else "111827")
+            c.alignment = al("left", "top" if ci in [4, 5, 6] else "center", wrap=True)
+            c.border = TB
+            if ci in [7, 9] and value:
+                c.hyperlink = value
+        ws.row_dimensions[ri].height = 42
+
+    note_row = len(TRANSPARENCY) + 6
+    ws.merge_cells(start_row=note_row, start_column=1, end_row=note_row, end_column=9)
+    c = ws.cell(row=note_row, column=1, value=TRANSPARENCY_META.get("scopeNote", ""))
+    c.fill = f("F8FAFC")
+    c.font = ft(size=8, italic=True, color="374151")
+    c.alignment = al("left", "center", wrap=True)
+    c.border = TB
+
+    for col, width in {"A":22, "B":14, "C":20, "D":36, "E":36, "F":70, "G":54, "H":12, "I":54}.items():
+        ws.column_dimensions[col].width = width
+
 def build_upcoming_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "Announced / Preview / Upcoming — Official Sources Only", 10)
@@ -526,6 +594,10 @@ COMPLIANCE_EXPORT_HEADERS = [
 HISTORY_EXPORT_HEADERS = [
     "provider", "phase", "year", "date", "dateLabel", "title", "summary",
     "scope", "sourceLabel", "sourceUrl", "lastVerified",
+]
+TRANSPARENCY_EXPORT_HEADERS = [
+    "state", "stateName", "instrument", "title", "citation", "status",
+    "summary", "url", "lastVerified",
 ]
 
 def cell_text(value):
@@ -650,6 +722,22 @@ def history_export_rows():
         for item in sorted(HISTORY, key=lambda entry: (entry.get("year", 0), entry.get("provider", ""), entry.get("date", "")))
     ]
 
+def transparency_export_rows():
+    return [
+        {
+            "state": item.get("state", ""),
+            "stateName": item.get("stateName", ""),
+            "instrument": item.get("instrument", ""),
+            "title": item.get("title", ""),
+            "citation": item.get("citation", ""),
+            "status": item.get("status", ""),
+            "summary": item.get("summary", ""),
+            "url": item.get("url", ""),
+            "lastVerified": item.get("lastVerified", ""),
+        }
+        for item in sorted(TRANSPARENCY, key=lambda entry: (entry.get("stateName", ""), entry.get("title", "")))
+    ]
+
 def write_view_csv(view_id, headers, rows):
     out = OUTDIR / f"cloudintelmatrix-{view_id}-{EXPORT_DATE}.csv"
     stable_out = OUTDIR / f"cloudintelmatrix-{view_id}.csv"
@@ -674,6 +762,7 @@ def write_view_csvs():
     write_view_csv("patterns", PATTERN_EXPORT_HEADERS, pattern_export_rows())
     write_view_csv("controls", COMPLIANCE_EXPORT_HEADERS, compliance_export_rows())
     write_view_csv("history", HISTORY_EXPORT_HEADERS, history_export_rows())
+    write_view_csv("transparency", TRANSPARENCY_EXPORT_HEADERS, transparency_export_rows())
 
 wb = Workbook()
 wb.remove(wb.active)
@@ -700,6 +789,9 @@ build_compliance_sheet(ws_controls)
 
 ws_history = wb.create_sheet("Cloud History")
 build_history_sheet(ws_history)
+
+ws_transparency = wb.create_sheet("Transparency")
+build_transparency_sheet(ws_transparency)
 
 ws_up = wb.create_sheet("Upcoming & Future")
 build_upcoming_sheet(ws_up)
