@@ -75,6 +75,18 @@ const HISTORY_COLUMNS = [
   "lastVerified",
 ];
 
+const TRANSPARENCY_COLUMNS = [
+  "state",
+  "stateName",
+  "instrument",
+  "title",
+  "citation",
+  "status",
+  "summary",
+  "url",
+  "lastVerified",
+];
+
 function asText(value) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join("; ");
@@ -239,6 +251,20 @@ export function buildHistoryRows(items, meta) {
   }));
 }
 
+export function buildTransparencyRows(items) {
+  return items.map(item => ({
+    state: item.state,
+    stateName: item.stateName,
+    instrument: item.instrument,
+    title: item.title,
+    citation: item.citation,
+    status: item.status,
+    summary: item.summary,
+    url: item.url,
+    lastVerified: item.lastVerified,
+  }));
+}
+
 export function makeExportData(viewId, label, columns, rows) {
   return {
     viewId,
@@ -263,6 +289,10 @@ export function controlExport(lens, families, frameworks = []) {
 
 export function historyExport(items, meta) {
   return makeExportData("history", "Cloud Provider History", HISTORY_COLUMNS, buildHistoryRows(items, meta));
+}
+
+export function transparencyExport(items) {
+  return makeExportData("transparency", "State AI Transparency", TRANSPARENCY_COLUMNS, buildTransparencyRows(items));
 }
 
 export function downloadCsv(exportData) {

@@ -25,6 +25,63 @@ VALID_STATUS = {"GA", "Preview", "Deprecated", "Retiring", "Unknown"}
 VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
 VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
+VALID_TRANSPARENCY_STATUS = {"Active", "Proposed", "Repealed", "None on record", "Unknown"}
+EXPECTED_STATES = {
+    "AL": "Alabama",
+    "AK": "Alaska",
+    "AZ": "Arizona",
+    "AR": "Arkansas",
+    "CA": "California",
+    "CO": "Colorado",
+    "CT": "Connecticut",
+    "DE": "Delaware",
+    "DC": "District of Columbia",
+    "FL": "Florida",
+    "GA": "Georgia",
+    "HI": "Hawaii",
+    "ID": "Idaho",
+    "IL": "Illinois",
+    "IN": "Indiana",
+    "IA": "Iowa",
+    "KS": "Kansas",
+    "KY": "Kentucky",
+    "LA": "Louisiana",
+    "ME": "Maine",
+    "MD": "Maryland",
+    "MA": "Massachusetts",
+    "MI": "Michigan",
+    "MN": "Minnesota",
+    "MS": "Mississippi",
+    "MO": "Missouri",
+    "MT": "Montana",
+    "NE": "Nebraska",
+    "NV": "Nevada",
+    "NH": "New Hampshire",
+    "NJ": "New Jersey",
+    "NM": "New Mexico",
+    "NY": "New York",
+    "NC": "North Carolina",
+    "ND": "North Dakota",
+    "OH": "Ohio",
+    "OK": "Oklahoma",
+    "OR": "Oregon",
+    "PA": "Pennsylvania",
+    "RI": "Rhode Island",
+    "SC": "South Carolina",
+    "SD": "South Dakota",
+    "TN": "Tennessee",
+    "TX": "Texas",
+    "UT": "Utah",
+    "VT": "Vermont",
+    "VA": "Virginia",
+    "WA": "Washington",
+    "WV": "West Virginia",
+    "WI": "Wisconsin",
+    "WY": "Wyoming",
+}
+RECOGNIZED_STATE_DOMAINS = {
+    "myflorida.com",
+}
 CAP_REQUIRED = [
     "capability",
     "category",
@@ -71,6 +128,18 @@ HISTORY_REQUIRED = [
     "sourceUrl",
 ]
 HISTORY_ALLOWED = set(HISTORY_REQUIRED)
+TRANSPARENCY_REQUIRED = [
+    "state",
+    "stateName",
+    "instrument",
+    "title",
+    "citation",
+    "status",
+    "summary",
+    "url",
+    "lastVerified",
+]
+TRANSPARENCY_ALLOWED = set(TRANSPARENCY_REQUIRED)
 PROV_REQUIRED = [
     "service",
     "status",
@@ -521,6 +590,88 @@ def validate_history(hdata):
     return items
 
 
+def is_official_state_domain(url):
+    parsed = urlparse(url)
+    host = parsed.netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    if host.endswith(".gov"):
+        return True
+    return any(host == domain or host.endswith(f".{domain}") for domain in RECOGNIZED_STATE_DOMAINS)
+
+
+def validate_transparency(tdata):
+    if not isinstance(tdata, dict):
+        err("transparency.json must be an object")
+        return [], {}
+
+    meta = tdata.get("_meta", {})
+    require_fields(meta, ["description", "last_verified"], "transparency.json._meta")
+    if isinstance(meta, dict):
+        validate_date(meta.get("last_verified"), "transparency.json._meta.last_verified")
+        if not str(meta.get("description", "")).strip():
+            err("transparency.json._meta.description must not be empty")
+        federal_context = meta.get("federalContext", {})
+        if isinstance(federal_context, dict):
+            require_fields(federal_context, ["title", "citation", "url", "summary", "lastVerified"], "transparency.json._meta.federalContext")
+            validate_url(federal_context.get("url"), "transparency.json._meta.federalContext.url", False)
+            validate_date(federal_context.get("lastVerified"), "transparency.json._meta.federalContext.lastVerified")
+        elif federal_context:
+            err("transparency.json._meta.federalContext must be an object when present")
+
+    mandates = tdata.get("mandates", [])
+    if not isinstance(mandates, list) or not mandates:
+        err("transparency.json.mandates must be a non-empty array")
+        return [], meta
+
+    seen_states = set()
+    populated = 0
+    for mandate in mandates:
+        state = mandate.get("state", "MISSING") if isinstance(mandate, dict) else "MISSING"
+        require_fields(mandate, TRANSPARENCY_REQUIRED, f"transparency mandate '{state}'")
+        if not isinstance(mandate, dict):
+            continue
+        unexpected_fields = set(mandate) - TRANSPARENCY_ALLOWED
+        if unexpected_fields:
+            err(f"transparency mandate '{state}' contains unsupported fields: {sorted(unexpected_fields)}")
+
+        if state not in EXPECTED_STATES:
+            err(f"transparency mandate has invalid state code: {state}")
+        elif mandate.get("stateName") != EXPECTED_STATES[state]:
+            err(f"transparency mandate '{state}' stateName must be '{EXPECTED_STATES[state]}'")
+        seen_states.add(state)
+
+        if mandate.get("status") not in VALID_TRANSPARENCY_STATUS:
+            err(f"transparency mandate '{state}' invalid status: {mandate.get('status')}")
+        validate_date(mandate.get("lastVerified"), f"transparency mandate '{state}'.lastVerified")
+        for field in ["instrument", "title", "summary"]:
+            if not str(mandate.get(field, "")).strip():
+                err(f"transparency mandate '{state}'.{field} must not be empty")
+
+        url = mandate.get("url", "")
+        status = mandate.get("status")
+        if status == "Unknown":
+            if url:
+                err(f"transparency mandate '{state}' has status Unknown but non-empty url")
+        else:
+            populated += 1
+            validate_url(url, f"transparency mandate '{state}'.url", False)
+            if url and not is_official_state_domain(url):
+                err(f"transparency mandate '{state}'.url must be on a .gov or recognized official state domain: {url}")
+            if not str(mandate.get("citation", "")).strip():
+                err(f"transparency mandate '{state}'.citation must not be empty when status is {status}")
+
+    missing_states = set(EXPECTED_STATES) - seen_states
+    extra_states = seen_states - set(EXPECTED_STATES)
+    if missing_states:
+        err(f"transparency.json missing state rows: {sorted(missing_states)}")
+    if extra_states:
+        err(f"transparency.json contains unsupported state rows: {sorted(extra_states)}")
+
+    info(f"transparency.json: {len(mandates)} state/DC rows; {populated} populated")
+    return mandates, meta
+
+
 def is_timeout_error(exc):
     if isinstance(exc, (TimeoutError, socket.timeout)):
         return True
@@ -552,7 +703,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -578,6 +729,10 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
         add_link(control_lens.get(field), f"controlLens/{field}")
     for framework in compliance_frameworks:
         add_link(framework.get("url"), f"complianceFrameworks/{framework.get('id')}")
+    for mandate in transparency:
+        add_link(mandate.get("url"), f"transparency/{mandate.get('state')}")
+    federal_context = transparency_meta.get("federalContext", {}) if isinstance(transparency_meta, dict) else {}
+    add_link(federal_context.get("url"), "transparency/federalContext")
 
     info(
         f"public link review: {sum(len(labels) for labels in links.values())} references; "
@@ -627,17 +782,22 @@ def main():
     if not args.schema_only:
         upcoming_data = load(DATA / "upcoming.json")
         history_data = load(DATA / "history.json")
+        transparency_data = load(DATA / "transparency.json")
         sources_data = load(DATA / "sources.json")
-        if upcoming_data is None or history_data is None or sources_data is None:
+        if upcoming_data is None or history_data is None or transparency_data is None or sources_data is None:
             print("\n".join(ERRORS))
             return 1
         upcoming = validate_upcoming(upcoming_data)
         history = validate_history(history_data)
+        transparency, transparency_meta = validate_transparency(transparency_data)
         if isinstance(sources_data, dict):
             info("sources.json: loaded")
+    else:
+        transparency = []
+        transparency_meta = {}
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")

@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-15 - v3.16.0 - State AI transparency scaffold
+- Added `data/transparency.json` as an official-source state AI governance and transparency record with all 50 states plus DC scaffolded and Indiana populated from the State of Indiana AI Policy and Guidance.
+- Added Federal Register context for Executive Order 14365, 90 FR 58499, to warn readers that federal-versus-state AI governance remains volatile.
+- Added validator, UI tab, client exports, static CSV export, and XLSX sheet support for the transparency view.
+
 ## 2026-06-15 - v3.15.0 - Compliance framework expansion
 - Added a top-level `complianceFrameworks` dataset covering FedRAMP, GovRAMP, CJIS, HIPAA, FERPA, FIPS 140-2/3, NIST AI RMF, NIST AI 600-1, NIST IR 8596, and NIST COSAiS with official-source URLs and current verification dates.
 - Expanded the NIST 800-53 tab into a Compliance view that groups framework references by program type while preserving the existing NIST SP 800-53 Rev. 5 family planning lens.
