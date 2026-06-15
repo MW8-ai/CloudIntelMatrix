@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.14.0",
+    "version": "3.15.0",
     "schema": "capability-v1",
-    "last_verified": "2026-06-14",
+    "last_verified": "2026-06-15",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
     "providers": [
       "aws",
@@ -163,6 +163,134 @@
       }
     ]
   },
+  "complianceFrameworks": [
+    {
+      "id": "fedramp",
+      "name": "Federal Risk and Authorization Management Program (FedRAMP)",
+      "issuer": "General Services Administration / FedRAMP PMO",
+      "kind": "authorization-program",
+      "scope": "Federal cloud security authorization and continuous monitoring program for cloud products and services used by U.S. federal agencies.",
+      "status": "Active",
+      "url": "https://www.fedramp.gov/docs/rev5/playbook/csp/authorization/ssp/",
+      "nistAlignment": "FedRAMP Rev. 5 baselines are based on NIST SP 800-53 and include FedRAMP-defined parameters and cloud-specific guidance.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "govramp",
+      "name": "GovRAMP",
+      "issuer": "GovRAMP",
+      "kind": "authorization-program",
+      "scope": "Public-sector cloud security program for state, local, tribal, territorial, and education organizations and the cloud service providers that process, store, or transmit government data.",
+      "status": "Active",
+      "url": "https://govramp.org/about-us/",
+      "nistAlignment": "GovRAMP public materials identify NIST SP 800-53 Rev. 5 as a baseline for current security snapshot criteria and program controls.",
+      "historicalNote": "StateRAMP rebranded to GovRAMP in February 2025; the rebrand reflects a broader mission across levels of government.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "cjis",
+      "name": "FBI Criminal Justice Information Services (CJIS) Security Policy",
+      "issuer": "Federal Bureau of Investigation CJIS Division",
+      "kind": "regulation",
+      "scope": "Security policy for systems and organizations that process, store, transmit, or access Criminal Justice Information and related CJIS services.",
+      "status": "Active",
+      "url": "https://le.fbi.gov/file-repository/cjis_security_policy_v6-0_20241227.pdf",
+      "nistAlignment": "No official SP 800-53 family crosswalk is recorded in this matrix entry; use CJIS-specific requirements alongside the NIST planning lens.",
+      "historicalNote": "Current public policy version verified as CJISSECPOL v6.0 dated 2024-12-27.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "hipaa-security",
+      "name": "HIPAA Security Rule",
+      "issuer": "U.S. Department of Health and Human Services Office for Civil Rights",
+      "kind": "regulation",
+      "scope": "National standards for electronic protected health information created, received, used, or maintained by covered entities and business associates.",
+      "status": "Active",
+      "url": "https://www.hhs.gov/hipaa/for-professionals/security/index.html",
+      "nistAlignment": "No official SP 800-53 family crosswalk is recorded in this matrix entry; use with the NIST planning lens only as an architecture reference aid.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "ferpa",
+      "name": "Family Educational Rights and Privacy Act (FERPA)",
+      "issuer": "U.S. Department of Education",
+      "kind": "regulation",
+      "scope": "Federal student privacy law governing education records and personally identifiable information from education records.",
+      "status": "Active",
+      "url": "https://studentprivacy.ed.gov/ferpa",
+      "nistAlignment": "No official SP 800-53 family crosswalk is recorded in this matrix entry; use FERPA-specific obligations alongside the NIST planning lens.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "fips-140-3",
+      "name": "FIPS 140-3 Cryptographic Module Validation Program",
+      "issuer": "NIST and Canadian Centre for Cyber Security",
+      "kind": "validation-standard",
+      "scope": "Cryptographic module validation standard and testing program used to validate modules against FIPS 140-3 requirements.",
+      "status": "Active",
+      "url": "https://csrc.nist.gov/projects/fips-140-3-transition-effort/transition-to-fips-140-3",
+      "nistAlignment": "Supports cryptographic-module evidence for security controls; it is not a direct SP 800-53 family crosswalk.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "fips-140-2",
+      "name": "FIPS 140-2 Cryptographic Module Validation Program",
+      "issuer": "NIST and Canadian Centre for Cyber Security",
+      "kind": "validation-standard",
+      "scope": "Prior cryptographic module validation standard; CMVP no longer accepts new FIPS 140-2 submissions for new validation certificates except limited transition cases.",
+      "status": "Superseded",
+      "url": "https://csrc.nist.gov/projects/cryptographic-module-validation-program",
+      "nistAlignment": "Supports legacy cryptographic-module evidence for security controls; it is not a direct SP 800-53 family crosswalk.",
+      "historicalNote": "CMVP began validating to FIPS 140-3 on 2020-09-22 and stopped accepting most new FIPS 140-2 submissions on 2022-04-01.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "nist-ai-rmf",
+      "name": "NIST Artificial Intelligence Risk Management Framework (AI RMF 1.0)",
+      "issuer": "National Institute of Standards and Technology",
+      "kind": "voluntary-framework",
+      "scope": "Voluntary, non-sector-specific framework for organizations designing, developing, deploying, or using AI systems to manage AI risks.",
+      "status": "Active",
+      "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10",
+      "nistAlignment": "No official SP 800-53 family crosswalk is recorded in this matrix entry; use alongside AI governance, risk, assessment, acquisition, and integrity planning prompts.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "nist-ai-600-1",
+      "name": "NIST AI 600-1 Generative Artificial Intelligence Profile",
+      "issuer": "National Institute of Standards and Technology",
+      "kind": "voluntary-framework",
+      "scope": "Cross-sectoral companion profile to AI RMF 1.0 for generative AI risk management across governance, mapping, measurement, and management activities.",
+      "status": "Active",
+      "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "nistAlignment": "Companion profile to the AI RMF; no direct SP 800-53 family crosswalk is recorded in this matrix entry.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "nist-ir-8596",
+      "name": "NIST IR 8596 Cybersecurity Framework Profile for Artificial Intelligence",
+      "issuer": "National Institute of Standards and Technology",
+      "kind": "voluntary-framework",
+      "scope": "Preliminary draft Cyber AI Profile using CSF 2.0 outcomes to help organizations manage cybersecurity risk related to AI systems and AI-enabled cyber capabilities.",
+      "status": "Draft",
+      "url": "https://www.nccoe.nist.gov/publications/csf-profile/nist-ir-8596-ipd-cybersecurity-framework-profile-artificial-intelligence",
+      "nistAlignment": "Bridges CSF 2.0 and AI RMF work; it is not an SP 800-53 family crosswalk in this matrix entry.",
+      "historicalNote": "Initial preliminary draft was published for public comment in December 2025.",
+      "lastVerified": "2026-06-15"
+    },
+    {
+      "id": "nist-cosais",
+      "name": "NIST SP 800-53 Control Overlays for Securing AI Systems (COSAiS)",
+      "issuer": "National Institute of Standards and Technology",
+      "kind": "voluntary-framework",
+      "scope": "NIST project to develop implementation-focused SP 800-53 control overlays for securing AI systems and AI system components.",
+      "status": "In development",
+      "url": "https://csrc.nist.gov/projects/cosais",
+      "nistAlignment": "Directly uses SP 800-53 controls as the technical foundation for AI-specific overlays; final overlay mappings are still in development.",
+      "historicalNote": "Current public project materials identify generative AI, predictive AI, single-agent AI, multi-agent AI, and AI developer controls as proposed use cases.",
+      "lastVerified": "2026-06-15"
+    }
+  ],
   "patterns": [
     {
       "id": "secure-internet-facing-application",

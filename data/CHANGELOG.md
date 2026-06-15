@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-15 - v3.15.0 - Compliance framework expansion
+- Added a top-level `complianceFrameworks` dataset covering FedRAMP, GovRAMP, CJIS, HIPAA, FERPA, FIPS 140-2/3, NIST AI RMF, NIST AI 600-1, NIST IR 8596, and NIST COSAiS with official-source URLs and current verification dates.
+- Expanded the NIST 800-53 tab into a Compliance view that groups framework references by program type while preserving the existing NIST SP 800-53 Rev. 5 family planning lens.
+- Updated schema, validator, client exports, build-time CSV exports, and the XLSX workbook to include the new compliance data without asserting per-service authorization status.
+
 ## 2026-06-14 - v3.14.0 - Issue #31 boundary decisions
 - Resolved the Azure Functions agent/MCP boundary by keeping Azure Functions in Serverless Functions and clarifying Microsoft Foundry Agent Service as the Azure mapping for AI Agents & Tool Orchestration.
 - Strengthened the BigQuery analytics row with official BigQuery ML, Gemini in BigQuery, and BigQuery generative AI function evidence while preserving the existing capability-level AI_CAPABLE classification.

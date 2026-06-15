@@ -34,6 +34,7 @@ CATEGORIES = mdata["categories"]
 TAG_DEFS   = mdata["tags"]
 FRAMEWORKS = mdata["frameworks"]
 CONTROL_LENS = mdata["controlLens"]
+COMPLIANCE_FRAMEWORKS = mdata.get("complianceFrameworks", [])
 PATTERNS   = mdata["patterns"]
 TIERS      = META["tiers"]
 PROVIDERS  = META["providers"]
@@ -343,12 +344,12 @@ def build_patterns_sheet(ws):
     ws.column_dimensions[get_column_letter(5 + len(PROVIDERS))].width = 40
     ws.column_dimensions[get_column_letter(6 + len(PROVIDERS))].width = 14
 
-def build_controls_sheet(ws):
-    """Selected NIST SP 800-53 Rev. 5 control families mapped to architecture decisions."""
+def build_compliance_sheet(ws):
+    """Compliance framework references plus selected NIST SP 800-53 control-family planning rows."""
     ws.sheet_view.showGridLines = False
     ws.freeze_panes = "A3"
-    hdr(ws, f"{CONTROL_LENS['name']} - {CONTROL_LENS['release']} Architecture Planning Lens", 6)
-    headers = ["Family", "Implementation Focus", "Linked Capabilities", "Architecture Review Questions", "Boundary", "Verified"]
+    hdr(ws, "Compliance - Frameworks and NIST 800-53 Planning Lens", 9)
+    headers = ["Framework", "Kind", "Issuer", "Status", "Scope", "NIST Alignment", "Historical Note", "Official Source", "Verified"]
     for ci, header in enumerate(headers, 1):
         c = ws.cell(row=2, column=ci, value=header)
         c.fill = f("1E3A5F")
@@ -357,47 +358,73 @@ def build_controls_sheet(ws):
         c.border = TB
     ws.row_dimensions[2].height = 18
 
-    for row, family in enumerate(CONTROL_LENS["families"], 3):
+    row = 3
+    for framework in COMPLIANCE_FRAMEWORKS:
         values = [
-            f"{family['id']} - {family['name']}",
-            family["applicability"],
-            "\n".join(family["capabilities"]),
-            "\n".join(family["reviewPrompts"]),
-            CONTROL_LENS["scopeNote"] if row == 3 else "",
-            CONTROL_LENS["lastVerified"],
+            framework.get("name", ""),
+            framework.get("kind", ""),
+            framework.get("issuer", ""),
+            framework.get("status", ""),
+            framework.get("scope", ""),
+            cell_text(framework.get("nistAlignment", "")),
+            framework.get("historicalNote", ""),
+            framework.get("url", ""),
+            framework.get("lastVerified", ""),
         ]
         bg = "EFF6FF" if row % 2 else "F8FAFC"
         for ci, value in enumerate(values, 1):
             c = ws.cell(row=row, column=ci, value=value)
             c.fill = f(bg)
-            c.font = ft(bold=(ci == 1), size=8)
+            c.font = ft(bold=(ci == 1), size=8, color="2563EB" if ci == 8 and value else "111827")
             c.alignment = al("left", "top", wrap=True)
             c.border = TB
-        ws.row_dimensions[row].height = 62
+            if ci == 8 and value:
+                c.hyperlink = value
+        ws.row_dimensions[row].height = 58
+        row += 1
 
-    row = len(CONTROL_LENS["families"]) + 5
-    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=6)
-    c = ws.cell(row=row, column=1, value="Official NIST reference basis")
+    row += 2
+    ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=9)
+    c = ws.cell(row=row, column=1, value=f"{CONTROL_LENS['name']} - {CONTROL_LENS['release']} control-family planning lens")
     c.fill = f("0F1A2E")
     c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
     c.alignment = al("left", "center")
-    source_rows = [
-        ("Catalog", CONTROL_LENS["catalogUrl"]),
-        ("Control baselines", CONTROL_LENS["baselineUrl"]),
-        ("OSCAL content", CONTROL_LENS["oscalUrl"]),
-    ]
-    for offset, (label, url) in enumerate(source_rows, 1):
-        ws.cell(row=row + offset, column=1, value=label)
-        source_cell = ws.cell(row=row + offset, column=2, value=url)
-        source_cell.hyperlink = url
-        for ci in range(1, 7):
-            cell = ws.cell(row=row + offset, column=ci)
-            cell.fill = f("F8FAFC")
-            cell.font = ft(bold=(ci == 1), size=8, color="2563EB" if ci == 2 else "111827")
-            cell.alignment = al("left", "center", wrap=True)
-            cell.border = TB
+    row += 1
 
-    for col, width in {"A":30, "B":55, "C":42, "D":58, "E":58, "F":14}.items():
+    family_headers = ["Family", "Implementation Focus", "Linked Capabilities", "Architecture Review Questions", "Boundary", "Catalog", "Baselines", "OSCAL", "Verified"]
+    for ci, header in enumerate(family_headers, 1):
+        c = ws.cell(row=row, column=ci, value=header)
+        c.fill = f("1E3A5F")
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    row += 1
+
+    for index, family in enumerate(CONTROL_LENS["families"]):
+        values = [
+            f"{family['id']} - {family['name']}",
+            family["applicability"],
+            "\n".join(family["capabilities"]),
+            "\n".join(family["reviewPrompts"]),
+            CONTROL_LENS["scopeNote"] if index == 0 else "",
+            CONTROL_LENS["catalogUrl"] if index == 0 else "",
+            CONTROL_LENS["baselineUrl"] if index == 0 else "",
+            CONTROL_LENS["oscalUrl"] if index == 0 else "",
+            CONTROL_LENS["lastVerified"],
+        ]
+        bg = "ECFDF5" if index % 2 == 0 else "F8FAFC"
+        for ci, value in enumerate(values, 1):
+            c = ws.cell(row=row, column=ci, value=value)
+            c.fill = f(bg)
+            c.font = ft(bold=(ci == 1), size=8, color="2563EB" if ci in [6, 7, 8] and value else "111827")
+            c.alignment = al("left", "top", wrap=True)
+            c.border = TB
+            if ci in [6, 7, 8] and value:
+                c.hyperlink = value
+        ws.row_dimensions[row].height = 62
+        row += 1
+
+    for col, width in {"A":34, "B":24, "C":34, "D":18, "E":58, "F":58, "G":48, "H":54, "I":14}.items():
         ws.column_dimensions[col].width = width
 
 def build_history_sheet(ws):
@@ -492,9 +519,9 @@ PATTERN_EXPORT_HEADERS = [
     "service", "govAvailability", "parityLag", "providerFramework", "frameworkUrl",
     "providerFoundation", "foundationUrl", "reviewPrompts", "verificationNote", "lastVerified",
 ]
-CONTROL_EXPORT_HEADERS = [
-    "familyId", "familyName", "applicability", "linkedCapabilities", "reviewPrompts",
-    "scopeNote", "catalogUrl", "baselineUrl", "oscalUrl", "lastVerified",
+COMPLIANCE_EXPORT_HEADERS = [
+    "rowType", "id", "name", "kind", "issuer", "status", "scope", "nistAlignment",
+    "historicalNote", "officialUrl", "linkedCapabilities", "reviewPrompts", "lastVerified",
 ]
 HISTORY_EXPORT_HEADERS = [
     "provider", "phase", "year", "date", "dateLabel", "title", "summary",
@@ -566,22 +593,44 @@ def pattern_export_rows():
                 })
     return rows
 
-def control_export_rows():
-    return [
+def compliance_export_rows():
+    rows = [
         {
-            "familyId": family.get("id", ""),
-            "familyName": family.get("name", ""),
-            "applicability": family.get("applicability", ""),
+            "rowType": "Framework",
+            "id": framework.get("id", ""),
+            "name": framework.get("name", ""),
+            "kind": framework.get("kind", ""),
+            "issuer": framework.get("issuer", ""),
+            "status": framework.get("status", ""),
+            "scope": framework.get("scope", ""),
+            "nistAlignment": framework.get("nistAlignment", ""),
+            "historicalNote": framework.get("historicalNote", ""),
+            "officialUrl": framework.get("url", ""),
+            "linkedCapabilities": "",
+            "reviewPrompts": "",
+            "lastVerified": framework.get("lastVerified", ""),
+        }
+        for framework in COMPLIANCE_FRAMEWORKS
+    ]
+    rows.extend(
+        {
+            "rowType": "NIST control family",
+            "id": family.get("id", ""),
+            "name": family.get("name", ""),
+            "kind": CONTROL_LENS.get("id", ""),
+            "issuer": "NIST",
+            "status": CONTROL_LENS.get("release", ""),
+            "scope": family.get("applicability", ""),
+            "nistAlignment": CONTROL_LENS.get("scopeNote", ""),
+            "historicalNote": "",
+            "officialUrl": CONTROL_LENS.get("catalogUrl", ""),
             "linkedCapabilities": family.get("capabilities", []),
             "reviewPrompts": family.get("reviewPrompts", []),
-            "scopeNote": CONTROL_LENS.get("scopeNote", ""),
-            "catalogUrl": CONTROL_LENS.get("catalogUrl", ""),
-            "baselineUrl": CONTROL_LENS.get("baselineUrl", ""),
-            "oscalUrl": CONTROL_LENS.get("oscalUrl", ""),
             "lastVerified": CONTROL_LENS.get("lastVerified", ""),
         }
         for family in CONTROL_LENS.get("families", [])
-    ]
+    )
+    return rows
 
 def history_export_rows():
     return [
@@ -623,7 +672,7 @@ def write_view_csvs():
         matrix_export_rows([cap for cap in CAPS if any(tag in {"AI_NATIVE", "AI_CAPABLE"} for tag in cap.get("tags", []))]),
     )
     write_view_csv("patterns", PATTERN_EXPORT_HEADERS, pattern_export_rows())
-    write_view_csv("controls", CONTROL_EXPORT_HEADERS, control_export_rows())
+    write_view_csv("controls", COMPLIANCE_EXPORT_HEADERS, compliance_export_rows())
     write_view_csv("history", HISTORY_EXPORT_HEADERS, history_export_rows())
 
 wb = Workbook()
@@ -646,8 +695,8 @@ build_gov_sheet(ws_gov)
 ws_patterns = wb.create_sheet("Architecture Patterns")
 build_patterns_sheet(ws_patterns)
 
-ws_controls = wb.create_sheet("NIST 800-53 Lens")
-build_controls_sheet(ws_controls)
+ws_controls = wb.create_sheet("Compliance")
+build_compliance_sheet(ws_controls)
 
 ws_history = wb.create_sheet("Cloud History")
 build_history_sheet(ws_history)

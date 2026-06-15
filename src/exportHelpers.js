@@ -45,16 +45,19 @@ const PATTERN_COLUMNS = [
   "lastVerified",
 ];
 
-const CONTROL_COLUMNS = [
-  "familyId",
-  "familyName",
-  "applicability",
+const COMPLIANCE_COLUMNS = [
+  "rowType",
+  "id",
+  "name",
+  "kind",
+  "issuer",
+  "status",
+  "scope",
+  "nistAlignment",
+  "historicalNote",
+  "officialUrl",
   "linkedCapabilities",
   "reviewPrompts",
-  "scopeNote",
-  "catalogUrl",
-  "baselineUrl",
-  "oscalUrl",
   "lastVerified",
 ];
 
@@ -185,19 +188,39 @@ export function buildPatternRows(patterns, activeProviders, capabilityMap, frame
   );
 }
 
-export function buildControlRows(lens, families) {
-  return families.map(family => ({
-    familyId: family.id,
-    familyName: family.name,
-    applicability: family.applicability,
-    linkedCapabilities: family.capabilities || [],
-    reviewPrompts: family.reviewPrompts || [],
-    scopeNote: lens.scopeNote,
-    catalogUrl: lens.catalogUrl,
-    baselineUrl: lens.baselineUrl,
-    oscalUrl: lens.oscalUrl,
-    lastVerified: lens.lastVerified,
-  }));
+export function buildComplianceRows(lens, families, frameworks = []) {
+  return [
+    ...frameworks.map(framework => ({
+      rowType: "Framework",
+      id: framework.id,
+      name: framework.name,
+      kind: framework.kind,
+      issuer: framework.issuer,
+      status: framework.status,
+      scope: framework.scope,
+      nistAlignment: framework.nistAlignment,
+      historicalNote: framework.historicalNote,
+      officialUrl: framework.url,
+      linkedCapabilities: "",
+      reviewPrompts: "",
+      lastVerified: framework.lastVerified,
+    })),
+    ...families.map(family => ({
+      rowType: "NIST control family",
+      id: family.id,
+      name: family.name,
+      kind: lens.id,
+      issuer: "NIST",
+      status: lens.release,
+      scope: family.applicability,
+      nistAlignment: lens.scopeNote,
+      historicalNote: "",
+      officialUrl: lens.catalogUrl,
+      linkedCapabilities: family.capabilities || [],
+      reviewPrompts: family.reviewPrompts || [],
+      lastVerified: lens.lastVerified,
+    })),
+  ];
 }
 
 export function buildHistoryRows(items, meta) {
@@ -234,8 +257,8 @@ export function patternExport(patterns, activeProviders, capabilityMap, framewor
   return makeExportData("patterns", "Architecture Patterns", PATTERN_COLUMNS, buildPatternRows(patterns, activeProviders, capabilityMap, frameworks));
 }
 
-export function controlExport(lens, families) {
-  return makeExportData("controls", "NIST 800-53 Controls", CONTROL_COLUMNS, buildControlRows(lens, families));
+export function controlExport(lens, families, frameworks = []) {
+  return makeExportData("controls", "Compliance", COMPLIANCE_COLUMNS, buildComplianceRows(lens, families, frameworks));
 }
 
 export function historyExport(items, meta) {
