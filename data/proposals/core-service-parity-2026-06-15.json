@@ -1,0 +1,294 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Task 5 core-service parity proposal batch. Proposals are human-review inputs only and do not edit matrix.json.",
+    "generatedOn": "2026-06-15",
+    "approved": false,
+    "targetFields": [
+      "parityLag"
+    ],
+    "matrixVersion": "3.16.0",
+    "matrixLastVerified": "2026-06-15",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change.",
+    "batchScope": "Virtual Machines, Serverless Functions, Object Storage, Managed Kubernetes, and Relational Databases (Managed)"
+  },
+  "workItems": [
+    {
+      "capability": "Virtual Machines",
+      "category": "Core Infrastructure",
+      "provider": "aws",
+      "service": "Amazon EC2",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/ec2/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+      "reason": "Core service batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Virtual Machines",
+      "category": "Core Infrastructure",
+      "provider": "azure",
+      "service": "Azure Virtual Machines",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Virtual Machines",
+      "category": "Core Infrastructure",
+      "provider": "gcp",
+      "service": "Compute Engine",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/compute/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Virtual Machines",
+      "category": "Core Infrastructure",
+      "provider": "oci",
+      "service": "OCI Compute",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Serverless Functions",
+      "category": "Core Infrastructure",
+      "provider": "aws",
+      "service": "AWS Lambda",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html",
+      "reason": "Core service batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Serverless Functions",
+      "category": "Core Infrastructure",
+      "provider": "azure",
+      "service": "Azure Functions",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Serverless Functions",
+      "category": "Core Infrastructure",
+      "provider": "gcp",
+      "service": "Cloud Run / Cloud Functions",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/run/docs/overview/what-is-cloud-run",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Serverless Functions",
+      "category": "Core Infrastructure",
+      "provider": "oci",
+      "service": "OCI Functions",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Functions/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Object Storage",
+      "category": "Storage",
+      "provider": "aws",
+      "service": "Amazon S3",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/s3/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html",
+      "reason": "Core service batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Object Storage",
+      "category": "Storage",
+      "provider": "azure",
+      "service": "Azure Blob Storage",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blobs-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Object Storage",
+      "category": "Storage",
+      "provider": "gcp",
+      "service": "Cloud Storage",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/storage/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Object Storage",
+      "category": "Storage",
+      "provider": "oci",
+      "service": "OCI Object Storage",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Object/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "category": "Core Infrastructure",
+      "provider": "aws",
+      "service": "Amazon EKS",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eks.html",
+      "reason": "Core service batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "category": "Core Infrastructure",
+      "provider": "azure",
+      "service": "Azure Kubernetes Service (AKS)",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/aks/what-is-aks",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "category": "Core Infrastructure",
+      "provider": "gcp",
+      "service": "Google Kubernetes Engine (GKE)",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/kubernetes-engine/docs/concepts/kubernetes-engine-overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "category": "Core Infrastructure",
+      "provider": "oci",
+      "service": "Oracle Kubernetes Engine (OKE)",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "category": "Databases",
+      "provider": "aws",
+      "service": "Amazon RDS / Aurora",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/rds/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-rds.html",
+      "reason": "Core service batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "category": "Databases",
+      "provider": "azure",
+      "service": "Azure SQL / PostgreSQL Flexible",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-sql/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "category": "Databases",
+      "provider": "gcp",
+      "service": "Cloud SQL / Cloud Spanner",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/sql/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "category": "Databases",
+      "provider": "oci",
+      "service": "OCI Database Services",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+      "sourceQuote": "On-Demand Instance hibernation is not available.",
+      "rationale": "AWS documents multiple EC2 differences in AWS GovCloud, including purchasing, AMI/snapshot migration, instance screenshot, hibernation, and networking behavior. Core EC2 remains available, so the proposed lag is Moderate rather than Significant.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html",
+      "sourceQuote": "AWS Lambda Function URLs is not available.",
+      "rationale": "AWS documents several Lambda features unavailable in AWS GovCloud, including Function URLs, selected event-source features, JSON log formatting, KMS encryption for zip packages, SnapStart variants, and monitoring integrations. Core Lambda remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html",
+      "sourceQuote": "Amazon S3 Express One Zone is not available.",
+      "rationale": "AWS documents multiple S3 differences in AWS GovCloud, including no direct bucket copy to or from another AWS Region, no MFA Delete, no Transfer Acceleration, no S3 Express One Zone, no S3 Tables replication, and no S3 Metadata. Core S3 remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eks.html",
+      "sourceQuote": "Amazon EKS on Fargate isn’t available.",
+      "rationale": "AWS documents EKS differences in AWS GovCloud, including no EKS on Fargate, Managed Service for Prometheus, S3 CSI driver add-on support, EKS Anywhere, or EKS Hybrid Nodes. Core EKS remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-rds.html",
+      "sourceQuote": "Multi-AZ DB clusters are not available.",
+      "rationale": "AWS documents RDS differences in AWS GovCloud, including unavailable Multi-AZ DB clusters, RDS Custom for SQL Server, cross-Region read replicas, DB snapshot copying, proactive recommendations, and zero-ETL integration. The mapped row includes RDS and the core managed database service remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    }
+  ]
+}

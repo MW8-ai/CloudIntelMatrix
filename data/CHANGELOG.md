@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-15 - Task 5 core-service parity proposals
+- Added a proposal-only batch for five high-use core service parity cells: Virtual Machines, Serverless Functions, Object Storage, Managed Kubernetes, and Relational Databases (Managed).
+- Proposed AWS `parityLag: Moderate` for those five rows using official AWS GovCloud service-difference documentation.
+- Left Azure, GCP, and OCI parity values as review work items only because this batch did not identify official sources establishing a specific parity lag value.
+
 ## 2026-06-15 - Fact proposal workflow scaffolding
 - Added a proposer workflow for official-source fact review worklists without editing `data/matrix.json`.
 - Added a guarded proposal-application helper for human-approved proposal files, including source checks, date updates, changelog entry creation, and matrix version bumping.
