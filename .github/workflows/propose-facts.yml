@@ -1,0 +1,67 @@
+name: Propose fact worklists
+
+on:
+  schedule:
+    - cron: "0 14 * * 1"
+  workflow_dispatch:
+    inputs:
+      fields:
+        description: Comma-separated field groups to review
+        required: false
+        default: "parityLag,govAvailability,linkFreshness"
+      stale_days:
+        description: Flag records older than this many days
+        required: false
+        default: "180"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: fact-proposal-worklist
+  cancel-in-progress: false
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Generate proposal worklists
+        env:
+          FACT_FIELDS: ${{ github.event.inputs.fields || 'parityLag,govAvailability,linkFreshness' }}
+          STALE_DAYS: ${{ github.event.inputs.stale_days || '180' }}
+        run: python scripts/propose_facts.py --fields "$FACT_FIELDS" --stale-days "$STALE_DAYS"
+
+      - name: Validate generated worklists
+        run: python scripts/verify.py
+
+      - name: Open proposal PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain data/proposals)" ]; then
+            echo "No proposal worklist changes to publish."
+            exit 0
+          fi
+
+          today="$(date -u +%F)"
+          branch="codex/fact-proposals-$(date -u +%Y%m%d)-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/proposals
+          git commit -m "Generate fact proposal worklists"
+          git push --set-upstream origin "$branch"
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Fact proposal worklists - $today" \
+            --body "Generated official-source review worklists only. This PR does not edit data/matrix.json and must not be auto-merged. Fill proposals with primary-source evidence before applying through scripts/apply_proposals.py."

@@ -140,6 +140,52 @@ TRANSPARENCY_REQUIRED = [
     "lastVerified",
 ]
 TRANSPARENCY_ALLOWED = set(TRANSPARENCY_REQUIRED)
+PROPOSAL_PROVIDER_FIELDS = {
+    "status",
+    "govAvailability",
+    "parityLag",
+    "govVariant",
+    "docsUrl",
+    "pricingUrl",
+    "complianceUrl",
+    "govDocsUrl",
+}
+PROPOSAL_URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
+PROPOSAL_REQUIRED = [
+    "capability",
+    "provider",
+    "field",
+    "currentValue",
+    "proposedValue",
+    "sourceUrl",
+    "sourceQuote",
+    "rationale",
+    "proposedOn",
+]
+PROPOSAL_ALLOWED = set(PROPOSAL_REQUIRED)
+PROPOSAL_WORK_ITEM_REQUIRED = ["capability", "provider", "field", "currentValue", "reason"]
+PROPOSAL_WORK_ITEM_ALLOWED = set(
+    PROPOSAL_WORK_ITEM_REQUIRED
+    + ["category", "service", "docsUrl", "govDocsUrl", "sourceNotes", "sourceHints"]
+)
+OFFICIAL_SOURCE_DOMAINS = {
+    "aws.amazon.com",
+    "docs.aws.amazon.com",
+    "learn.microsoft.com",
+    "azure.microsoft.com",
+    "cloud.google.com",
+    "docs.cloud.google.com",
+    "docs.oracle.com",
+    "csrc.nist.gov",
+    "nist.gov",
+    "nccoe.nist.gov",
+    "fedramp.gov",
+    "govramp.org",
+    "fbi.gov",
+    "hhs.gov",
+    "ed.gov",
+    "studentprivacy.ed.gov",
+}
 PROV_REQUIRED = [
     "service",
     "status",
@@ -672,6 +718,148 @@ def validate_transparency(tdata):
     return mandates, meta
 
 
+def normalized_host(url):
+    parsed = urlparse(str(url))
+    host = parsed.netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    return host
+
+
+def is_official_source_url(url):
+    host = normalized_host(url)
+    if host.endswith(".gov"):
+        return True
+    return any(host == domain or host.endswith(f".{domain}") for domain in OFFICIAL_SOURCE_DOMAINS)
+
+
+def proposal_value_valid(field, value, label):
+    if field == "status" and value not in VALID_STATUS:
+        err(f"{label}.proposedValue invalid for status: {value}")
+    elif field == "govAvailability" and value not in VALID_GOV:
+        err(f"{label}.proposedValue invalid for govAvailability: {value}")
+    elif field == "parityLag" and value not in VALID_PARITY:
+        err(f"{label}.proposedValue invalid for parityLag: {value}")
+    elif field in PROPOSAL_URL_FIELDS:
+        validate_url(value, f"{label}.proposedValue", True)
+    elif field == "govVariant" and value is not None and not str(value).strip():
+        err(f"{label}.proposedValue for govVariant must be non-empty or null")
+
+
+def validate_proposal_files(matrix):
+    proposal_dir = DATA / "proposals"
+    if not proposal_dir.exists():
+        info("proposal files: none")
+        return []
+
+    cap_lookup = {
+        cap.get("capability"): cap
+        for cap in matrix.get("capabilities", [])
+        if isinstance(cap, dict)
+    }
+    proposal_links = []
+    files = sorted(proposal_dir.glob("*.json"))
+    for path in files:
+        pdata = load(path)
+        label = f"proposal file '{path.relative_to(ROOT)}'"
+        if not isinstance(pdata, dict):
+            err(f"{label} must be an object")
+            continue
+
+        meta = pdata.get("_meta", {})
+        require_fields(meta, ["schema", "generatedOn", "approved", "targetFields"], f"{label}._meta")
+        if isinstance(meta, dict):
+            if meta.get("schema") != "cloudintel-proposals-v1":
+                err(f"{label}._meta.schema must be cloudintel-proposals-v1")
+            validate_date(meta.get("generatedOn"), f"{label}._meta.generatedOn")
+            if not isinstance(meta.get("approved"), bool):
+                err(f"{label}._meta.approved must be boolean")
+            target_fields = meta.get("targetFields", [])
+            if (
+                not isinstance(target_fields, list)
+                or not target_fields
+                or not all(isinstance(field, str) and field.strip() for field in target_fields)
+            ):
+                err(f"{label}._meta.targetFields must be a non-empty array of strings")
+
+        work_items = pdata.get("workItems", [])
+        if not isinstance(work_items, list):
+            err(f"{label}.workItems must be an array")
+            work_items = []
+        for index, item in enumerate(work_items):
+            item_label = f"{label}.workItems[{index}]"
+            require_fields(item, PROPOSAL_WORK_ITEM_REQUIRED, item_label)
+            if not isinstance(item, dict):
+                continue
+            unexpected = set(item) - PROPOSAL_WORK_ITEM_ALLOWED
+            if unexpected:
+                err(f"{item_label} contains unsupported fields: {sorted(unexpected)}")
+            if item.get("provider") not in EXPECTED_PROVIDERS:
+                err(f"{item_label}.provider invalid: {item.get('provider')}")
+            if item.get("field") not in PROPOSAL_PROVIDER_FIELDS:
+                err(f"{item_label}.field unsupported: {item.get('field')}")
+            if item.get("capability") not in cap_lookup:
+                err(f"{item_label}.capability unknown: {item.get('capability')}")
+            if not str(item.get("reason", "")).strip():
+                err(f"{item_label}.reason must not be empty")
+
+        proposals = pdata.get("proposals", [])
+        if not isinstance(proposals, list):
+            err(f"{label}.proposals must be an array")
+            proposals = []
+        for index, proposal in enumerate(proposals):
+            proposal_label = f"{label}.proposals[{index}]"
+            require_fields(proposal, PROPOSAL_REQUIRED, proposal_label)
+            if not isinstance(proposal, dict):
+                continue
+            unexpected = set(proposal) - PROPOSAL_ALLOWED
+            if unexpected:
+                err(f"{proposal_label} contains unsupported fields: {sorted(unexpected)}")
+
+            cap = cap_lookup.get(proposal.get("capability"))
+            if not cap:
+                err(f"{proposal_label}.capability unknown: {proposal.get('capability')}")
+                continue
+            provider_key = proposal.get("provider")
+            if provider_key not in EXPECTED_PROVIDERS:
+                err(f"{proposal_label}.provider invalid: {provider_key}")
+                continue
+            provider = cap.get("providers", {}).get(provider_key)
+            if not provider:
+                err(f"{proposal_label} references missing provider record: {provider_key}")
+                continue
+
+            field = proposal.get("field")
+            if field not in PROPOSAL_PROVIDER_FIELDS:
+                err(f"{proposal_label}.field unsupported: {field}")
+            elif provider.get(field) != proposal.get("currentValue"):
+                err(
+                    f"{proposal_label}.currentValue mismatch for "
+                    f"{proposal.get('capability')}/{provider_key}/{field}"
+                )
+            proposal_value_valid(field, proposal.get("proposedValue"), proposal_label)
+
+            source_url = proposal.get("sourceUrl")
+            validate_url(source_url, f"{proposal_label}.sourceUrl", False)
+            if source_url:
+                proposal_links.append((source_url, proposal_label))
+                if not is_official_source_url(source_url):
+                    err(f"{proposal_label}.sourceUrl is not an approved official primary source: {source_url}")
+            if not str(proposal.get("sourceQuote", "")).strip():
+                err(f"{proposal_label}.sourceQuote must not be empty")
+            elif len(str(proposal.get("sourceQuote", "")).split()) >= 15:
+                err(f"{proposal_label}.sourceQuote must be under 15 words")
+            if not str(proposal.get("rationale", "")).strip():
+                err(f"{proposal_label}.rationale must not be empty")
+            validate_date(proposal.get("proposedOn"), f"{proposal_label}.proposedOn")
+
+        info(f"{path.relative_to(ROOT)}: {len(work_items)} work item(s); {len(proposals)} proposal(s)")
+
+    if not files:
+        info("proposal files: none")
+    return proposal_links
+
+
 def is_timeout_error(exc):
     if isinstance(exc, (TimeoutError, socket.timeout)):
         return True
@@ -703,7 +891,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, proposal_links):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -733,6 +921,8 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
         add_link(mandate.get("url"), f"transparency/{mandate.get('state')}")
     federal_context = transparency_meta.get("federalContext", {}) if isinstance(transparency_meta, dict) else {}
     add_link(federal_context.get("url"), "transparency/federalContext")
+    for source_url, label in proposal_links:
+        add_link(source_url, label)
 
     info(
         f"public link review: {sum(len(labels) for labels in links.values())} references; "
@@ -776,6 +966,7 @@ def main():
         return 1
     validate_schema_contract(schema)
     providers, capabilities, _, frameworks, control_lens, compliance_frameworks = validate_matrix(matrix)
+    proposal_links = validate_proposal_files(matrix)
 
     upcoming = []
     history = []
@@ -797,7 +988,7 @@ def main():
         transparency_meta = {}
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, proposal_links)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")
