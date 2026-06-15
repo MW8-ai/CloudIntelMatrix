@@ -1,0 +1,294 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Task 5 enterprise-foundation parity proposal batch. Proposals are human-review inputs only and do not edit matrix.json.",
+    "generatedOn": "2026-06-15",
+    "approved": false,
+    "targetFields": [
+      "parityLag"
+    ],
+    "matrixVersion": "3.16.0",
+    "matrixLastVerified": "2026-06-15",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change.",
+    "batchScope": "Identity & Access Management, Key/Secret/Certificate Management, Private Connectivity & DNS, Backup & Disaster Recovery, and Landing Zone & Resource Governance"
+  },
+  "workItems": [
+    {
+      "capability": "Identity & Access Management",
+      "category": "Identity & Access",
+      "provider": "aws",
+      "service": "AWS IAM + IAM Identity Center",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-iam.html",
+      "reason": "Enterprise-foundation batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Identity & Access Management",
+      "category": "Identity & Access",
+      "provider": "azure",
+      "service": "Microsoft Entra ID",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/entra/fundamentals/whatis",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Identity & Access Management",
+      "category": "Identity & Access",
+      "provider": "gcp",
+      "service": "Cloud IAM + Cloud Identity",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/iam/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Identity & Access Management",
+      "category": "Identity & Access",
+      "provider": "oci",
+      "service": "OCI IAM with Identity Domains",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Identity/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "category": "Security & Compliance",
+      "provider": "aws",
+      "service": "AWS KMS + Secrets Manager + AWS Certificate Manager",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-services.html",
+      "reason": "Enterprise-foundation batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "category": "Security & Compliance",
+      "provider": "azure",
+      "service": "Azure Key Vault + Managed HSM",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/key-vault/general/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "category": "Security & Compliance",
+      "provider": "gcp",
+      "service": "Cloud KMS + Secret Manager + Certificate Manager",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/kms/docs/key-management-service",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "category": "Security & Compliance",
+      "provider": "oci",
+      "service": "OCI Vault + Certificates",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/KeyManagement/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "category": "Networking",
+      "provider": "aws",
+      "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud-vpc-endpoints.html",
+      "reason": "Enterprise-foundation batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "category": "Networking",
+      "provider": "azure",
+      "service": "Azure Private Link + Azure Private DNS + ExpressRoute",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/private-link/private-link-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "category": "Networking",
+      "provider": "gcp",
+      "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/vpc/docs/private-service-connect",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is not yet asserted for the full mapped portfolio, and this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "category": "Networking",
+      "provider": "oci",
+      "service": "OCI Private Endpoints + DNS + FastConnect",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/DNS/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented for parts of the mapped portfolio, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "category": "Storage",
+      "provider": "aws",
+      "service": "AWS Backup",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bkp.html",
+      "reason": "Enterprise-foundation batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "category": "Storage",
+      "provider": "azure",
+      "service": "Azure Backup + Azure Site Recovery",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/backup/backup-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "category": "Storage",
+      "provider": "gcp",
+      "service": "Backup and DR Service",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/backup-disaster-recovery/docs/concepts/backup-dr",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability is not yet asserted for the mapped service, so no parity value is proposed."
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "category": "Storage",
+      "provider": "oci",
+      "service": "OCI Full Stack Disaster Recovery",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/disaster-recovery/index.html",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "category": "Security & Compliance",
+      "provider": "aws",
+      "service": "AWS Control Tower + AWS Organizations",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/controltower/latest/userguide/aws-multi-account-landing-zone.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-controltower.html",
+      "reason": "Enterprise-foundation batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "category": "Security & Compliance",
+      "provider": "azure",
+      "service": "Azure Landing Zones + Azure Policy",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/architecture/landing-zones/landing-zone-deploy",
+      "reason": "Availability is documented as guidance and composed services, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "category": "Security & Compliance",
+      "provider": "gcp",
+      "service": "Enterprise Foundations Blueprint + Organization Policy",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/architecture/blueprints/security-foundations",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability is not yet asserted for the composed blueprint, so no parity value is proposed."
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "category": "Security & Compliance",
+      "provider": "oci",
+      "service": "OCI Landing Zones + Resource Manager",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-adoption-framework/oci-landing-zones-overview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented for Resource Manager, but this batch did not identify an official source establishing a specific parity lag value for the composed landing-zone portfolio."
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "Identity & Access Management",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-iam.html",
+      "sourceQuote": "there is no AWS STS global endpoint.",
+      "rationale": "AWS documents multiple IAM differences in AWS GovCloud, including no root-user console access, no AWS STS global endpoint, no cross-partition role delegation, different SAML endpoints, and no IAM Access Analyzer policy generation. Core IAM remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Minor",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-asm.html",
+      "sourceQuote": "Managed External Secrets are not available.",
+      "rationale": "AWS documents a Secrets Manager feature gap for Managed External Secrets in AWS GovCloud. Because the broader mapped portfolio still includes KMS, Secrets Manager, and Certificate Manager, and the documented gap is narrower than a broad platform absence, the proposed lag is Minor.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-r53.html",
+      "sourceQuote": "Route 53 Resolver delegation is not available.",
+      "rationale": "AWS documents Route 53 differences in AWS GovCloud, including unavailable IP-based routing, DNS answer testing, Route 53 Resolver delegation, and private-zone latency/geolocation/geoproximity routing. Core DNS and private connectivity capabilities remain available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bkp.html",
+      "sourceQuote": "Restore testing is not available.",
+      "rationale": "AWS documents AWS Backup differences in AWS GovCloud, including unavailable restore testing and unavailable Backup Audit Manager multi-account, multi-Region reporting. Core backup remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-controltower.html",
+      "sourceQuote": "The Create account feature in Account Factory is removed.",
+      "rationale": "AWS documents material Control Tower differences in AWS GovCloud, including removed Account Factory account creation, required pre-existing Audit and Log Archive accounts, affected control behavior, unavailable new-customer AFT deployment, unavailable resource control policy controls, and API permission differences. Core Control Tower remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-15"
+    }
+  ]
+}
