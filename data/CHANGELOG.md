@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-15 - Fact proposal workflow scaffolding
+- Added a proposer workflow for official-source fact review worklists without editing `data/matrix.json`.
+- Added a guarded proposal-application helper for human-approved proposal files, including source checks, date updates, changelog entry creation, and matrix version bumping.
+- Extended verification to validate proposal files and reject sourceless or non-primary-source fact proposals.
+
 ## 2026-06-15 - v3.16.0 - State AI transparency scaffold
 - Added `data/transparency.json` as an official-source state AI governance and transparency record with all 50 states plus DC scaffolded and Indiana populated from the State of Indiana AI Policy and Guidance.
 - Added Federal Register context for Executive Order 14365, 90 FR 58499, to warn readers that federal-versus-state AI governance remains volatile.
