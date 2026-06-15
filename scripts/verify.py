@@ -42,6 +42,10 @@ CONTROL_LENS_REQUIRED = ["id", "name", "release", "catalogUrl", "baselineUrl", "
 CONTROL_LENS_ALLOWED = set(CONTROL_LENS_REQUIRED)
 CONTROL_FAMILY_REQUIRED = ["id", "name", "applicability", "capabilities", "reviewPrompts"]
 CONTROL_FAMILY_ALLOWED = set(CONTROL_FAMILY_REQUIRED)
+COMPLIANCE_KIND = {"authorization-program", "regulation", "validation-standard", "voluntary-framework"}
+COMPLIANCE_STATUS = {"Active", "Draft", "In development", "Superseded"}
+COMPLIANCE_REQUIRED = ["id", "name", "issuer", "kind", "scope", "status", "url", "nistAlignment", "lastVerified"]
+COMPLIANCE_ALLOWED = set(COMPLIANCE_REQUIRED + ["historicalNote"])
 PATTERN_REQUIRED = [
     "id",
     "name",
@@ -146,16 +150,18 @@ def validate_schema_contract(schema):
     framework = schema.get("$defs", {}).get("framework", {})
     control_lens = schema.get("$defs", {}).get("controlLens", {})
     control_family = schema.get("$defs", {}).get("controlFamily", {})
+    compliance_framework = schema.get("$defs", {}).get("complianceFramework", {})
     pattern = schema.get("$defs", {}).get("pattern", {})
     required_caps = set(capability.get("required", []))
     required_prov = set(provider.get("required", []))
     required_framework = set(framework.get("required", []))
     required_control_lens = set(control_lens.get("required", []))
     required_control_family = set(control_family.get("required", []))
+    required_compliance_framework = set(compliance_framework.get("required", []))
     required_pattern = set(pattern.get("required", []))
     required_root = set(schema.get("required", []))
-    if not {"frameworks", "controlLens", "patterns"}.issubset(required_root):
-        err("data/schema.json root requirements must include frameworks, controlLens, and patterns")
+    if not {"frameworks", "controlLens", "complianceFrameworks", "patterns"}.issubset(required_root):
+        err("data/schema.json root requirements must include frameworks, controlLens, complianceFrameworks, and patterns")
     if not set(CAP_REQUIRED).issubset(required_caps):
         err("data/schema.json capability requirements do not cover validator-required fields")
     if not set(PROV_REQUIRED).issubset(required_prov):
@@ -166,15 +172,17 @@ def validate_schema_contract(schema):
         err("data/schema.json controlLens requirements do not cover validator-required fields")
     if not set(CONTROL_FAMILY_REQUIRED).issubset(required_control_family):
         err("data/schema.json controlFamily requirements do not cover validator-required fields")
+    if not set(COMPLIANCE_REQUIRED).issubset(required_compliance_framework):
+        err("data/schema.json complianceFramework requirements do not cover validator-required fields")
     if not set(PATTERN_REQUIRED).issubset(required_pattern):
         err("data/schema.json pattern requirements do not cover validator-required fields")
     info("data/schema.json: capability-v1 contract loaded")
 
 
 def validate_matrix(mdata):
-    require_fields(mdata, ["_meta", "tags", "categories", "frameworks", "controlLens", "patterns", "capabilities"], "matrix.json")
+    require_fields(mdata, ["_meta", "tags", "categories", "frameworks", "controlLens", "complianceFrameworks", "patterns", "capabilities"], "matrix.json")
     if not isinstance(mdata, dict):
-        return None, [], [], {}, {}
+        return None, [], [], {}, {}, []
 
     meta = mdata.get("_meta", {})
     require_fields(meta, ["version", "schema", "last_verified", "providers", "tiers", "license", "repo"], "_meta")
@@ -347,6 +355,42 @@ def validate_matrix(mdata):
                 err(f"control family '{family_id}'.reviewPrompts must be a non-empty array")
         info(f"controlLens: {control_lens.get('name', 'unknown')}; {len(families)} selected families")
 
+    compliance_frameworks = mdata.get("complianceFrameworks", [])
+    if not isinstance(compliance_frameworks, list) or not compliance_frameworks:
+        err("complianceFrameworks must be a non-empty array")
+        compliance_frameworks = []
+    seen_compliance = set()
+    for framework in compliance_frameworks:
+        framework_id = framework.get("id", "MISSING") if isinstance(framework, dict) else "MISSING"
+        require_fields(framework, COMPLIANCE_REQUIRED, f"compliance framework '{framework_id}'")
+        if not isinstance(framework, dict):
+            continue
+        unexpected_compliance_fields = set(framework) - COMPLIANCE_ALLOWED
+        if unexpected_compliance_fields:
+            err(f"compliance framework '{framework_id}' contains unsupported fields: {sorted(unexpected_compliance_fields)}")
+        if framework_id in seen_compliance:
+            err(f"Duplicate compliance framework: '{framework_id}'")
+        seen_compliance.add(framework_id)
+        if framework.get("kind") not in COMPLIANCE_KIND:
+            err(f"compliance framework '{framework_id}' invalid kind: {framework.get('kind')}")
+        if framework.get("status") not in COMPLIANCE_STATUS:
+            err(f"compliance framework '{framework_id}' invalid status: {framework.get('status')}")
+        validate_url(framework.get("url"), f"compliance framework '{framework_id}'.url", False)
+        validate_date(framework.get("lastVerified"), f"compliance framework '{framework_id}'.lastVerified")
+        for field in ["name", "issuer", "scope"]:
+            if not str(framework.get(field, "")).strip():
+                err(f"compliance framework '{framework_id}'.{field} must not be empty")
+        alignment = framework.get("nistAlignment")
+        if isinstance(alignment, str):
+            if not alignment.strip():
+                err(f"compliance framework '{framework_id}'.nistAlignment must not be empty")
+        elif isinstance(alignment, list):
+            if not alignment or not all(isinstance(item, str) and item.strip() for item in alignment):
+                err(f"compliance framework '{framework_id}'.nistAlignment must be a non-empty array of strings when using an array")
+        else:
+            err(f"compliance framework '{framework_id}'.nistAlignment must be a string or array of strings")
+    info(f"complianceFrameworks: {len(compliance_frameworks)} entries")
+
     patterns = mdata.get("patterns", [])
     if not isinstance(patterns, list) or not patterns:
         err("patterns must be a non-empty array")
@@ -381,7 +425,7 @@ def validate_matrix(mdata):
         f"matrix.json: {len(capabilities)} capabilities; {len(patterns)} patterns; "
         f"{len(providers)} providers; schema {meta.get('schema')}"
     )
-    return providers, capabilities, tiers, frameworks, control_lens
+    return providers, capabilities, tiers, frameworks, control_lens, compliance_frameworks
 
 
 def validate_upcoming(udata):
@@ -508,7 +552,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, history, frameworks, control_lens):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -532,6 +576,8 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens):
             add_link(guidance.get(field), f"framework/{pkey}/{field}")
     for field in ["catalogUrl", "baselineUrl", "oscalUrl"]:
         add_link(control_lens.get(field), f"controlLens/{field}")
+    for framework in compliance_frameworks:
+        add_link(framework.get("url"), f"complianceFrameworks/{framework.get('id')}")
 
     info(
         f"public link review: {sum(len(labels) for labels in links.values())} references; "
@@ -574,7 +620,7 @@ def main():
         print("\n".join(ERRORS))
         return 1
     validate_schema_contract(schema)
-    providers, capabilities, _, frameworks, control_lens = validate_matrix(matrix)
+    providers, capabilities, _, frameworks, control_lens, compliance_frameworks = validate_matrix(matrix)
 
     upcoming = []
     history = []
@@ -591,7 +637,7 @@ def main():
             info("sources.json: loaded")
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, history, frameworks, control_lens)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")

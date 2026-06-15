@@ -18,6 +18,7 @@ const {
   tags: TAG_DEFS,
   frameworks: FRAMEWORKS,
   controlLens: CONTROL_LENS,
+  complianceFrameworks: COMPLIANCE_FRAMEWORKS = [],
   patterns: PATTERNS,
   _meta: META,
 } = matrixData;
@@ -107,6 +108,20 @@ const HISTORY_PHASE_STYLES = {
   "Government state/federal": { bg: "#78350f22", fg: "#f59e0b", border: "#b4530955" },
 };
 
+const COMPLIANCE_KIND_LABELS = {
+  "authorization-program": "Authorization Programs",
+  regulation: "Regulations",
+  "validation-standard": "Validation Standards",
+  "voluntary-framework": "AI & Voluntary Frameworks",
+};
+
+const COMPLIANCE_STATUS_STYLES = {
+  Active: { bg: "#14532d22", fg: "#16a34a", border: "#15803d55" },
+  Draft: { bg: "#78350f22", fg: "#d97706", border: "#b4530955" },
+  "In development": { bg: "#164e6322", fg: "#0891b2", border: "#0891b255" },
+  Superseded: { bg: "#1f293722", fg: "#64748b", border: "#64748b55" },
+};
+
 function TagBadge({ tagKey }) {
   const def = TAG_DEFS[tagKey];
   if (!def) return null;
@@ -136,6 +151,15 @@ function ParityBadge({ parity }) {
   return (
     <span style={{ fontSize: 8, padding: "2px 6px", borderRadius: 3, fontWeight: 700, letterSpacing: "0.06em", background: s.bg, color: s.fg, border: `1px solid ${s.fg}33`, whiteSpace: "nowrap" }}>
       {s.label}
+    </span>
+  );
+}
+
+function ComplianceStatusBadge({ status }) {
+  const style = COMPLIANCE_STATUS_STYLES[status] || COMPLIANCE_STATUS_STYLES.Active;
+  return (
+    <span style={{ fontSize: 8, padding: "3px 7px", borderRadius: 4, fontWeight: 700, letterSpacing: "0.06em", background: style.bg, color: style.fg, border: `1px solid ${style.border}`, whiteSpace: "nowrap" }}>
+      {status}
     </span>
   );
 }
@@ -568,13 +592,21 @@ function PatternView({ patterns, activeProviders }) {
   );
 }
 
-// -- NIST CONTROL LENS -------------------------------------------------------
-function ControlLensView({ lens, families }) {
+// -- COMPLIANCE LENS -------------------------------------------------------
+function ControlLensView({ lens, families, frameworks }) {
+  const groupedFrameworks = Object.entries(COMPLIANCE_KIND_LABELS)
+    .map(([kind, label]) => ({
+      kind,
+      label,
+      items: frameworks.filter(framework => framework.kind === kind),
+    }))
+    .filter(group => group.items.length);
+
   return (
     <div>
       <div style={{ padding: "12px 14px", margin: "10px 0 14px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)" }}>
-        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--link)", fontWeight: 700, marginBottom: 4 }}>CONTROL FAMILY PLANNING LENS</div>
-        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 700, marginBottom: 5 }}>{lens.name} - {lens.release}</div>
+        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--link)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE PLANNING LENS</div>
+        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 700, marginBottom: 5 }}>Framework references plus {lens.name} - {lens.release}</div>
         <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6, marginBottom: 9 }}>{lens.scopeNote}</div>
         <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
           <a href={lens.catalogUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Official catalog</a>
@@ -583,6 +615,51 @@ function ControlLensView({ lens, families }) {
           <VerifiedStamp date={lens.lastVerified} />
         </div>
       </div>
+      <div style={{ marginBottom: 16 }}>
+        <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, marginBottom: 8 }}>FRAMEWORKS AND PROGRAMS</div>
+        {!frameworks.length && (
+          <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No compliance frameworks match the current search.</div>
+        )}
+        {groupedFrameworks.map(group => (
+          <div key={group.kind} style={{ marginBottom: 12, border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", overflow: "hidden" }}>
+            <div style={{ padding: "8px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel-alt)", display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
+              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, letterSpacing: "0.08em" }}>{group.label.toUpperCase()}</div>
+              <div style={{ fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>{group.items.length} item(s)</div>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "minmax(210px,1fr) 120px minmax(300px,1.5fr) minmax(260px,1.2fr) 120px", gap: 0, minWidth: 1010 }}>
+              <div style={{ padding: "7px 10px", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>FRAMEWORK</div>
+              <div style={{ padding: "7px 10px", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>STATUS</div>
+              <div style={{ padding: "7px 10px", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>SCOPE</div>
+              <div style={{ padding: "7px 10px", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>NIST ALIGNMENT / NOTE</div>
+              <div style={{ padding: "7px 10px", borderBottom: "1px solid var(--border)", fontSize: 8, color: "var(--muted)", fontWeight: 700 }}>SOURCE</div>
+              {group.items.map((framework, index) => {
+                const bg = index % 2 === 0 ? "var(--panel)" : "var(--panel-alt)";
+                return [
+                  <div key={`${framework.id}-name`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                    <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, lineHeight: 1.45 }}>{framework.name}</div>
+                    <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 4, lineHeight: 1.35 }}>{framework.issuer}</div>
+                  </div>,
+                  <div key={`${framework.id}-status`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                    <ComplianceStatusBadge status={framework.status} />
+                  </div>,
+                  <div key={`${framework.id}-scope`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg, fontSize: 9, color: "var(--text)", lineHeight: 1.55 }}>
+                    {framework.scope}
+                  </div>,
+                  <div key={`${framework.id}-alignment`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg, fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>
+                    <div>{Array.isArray(framework.nistAlignment) ? framework.nistAlignment.join("; ") : framework.nistAlignment}</div>
+                    {framework.historicalNote && <div style={{ marginTop: 6, color: "var(--text)" }}>{framework.historicalNote}</div>}
+                  </div>,
+                  <div key={`${framework.id}-source`} style={{ padding: "10px", borderBottom: "1px solid var(--border)", background: bg }}>
+                    <a href={framework.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none", fontWeight: 700 }}>Official source</a>
+                    <div style={{ marginTop: 6 }}><VerifiedStamp date={framework.lastVerified} /></div>
+                  </div>,
+                ];
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 700, margin: "16px 0 8px" }}>NIST SP 800-53 FAMILY LENS</div>
       {!families.length && (
         <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No control families match the current filter.</div>
       )}
@@ -839,6 +916,24 @@ export default function App() {
     return families;
   }, [selectedCategory, searchQuery]);
 
+  const filteredComplianceFrameworks = useMemo(() => {
+    let frameworks = COMPLIANCE_FRAMEWORKS;
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      frameworks = frameworks.filter(framework =>
+        framework.id.toLowerCase().includes(q) ||
+        framework.name.toLowerCase().includes(q) ||
+        framework.issuer.toLowerCase().includes(q) ||
+        framework.kind.toLowerCase().includes(q) ||
+        framework.status.toLowerCase().includes(q) ||
+        framework.scope.toLowerCase().includes(q) ||
+        String(framework.nistAlignment || "").toLowerCase().includes(q) ||
+        framework.historicalNote?.toLowerCase().includes(q)
+      );
+    }
+    return frameworks;
+  }, [searchQuery]);
+
   const filteredHistory = useMemo(() => {
     let items = HISTORY.filter(item => activeProviders.includes(item.provider));
     if (searchQuery.trim().length >= 2) {
@@ -862,13 +957,13 @@ export default function App() {
 
   const exportData = useMemo(() => {
     if (mode === "patterns") return patternExport(filteredPatterns, activeProviders, CAPABILITY_MAP, FRAMEWORKS);
-    if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies);
+    if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies, filteredComplianceFrameworks);
     if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
     if (mode === "diff") return matrixExport("diff", "Service Equivalency", filteredCaps, activeProviders, selectedTier);
     if (mode === "gov") return matrixExport("gov", "Government Availability and Parity", filteredCaps, activeProviders, selectedTier);
     if (mode === "ai") return matrixExport("ai", "AI Focus", filteredAiCaps, activeProviders, selectedTier);
     return matrixExport("matrix", "Capability Matrix", filteredCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredAiCaps, filteredCaps, filteredControlFamilies, filteredHistory, filteredPatterns, mode, selectedTier]);
+  }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredPatterns, mode, selectedTier]);
 
   const govAlertCount = CAPABILITIES.filter(c =>
     Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
@@ -876,7 +971,7 @@ export default function App() {
 
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
-    mode === "controls" ? filteredControlFamilies.length :
+    mode === "controls" ? filteredControlFamilies.length + filteredComplianceFrameworks.length :
     mode === "history" ? filteredHistory.length :
     mode === "ai" ? filteredAiCaps.length :
     filteredCaps.length;
@@ -884,7 +979,7 @@ export default function App() {
   const modes = [
     { id: "matrix", label: "MATRIX", desc: "All capabilities by tier" },
     { id: "patterns", label: "PATTERNS", desc: "Architecture planning overlays" },
-    { id: "controls", label: "NIST 800-53", desc: "NIST SP 800-53 Rev. 5 control-family planning lens" },
+    { id: "controls", label: "COMPLIANCE", desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history", label: "HISTORY", desc: "Provider cloud journey milestones" },
     { id: "diff",   label: "EQUIVALENCY", desc: "Side-by-side service mapping" },
     { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
@@ -957,7 +1052,7 @@ export default function App() {
               {PROVIDERS.map(provider => PROVIDER_META[provider].label).join(" · ")}
             </div>
             <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {CONTROL_LENS.families.length} NIST families · {HISTORY.length} history milestones · {CATEGORIES.length} categories · fact-first · official sources only
+              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {COMPLIANCE_FRAMEWORKS.length} compliance frameworks · {CONTROL_LENS.families.length} NIST families · {HISTORY.length} history milestones · {CATEGORIES.length} categories · fact-first · official sources only
             </div>
           </div>
 
@@ -1082,8 +1177,8 @@ export default function App() {
           {mode === "controls" && (
             <div className="filter-context">
               <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>NIST CONTROL-FAMILY LENS</div>
-              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Category filters linked capabilities. Tier guidance is not applied in this view.</div>
+              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE LENS</div>
+              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
             </div>
           )}
         </div>
@@ -1091,7 +1186,7 @@ export default function App() {
 
       {/* ── CONTENT ── */}
       <div style={{ padding: "14px 24px 40px", overflowX: "auto" }}>
-        <div style={{ minWidth: mode === "history" ? 1080 : activeProviders.length > 3 ? 1040 : 780 }}>
+        <div style={{ minWidth: mode === "history" || mode === "controls" ? 1080 : activeProviders.length > 3 ? 1040 : 780 }}>
           <UpcomingBanner items={UPCOMING} />
 
           {/* Search result count */}
@@ -1128,7 +1223,7 @@ export default function App() {
           {mode === "gov"  && <GovView  caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "ai"   && <AIView   caps={filteredAiCaps} activeProviders={activeProviders} />}
           {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
-          {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} />}
+          {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
           {mode === "history" && <HistoryView items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
         </div>
 

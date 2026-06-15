@@ -4,7 +4,7 @@
   "title": "Cloud Intelligence Matrix capability-v1",
   "description": "Schema contract for data/matrix.json, including capability rows, architecture-pattern overlays, and a control-family planning lens. Unknown public-source facts must be explicit and explained with sourceNotes.",
   "type": "object",
-  "required": ["_meta", "tags", "categories", "frameworks", "controlLens", "patterns", "capabilities"],
+  "required": ["_meta", "tags", "categories", "frameworks", "controlLens", "complianceFrameworks", "patterns", "capabilities"],
   "properties": {
     "_meta": {
       "type": "object",
@@ -62,6 +62,11 @@
       "additionalProperties": false
     },
     "controlLens": { "$ref": "#/$defs/controlLens" },
+    "complianceFrameworks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/complianceFramework" },
+      "minItems": 1
+    },
     "patterns": {
       "type": "array",
       "items": { "$ref": "#/$defs/pattern" },
@@ -159,6 +164,36 @@
           "minItems": 1,
           "uniqueItems": true
         }
+      },
+      "additionalProperties": false
+    },
+    "complianceFramework": {
+      "type": "object",
+      "required": ["id", "name", "issuer", "kind", "scope", "status", "url", "nistAlignment", "lastVerified"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "issuer": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["authorization-program", "regulation", "validation-standard", "voluntary-framework"]
+        },
+        "scope": { "type": "string", "minLength": 1 },
+        "status": {
+          "enum": ["Active", "Draft", "In development", "Superseded"]
+        },
+        "url": { "type": "string", "format": "uri" },
+        "nistAlignment": {
+          "oneOf": [
+            { "type": "string" },
+            {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          ]
+        },
+        "historicalNote": { "type": "string", "minLength": 1 },
+        "lastVerified": { "type": "string", "format": "date" }
       },
       "additionalProperties": false
     },
