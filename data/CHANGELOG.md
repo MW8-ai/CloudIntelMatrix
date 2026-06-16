@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-16 - Task 5 analytics, operations, and integration proposals
+- Added a proposal-only batch for ML Platform & Model Training, Data Warehouse / Analytics Platform, Managed File Transfer, Observability & Monitoring, and Event Streaming & Messaging.
+- Proposed AWS parity values for SageMaker AI, Redshift, Transfer Family, CloudWatch Logs, and EventBridge using official AWS GovCloud service-difference documentation.
+- Proposed AWS EventBridge `govAvailability: Limited` from the same official AWS GovCloud source while leaving other providers as review work items only.
+
 ## 2026-06-15 - Task 5 enterprise-foundation parity proposals
 - Added a proposal-only batch for five enterprise foundation parity cells: Identity & Access Management, Key/Secret/Certificate Management, Private Connectivity & DNS, Backup & Disaster Recovery, and Landing Zone & Resource Governance.
 - Proposed AWS parity values for those five rows using official AWS GovCloud service-difference documentation.
