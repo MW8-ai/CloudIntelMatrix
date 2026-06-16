@@ -3,7 +3,7 @@
     "schema": "cloudintel-proposals-v1",
     "description": "Task 5 analytics, operations, and integration proposal batch. Proposals are human-review inputs only and do not edit matrix.json.",
     "generatedOn": "2026-06-16",
-    "approved": false,
+    "approved": true,
     "targetFields": [
       "govAvailability",
       "parityLag"

@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.16.0",
+    "version": "3.16.3",
     "schema": "capability-v1",
-    "last_verified": "2026-06-15",
+    "last_verified": "2026-06-16",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
     "providers": [
       "aws",
@@ -10,23 +10,76 @@
       "gcp",
       "oci"
     ],
-    "tiers": ["Personal / Free", "Commercial / SMB", "Enterprise", "Government"],
+    "tiers": [
+      "Personal / Free",
+      "Commercial / SMB",
+      "Enterprise",
+      "Government"
+    ],
     "license": "CC-BY-4.0",
     "repo": "https://github.com/MW8-ai/CloudIntelMatrix"
   },
   "tags": {
-    "STANDARD":            { "label": "STANDARD",            "color": "gray",   "description": "Traditional cloud infrastructure or platform service" },
-    "AI_CAPABLE":          { "label": "AI_CAPABLE",          "color": "blue",   "description": "Can support AI workloads but not purpose-built for AI" },
-    "AI_NATIVE":           { "label": "AI_NATIVE",           "color": "purple", "description": "Purpose-built AI/ML service" },
-    "GOV_AVAILABLE":       { "label": "GOV_AVAILABLE",       "color": "green",  "description": "Documented as available in a government or regulated environment" },
-    "GOV_LIMITED":         { "label": "GOV_LIMITED",         "color": "amber",  "description": "Documented in government or regulated use with identified constraints" },
-    "PARITY_LAG":          { "label": "PARITY_LAG",          "color": "red",    "description": "Commercial version is ahead of gov/regulated version" },
-    "COMPLIANCE_RELEVANT": { "label": "COMPLIANCE_RELEVANT", "color": "cyan",   "description": "Architecturally relevant to NIST/CJIS/HIPAA/FedRAMP/FIPS review" },
-    "ENTERPRISE_CORE":     { "label": "ENTERPRISE_CORE",     "color": "slate",  "description": "Common foundational service in enterprise architectures" },
-    "HYBRID_READY":        { "label": "HYBRID_READY",        "color": "teal",   "description": "Strong support for on-prem/cloud integration" },
-    "IDENTITY_CRITICAL":   { "label": "IDENTITY_CRITICAL",   "color": "orange", "description": "Depends heavily on IAM/Entra/SSO/RBAC design" },
-    "COST_SENSITIVE":      { "label": "COST_SENSITIVE",      "color": "yellow", "description": "Can become expensive without active governance" },
-    "LOCK_IN_RISK":        { "label": "LOCK_IN_RISK",        "color": "rose",   "description": "High coupling to provider ecosystem; migration friction" }
+    "STANDARD": {
+      "label": "STANDARD",
+      "color": "gray",
+      "description": "Traditional cloud infrastructure or platform service"
+    },
+    "AI_CAPABLE": {
+      "label": "AI_CAPABLE",
+      "color": "blue",
+      "description": "Can support AI workloads but not purpose-built for AI"
+    },
+    "AI_NATIVE": {
+      "label": "AI_NATIVE",
+      "color": "purple",
+      "description": "Purpose-built AI/ML service"
+    },
+    "GOV_AVAILABLE": {
+      "label": "GOV_AVAILABLE",
+      "color": "green",
+      "description": "Documented as available in a government or regulated environment"
+    },
+    "GOV_LIMITED": {
+      "label": "GOV_LIMITED",
+      "color": "amber",
+      "description": "Documented in government or regulated use with identified constraints"
+    },
+    "PARITY_LAG": {
+      "label": "PARITY_LAG",
+      "color": "red",
+      "description": "Commercial version is ahead of gov/regulated version"
+    },
+    "COMPLIANCE_RELEVANT": {
+      "label": "COMPLIANCE_RELEVANT",
+      "color": "cyan",
+      "description": "Architecturally relevant to NIST/CJIS/HIPAA/FedRAMP/FIPS review"
+    },
+    "ENTERPRISE_CORE": {
+      "label": "ENTERPRISE_CORE",
+      "color": "slate",
+      "description": "Common foundational service in enterprise architectures"
+    },
+    "HYBRID_READY": {
+      "label": "HYBRID_READY",
+      "color": "teal",
+      "description": "Strong support for on-prem/cloud integration"
+    },
+    "IDENTITY_CRITICAL": {
+      "label": "IDENTITY_CRITICAL",
+      "color": "orange",
+      "description": "Depends heavily on IAM/Entra/SSO/RBAC design"
+    },
+    "COST_SENSITIVE": {
+      "label": "COST_SENSITIVE",
+      "color": "yellow",
+      "description": "Can become expensive without active governance"
+    },
+    "LOCK_IN_RISK": {
+      "label": "LOCK_IN_RISK",
+      "color": "rose",
+      "description": "High coupling to provider ecosystem; migration friction"
+    }
   },
   "categories": [
     "Core Infrastructure",
@@ -88,78 +141,159 @@
         "id": "AC",
         "name": "Access Control",
         "applicability": "Shape application and administrative access boundaries, privileged paths, network-restricted service access, and policy enforcement points.",
-        "capabilities": ["Identity & Access Management", "API Management & Integration Gateway", "Private Connectivity & DNS", "AI Agents & Tool Orchestration", "Vector Retrieval & RAG Knowledge Bases"],
-        "reviewPrompts": ["Where is authorization enforced for users, workloads, and administrators?", "Which public or private paths must be denied by default and evidenced?"]
+        "capabilities": [
+          "Identity & Access Management",
+          "API Management & Integration Gateway",
+          "Private Connectivity & DNS",
+          "AI Agents & Tool Orchestration",
+          "Vector Retrieval & RAG Knowledge Bases"
+        ],
+        "reviewPrompts": [
+          "Where is authorization enforced for users, workloads, and administrators?",
+          "Which public or private paths must be denied by default and evidenced?"
+        ]
       },
       {
         "id": "AU",
         "name": "Audit and Accountability",
         "applicability": "Plan traceable audit events, centralized collection, retention, review, and evidentiary access protection.",
-        "capabilities": ["Observability & Monitoring", "Security Information & Event Management (SIEM)", "AI Agents & Tool Orchestration"],
-        "reviewPrompts": ["Which application and platform events must be captured and retained?", "Who can alter, query, export, or delete audit evidence?"]
+        "capabilities": [
+          "Observability & Monitoring",
+          "Security Information & Event Management (SIEM)",
+          "AI Agents & Tool Orchestration"
+        ],
+        "reviewPrompts": [
+          "Which application and platform events must be captured and retained?",
+          "Who can alter, query, export, or delete audit evidence?"
+        ]
       },
       {
         "id": "CA",
         "name": "Assessment, Authorization, and Monitoring",
         "applicability": "Organize continuous posture review, regulated-hosting evidence, findings workflow, and authorization boundary decisions.",
-        "capabilities": ["Security & Compliance Posture Management", "Government / Sovereign Cloud Offerings", "Observability & Monitoring"],
-        "reviewPrompts": ["What boundary and authorization assumptions need evidence?", "Which findings and changes trigger reassessment?"]
+        "capabilities": [
+          "Security & Compliance Posture Management",
+          "Government / Sovereign Cloud Offerings",
+          "Observability & Monitoring"
+        ],
+        "reviewPrompts": [
+          "What boundary and authorization assumptions need evidence?",
+          "Which findings and changes trigger reassessment?"
+        ]
       },
       {
         "id": "CM",
         "name": "Configuration Management",
         "applicability": "Treat infrastructure definitions, policies, baselines, approvals, drift findings, and changes as controlled artifacts.",
-        "capabilities": ["Infrastructure as Code & Policy as Code", "Landing Zone & Resource Governance", "DevOps / CI-CD Platform"],
-        "reviewPrompts": ["How are Terraform and native policy changes reviewed, approved, deployed, and recovered?", "How is drift identified against approved application and platform baselines?"]
+        "capabilities": [
+          "Infrastructure as Code & Policy as Code",
+          "Landing Zone & Resource Governance",
+          "DevOps / CI-CD Platform"
+        ],
+        "reviewPrompts": [
+          "How are Terraform and native policy changes reviewed, approved, deployed, and recovered?",
+          "How is drift identified against approved application and platform baselines?"
+        ]
       },
       {
         "id": "CP",
         "name": "Contingency Planning",
         "applicability": "Relate workload recovery objectives to backups, restore validation, regional recovery, migration rollback, and dependencies.",
-        "capabilities": ["Backup & Disaster Recovery", "Cloud Migration Tooling"],
-        "reviewPrompts": ["Which application recovery objectives are tested rather than assumed?", "How are recovery dependencies and restoration evidence protected?"]
+        "capabilities": [
+          "Backup & Disaster Recovery",
+          "Cloud Migration Tooling"
+        ],
+        "reviewPrompts": [
+          "Which application recovery objectives are tested rather than assumed?",
+          "How are recovery dependencies and restoration evidence protected?"
+        ]
       },
       {
         "id": "IA",
         "name": "Identification and Authentication",
         "applicability": "Design workforce, workload, service, and privileged identities together with key, secret, and certificate handling.",
-        "capabilities": ["Identity & Access Management", "Key, Secret & Certificate Management"],
-        "reviewPrompts": ["How are human and workload identities issued, authenticated, rotated, and revoked?", "Where are application secrets and cryptographic identities stored and audited?"]
+        "capabilities": [
+          "Identity & Access Management",
+          "Key, Secret & Certificate Management"
+        ],
+        "reviewPrompts": [
+          "How are human and workload identities issued, authenticated, rotated, and revoked?",
+          "Where are application secrets and cryptographic identities stored and audited?"
+        ]
       },
       {
         "id": "RA",
         "name": "Risk Assessment",
         "applicability": "Expose risks from public attack surface, vulnerable configuration, regulated data location, AI usage, and provider capability constraints.",
-        "capabilities": ["Security & Compliance Posture Management", "CDN & Edge Application Protection", "Generative AI / Foundation Models", "AI Agents & Tool Orchestration", "Vector Retrieval & RAG Knowledge Bases"],
-        "reviewPrompts": ["Which threats, data flows, and provider limitations materially affect the application?", "How are findings tracked through design and operational review?"]
+        "capabilities": [
+          "Security & Compliance Posture Management",
+          "CDN & Edge Application Protection",
+          "Generative AI / Foundation Models",
+          "AI Agents & Tool Orchestration",
+          "Vector Retrieval & RAG Knowledge Bases"
+        ],
+        "reviewPrompts": [
+          "Which threats, data flows, and provider limitations materially affect the application?",
+          "How are findings tracked through design and operational review?"
+        ]
       },
       {
         "id": "SA",
         "name": "System and Services Acquisition",
         "applicability": "Make cloud-service selection, platform standards, secure delivery, and infrastructure automation deliberate acquisition and engineering decisions.",
-        "capabilities": ["Landing Zone & Resource Governance", "Infrastructure as Code & Policy as Code", "DevOps / CI-CD Platform"],
-        "reviewPrompts": ["Which service and tooling requirements must be imposed before application delivery?", "What supply-chain and lifecycle evidence is required from pipelines and modules?"]
+        "capabilities": [
+          "Landing Zone & Resource Governance",
+          "Infrastructure as Code & Policy as Code",
+          "DevOps / CI-CD Platform"
+        ],
+        "reviewPrompts": [
+          "Which service and tooling requirements must be imposed before application delivery?",
+          "What supply-chain and lifecycle evidence is required from pipelines and modules?"
+        ]
       },
       {
         "id": "SC",
         "name": "System and Communications Protection",
         "applicability": "Plan segmentation, private access, encryption, key control, edge exposure, and trustworthy communications paths.",
-        "capabilities": ["Virtual Networking", "Private Connectivity & DNS", "Key, Secret & Certificate Management", "CDN & Edge Application Protection", "Vector Retrieval & RAG Knowledge Bases"],
-        "reviewPrompts": ["Where do trust boundaries, ingress, egress, and cryptographic protections exist?", "Which managed-service endpoints require private or inspected connectivity?"]
+        "capabilities": [
+          "Virtual Networking",
+          "Private Connectivity & DNS",
+          "Key, Secret & Certificate Management",
+          "CDN & Edge Application Protection",
+          "Vector Retrieval & RAG Knowledge Bases"
+        ],
+        "reviewPrompts": [
+          "Where do trust boundaries, ingress, egress, and cryptographic protections exist?",
+          "Which managed-service endpoints require private or inspected connectivity?"
+        ]
       },
       {
         "id": "SI",
         "name": "System and Information Integrity",
         "applicability": "Connect vulnerability and configuration findings with telemetry, incident visibility, and application integrity decisions.",
-        "capabilities": ["Security & Compliance Posture Management", "Observability & Monitoring", "Security Information & Event Management (SIEM)"],
-        "reviewPrompts": ["How are flaws, anomalous behavior, and integrity findings detected and acted on?", "Which application signals and cloud findings are correlated for response?"]
+        "capabilities": [
+          "Security & Compliance Posture Management",
+          "Observability & Monitoring",
+          "Security Information & Event Management (SIEM)"
+        ],
+        "reviewPrompts": [
+          "How are flaws, anomalous behavior, and integrity findings detected and acted on?",
+          "Which application signals and cloud findings are correlated for response?"
+        ]
       },
       {
         "id": "SR",
         "name": "Supply Chain Risk Management",
         "applicability": "Govern infrastructure modules, pipeline dependencies, artifact provenance, approved components, and deployment paths.",
-        "capabilities": ["Infrastructure as Code & Policy as Code", "DevOps / CI-CD Platform", "Landing Zone & Resource Governance"],
-        "reviewPrompts": ["How are Terraform modules, providers, actions, images, and dependencies approved and pinned?", "What evidence connects a reviewed change to the deployed application environment?"]
+        "capabilities": [
+          "Infrastructure as Code & Policy as Code",
+          "DevOps / CI-CD Platform",
+          "Landing Zone & Resource Governance"
+        ],
+        "reviewPrompts": [
+          "How are Terraform modules, providers, actions, images, and dependencies approved and pinned?",
+          "What evidence connects a reviewed change to the deployed application environment?"
+        ]
       }
     ]
   },
@@ -396,11 +530,15 @@
     {
       "capability": "Virtual Machines",
       "category": "Core Infrastructure",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "HYBRID_READY"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "HYBRID_READY"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Virtual machine services provide configurable IaaS compute. Compare instance families, processor architecture, licensing, host isolation, image operations, placement controls, and extension into hybrid or regulated environments.",
       "operationalConsiderations": "Patching overhead scales with fleet size. Reserved/committed pricing requires capacity planning discipline. Sole-tenant/dedicated options incur premium.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "sourceNotes": "Availability classifications identify documented product presence or limitations in regulated environments; instance families, extensions, isolation, migration paths, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -408,12 +546,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "EC2 GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/ec2/",
           "pricingUrl": "https://aws.amazon.com/ec2/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
-          "sourceNotes": "AWS documents Amazon EC2 in AWS GovCloud (US) and identifies material differences including purchasing, AMI/snapshot migration, instance screenshot, hibernation, and networking behavior. Availability is recorded as Limited; instance-family and feature parity remain unasserted.",
+          "sourceNotes": "AWS documents Amazon EC2 in AWS GovCloud (US) and identifies material differences including purchasing, AMI/snapshot migration, instance screenshot, hibernation, and networking behavior. Availability is recorded as Limited; instance-family and feature parity remain unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html: AWS documents multiple EC2 differences in AWS GovCloud, including purchasing, AMI/snapshot migration, instance screenshot, hibernation, and networking behavior. Core EC2 remains available, so the proposed lag is Moderate rather than Significant.",
           "tierNotes": {
             "Personal / Free": "t2.micro free 750 hrs/mo (12 months)",
             "Commercial / SMB": "T3, M6, C6 family; On-Demand, Reserved, Spot",
@@ -480,11 +618,15 @@
     {
       "capability": "Serverless Functions",
       "category": "Core Infrastructure",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event-driven compute differs by runtime packaging, trigger integrations, state-orchestration options, networking, scaling controls, and container portability. Evaluate those characteristics against the workload rather than assuming service equivalence.",
       "operationalConsiderations": "Cold start latency matters for latency-sensitive workloads. Debugging distributed serverless functions requires mature observability strategy. Cost can surprise at high invocation volume without concurrency controls.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-06-15",
       "sourceNotes": "Availability classifications identify documented runtime support or control-package scope; triggers, runtime versions, integrations, network controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -492,12 +634,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "Lambda GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/lambda/",
           "pricingUrl": "https://aws.amazon.com/lambda/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html",
-          "sourceNotes": "AWS documents Lambda in AWS GovCloud (US) and identifies unavailable function URLs, selected event sources and mappings, selected logging features, deployment-package KMS encryption, and some SnapStart runtimes. AWS also announced Lambda Managed Instances availability across most commercial Regions in June 2026; that commercial expansion does not establish GovCloud parity. Availability is recorded as Limited; parity remains unasserted.",
+          "sourceNotes": "AWS documents Lambda in AWS GovCloud (US) and identifies unavailable function URLs, selected event sources and mappings, selected logging features, deployment-package KMS encryption, and some SnapStart runtimes. AWS also announced Lambda Managed Instances availability across most commercial Regions in June 2026; that commercial expansion does not establish GovCloud parity. Availability is recorded as Limited; parity remains unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html: AWS documents several Lambda features unavailable in AWS GovCloud, including Function URLs, selected event-source features, JSON log formatting, KMS encryption for zip packages, SnapStart variants, and monitoring integrations. Core Lambda remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "1M requests/mo free (permanent)",
             "Commercial / SMB": "Lambda + API Gateway; Step Functions orchestration; evaluate Lambda Managed Instances for steady EC2-backed function workloads.",
@@ -564,11 +706,16 @@
     {
       "capability": "Identity & Access Management",
       "category": "Identity & Access",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Identity and access is a platform foundation. Compare workforce federation, workload identities, privileged administration, account or tenant hierarchy, policy inheritance, conditional access, and authorization boundaries across the mapped services.",
       "operationalConsiderations": "Misconfigured IAM is a common enterprise cloud security failure mode. Policy hierarchy, privileged access, federation, workload identity, and emergency access require provider-specific design and evidence. PIV/CAC integration must be validated for each selected provider and environment.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "sourceNotes": "Identity capability and regulated-environment support must be assessed feature by feature, including federation and privileged access requirements; no parity conclusion is made here.",
       "providers": {
         "aws": {
@@ -576,12 +723,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "IAM GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/iam/",
           "pricingUrl": "https://aws.amazon.com/iam/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-iam.html",
-          "sourceNotes": "AWS documents IAM in AWS GovCloud (US), and its GovCloud service inventory includes IAM Identity Center. IAM has documented GovCloud differences, including root-user, STS endpoint, cross-account delegation, and Access Analyzer policy-generation constraints; availability is recorded as Limited while parity remains unasserted.",
+          "sourceNotes": "AWS documents IAM in AWS GovCloud (US), and its GovCloud service inventory includes IAM Identity Center. IAM has documented GovCloud differences, including root-user, STS endpoint, cross-account delegation, and Access Analyzer policy-generation constraints; availability is recorded as Limited while parity remains unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-iam.html: AWS documents multiple IAM differences in AWS GovCloud, including no root-user console access, no AWS STS global endpoint, no cross-partition role delegation, different SAML endpoints, and no IAM Access Analyzer policy generation. Core IAM remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "IAM (free); IAM Identity Center (free)",
             "Commercial / SMB": "IAM + Identity Center + Cognito; SCP via Organizations",
@@ -648,11 +795,16 @@
     {
       "capability": "Object Storage",
       "category": "Storage",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Object storage supports data lakes, backup, static assets, exchange, and archival. Compare lifecycle policy, immutability, replication, encryption controls, event integration, analytics adjacency, data-residency options, and egress behavior.",
       "operationalConsiderations": "Egress costs can become substantial at scale. Lifecycle policies are essential for cost control. Object Lock / WORM is important for compliance. Bucket-level public access should be denied by default in enterprise.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-06-15",
       "sourceNotes": "Availability classifications identify documented mapped-service support; immutability, replication, cryptographic controls, event integration, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -660,12 +812,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "S3 GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/s3/",
           "pricingUrl": "https://aws.amazon.com/s3/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html",
-          "sourceNotes": "AWS documents Amazon S3 in AWS GovCloud (US) and identifies material limitations including cross-partition copies, MFA delete, Transfer Acceleration, Express One Zone, and some endpoint behavior. AWS also announced S3 Access Grants availability in the AWS European Sovereign Cloud (Germany) Region in June 2026. Availability is recorded as Limited; storage-feature parity remains unasserted.",
+          "sourceNotes": "AWS documents Amazon S3 in AWS GovCloud (US) and identifies material limitations including cross-partition copies, MFA delete, Transfer Acceleration, Express One Zone, and some endpoint behavior. AWS also announced S3 Access Grants availability in the AWS European Sovereign Cloud (Germany) Region in June 2026. Availability is recorded as Limited; storage-feature parity remains unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html: AWS documents multiple S3 differences in AWS GovCloud, including no direct bucket copy to or from another AWS Region, no MFA Delete, no Transfer Acceleration, no S3 Express One Zone, no S3 Tables replication, and no S3 Metadata. Core S3 remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "5 GB Standard free (12 months)",
             "Commercial / SMB": "Standard/IA/Glacier/Deep Archive; Intelligent-Tiering auto-moves",
@@ -732,11 +884,16 @@
     {
       "capability": "Managed Kubernetes",
       "category": "Core Infrastructure",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "HYBRID_READY", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "HYBRID_READY",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed Kubernetes reduces control-plane responsibility while retaining cluster design obligations. Compare identity and policy integration, networking, upgrade controls, managed node modes, fleet governance, and hybrid extension requirements.",
       "operationalConsiderations": "Kubernetes carries significant operational burden even in managed form. Dedicated platform engineering capability is recommended at enterprise scale. Networking complexity (CNI, service mesh, ingress) is a common friction point. Control plane costs vary significantly.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "sourceNotes": "Availability classifications identify documented managed-cluster support or limitations; add-ons, node modes, hybrid options, networking controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -744,12 +901,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "EKS GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/eks/",
           "pricingUrl": "https://aws.amazon.com/eks/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eks.html",
-          "sourceNotes": "AWS documents Amazon EKS in AWS GovCloud (US) and identifies unavailable EKS on Fargate, EKS Anywhere, Hybrid Nodes, Managed Service for Prometheus, and Mountpoint for S3 CSI add-on support. Availability is recorded as Limited; parity remains unasserted.",
+          "sourceNotes": "AWS documents Amazon EKS in AWS GovCloud (US) and identifies unavailable EKS on Fargate, EKS Anywhere, Hybrid Nodes, Managed Service for Prometheus, and Mountpoint for S3 CSI add-on support. Availability is recorded as Limited; parity remains unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eks.html: AWS documents EKS differences in AWS GovCloud, including no EKS on Fargate, Managed Service for Prometheus, S3 CSI driver add-on support, EKS Anywhere, or EKS Hybrid Nodes. Core EKS remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "No free tier; ECS control plane free",
             "Commercial / SMB": "EKS / ECS / App Runner; $0.10/hr cluster fee; Fargate or EC2 nodes",
@@ -816,11 +973,16 @@
     {
       "capability": "Relational Databases (Managed)",
       "category": "Databases",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed relational database choices differ by engine compatibility, licensing, high-availability and failover models, replication, backup recovery, migration path, global distribution, and portability constraints.",
       "operationalConsiderations": "Multi-region HA adds cost and complexity. Read replicas don't provide write HA. RDS Custom (AWS) and Managed Instance (Azure) support lift-and-shift for Oracle/SQL Server with less re-architecture. Cloud Spanner has unique pricing model that requires capacity planning.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "sourceNotes": "Availability classifications identify documented support for the mapped database products; engine versions, high availability, replication, migration paths, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -828,12 +990,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "RDS / Aurora GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/rds/",
           "pricingUrl": "https://aws.amazon.com/rds/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-rds.html",
-          "sourceNotes": "AWS documents Amazon RDS and Amazon Aurora in AWS GovCloud (US), with material differences including unavailable RDS Multi-AZ DB clusters and RDS Custom for SQL Server, restricted cross-partition replication and snapshot copy, and Aurora-specific feature limitations. Availability is recorded as Limited; engine and feature parity remain unasserted.",
+          "sourceNotes": "AWS documents Amazon RDS and Amazon Aurora in AWS GovCloud (US), with material differences including unavailable RDS Multi-AZ DB clusters and RDS Custom for SQL Server, restricted cross-partition replication and snapshot copy, and Aurora-specific feature limitations. Availability is recorded as Limited; engine and feature parity remain unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-rds.html: AWS documents RDS differences in AWS GovCloud, including unavailable Multi-AZ DB clusters, RDS Custom for SQL Server, cross-Region read replicas, DB snapshot copying, proactive recommendations, and zero-ETL integration. The mapped row includes RDS and the core managed database service remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "RDS t2.micro 750 hrs/mo free (12 months)",
             "Commercial / SMB": "RDS, Aurora, DynamoDB, ElastiCache; Aurora Serverless v2",
@@ -900,7 +1062,12 @@
     {
       "capability": "Generative AI / Foundation Models",
       "category": "AI / ML",
-      "tags": ["AI_NATIVE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE", "LOCK_IN_RISK"],
+      "tags": [
+        "AI_NATIVE",
+        "COMPLIANCE_RELEVANT",
+        "COST_SENSITIVE",
+        "LOCK_IN_RISK"
+      ],
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed foundation-model platforms differ by offered models, region availability, data-use commitments, grounding and retrieval integrations, evaluation tooling, customization options, safety controls, quotas, and regulated-workload support.",
       "operationalConsiderations": "Token costs scale rapidly with usage volume. Prompt engineering and retrieval-augmented generation (RAG) are operationally non-trivial. Data residency and model data retention policies differ significantly and require legal review for regulated workloads. Content filtering and guardrails are essential before enterprise deployment.",
@@ -984,7 +1151,12 @@
     {
       "capability": "Vector Retrieval & RAG Knowledge Bases",
       "category": "AI / ML",
-      "tags": ["AI_NATIVE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE", "LOCK_IN_RISK"],
+      "tags": [
+        "AI_NATIVE",
+        "COMPLIANCE_RELEVANT",
+        "COST_SENSITIVE",
+        "LOCK_IN_RISK"
+      ],
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Retrieval-augmented generation grounds model responses in governed enterprise data. Compare ingestion pipelines, supported vector stores, embedding choices, access-control propagation, citations, private networking, evaluation, and data lifecycle controls rather than assuming equivalent RAG behavior.",
       "operationalConsiderations": "Retrieval quality depends on content preparation, chunking, metadata, embeddings, ranking, and authorization trimming. Sensitive source material can leak through poor access design or prompt/tool behavior. Index refresh, query volume, storage, and embedding generation add ongoing cost.",
@@ -1068,7 +1240,13 @@
     {
       "capability": "AI Agents & Tool Orchestration",
       "category": "AI / ML",
-      "tags": ["AI_NATIVE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL", "COST_SENSITIVE", "LOCK_IN_RISK"],
+      "tags": [
+        "AI_NATIVE",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL",
+        "COST_SENSITIVE",
+        "LOCK_IN_RISK"
+      ],
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed AI-agent services orchestrate model reasoning with tools, APIs, knowledge sources, memory, and workflow controls. Compare identity delegation, tool authorization, human approval, action tracing, evaluation, guardrails, interoperability, and runtime isolation before adoption.",
       "operationalConsiderations": "Agents expand the blast radius of model errors because they can invoke systems and act on data. Require scoped service identities, least-privilege tools, approval gates for consequential operations, audit trails, testing against prompt injection, and clear rollback procedures.",
@@ -1152,7 +1330,11 @@
     {
       "capability": "Accelerated AI Compute & GPU Infrastructure",
       "category": "AI / ML",
-      "tags": ["AI_CAPABLE", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "tags": [
+        "AI_CAPABLE",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "GPU and accelerator-backed compute supports model training, fine-tuning, high-throughput inference, graphics, and scientific workloads outside fully managed model APIs. Compare accelerator families, memory, interconnect, availability zones, scheduling, container stacks, bare-metal options, quotas, and reservation models.",
       "operationalConsiderations": "Accelerator supply, quota, and utilization dominate cost and delivery risk. Architecture should plan capacity acquisition, image and driver management, orchestration, telemetry, data locality, failover, and a fallback path when a desired accelerator is unavailable.",
@@ -1236,7 +1418,13 @@
     {
       "capability": "Security Information & Event Management (SIEM)",
       "category": "Security & Compliance",
-      "tags": ["STANDARD", "AI_CAPABLE", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "tags": [
+        "STANDARD",
+        "AI_CAPABLE",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL"
+      ],
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "This row maps security-analytics approaches rather than identical single services: Microsoft Sentinel and Google Security Operations provide SIEM capabilities, while the AWS mapping combines findings aggregation with an analytics pattern. Compare ingestion, correlation, retention, case management, and investigation requirements.",
       "operationalConsiderations": "SIEM implementation requires dedicated security operations expertise. Log ingestion costs are a significant operational consideration at scale. Integration with identity systems and incident response workflows is essential. Cloud-native SIEMs reduce infrastructure overhead but increase vendor dependency.",
@@ -1317,11 +1505,15 @@
     {
       "capability": "Data Warehouse / Analytics Platform",
       "category": "Data & Analytics",
-      "tags": ["AI_CAPABLE", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "tags": [
+        "AI_CAPABLE",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "Analytics platforms differ in provisioning model, workload isolation, data-lake federation, BI and ML adjacency, query governance, sharing, encryption, and cost controls. Select against workload patterns and data-governance boundaries.",
       "operationalConsiderations": "Query costs in on-demand models can surprise without governance guardrails. Slot/reservation pricing requires capacity planning. Data egress for cross-cloud or on-prem data movement adds cost. Schema design for distributed analytics differs significantly from traditional RDBMS patterns.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-06-16",
       "sourceNotes": "Official regulated-environment documentation establishes selected AWS, Azure, and Google analytics-platform presence. Google documentation confirms BigQuery ML, Gemini in BigQuery, and generative AI functions, supporting the existing AI_CAPABLE classification for this analytics capability. Required query, sharing, governance, AI/ML-adjacent features, OCI Autonomous Data Warehouse support, and all commercial-to-regulated parity remain to be validated.",
       "providers": {
         "aws": {
@@ -1329,12 +1521,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "Amazon Redshift (AWS GovCloud US)",
-          "parityLag": "Unknown",
+          "parityLag": "Minor",
           "docsUrl": "https://docs.aws.amazon.com/redshift/",
           "pricingUrl": "https://aws.amazon.com/redshift/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-redshift.html",
-          "sourceNotes": "AWS documents Amazon Redshift in both AWS GovCloud (US) Regions and identifies environment-specific differences, including COPY restrictions and S3 export/import controls. Availability is recorded as Limited; required analytics features and parity remain unasserted.",
+          "sourceNotes": "AWS documents Amazon Redshift in both AWS GovCloud (US) Regions and identifies environment-specific differences, including COPY restrictions and S3 export/import controls. Availability is recorded as Limited; required analytics features and parity remain unasserted. parityLag verified 2026-06-16 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-redshift.html: AWS documents a narrow Redshift feature difference in AWS GovCloud along with SSL certificate-bundle handling. Core Redshift remains available and the documented feature gap is narrow, so the proposed lag is Minor.",
           "tierNotes": {
             "Personal / Free": "No Redshift free tier; Athena pay-per-query; Glue 1M obj free/mo",
             "Commercial / SMB": "Redshift + EMR + Glue + Kinesis + QuickSight; Lake Formation governance",
@@ -1401,7 +1593,12 @@
     {
       "capability": "API Management & Integration Gateway",
       "category": "Integration & Messaging",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "HYBRID_READY"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "API management services publish, secure, govern, observe, and version APIs for consumers and integration partners. Compare gateway policies, developer access, authentication, private exposure, protocol support, analytics, monetization needs, and lifecycle governance.",
       "operationalConsiderations": "An API gateway becomes a critical control point. Define ownership of API contracts, identity and secret handling, throttling, schema validation, audit logs, change compatibility, private network access, and incident response.",
@@ -1482,11 +1679,17 @@
     {
       "capability": "Managed File Transfer",
       "category": "Integration & Messaging",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "HYBRID_READY",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed file transfer covers protocol-driven exchange with partners, agencies, or legacy systems. The mapped services are not identical: AWS provides a managed transfer-family endpoint, Azure Blob supports SFTP-based object exchange, and Google Storage Transfer Service is oriented to scheduled data movement rather than hosted partner-facing SFTP.",
       "operationalConsiderations": "Identify required protocols, partner onboarding, identity model, malware scanning, retention, encryption, nonrepudiation, audit logging, file-size limits, retries, and operational ownership before choosing an exchange pattern.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-16",
       "sourceNotes": "This row deliberately exposes capability differences rather than implying a native managed-MFT equivalent on every provider. Official documentation establishes mapped transfer support in AWS GovCloud, Azure Government, Google Assured Workloads, and Oracle Integration U.S. Government Cloud, with each product boundary still requiring review.",
       "providers": {
         "aws": {
@@ -1494,12 +1697,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "AWS Transfer Family (AWS GovCloud US)",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html",
           "pricingUrl": "https://aws.amazon.com/aws-transfer-family/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-tf.html",
-          "sourceNotes": "AWS documents Transfer Family in AWS GovCloud (US) and identifies endpoint and migration limitations, including no FedRAMP authorization for server endpoints and non-migratable commercial servers. Availability is recorded as Limited; required exchange features and parity remain unasserted.",
+          "sourceNotes": "AWS documents Transfer Family in AWS GovCloud (US) and identifies endpoint and migration limitations, including no FedRAMP authorization for server endpoints and non-migratable commercial servers. Availability is recorded as Limited; required exchange features and parity remain unasserted. parityLag verified 2026-06-16 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-tf.html: AWS documents Transfer Family endpoint-type limitations and custom-hostname DNS considerations in AWS GovCloud. Because endpoint mode materially affects regulated transfer design while core transfer protocols remain available, the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Use managed transfer only where a file-exchange protocol requirement exists.",
             "Commercial / SMB": "Define SFTP, FTPS, or AS2 partners, authentication, storage, processing, monitoring, and retention.",
@@ -1566,7 +1769,11 @@
     {
       "capability": "DevOps / CI-CD Platform",
       "category": "Developer Platform",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed delivery platforms should be compared by source integration, build execution, deployment targets, artifact controls, identity boundaries, software-supply-chain safeguards, audit evidence, and regulated-environment support.",
       "operationalConsiderations": "Software supply-chain security, artifact provenance, secret protection, scanning, and auditable deployments increasingly affect regulated reviews. Government workloads require explicitly verified build environments and evidence paths; do not infer STIG or impact-level support from commercial CI/CD functionality. CodeCommit deprecation remains a migration concern for existing AWS investments.",
@@ -1647,7 +1854,12 @@
     {
       "capability": "Infrastructure as Code & Policy as Code",
       "category": "Developer Platform",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "HYBRID_READY"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Infrastructure as code and policy as code establish repeatable cloud configuration through reviewed source, modules, state, policy checks, and controlled deployment. Terraform is a common multi-cloud workflow; provider-native tools and APIs still determine supported resources and regulated-environment behavior.",
       "operationalConsiderations": "Treat Terraform state, providers, modules, policy definitions, execution identities, approvals, drift detection, and audit logs as sensitive controlled assets. Pin versions, scan plans and modules, restrict state access, and separate application deployment privileges from platform governance.",
@@ -1728,7 +1940,13 @@
     {
       "capability": "Virtual Networking",
       "category": "Networking",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "HYBRID_READY",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Virtual networks provide address spaces, routing boundaries, security segmentation, service access, and connectivity foundations for cloud workloads. Edge delivery and application protection are represented as a separate decision row.",
       "operationalConsiderations": "Centralize address planning and network policy ownership, avoid overlapping hybrid ranges, control routes and egress, test name resolution and connectivity failure modes, and review network data-transfer cost.",
@@ -1808,7 +2026,12 @@
     {
       "capability": "CDN & Edge Application Protection",
       "category": "Networking",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Edge delivery and web application protection affect latency, origin exposure, cache behavior, DDoS response, and web-layer security policy. They are separate from virtual network design even when both participate in an internet-facing architecture.",
       "operationalConsiderations": "Define caching and invalidation, origin authentication, TLS and certificate ownership, WAF policy, bot and DDoS response, logging, data-location constraints, false-positive handling, and request or egress cost monitoring.",
@@ -1888,23 +2111,28 @@
     {
       "capability": "Observability & Monitoring",
       "category": "Monitoring & Operations",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE", "COMPLIANCE_RELEVANT"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE",
+        "COMPLIANCE_RELEVANT"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed metrics, logging, tracing, alerting, and dashboards form the operational evidence layer for cloud workloads. A portable telemetry strategy can reduce migration friction while provider-native tools simplify service integration.",
       "operationalConsiderations": "Define log retention, sampling, alert ownership, and access controls early. Telemetry ingestion and retention can become material operating costs, especially when audit retention requirements apply.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-16",
       "providers": {
         "aws": {
           "service": "Amazon CloudWatch",
           "status": "GA",
           "govAvailability": "Partial",
           "govVariant": "Amazon CloudWatch Logs in AWS GovCloud (US)",
-          "parityLag": "Unknown",
+          "parityLag": "Minor",
           "docsUrl": "https://docs.aws.amazon.com/cloudwatch/",
           "pricingUrl": "https://aws.amazon.com/cloudwatch/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cwl.html",
-          "sourceNotes": "AWS documents CloudWatch Logs in AWS GovCloud (US) with feature differences; validate the required CloudWatch features beyond logs for the target workload.",
+          "sourceNotes": "AWS documents CloudWatch Logs in AWS GovCloud (US) with feature differences; validate the required CloudWatch features beyond logs for the target workload. parityLag verified 2026-06-16 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cwl.html: AWS documents CloudWatch Logs differences in AWS GovCloud, including HTTPS-only calls, no Live Tail, and no logGroupNamePattern support. The observed feature gap is narrower than the overall monitoring/logging surface, so the proposed lag is Minor.",
           "tierNotes": {
             "Personal / Free": "Start with essential metrics, alarms, and limited log retention.",
             "Commercial / SMB": "Standardize dashboards, alert routing, audit logs, and application telemetry.",
@@ -1970,7 +2198,11 @@
     {
       "capability": "Government / Sovereign Cloud Offerings",
       "category": "Government / Sovereign Cloud",
-      "tags": ["STANDARD", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "tags": [
+        "STANDARD",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Government and sovereign offerings use provider-specific tenancy, boundary, eligibility, and control models. A comparable workload design must start from the required control regime and supported service inventory rather than assume commercial-cloud equivalence.",
       "operationalConsiderations": "Confirm account eligibility, identity boundaries, region selection, authorized services, support access constraints, and procurement requirements before selecting a regulated cloud deployment model.",
@@ -2053,7 +2285,12 @@
     {
       "capability": "Hybrid & On-Premises Extension",
       "category": "Hybrid / Edge",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "HYBRID_READY", "COMPLIANCE_RELEVANT"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "HYBRID_READY",
+        "COMPLIANCE_RELEVANT"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Hybrid platforms extend management or provider infrastructure into customer-controlled locations. The options differ materially: managed hardware, connected management planes, and air-gapped deployments create different operating and compliance boundaries.",
       "operationalConsiderations": "Evaluate site readiness, network dependencies, patching ownership, disconnected operation, capacity planning, and data-boundary requirements before selecting an edge or on-premises extension.",
@@ -2133,7 +2370,11 @@
     {
       "capability": "Cloud Cost Management & FinOps",
       "category": "Cost Governance",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Cost-governance services expose usage, budgets, allocation, optimization guidance, and reporting needed for accountable cloud operation. Their effectiveness depends on organizational scopes, tagging discipline, ownership, and timely review.",
       "operationalConsiderations": "Establish tagging and account hierarchy early, assign budget and anomaly-review ownership, and treat recommendations as inputs to engineering decisions rather than automatic actions.",
@@ -2214,22 +2455,27 @@
     {
       "capability": "Event Streaming & Messaging",
       "category": "Integration & Messaging",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COST_SENSITIVE", "COMPLIANCE_RELEVANT"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE",
+        "COMPLIANCE_RELEVANT"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event services support decoupled integration through publish-subscribe, routing, and streaming patterns. Selection should be based on delivery semantics, ordering, retention, replay, throughput, and integration boundaries rather than service names alone.",
       "operationalConsiderations": "Document delivery guarantees and retry handling before implementation. Retention, dead-letter processing, replay, encryption, private connectivity, and audit access all affect operational and regulated workload design.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-16",
       "providers": {
         "aws": {
           "service": "Amazon EventBridge",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "parityLag": "Unknown",
+          "govAvailability": "Limited",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
           "pricingUrl": "https://aws.amazon.com/eventbridge/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
-          "sourceNotes": "AWS publishes GovCloud service information separately; validate EventBridge features, integrations, and quotas required by a regulated workload before asserting availability or parity.",
+          "sourceNotes": "AWS publishes GovCloud service information separately; validate EventBridge features, integrations, and quotas required by a regulated workload before asserting availability or parity. govAvailability verified 2026-06-16 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eventbridge.html: AWS documents Amazon EventBridge in AWS GovCloud and identifies unsupported features, including API Gateway event-bus targets, API destinations, and EventBridge Pipes. Availability is therefore proposed as Limited rather than Full. parityLag verified 2026-06-16 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eventbridge.html: AWS documents EventBridge differences in AWS GovCloud, including no API Gateway event-bus target, no API destinations, and no EventBridge Pipes. Core EventBridge remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Use simple event routing only where asynchronous integration improves the design.",
             "Commercial / SMB": "Establish event schemas, retries, dead-letter handling, and cost monitoring.",
@@ -2294,7 +2540,12 @@
     {
       "capability": "Security & Compliance Posture Management",
       "category": "Security & Compliance",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Posture-management services aggregate configuration findings, exposure signals, and security recommendations. This is distinct from SIEM: posture management focuses on resource state and control drift, while SIEM focuses on event collection and investigation workflows.",
       "operationalConsiderations": "Enabling a posture service is not equivalent to meeting a compliance requirement. Assign remediation ownership, define exception handling, connect findings to ticketing or response processes, and validate the standards or control mappings applicable to the workload.",
@@ -2374,11 +2625,15 @@
     {
       "capability": "ML Platform & Model Training",
       "category": "AI / ML",
-      "tags": ["AI_NATIVE", "ENTERPRISE_CORE", "COST_SENSITIVE"],
+      "tags": [
+        "AI_NATIVE",
+        "ENTERPRISE_CORE",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed machine-learning platforms support experiment execution, training jobs, model lifecycle workflows, and deployment operations. Selection depends on supported frameworks, accelerators, governance tooling, data integration, and deployment boundary requirements.",
       "operationalConsiderations": "Training compute can be expensive and data-intensive. Establish experiment tracking, model lineage, data access controls, evaluation criteria, cost controls, and approval workflows before operational deployment.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-16",
       "sourceNotes": "Official regulated-environment documentation establishes mapped ML platform presence for all four providers with material AWS limitations and control-package-scoped Google support; training features, accelerator scope, deployment lifecycle, and all parity remain to be validated.",
       "providers": {
         "aws": {
@@ -2386,12 +2641,12 @@
           "status": "GA",
           "govAvailability": "Limited",
           "govVariant": "Amazon SageMaker AI (AWS GovCloud US)",
-          "parityLag": "Unknown",
+          "parityLag": "Significant",
           "docsUrl": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html",
           "pricingUrl": "https://aws.amazon.com/sagemaker-ai/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-sagemaker.html",
-          "sourceNotes": "AWS documents SageMaker AI in AWS GovCloud (US) with a specified feature set and multiple unsupported capabilities, including Canvas and HyperPod. Availability is recorded as Limited; required training, governance, endpoint, accelerator, and parity needs remain to be checked.",
+          "sourceNotes": "AWS documents SageMaker AI in AWS GovCloud (US) with a specified feature set and multiple unsupported capabilities, including Canvas and HyperPod. Availability is recorded as Limited; required training, governance, endpoint, accelerator, and parity needs remain to be checked. parityLag verified 2026-06-16 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-sagemaker.html: AWS documents SageMaker AI in AWS GovCloud as a limited feature subset where API calls to unavailable features fail. Because the mapped capability is the ML platform and model-training surface, this is proposed as a Significant parity lag.",
           "tierNotes": {
             "Personal / Free": "Limit experiments and monitor compute and storage use closely.",
             "Commercial / SMB": "Standardize training jobs, model registry practice, endpoint controls, and cost review.",
@@ -2458,7 +2713,12 @@
     {
       "capability": "Cloud Migration Tooling",
       "category": "Hybrid / Edge",
-      "tags": ["STANDARD", "HYBRID_READY", "COST_SENSITIVE", "COMPLIANCE_RELEVANT"],
+      "tags": [
+        "STANDARD",
+        "HYBRID_READY",
+        "COST_SENSITIVE",
+        "COMPLIANCE_RELEVANT"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Migration tooling supports discovery, assessment, replication, cutover, and modernization planning for moving workloads into cloud environments. Product coverage differs for servers, databases, applications, storage, and offline transfer methods.",
       "operationalConsiderations": "Inventory dependencies and data classifications before migration. Rehearse cutover and rollback, measure network or transfer appliance constraints, validate identity and encryption boundaries, and budget for post-migration remediation.",
@@ -2538,22 +2798,28 @@
     {
       "capability": "Landing Zone & Resource Governance",
       "category": "Security & Compliance",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL", "HYBRID_READY"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL",
+        "HYBRID_READY"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cloud adoption begins with resource hierarchy, guardrails, identity boundaries, centralized logging, network foundations, and account or subscription provisioning. These are architecture patterns composed from provider services rather than one-to-one products.",
       "operationalConsiderations": "Establish ownership for platform guardrails before onboarding application teams. Version policy changes, preserve audit evidence, separate platform and workload responsibilities, and test exception handling and break-glass access.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "providers": {
         "aws": {
           "service": "AWS Control Tower + AWS Organizations",
           "status": "GA",
           "govAvailability": "Limited",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html",
           "pricingUrl": "https://aws.amazon.com/controltower/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-controltower.html",
-          "sourceNotes": "AWS documents deploying Control Tower landing zones in AWS GovCloud (US) with AWS Organizations, and states material differences including existing audit/log archive account enrollment, Account Factory creation limits, and unavailable controls. Availability is recorded as Limited; parity remains unasserted.",
+          "sourceNotes": "AWS documents deploying Control Tower landing zones in AWS GovCloud (US) with AWS Organizations, and states material differences including existing audit/log archive account enrollment, Account Factory creation limits, and unavailable controls. Availability is recorded as Limited; parity remains unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-controltower.html: AWS documents material Control Tower differences in AWS GovCloud, including removed Account Factory account creation, required pre-existing Audit and Log Archive accounts, affected control behavior, unavailable new-customer AFT deployment, unavailable resource control policy controls, and API permission differences. Core Control Tower remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Use account separation and basic identity hygiene before adding shared platform automation.",
             "Commercial / SMB": "Standardize account vending, logging, guardrails, and cost ownership.",
@@ -2618,22 +2884,27 @@
     {
       "capability": "Backup & Disaster Recovery",
       "category": "Storage",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Recovery architecture requires protected copies, retention policy, immutability controls, restoration testing, and workload-specific RPO and RTO decisions. Provider backup services protect different resource sets and should be evaluated against the actual recovery plan.",
       "operationalConsiderations": "A successful backup job is not proof of recoverability. Isolate backup administration, protect vaults against destructive changes, test restores and regional recovery, document key dependencies, and budget for storage and recovery data movement.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-06-15",
       "providers": {
         "aws": {
           "service": "AWS Backup",
           "status": "GA",
           "govAvailability": "Limited",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html",
           "pricingUrl": "https://aws.amazon.com/backup/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bkp.html",
-          "sourceNotes": "AWS documents AWS Backup in AWS GovCloud (US) and identifies unavailable restore testing and Backup Audit Manager multi-account, multi-Region reporting. AWS also announced AWS Backup support for Amazon EKS in the AWS European Sovereign Cloud (Germany) Region in June 2026. Availability is recorded as Limited; verify protected resource types and recovery controls, and do not infer parity.",
+          "sourceNotes": "AWS documents AWS Backup in AWS GovCloud (US) and identifies unavailable restore testing and Backup Audit Manager multi-account, multi-Region reporting. AWS also announced AWS Backup support for Amazon EKS in the AWS European Sovereign Cloud (Germany) Region in June 2026. Availability is recorded as Limited; verify protected resource types and recovery controls, and do not infer parity. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bkp.html: AWS documents AWS Backup differences in AWS GovCloud, including unavailable restore testing and unavailable Backup Audit Manager multi-account, multi-Region reporting. Core backup remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Protect essential data and prove at least one restore path.",
             "Commercial / SMB": "Define backup policy, retention, vault access, restoration testing, and cost review.",
@@ -2698,22 +2969,27 @@
     {
       "capability": "Key, Secret & Certificate Management",
       "category": "Security & Compliance",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "IDENTITY_CRITICAL"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "IDENTITY_CRITICAL"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cryptographic foundations separate keys, application secrets, and certificate lifecycle responsibilities while centralizing authorization, rotation policy, logging, and hardware-protection requirements. The mapped portfolios contain multiple related services.",
       "operationalConsiderations": "Define key ownership, separation of duties, recovery and deletion controls, rotation, application secret access, certificate renewal, audit collection, HSM requirements, and break-glass operations before workloads depend on the platform.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "providers": {
         "aws": {
           "service": "AWS KMS + Secrets Manager + AWS Certificate Manager",
           "status": "GA",
           "govAvailability": "Limited",
-          "parityLag": "Unknown",
+          "parityLag": "Minor",
           "docsUrl": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
           "pricingUrl": "https://aws.amazon.com/kms/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-services.html",
-          "sourceNotes": "AWS lists KMS, Secrets Manager, and Certificate Manager in AWS GovCloud (US). Its product guides identify KMS external key store TLS constraints and unavailable Secrets Manager Managed External Secrets, while ACM states no regional differences. Availability is recorded as Limited; parity remains unasserted.",
+          "sourceNotes": "AWS lists KMS, Secrets Manager, and Certificate Manager in AWS GovCloud (US). Its product guides identify KMS external key store TLS constraints and unavailable Secrets Manager Managed External Secrets, while ACM states no regional differences. Availability is recorded as Limited; parity remains unasserted. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-asm.html: AWS documents a Secrets Manager feature gap for Managed External Secrets in AWS GovCloud. Because the broader mapped portfolio still includes KMS, Secrets Manager, and Certificate Manager, and the documented gap is narrower than a broad platform absence, the proposed lag is Minor.",
           "tierNotes": {
             "Personal / Free": "Keep secrets out of code and define ownership for any customer-managed keys.",
             "Commercial / SMB": "Adopt centralized encryption keys, secret rotation, certificate renewal, and access logging.",
@@ -2778,22 +3054,28 @@
     {
       "capability": "Private Connectivity & DNS",
       "category": "Networking",
-      "tags": ["STANDARD", "ENTERPRISE_CORE", "COMPLIANCE_RELEVANT", "HYBRID_READY", "COST_SENSITIVE"],
+      "tags": [
+        "STANDARD",
+        "ENTERPRISE_CORE",
+        "COMPLIANCE_RELEVANT",
+        "HYBRID_READY",
+        "COST_SENSITIVE"
+      ],
       "aiClassification": "STANDARD",
       "architectureNotes": "Private access to managed services, hybrid network extension, and predictable DNS resolution are foundational controls for enterprise workload boundaries. The mapped portfolios combine endpoint, name-resolution, and dedicated-connectivity choices rather than identical products.",
       "operationalConsiderations": "Centralize address planning and DNS ownership, define egress inspection and failover, test private resolution paths, control endpoint approvals, monitor bandwidth and connection cost, and confirm every service endpoint required by regulated workloads.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-15",
       "providers": {
         "aws": {
           "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
           "status": "GA",
           "govAvailability": "Partial",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html",
           "pricingUrl": "https://aws.amazon.com/privatelink/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud-vpc-endpoints.html",
-          "sourceNotes": "AWS documents VPC endpoints powered by PrivateLink in AWS GovCloud (US), and its service inventory includes Direct Connect and Route 53. Availability is recorded as Partial for this combined portfolio; verify resolver, endpoint-service, and circuit requirements before selection.",
+          "sourceNotes": "AWS documents VPC endpoints powered by PrivateLink in AWS GovCloud (US), and its service inventory includes Direct Connect and Route 53. Availability is recorded as Partial for this combined portfolio; verify resolver, endpoint-service, and circuit requirements before selection. parityLag verified 2026-06-15 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-r53.html: AWS documents Route 53 differences in AWS GovCloud, including unavailable IP-based routing, DNS answer testing, Route 53 Resolver delegation, and private-zone latency/geolocation/geoproximity routing. Core DNS and private connectivity capabilities remain available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Avoid dedicated private connectivity unless workload exposure or hybrid needs justify it.",
             "Commercial / SMB": "Use private endpoints and governed DNS where service access or hybrid dependencies require them.",

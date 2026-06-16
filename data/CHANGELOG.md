@@ -4,6 +4,16 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-16 - v3.16.3 - Approved fact proposals
+- Applied 6 approved fact proposal(s) from `data/proposals/analytics-ops-integration-parity-2026-06-16.json` across 5 capability/provider record(s).
+- Updated proposal validation so approved proposal files validate against applied matrix values while unapproved files still validate against current matrix values.
+
+## 2026-06-15 - v3.16.2 - Approved fact proposals
+- Applied 5 approved fact proposal(s) from `data/proposals/enterprise-foundation-parity-2026-06-15.json` across 5 capability/provider record(s).
+
+## 2026-06-15 - v3.16.1 - Approved fact proposals
+- Applied 5 approved fact proposal(s) from `data/proposals/core-service-parity-2026-06-15.json` across 5 capability/provider record(s).
+
 ## 2026-06-16 - Task 5 analytics, operations, and integration proposals
 - Added a proposal-only batch for ML Platform & Model Training, Data Warehouse / Analytics Platform, Managed File Transfer, Observability & Monitoring, and Event Streaming & Messaging.
 - Proposed AWS parity values for SageMaker AI, Redshift, Transfer Family, CloudWatch Logs, and EventBridge using official AWS GovCloud service-difference documentation.

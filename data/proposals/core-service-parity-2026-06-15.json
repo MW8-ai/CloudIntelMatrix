@@ -3,7 +3,7 @@
     "schema": "cloudintel-proposals-v1",
     "description": "Task 5 core-service parity proposal batch. Proposals are human-review inputs only and do not edit matrix.json.",
     "generatedOn": "2026-06-15",
-    "approved": false,
+    "approved": true,
     "targetFields": [
       "parityLag"
     ],
