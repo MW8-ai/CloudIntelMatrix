@@ -1,0 +1,317 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Task 5 analytics, operations, and integration proposal batch. Proposals are human-review inputs only and do not edit matrix.json.",
+    "generatedOn": "2026-06-16",
+    "approved": false,
+    "targetFields": [
+      "govAvailability",
+      "parityLag"
+    ],
+    "matrixVersion": "3.16.0",
+    "matrixLastVerified": "2026-06-15",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change.",
+    "batchScope": "ML Platform & Model Training, Data Warehouse / Analytics Platform, Managed File Transfer, Observability & Monitoring, and Event Streaming & Messaging"
+  },
+  "workItems": [
+    {
+      "capability": "ML Platform & Model Training",
+      "category": "AI / ML",
+      "provider": "aws",
+      "service": "Amazon SageMaker AI",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/sagemaker/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-sagemaker.html",
+      "reason": "Analytics/ops/integration batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "category": "AI / ML",
+      "provider": "azure",
+      "service": "Azure Machine Learning",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "category": "AI / ML",
+      "provider": "gcp",
+      "service": "Vertex AI",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/vertex-ai/docs/start/introduction-unified-platform",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Data Science",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/data-science/using/data-science.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "category": "Data & Analytics",
+      "provider": "aws",
+      "service": "Amazon Redshift",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/redshift/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-redshift.html",
+      "reason": "Analytics/ops/integration batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "category": "Data & Analytics",
+      "provider": "azure",
+      "service": "Azure Synapse Analytics / Microsoft Fabric",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/synapse-analytics/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented for mapped analytics products, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "category": "Data & Analytics",
+      "provider": "gcp",
+      "service": "BigQuery",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/bigquery/docs/introduction",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "category": "Data & Analytics",
+      "provider": "oci",
+      "service": "OCI Autonomous Data Warehouse",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Regulated availability is not yet asserted for the mapped service, so no parity value is proposed."
+    },
+    {
+      "capability": "Managed File Transfer",
+      "category": "Integration & Messaging",
+      "provider": "aws",
+      "service": "AWS Transfer Family",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-tf.html",
+      "reason": "Analytics/ops/integration batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Managed File Transfer",
+      "category": "Integration & Messaging",
+      "provider": "azure",
+      "service": "Azure Blob Storage SFTP",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/storage/blobs/secure-file-transfer-protocol-support",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Managed File Transfer",
+      "category": "Integration & Messaging",
+      "provider": "gcp",
+      "service": "Storage Transfer Service",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/storage-transfer/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Managed File Transfer",
+      "category": "Integration & Messaging",
+      "provider": "oci",
+      "service": "Oracle Integration File Server",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/integrations-user/files-oci-integration.html",
+      "govDocsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/oracle-integration-gov/using-oracle-integration-3-us-government-cloud.pdf",
+      "reason": "Government availability is documented with limitations, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "category": "Monitoring & Operations",
+      "provider": "aws",
+      "service": "Amazon CloudWatch + X-Ray",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cwl.html",
+      "reason": "Analytics/ops/integration batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "category": "Monitoring & Operations",
+      "provider": "azure",
+      "service": "Azure Monitor",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "category": "Monitoring & Operations",
+      "provider": "gcp",
+      "service": "Cloud Monitoring + Cloud Logging",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/monitoring/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Control-package availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "category": "Monitoring & Operations",
+      "provider": "oci",
+      "service": "OCI Monitoring + Logging",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Monitoring/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "aws",
+      "service": "Amazon EventBridge",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eventbridge.html",
+      "reason": "Analytics/ops/integration batch review for documented GovCloud availability with feature differences."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "aws",
+      "service": "Amazon EventBridge",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eventbridge.html",
+      "reason": "Analytics/ops/integration batch review for documented commercial-to-GovCloud feature differences."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "azure",
+      "service": "Azure Event Grid",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/event-grid/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Regulated availability is not yet asserted for the mapped service, so no parity value is proposed."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "gcp",
+      "service": "Pub/Sub",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/pubsub/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability is not yet asserted for the mapped service, so no parity value is proposed."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "oci",
+      "service": "OCI Streaming / Queue",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Streaming/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Government endpoint availability is documented, but this batch did not identify an official source establishing a specific parity lag value."
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Significant",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-sagemaker.html",
+      "sourceQuote": "Only the following features are available.",
+      "rationale": "AWS documents SageMaker AI in AWS GovCloud as a limited feature subset where API calls to unavailable features fail. Because the mapped capability is the ML platform and model-training surface, this is proposed as a Significant parity lag.",
+      "proposedOn": "2026-06-16"
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Minor",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-redshift.html",
+      "sourceQuote": "The COPY EXPLICIT_IDS parameter is not available.",
+      "rationale": "AWS documents a narrow Redshift feature difference in AWS GovCloud along with SSL certificate-bundle handling. Core Redshift remains available and the documented feature gap is narrow, so the proposed lag is Minor.",
+      "proposedOn": "2026-06-16"
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-tf.html",
+      "sourceQuote": "PUBLIC and VPC_ENDPOINT endpoint types are not supported.",
+      "rationale": "AWS documents Transfer Family endpoint-type limitations and custom-hostname DNS considerations in AWS GovCloud. Because endpoint mode materially affects regulated transfer design while core transfer protocols remain available, the proposed lag is Moderate.",
+      "proposedOn": "2026-06-16"
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Minor",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cwl.html",
+      "sourceQuote": "The Live Tail feature is not available.",
+      "rationale": "AWS documents CloudWatch Logs differences in AWS GovCloud, including HTTPS-only calls, no Live Tail, and no logGroupNamePattern support. The observed feature gap is narrower than the overall monitoring/logging surface, so the proposed lag is Minor.",
+      "proposedOn": "2026-06-16"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "aws",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eventbridge.html",
+      "sourceQuote": "EventBridge Pipes is not supported.",
+      "rationale": "AWS documents Amazon EventBridge in AWS GovCloud and identifies unsupported features, including API Gateway event-bus targets, API destinations, and EventBridge Pipes. Availability is therefore proposed as Limited rather than Full.",
+      "proposedOn": "2026-06-16"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eventbridge.html",
+      "sourceQuote": "API destinations are not supported.",
+      "rationale": "AWS documents EventBridge differences in AWS GovCloud, including no API Gateway event-bus target, no API destinations, and no EventBridge Pipes. Core EventBridge remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-16"
+    }
+  ]
+}
