@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-16 - Client XLSX export dependency removal
+- Removed the vulnerable client-side `xlsx` package and replaced per-view XLSX downloads with a local minimal OOXML workbook writer.
+- Preserved CSV, XLSX, and print/PDF export controls while reducing the production bundle size and clearing npm audit findings.
+
 ## 2026-06-16 - Task 5 analytics, operations, and integration proposals
 - Added a proposal-only batch for ML Platform & Model Training, Data Warehouse / Analytics Platform, Managed File Transfer, Observability & Monitoring, and Event Streaming & Messaging.
 - Proposed AWS parity values for SageMaker AI, Redshift, Transfer Family, CloudWatch Logs, and EventBridge using official AWS GovCloud service-difference documentation.
