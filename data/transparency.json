@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Point-in-time state AI governance and transparency record. Populated entries must cite official state sources; Unknown rows are launch scaffolding for future official-source review.",
-    "last_verified": "2026-06-15",
+    "last_verified": "2026-06-23",
     "scopeNote": "Planning and reference aid only. Entries summarize official state public records located for this project; they do not determine legal applicability, compliance status, or whether an agency has fully disclosed every AI use.",
     "federalContext": {
       "title": "Ensuring a National Policy Framework for Artificial Intelligence",
@@ -60,13 +60,13 @@
     {
       "state": "CA",
       "stateName": "California",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order N-5-26: Trusted AI Procurement",
+      "citation": "Executive Department, State of California, Executive Order N-5-26",
+      "status": "Active",
+      "summary": "California directs state procurement and technology agencies to recommend AI vendor certifications, share responsible AI procurement and adoption practices, expand vetted GenAI access and training for state workers, update the State Digital Strategy, pilot AI-supported government-service access, publish a data minimization toolkit, and issue watermarking guidance.",
+      "url": "https://www.gov.ca.gov/wp-content/uploads/2026/03/3.30-FINAL-Trusted-AI-Procurement-EO-N-5-26.pdf",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "CO",
@@ -82,13 +82,13 @@
     {
       "state": "CT",
       "stateName": "Connecticut",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State law",
+      "title": "Public Act No. 23-16: Artificial Intelligence, Automated Decision-Making and Personal Data Privacy",
+      "citation": "Connecticut Public Act No. 23-16",
+      "status": "Active",
+      "summary": "Connecticut requires executive-branch and judicial-branch inventories of AI systems, public posting of those inventories, policies and procedures for AI development, procurement, implementation, use and ongoing assessment, and impact assessments before covered AI systems are implemented.",
+      "url": "https://www.cga.ct.gov/2023/act/Pa/pdf/2023PA-00016-R00SB-01103-PA.PDF",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "DE",
@@ -236,13 +236,13 @@
     {
       "state": "MD",
       "stateName": "Maryland",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Catalyzing the Responsible and Productive Use of Artificial Intelligence in Maryland State Government",
+      "citation": "Governor of Maryland, Artificial Intelligence Executive Order",
+      "status": "Active",
+      "summary": "Maryland establishes principles for AI use in state agencies, including fairness and equity, innovation, privacy, safety, transparency, accountability, and human-centered government service. The order establishes an AI Subcabinet to develop and implement a comprehensive AI action plan and guardrails for agency use.",
+      "url": "https://governor.maryland.gov/media/741",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "MA",
@@ -269,13 +269,13 @@
     {
       "state": "MN",
       "stateName": "Minnesota",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State standard",
+      "title": "Public Artificial Intelligence Services Security Standard",
+      "citation": "Minnesota IT Services, Public Artificial Intelligence Services Security Standard",
+      "status": "Active",
+      "summary": "Minnesota's AI security standard guides responsible use of public AI services by state employees and applies to employees, contractors, and third parties who develop, deploy, or use AI systems and applications within state government. It focuses on secure use, productivity, and protection of private, sensitive, or protected data.",
+      "url": "https://mn.gov/mnit/government/policies/security/ai-standard/",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "MS",
@@ -368,13 +368,13 @@
     {
       "state": "NY",
       "stateName": "New York",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State policy",
+      "title": "Acceptable Use of Artificial Intelligence Technologies",
+      "citation": "New York State Office of Information Technology Services Policy NYS-P25-001",
+      "status": "Active",
+      "summary": "New York's acceptable-use policy applies to state entity AI systems that could directly impact the public. It requires leadership approval before adopting new AI systems, identification of an information owner, human oversight for public-impacting decisions, documentation of AI-supported decisions and methods, and periodic assessment for reliability, safety, and fairness.",
+      "url": "https://its.ny.gov/acceptable-use-artificial-intelligence-technologies",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "NC",
@@ -434,13 +434,13 @@
     {
       "state": "PA",
       "stateName": "Pennsylvania",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order 2023-19: Expanding and Governing the Use of Generative Artificial Intelligence Technologies Within the Commonwealth of Pennsylvania",
+      "citation": "Commonwealth of Pennsylvania Executive Order 2023-19",
+      "status": "Active",
+      "summary": "Pennsylvania establishes a Generative AI Governing Board and statewide governance values for agency use of generative AI. The order directs responsive and responsible standards intended to prevent generative AI use from enabling activities that violate Commonwealth or federal law.",
+      "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/oa/documents/policies/eo/2023-19.pdf",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "RI",
@@ -489,24 +489,24 @@
     {
       "state": "TX",
       "stateName": "Texas",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State law",
+      "title": "Texas Responsible Artificial Intelligence Governance Act",
+      "citation": "Texas House Bill 149, 89th Legislature, Regular Session",
+      "status": "Active",
+      "summary": "Texas establishes a regulatory framework for AI systems, including prohibited uses, disclosure and governance requirements, enforcement authority, civil penalties, and a state artificial intelligence council. The enrolled act became effective January 1, 2026.",
+      "url": "https://capitol.texas.gov/tlodocs/89R/billtext/html/HB00149F.htm",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "UT",
       "stateName": "Utah",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State law",
+      "title": "Artificial Intelligence Policy Act",
+      "citation": "Utah Code Title 13, Chapter 72",
+      "status": "Active",
+      "summary": "Utah creates an Office of Artificial Intelligence Policy and Artificial Intelligence Learning Laboratory Program to study AI risks, benefits, impacts, and policy implications, support consumer education, and allow regulatory mitigation agreements for participants using or seeking to use AI technology in the state.",
+      "url": "https://le.utah.gov/xcode/Title13/Chapter72/C13-72_2024050120240501.pdf",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "VT",
@@ -533,13 +533,13 @@
     {
       "state": "WA",
       "stateName": "Washington",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order 24-01: Artificial Intelligence",
+      "citation": "State of Washington Executive Order 24-01",
+      "status": "Active",
+      "summary": "Washington directs state technology and enterprise services agencies to identify potential generative AI initiatives, create pilot infrastructure, issue public-sector procurement, use, and monitoring guidelines, require NIST AI RMF-aligned governance certification for high-risk generative AI vendors, and develop training for state government workers.",
+      "url": "https://governor.wa.gov/sites/default/files/exe_order/24-01%20-%20Artificial%20Intelligence%20%28tmp%29.pdf",
+      "lastVerified": "2026-06-23"
     },
     {
       "state": "WV",
