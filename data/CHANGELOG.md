@@ -8,6 +8,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 - Applied 6 approved fact proposal(s) from `data/proposals/analytics-ops-integration-parity-2026-06-16.json` across 5 capability/provider record(s).
 - Updated proposal validation so approved proposal files validate against applied matrix values while unapproved files still validate against current matrix values.
 
+## 2026-06-16 - Client XLSX export dependency removal
+- Removed the vulnerable client-side `xlsx` package and replaced per-view XLSX downloads with a local minimal OOXML workbook writer.
+- Preserved CSV, XLSX, and print/PDF export controls while reducing the production bundle size and clearing npm audit findings.
+
 ## 2026-06-15 - v3.16.2 - Approved fact proposals
 - Applied 5 approved fact proposal(s) from `data/proposals/enterprise-foundation-parity-2026-06-15.json` across 5 capability/provider record(s).
 
