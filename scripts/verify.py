@@ -877,16 +877,32 @@ def is_azure_pricing_url(url):
     return parsed.netloc.lower() == "azure.microsoft.com" and "/pricing" in parsed.path.lower()
 
 
+def open_link(url, method):
+    request = urllib.request.Request(url, method=method, headers={"User-Agent": "CloudIntelMatrix-verify/3.0"})
+    return urllib.request.urlopen(request, timeout=10)
+
+
 def check_link(url, label, defer_timeout_warning=False):
     if not url:
         return None
     try:
-        request = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "CloudIntelMatrix-verify/3.0"})
-        with urllib.request.urlopen(request, timeout=10) as response:
+        with open_link(url, "HEAD") as response:
             if response.status >= 400:
                 warn(f"HTTP {response.status}: {label} - {url}")
     except urllib.error.HTTPError as exc:
-        if exc.code not in (403, 405):
+        if exc.code in (403, 404, 405):
+            try:
+                with open_link(url, "GET") as response:
+                    if response.status >= 400:
+                        warn(f"HTTP {response.status}: {label} - {url}")
+            except urllib.error.HTTPError as get_exc:
+                if get_exc.code not in (403, 405):
+                    warn(f"HTTP {get_exc.code}: {label} - {url}")
+            except Exception as get_exc:
+                if defer_timeout_warning and is_timeout_error(get_exc):
+                    return "timeout"
+                warn(f"Could not verify {label}: {get_exc}")
+        else:
             warn(f"HTTP {exc.code}: {label} - {url}")
     except Exception as exc:
         if defer_timeout_warning and is_timeout_error(exc):

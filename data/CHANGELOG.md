@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-23 - Link-check cadence hygiene
+- Updated the public link checker to retry with GET when a source returns a method-sensitive HEAD response, reducing false warnings for official source pages that are reachable in a browser.
+
 ## 2026-06-23 - v3.16.4 - Approved fact proposals
 - Applied 22 approved fact proposal(s) from `data/proposals/regulated-availability-cleanup-2026-06-23.json` across 15 capability/provider record(s).
 
