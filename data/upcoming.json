@@ -1,9 +1,37 @@
 {
   "_meta": {
     "description": "Announced, preview, or upcoming changes. Removed and promoted to matrix.json when GA. Official sources only.",
-    "last_reviewed": "2026-06-14"
+    "last_reviewed": "2026-06-23"
   },
   "upcoming": [
+    {
+      "id": "aws-transform-fsx-ontap-preview",
+      "provider": "aws",
+      "category": "Hybrid / Edge",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "AWS Transform - FSx for NetApp ONTAP migration preview",
+      "detail": "AWS announced a public preview storage-migration capability in AWS Transform for migrating block storage workloads from on-premises or cloud sources to Amazon FSx for NetApp ONTAP, in addition to Amazon EBS. Track because the matrix currently maps AWS migration primarily through AWS Application Migration Service, and this preview may affect the cloud-migration tooling row when it reaches GA.",
+      "status": "preview",
+      "announced": "2026-06-16",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-transform-vmware-fsx-for-ontap-preview/",
+      "verified": true
+    },
+    {
+      "id": "azure-legacy-blob-gpv1-retirement",
+      "provider": "azure",
+      "category": "Storage",
+      "tier": "Enterprise",
+      "type": "deprecation_notice",
+      "title": "Azure legacy Blob and GPv1 storage account retirement",
+      "detail": "Microsoft documents retirement of legacy Blob storage account types and General Purpose v1 storage accounts, with new legacy account creation disabled in September 2026 and full retirement or auto-migration to GPv2 in October 2026. Track because the matrix maps Azure object storage as Azure Blob Storage, and older account types may require migration planning; this does not change Azure Blob Storage GA status.",
+      "status": "deprecated",
+      "announced": "2025-09",
+      "expected_ga": "2026-10",
+      "source": "https://learn.microsoft.com/en-us/azure/storage/common/legacy-blob-storage-account-migration-overview",
+      "verified": true
+    },
     {
       "id": "aws-finops-agent-preview",
       "provider": "aws",

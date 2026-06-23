@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-23 - Issue #44 update-review triage
+- Added `upcoming.json` tracking entries for AWS Transform FSx for NetApp ONTAP migration preview and Azure legacy Blob / GPv1 storage-account retirement using official provider sources.
+- Left GA feature announcements and non-mapped retirements from issue #44 out of `matrix.json`; any future matrix fact changes still require proposal review.
+
 ## 2026-06-23 - Fact proposal workflow issue fallback
 - Updated the scheduled fact-proposal workflow to publish generated worklist branches and open a review issue instead of failing when GitHub Actions cannot create pull requests.
 
