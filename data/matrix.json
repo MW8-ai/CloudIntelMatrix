@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.16.3",
+    "version": "3.16.4",
     "schema": "capability-v1",
-    "last_verified": "2026-06-16",
+    "last_verified": "2026-06-23",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
     "providers": [
       "aws",
@@ -1428,15 +1428,15 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "This row maps security-analytics approaches rather than identical single services: Microsoft Sentinel and Google Security Operations provide SIEM capabilities, while the AWS mapping combines findings aggregation with an analytics pattern. Compare ingestion, correlation, retention, case management, and investigation requirements.",
       "operationalConsiderations": "SIEM implementation requires dedicated security operations expertise. Log ingestion costs are a significant operational consideration at scale. Integration with identity systems and incident response workflows is essential. Cloud-native SIEMs reduce infrastructure overhead but increase vendor dependency.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-23",
       "sourceNotes": "The mapped security-analytics approaches are not functional equivalents; availability and parity claims require confirmation for each component used in a regulated design.",
       "providers": {
         "aws": {
           "service": "AWS Security Hub + Amazon OpenSearch (SIEM pattern)",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Limited",
           "govVariant": "Security Hub GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/securityhub/",
           "pricingUrl": "https://aws.amazon.com/security-hub/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
@@ -1446,7 +1446,8 @@
             "Commercial / SMB": "Security Hub + GuardDuty + Detective + CloudTrail",
             "Enterprise": "Security Lake; Detective; AWS Config; CloudTrail; CloudHSM; FIPS 140-2/3 endpoints",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html: AWS documents Security Hub in AWS GovCloud and lists unavailable integrations, console features, plans, and related CSPM/Inspector differences. Because the mapped SIEM row includes Security Hub as a SIEM pattern, availability is proposed as Limited. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html: AWS documents multiple Security Hub differences in AWS GovCloud, including unsupported integrations, unavailable usage/cost pages, no Extended Plan, and related CSPM/Inspector differences. Core Security Hub remains available, so the proposed lag is Moderate."
         },
         "azure": {
           "service": "Microsoft Sentinel",
@@ -1602,19 +1603,19 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "API management services publish, secure, govern, observe, and version APIs for consumers and integration partners. Compare gateway policies, developer access, authentication, private exposure, protocol support, analytics, monetization needs, and lifecycle governance.",
       "operationalConsiderations": "An API gateway becomes a critical control point. Define ownership of API contracts, identity and secret handling, throttling, schema validation, audit logs, change compatibility, private network access, and incident response.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-23",
       "sourceNotes": "This row now compares API management services. Managed file transfer is represented separately because protocol-driven file exchange is a different architecture decision.",
       "providers": {
         "aws": {
           "service": "Amazon API Gateway",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "parityLag": "Unknown",
+          "govAvailability": "Limited",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html",
           "pricingUrl": "https://aws.amazon.com/api-gateway/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
-          "sourceNotes": "Validate required API Gateway endpoint types, integrations, authorizers, and AWS GovCloud support before selecting it for regulated API exposure.",
+          "sourceNotes": "Validate required API Gateway endpoint types, integrations, authorizers, and AWS GovCloud support before selecting it for regulated API exposure. govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-abp.html: AWS documents Amazon API Gateway in AWS GovCloud and lists unavailable API Gateway features, so availability is proposed as Limited rather than Full. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-abp.html: AWS documents multiple API Gateway differences in AWS GovCloud, including unavailable portals, edge-optimized APIs, some HTTP API private integrations, and selected TLS options. Core API Gateway remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Use an API gateway only where a managed public or private API surface is needed.",
             "Commercial / SMB": "Standardize authentication, throttling, versioning, logs, and backend integration policy.",
@@ -1625,13 +1626,13 @@
         "azure": {
           "service": "Azure API Management",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "parityLag": "Unknown",
+          "govAvailability": "Limited",
+          "parityLag": "Minor",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/api-management/",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/api-management/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Validate the API Management tier, gateway modes, private networking, policy features, and Azure Government availability for the target design.",
+          "sourceNotes": "Validate the API Management tier, gateway modes, private networking, policy features, and Azure Government availability for the target design. govAvailability verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft documents API Management endpoints and a specific Azure Government feature gap for API Management. Availability is proposed as Limited rather than Full. parityLag verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft lists Azure AD B2C integration as the API Management feature currently unavailable in Azure Government. Because the documented API Management gap is narrow, the proposed lag is Minor.",
           "tierNotes": {
             "Personal / Free": "Use managed API exposure only where an application has stable consumer interfaces.",
             "Commercial / SMB": "Standardize products, policies, identities, versioning, monitoring, and backend access.",
@@ -1642,13 +1643,13 @@
         "gcp": {
           "service": "Apigee",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.cloud.google.com/apigee/docs/api-platform/get-started/what-apigee",
           "pricingUrl": "https://cloud.google.com/apigee/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Confirm Apigee deployment model, network attachment, API product features, and Assured Workloads control-package support before regulated selection.",
+          "sourceNotes": "Confirm Apigee deployment model, network attachment, API product features, and Assured Workloads control-package support before regulated selection. govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Apigee as an Assured Workloads supported product for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
           "tierNotes": {
             "Personal / Free": "Use API management only after a stable API surface and consumer need are defined.",
             "Commercial / SMB": "Standardize proxies, products, authentication, quotas, monitoring, and backend integrations.",
@@ -1777,15 +1778,15 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed delivery platforms should be compared by source integration, build execution, deployment targets, artifact controls, identity boundaries, software-supply-chain safeguards, audit evidence, and regulated-environment support.",
       "operationalConsiderations": "Software supply-chain security, artifact provenance, secret protection, scanning, and auditable deployments increasingly affect regulated reviews. Government workloads require explicitly verified build environments and evidence paths; do not infer STIG or impact-level support from commercial CI/CD functionality. CodeCommit deprecation remains a migration concern for existing AWS investments.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-23",
       "sourceNotes": "Delivery-service availability and supply-chain controls must be checked in the selected regulated environment; this row makes no cross-provider parity claim.",
       "providers": {
         "aws": {
           "service": "AWS CodePipeline / CodeBuild",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Limited",
           "govVariant": "CodePipeline / CodeBuild GovCloud",
-          "parityLag": "Unknown",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/codepipeline/",
           "pricingUrl": "https://aws.amazon.com/codepipeline/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
@@ -1795,7 +1796,8 @@
             "Commercial / SMB": "CodeBuild + CodeDeploy + CodePipeline + CodeArtifact + CodeGuru",
             "Enterprise": "CodeCatalyst; CodeGuru Security; Inspector SBOM export; Binary Authorization",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html: AWS documents CodePipeline in AWS GovCloud and lists unavailable source, build, test, deploy, invoke, and cross-region action features. The mapped row includes CodePipeline, so availability is proposed as Limited. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html: AWS documents CodePipeline differences in AWS GovCloud, including unavailable custom actions, batch-build action support, several deploy and invoke actions, and cross-region actions. Core CI/CD remains available, so the proposed lag is Moderate."
         },
         "azure": {
           "service": "Azure DevOps + GitHub Enterprise",
@@ -1817,7 +1819,7 @@
         "gcp": {
           "service": "Cloud Build + Cloud Deploy",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "govVariant": "Cloud Build (Assured Workloads)",
           "parityLag": "Unknown",
           "docsUrl": "https://cloud.google.com/build/docs",
@@ -1829,7 +1831,8 @@
             "Commercial / SMB": "Cloud Build + Cloud Deploy + Artifact Registry; GitHub Actions integration; Skaffold",
             "Enterprise": "Cloud Build Enterprise; Cloud Deploy multi-target; Binary Authorization; SBOM generation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Cloud Build and Cloud Deploy as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial."
         },
         "oci": {
           "service": "OCI DevOps",
@@ -2035,7 +2038,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Edge delivery and web application protection affect latency, origin exposure, cache behavior, DDoS response, and web-layer security policy. They are separate from virtual network design even when both participate in an internet-facing architecture.",
       "operationalConsiderations": "Define caching and invalidation, origin authentication, TLS and certificate ownership, WAF policy, bot and DDoS response, logging, data-location constraints, false-positive handling, and request or egress cost monitoring.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "Amazon CloudFront + AWS WAF",
@@ -2057,13 +2060,13 @@
         "azure": {
           "service": "Azure Front Door + Web Application Firewall",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "parityLag": "Unknown",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/frontdoor/front-door-overview",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/frontdoor/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Front Door and WAF tier capabilities should be validated together; confirm service suitability and Azure Government availability before using an edge pattern for regulated data.",
+          "sourceNotes": "Front Door and WAF tier capabilities should be validated together; confirm service suitability and Azure Government availability before using an edge pattern for regulated data. govAvailability verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft documents Azure Front Door Standard and Premium tiers as generally available in two Azure Government regions. Because the mapped row combines Front Door and WAF and the source does not establish all-region or full-feature parity, availability is proposed as Partial.",
           "tierNotes": {
             "Personal / Free": "Adopt edge delivery only where a public application benefits from it.",
             "Commercial / SMB": "Define routes, origins, caching, TLS, WAF policy, monitoring, and cost ownership.",
@@ -2074,13 +2077,13 @@
         "gcp": {
           "service": "Cloud CDN + Cloud Armor",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.cloud.google.com/cdn/docs/overview",
           "pricingUrl": "https://cloud.google.com/cdn/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Cloud CDN and Cloud Armor are separate services that combine for edge delivery and protection; confirm target services, locations, logging, and Assured Workloads control-package constraints.",
+          "sourceNotes": "Cloud CDN and Cloud Armor are separate services that combine for edge delivery and protection; confirm target services, locations, logging, and Assured Workloads control-package constraints. govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Cloud CDN and Google Cloud Armor as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
           "tierNotes": {
             "Personal / Free": "Use CDN and edge controls only for an exposed workload with a clear benefit.",
             "Commercial / SMB": "Define load-balancer origins, cache behavior, certificates, Armor rules, telemetry, and spend.",
@@ -2120,7 +2123,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed metrics, logging, tracing, alerting, and dashboards form the operational evidence layer for cloud workloads. A portable telemetry strategy can reduce migration friction while provider-native tools simplify service integration.",
       "operationalConsiderations": "Define log retention, sampling, alert ownership, and access controls early. Telemetry ingestion and retention can become material operating costs, especially when audit retention requirements apply.",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "Amazon CloudWatch",
@@ -2144,12 +2147,12 @@
           "service": "Azure Monitor",
           "status": "GA",
           "govAvailability": "Full",
-          "parityLag": "Unknown",
+          "parityLag": "None",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/monitor/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Microsoft's Azure Government GA roadmap lists Azure Monitor, its essential telemetry components, and Log Analytics as GA for FedRAMP High, DoD IL4, and DoD IL5. Validate optional components separately; parity remains unasserted.",
+          "sourceNotes": "Microsoft's Azure Government GA roadmap lists Azure Monitor, its essential telemetry components, and Log Analytics as GA for FedRAMP High, DoD IL4, and DoD IL5. Validate optional components separately; parity remains unasserted. parityLag verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft states that Azure Monitor enables the same features in Azure and Azure Government, so the mapped Azure Monitor parity lag is proposed as None.",
           "tierNotes": {
             "Personal / Free": "Capture essential metrics and retain only necessary logs.",
             "Commercial / SMB": "Use common workspaces, alerts, application telemetry, and operational dashboards.",
@@ -2378,7 +2381,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Cost-governance services expose usage, budgets, allocation, optimization guidance, and reporting needed for accountable cloud operation. Their effectiveness depends on organizational scopes, tagging discipline, ownership, and timely review.",
       "operationalConsiderations": "Establish tagging and account hierarchy early, assign budget and anomaly-review ownership, and treat recommendations as inputs to engineering decisions rather than automatic actions.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "AWS Billing and Cost Management",
@@ -2400,13 +2403,13 @@
         "azure": {
           "service": "Microsoft Cost Management",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "parityLag": "Unknown",
+          "govAvailability": "Limited",
+          "parityLag": "Minor",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/cost-management-billing/",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/calculator/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
-          "sourceNotes": "Microsoft documents Cost Management capabilities and Azure Government independently; verify billing scopes and feature availability in the target government environment.",
+          "sourceNotes": "Microsoft documents Cost Management capabilities and Azure Government independently; verify billing scopes and feature availability in the target government environment. govAvailability verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft documents Cost Management and Billing under Azure Government variations and identifies a CSP-related gap. Availability is proposed as Limited rather than Full. parityLag verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft lists Cost Management and Billing for CSPs as unavailable in Azure Government. Because the documented gap is narrow, the proposed lag is Minor.",
           "tierNotes": {
             "Personal / Free": "Set budgets and review cost analysis as resources are introduced.",
             "Commercial / SMB": "Use consistent tags, cost analysis, budgets, and optimization review.",
@@ -2464,7 +2467,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event services support decoupled integration through publish-subscribe, routing, and streaming patterns. Selection should be based on delivery semantics, ordering, retention, replay, throughput, and integration boundaries rather than service names alone.",
       "operationalConsiderations": "Document delivery guarantees and retry handling before implementation. Retention, dead-letter processing, replay, encryption, private connectivity, and audit access all affect operational and regulated workload design.",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "Amazon EventBridge",
@@ -2503,13 +2506,13 @@
         "gcp": {
           "service": "Pub/Sub",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "parityLag": "Unknown",
           "docsUrl": "https://cloud.google.com/pubsub/docs/overview",
           "pricingUrl": "https://cloud.google.com/pubsub/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Assured Workloads support is defined per control package and may constrain related integrations; confirm Pub/Sub scope for the selected regulated workload.",
+          "sourceNotes": "Assured Workloads support is defined per control package and may constrain related integrations; confirm Pub/Sub scope for the selected regulated workload. govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Pub/Sub as an Assured Workloads supported product for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
           "tierNotes": {
             "Personal / Free": "Use topics and subscriptions with deliberate retention and acknowledgement handling.",
             "Commercial / SMB": "Standardize schemas, dead-letter topics, replay policy, and telemetry.",
@@ -2722,18 +2725,18 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Migration tooling supports discovery, assessment, replication, cutover, and modernization planning for moving workloads into cloud environments. Product coverage differs for servers, databases, applications, storage, and offline transfer methods.",
       "operationalConsiderations": "Inventory dependencies and data classifications before migration. Rehearse cutover and rollback, measure network or transfer appliance constraints, validate identity and encryption boundaries, and budget for post-migration remediation.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "AWS Application Migration Service",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "parityLag": "Unknown",
+          "govAvailability": "Limited",
+          "parityLag": "Moderate",
           "docsUrl": "https://docs.aws.amazon.com/mgn/latest/ug/what-is-application-migration-service.html",
           "pricingUrl": "https://aws.amazon.com/application-migration-service/pricing/",
           "complianceUrl": "https://aws.amazon.com/compliance/",
           "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
-          "sourceNotes": "Regulated migration designs may require multiple AWS migration and transfer services; verify required services and target support in AWS GovCloud before planning cutover.",
+          "sourceNotes": "Regulated migration designs may require multiple AWS migration and transfer services; verify required services and target support in AWS GovCloud before planning cutover. govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-mgn.html: AWS documents Application Migration Service in AWS GovCloud and lists unavailable post-launch actions. Availability is therefore proposed as Limited rather than Full. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-mgn.html: AWS documents Application Migration Service differences in AWS GovCloud, including unavailable third-party post-launch actions, App2Container replatforming, and Refactor Spaces enablement. Core rehost migration remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Use migration tooling only when moving existing hosted workloads is justified.",
             "Commercial / SMB": "Assess dependencies, test replication, rehearse cutover, and validate cost assumptions.",
@@ -2744,13 +2747,13 @@
         "azure": {
           "service": "Azure Migrate",
           "status": "GA",
-          "govAvailability": "Unknown",
-          "parityLag": "Unknown",
+          "govAvailability": "Limited",
+          "parityLag": "Moderate",
           "docsUrl": "https://learn.microsoft.com/en-us/azure/migrate/migrate-services-overview",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/azure-migrate/",
           "complianceUrl": "https://learn.microsoft.com/en-us/compliance/regulatory/offering-home",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Azure Migrate tools and target services must be confirmed in the selected Azure Government environment; this row does not assert feature parity.",
+          "sourceNotes": "Azure Migrate tools and target services must be confirmed in the selected Azure Government environment; this row does not assert feature parity. govAvailability verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft documents Azure Migrate in Azure Government and lists unavailable containerization/deployment features plus Azure Government-only assessment target constraints. Availability is proposed as Limited. parityLag verified 2026-06-23 from https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure: Microsoft lists several Azure Migrate feature gaps and assessment constraints in Azure Government. Core migration assessment remains available, so the proposed lag is Moderate.",
           "tierNotes": {
             "Personal / Free": "Assess migration only for workloads with a clear destination and operating rationale.",
             "Commercial / SMB": "Use assessment and test migration to validate sizing, dependencies, and downtime planning.",
@@ -2808,7 +2811,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cloud adoption begins with resource hierarchy, guardrails, identity boundaries, centralized logging, network foundations, and account or subscription provisioning. These are architecture patterns composed from provider services rather than one-to-one products.",
       "operationalConsiderations": "Establish ownership for platform guardrails before onboarding application teams. Version policy changes, preserve audit evidence, separate platform and workload responsibilities, and test exception handling and break-glass access.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "AWS Control Tower + AWS Organizations",
@@ -2847,13 +2850,13 @@
         "gcp": {
           "service": "Enterprise Foundations Blueprint + Organization Policy",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.cloud.google.com/architecture/blueprints/security-foundations",
           "pricingUrl": null,
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Google documents the Enterprise Foundations Blueprint as an architecture baseline composed from multiple services; there is no single blueprint price, and Assured Workloads service support must be checked by control package.",
+          "sourceNotes": "Google documents the Enterprise Foundations Blueprint as an architecture baseline composed from multiple services; there is no single blueprint price, and Assured Workloads service support must be checked by control package. govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Organization Policy Service and Resource Manager as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than full blueprint parity, availability is proposed as Partial.",
           "tierNotes": {
             "Personal / Free": "Use project boundaries and least-privilege identity controls before central platform automation.",
             "Commercial / SMB": "Standardize folders, projects, organization policies, logging, and shared networking.",
@@ -3064,7 +3067,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Private access to managed services, hybrid network extension, and predictable DNS resolution are foundational controls for enterprise workload boundaries. The mapped portfolios combine endpoint, name-resolution, and dedicated-connectivity choices rather than identical products.",
       "operationalConsiderations": "Centralize address planning and DNS ownership, define egress inspection and failover, test private resolution paths, control endpoint approvals, monitor bandwidth and connection cost, and confirm every service endpoint required by regulated workloads.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-06-23",
       "providers": {
         "aws": {
           "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
@@ -3103,13 +3106,13 @@
         "gcp": {
           "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
           "status": "GA",
-          "govAvailability": "Unknown",
+          "govAvailability": "Partial",
           "parityLag": "Unknown",
           "docsUrl": "https://docs.cloud.google.com/vpc/docs/private-service-connect",
           "pricingUrl": "https://cloud.google.com/vpc/pricing",
           "complianceUrl": "https://cloud.google.com/assured-workloads/docs",
           "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
-          "sourceNotes": "Google's foundation blueprint calls for private network paths; verify Private Service Connect, Cloud DNS, Cloud Interconnect, endpoint targets, and Assured Workloads control-package scope.",
+          "sourceNotes": "Google's foundation blueprint calls for private network paths; verify Private Service Connect, Cloud DNS, Cloud Interconnect, endpoint targets, and Assured Workloads control-package scope. govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Cloud Interconnect and Cloud DNS as Assured Workloads supported products for regulated control packages. Because the mapped row also includes Private Service Connect, which this pass did not confirm, availability is proposed as Partial.",
           "tierNotes": {
             "Personal / Free": "Add private service access only for workloads needing controlled network boundaries.",
             "Commercial / SMB": "Standardize service attachments, DNS resolution, access approval, monitoring, and hybrid routes.",

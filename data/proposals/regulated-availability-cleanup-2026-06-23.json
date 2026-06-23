@@ -1,0 +1,427 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Regulated availability and parity cleanup batch for high-use integration, operations, migration, and edge capabilities. Proposals are human-review inputs and are auto-approved by repository owner request.",
+    "generatedOn": "2026-06-23",
+    "approved": true,
+    "targetFields": [
+      "govAvailability",
+      "parityLag"
+    ],
+    "matrixVersion": "3.16.3",
+    "matrixLastVerified": "2026-06-16",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change.",
+    "batchScope": "API Management & Integration Gateway, DevOps / CI-CD Platform, Cloud Migration Tooling, SIEM, Observability & Monitoring, Cost Management, CDN/Edge Protection, Event Streaming, Landing Zone Governance, and Private Connectivity."
+  },
+  "workItems": [
+    {
+      "capability": "API Management & Integration Gateway",
+      "category": "Integration & Messaging",
+      "provider": "aws",
+      "service": "Amazon API Gateway",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/apigateway/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-abp.html",
+      "reason": "Regulated availability cleanup for documented GovCloud support and feature differences."
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "category": "Integration & Messaging",
+      "provider": "azure",
+      "service": "Azure API Management",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/api-management/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "reason": "Regulated availability cleanup for documented Azure Government support and feature differences."
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "category": "Integration & Messaging",
+      "provider": "gcp",
+      "service": "Apigee",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/apigee/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability cleanup for Assured Workloads-supported products."
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "category": "Developer Platforms",
+      "provider": "aws",
+      "service": "AWS CodePipeline / CodeBuild",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/codepipeline/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html",
+      "reason": "Regulated availability cleanup for documented GovCloud support and feature differences."
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "category": "Developer Platforms",
+      "provider": "gcp",
+      "service": "Cloud Build + Cloud Deploy",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/build/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability cleanup for Assured Workloads-supported products."
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "category": "Migration & Modernization",
+      "provider": "aws",
+      "service": "AWS Application Migration Service",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/mgn/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-mgn.html",
+      "reason": "Regulated availability cleanup for documented GovCloud support and feature differences."
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "category": "Migration & Modernization",
+      "provider": "azure",
+      "service": "Azure Migrate",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/migrate/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "reason": "Regulated availability cleanup for documented Azure Government support and feature differences."
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "category": "Security Operations",
+      "provider": "aws",
+      "service": "AWS Security Hub + Amazon OpenSearch (SIEM pattern)",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/securityhub/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html",
+      "reason": "Regulated availability cleanup for documented GovCloud support and feature differences."
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "category": "Monitoring & Operations",
+      "provider": "azure",
+      "service": "Azure Monitor",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "reason": "Regulated availability cleanup for an official Azure Government parity statement."
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "category": "Monitoring & Operations",
+      "provider": "azure",
+      "service": "Microsoft Cost Management",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/cost-management-billing/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "reason": "Regulated availability cleanup for documented Azure Government support and feature differences."
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "category": "Networking & Edge",
+      "provider": "azure",
+      "service": "Azure Front Door + Web Application Firewall",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/frontdoor/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "reason": "Regulated availability cleanup for documented Azure Government support."
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "category": "Networking & Edge",
+      "provider": "gcp",
+      "service": "Cloud CDN + Cloud Armor",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/cdn/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability cleanup for Assured Workloads-supported products."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "gcp",
+      "service": "Pub/Sub",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/pubsub/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability cleanup for Assured Workloads-supported products."
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "category": "Enterprise Foundation",
+      "provider": "gcp",
+      "service": "Enterprise Foundations Blueprint + Organization Policy",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/architecture/security-foundations",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability cleanup for Assured Workloads-supported products."
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "category": "Networking & Edge",
+      "provider": "gcp",
+      "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/vpc/docs/private-service-connect",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Regulated availability cleanup for Assured Workloads-supported products."
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "aws",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-abp.html",
+      "sourceQuote": "Amazon API Gateway in AWS GovCloud (US)",
+      "rationale": "AWS documents Amazon API Gateway in AWS GovCloud and lists unavailable API Gateway features, so availability is proposed as Limited rather than Full.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-abp.html",
+      "sourceQuote": "Portals are not available.",
+      "rationale": "AWS documents multiple API Gateway differences in AWS GovCloud, including unavailable portals, edge-optimized APIs, some HTTP API private integrations, and selected TLS options. Core API Gateway remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "aws",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html",
+      "sourceQuote": "AWS CodePipeline in AWS GovCloud (US)",
+      "rationale": "AWS documents CodePipeline in AWS GovCloud and lists unavailable source, build, test, deploy, invoke, and cross-region action features. The mapped row includes CodePipeline, so availability is proposed as Limited.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html",
+      "sourceQuote": "Custom actions are not available.",
+      "rationale": "AWS documents CodePipeline differences in AWS GovCloud, including unavailable custom actions, batch-build action support, several deploy and invoke actions, and cross-region actions. Core CI/CD remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "aws",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-mgn.html",
+      "sourceQuote": "AWS Application Migration Service (MGN)",
+      "rationale": "AWS documents Application Migration Service in AWS GovCloud and lists unavailable post-launch actions. Availability is therefore proposed as Limited rather than Full.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-mgn.html",
+      "sourceQuote": "The following post-launch actions are not available.",
+      "rationale": "AWS documents Application Migration Service differences in AWS GovCloud, including unavailable third-party post-launch actions, App2Container replatforming, and Refactor Spaces enablement. Core rehost migration remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "aws",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html",
+      "sourceQuote": "AWS Security Hub in AWS GovCloud (US)",
+      "rationale": "AWS documents Security Hub in AWS GovCloud and lists unavailable integrations, console features, plans, and related CSPM/Inspector differences. Because the mapped SIEM row includes Security Hub as a SIEM pattern, availability is proposed as Limited.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html",
+      "sourceQuote": "Security Hub Extended Plan is not available.",
+      "rationale": "AWS documents multiple Security Hub differences in AWS GovCloud, including unsupported integrations, unavailable usage/cost pages, no Extended Plan, and related CSPM/Inspector differences. Core Security Hub remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "azure",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "None",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "Azure Monitor enables the same features",
+      "rationale": "Microsoft states that Azure Monitor enables the same features in Azure and Azure Government, so the mapped Azure Monitor parity lag is proposed as None.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "azure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "API Management features aren't currently available",
+      "rationale": "Microsoft documents API Management endpoints and a specific Azure Government feature gap for API Management. Availability is proposed as Limited rather than Full.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "azure",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Minor",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "Azure AD B2C integration",
+      "rationale": "Microsoft lists Azure AD B2C integration as the API Management feature currently unavailable in Azure Government. Because the documented API Management gap is narrow, the proposed lag is Minor.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "azure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "Azure Migrate features aren't currently available",
+      "rationale": "Microsoft documents Azure Migrate in Azure Government and lists unavailable containerization/deployment features plus Azure Government-only assessment target constraints. Availability is proposed as Limited.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "azure",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "You can only create assessments",
+      "rationale": "Microsoft lists several Azure Migrate feature gaps and assessment constraints in Azure Government. Core migration assessment remains available, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "azure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Limited",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "Cost Management and Billing",
+      "rationale": "Microsoft documents Cost Management and Billing under Azure Government variations and identifies a CSP-related gap. Availability is proposed as Limited rather than Full.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "azure",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Minor",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "cloud solution providers (CSPs)",
+      "rationale": "Microsoft lists Cost Management and Billing for CSPs as unavailable in Azure Government. Because the documented gap is narrow, the proposed lag is Minor.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "azure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compare-azure-government-global-azure",
+      "sourceQuote": "Standard and Premium tiers are available",
+      "rationale": "Microsoft documents Azure Front Door Standard and Premium tiers as generally available in two Azure Government regions. Because the mapped row combines Front Door and WAF and the source does not establish all-region or full-feature parity, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "gcp",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Apigee apigee.googleapis.com",
+      "rationale": "Google lists Apigee as an Assured Workloads supported product for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "gcp",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Cloud Build cloudbuild.googleapis.com",
+      "rationale": "Google lists Cloud Build and Cloud Deploy as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "gcp",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Cloud CDN compute.googleapis.com",
+      "rationale": "Google lists Cloud CDN and Google Cloud Armor as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "gcp",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Pub/Sub pubsub.googleapis.com",
+      "rationale": "Google lists Pub/Sub as an Assured Workloads supported product for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "gcp",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Organization Policy Service orgpolicy.googleapis.com",
+      "rationale": "Google lists Organization Policy Service and Resource Manager as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than full blueprint parity, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "gcp",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Cloud Interconnect compute.googleapis.com",
+      "rationale": "Google lists Cloud Interconnect and Cloud DNS as Assured Workloads supported products for regulated control packages. Because the mapped row also includes Private Service Connect, which this pass did not confirm, availability is proposed as Partial.",
+      "proposedOn": "2026-06-23"
+    }
+  ]
+}

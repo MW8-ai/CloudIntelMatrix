@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-23 - v3.16.4 - Approved fact proposals
+- Applied 22 approved fact proposal(s) from `data/proposals/regulated-availability-cleanup-2026-06-23.json` across 15 capability/provider record(s).
+
 ## 2026-06-23 - Issue #44 update-review triage
 - Added `upcoming.json` tracking entries for AWS Transform FSx for NetApp ONTAP migration preview and Azure legacy Blob / GPv1 storage-account retirement using official provider sources.
 - Left GA feature announcements and non-mapped retirements from issue #44 out of `matrix.json`; any future matrix fact changes still require proposal review.
