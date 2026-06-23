@@ -781,6 +781,7 @@ def validate_proposal_files(matrix):
                 or not all(isinstance(field, str) and field.strip() for field in target_fields)
             ):
                 err(f"{label}._meta.targetFields must be a non-empty array of strings")
+        approved = isinstance(meta, dict) and meta.get("approved") is True
 
         work_items = pdata.get("workItems", [])
         if not isinstance(work_items, list):
@@ -832,11 +833,14 @@ def validate_proposal_files(matrix):
             field = proposal.get("field")
             if field not in PROPOSAL_PROVIDER_FIELDS:
                 err(f"{proposal_label}.field unsupported: {field}")
-            elif provider.get(field) != proposal.get("currentValue"):
-                err(
-                    f"{proposal_label}.currentValue mismatch for "
-                    f"{proposal.get('capability')}/{provider_key}/{field}"
-                )
+            else:
+                expected_field = "proposedValue" if approved else "currentValue"
+                expected_value = proposal.get(expected_field)
+                if provider.get(field) != expected_value:
+                    err(
+                        f"{proposal_label}.{expected_field} mismatch for "
+                        f"{proposal.get('capability')}/{provider_key}/{field}"
+                    )
             proposal_value_valid(field, proposal.get("proposedValue"), proposal_label)
 
             source_url = proposal.get("sourceUrl")
