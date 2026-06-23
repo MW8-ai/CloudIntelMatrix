@@ -7,6 +7,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 ## 2026-06-23 - v3.16.4 - Approved fact proposals
 - Applied 22 approved fact proposal(s) from `data/proposals/regulated-availability-cleanup-2026-06-23.json` across 15 capability/provider record(s).
 
+## 2026-06-23 - Transparency v1.1.0 - State AI public-record expansion
+- Populated 9 additional official-source state AI governance and transparency rows for California, Connecticut, Maryland, Minnesota, New York, Pennsylvania, Texas, Utah, and Washington.
+- Kept Colorado out of this batch because its enacted AI Act requirements are not yet operative as of 2026-06-23.
+
 ## 2026-06-23 - Issue #44 update-review triage
 - Added `upcoming.json` tracking entries for AWS Transform FSx for NetApp ONTAP migration preview and Azure legacy Blob / GPv1 storage-account retirement using official provider sources.
 - Left GA feature announcements and non-mapped retirements from issue #44 out of `matrix.json`; any future matrix fact changes still require proposal review.
