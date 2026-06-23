@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-23 - Issue #44 update-review triage
+- Added `upcoming.json` tracking entries for AWS Transform FSx for NetApp ONTAP migration preview and Azure legacy Blob / GPv1 storage-account retirement using official provider sources.
+- Left GA feature announcements and non-mapped retirements from issue #44 out of `matrix.json`; any future matrix fact changes still require proposal review.
+
 ## 2026-06-16 - v3.16.3 - Approved fact proposals
 - Applied 6 approved fact proposal(s) from `data/proposals/analytics-ops-integration-parity-2026-06-16.json` across 5 capability/provider record(s).
 - Updated proposal validation so approved proposal files validate against applied matrix values while unapproved files still validate against current matrix values.
