@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-23 - Fact proposal workflow issue fallback
+- Updated the scheduled fact-proposal workflow to publish generated worklist branches and open a review issue instead of failing when GitHub Actions cannot create pull requests.
+
 ## 2026-06-16 - v3.16.3 - Approved fact proposals
 - Applied 6 approved fact proposal(s) from `data/proposals/analytics-ops-integration-parity-2026-06-16.json` across 5 capability/provider record(s).
 - Updated proposal validation so approved proposal files validate against applied matrix values while unapproved files still validate against current matrix values.

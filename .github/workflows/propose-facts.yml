@@ -16,7 +16,7 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
+  issues: write
 
 concurrency:
   group: fact-proposal-worklist
@@ -43,7 +43,7 @@ jobs:
       - name: Validate generated worklists
         run: python scripts/verify.py
 
-      - name: Open proposal PR
+      - name: Publish proposal branch and review issue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -60,8 +60,17 @@ jobs:
           git add data/proposals
           git commit -m "Generate fact proposal worklists"
           git push --set-upstream origin "$branch"
-          gh pr create \
-            --base main \
-            --head "$branch" \
+          {
+            echo "Generated official-source review worklists only."
+            echo
+            echo "Branch: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/tree/${branch}"
+            echo "Commit: $(git rev-parse HEAD)"
+            echo
+            echo "Files:"
+            git diff-tree --no-commit-id --name-only -r HEAD | sed 's/^/- `/' | sed 's/$/`/'
+            echo
+            echo "This issue does not edit data/matrix.json. Fill proposals with primary-source evidence before applying through scripts/apply_proposals.py."
+          } > fact_proposal_issue.md
+          gh issue create \
             --title "Fact proposal worklists - $today" \
-            --body "Generated official-source review worklists only. This PR does not edit data/matrix.json and must not be auto-merged. Fill proposals with primary-source evidence before applying through scripts/apply_proposals.py."
+            --body-file fact_proposal_issue.md
