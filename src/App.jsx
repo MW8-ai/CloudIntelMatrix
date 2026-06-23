@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { Fragment, useState, useMemo, useEffect } from "react";
 import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 import historyData  from "../data/history.json";
@@ -44,6 +44,12 @@ const THEME_TOKENS = {
     "--muted": "#556477",
     "--border": "#cfd8e3",
     "--link": "#0b62b9",
+    "--selected-bg": "#dceeff",
+    "--selected-text": "#064f9f",
+    "--selected-border": "#0b62b9",
+    "--category-bg": "#e7f1fb",
+    "--category-text": "#17456f",
+    "--tier-bg": "#eef6fd",
   },
   dark: {
     "--bg": "#070b12",
@@ -54,6 +60,12 @@ const THEME_TOKENS = {
     "--muted": "#9aa8ba",
     "--border": "#2a3a52",
     "--link": "#78aefc",
+    "--selected-bg": "#102a46",
+    "--selected-text": "#b8d7ff",
+    "--selected-border": "#78aefc",
+    "--category-bg": "#0d2035",
+    "--category-text": "#b8d7ff",
+    "--tier-bg": "#0d1c2d",
   },
 };
 
@@ -94,7 +106,7 @@ const PARITY_STYLES = {
 const TAG_STYLES = {
   gray:   { bg: "#1f2937", fg: "#9ca3af", border: "#374151" },
   blue:   { bg: "#1e3a5f", fg: "#60a5fa", border: "#1d4ed8" },
-  purple: { bg: "#2e1065", fg: "#c084fc", border: "#7c3aed" },
+  purple: { bg: "#1e3a5f", fg: "#93c5fd", border: "#2563eb" },
   green:  { bg: "#14532d", fg: "#4ade80", border: "#15803d" },
   amber:  { bg: "#78350f", fg: "#fbbf24", border: "#b45309" },
   red:    { bg: "#7f1d1d", fg: "#f87171", border: "#b91c1c" },
@@ -258,15 +270,15 @@ function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }
   const isExpanded = expandedId === cap.capability;
 
   return (
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 10 }}>
       {/* Main row */}
       <div style={{ display: "grid", gridTemplateColumns: `220px ${activeProviders.map(() => "1fr").join(" ")}`, gap: 8 }}>
         {/* Capability label */}
         <div
           onClick={() => setExpandedId(isExpanded ? null : cap.capability)}
-          style={{ padding: "10px 12px", borderRadius: 4, border: `1px solid ${isExpanded ? "var(--link)" : "var(--border)"}`, background: isExpanded ? "var(--panel-alt)" : "var(--panel)", cursor: "pointer", minHeight: 80 }}
+          style={{ padding: "10px 12px", borderRadius: 4, border: `1px solid ${isExpanded ? "var(--link)" : "var(--border)"}`, borderLeft: `3px solid ${isExpanded ? "var(--link)" : "var(--selected-border)"}`, background: isExpanded ? "var(--panel-alt)" : "var(--panel)", cursor: "pointer", minHeight: 88 }}
         >
-          <div style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.1em", marginBottom: 4, fontWeight: 700 }}>{cap.category.toUpperCase()}</div>
+          <div style={{ display: "inline-flex", maxWidth: "100%", padding: "2px 6px", borderRadius: 3, border: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", fontSize: 8, letterSpacing: "0.08em", marginBottom: 6, fontWeight: 700 }}>{cap.category.toUpperCase()}</div>
           <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", lineHeight: 1.3, marginBottom: 8 }}>{cap.capability}</div>
           {/* Tags */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginBottom: 6 }}>
@@ -284,7 +296,7 @@ function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }
             <div
               key={provKey}
               onClick={() => setExpandedId(isExpanded ? null : cap.capability)}
-              style={{ padding: "10px 14px", borderRadius: 4, border: `1px solid ${isExpanded ? pm.border : "var(--border)"}`, background: isExpanded ? pm.bg : "var(--panel)", cursor: "pointer", minHeight: 80 }}
+              style={{ padding: "10px 14px", borderRadius: 4, border: `1px solid ${isExpanded ? pm.border : "var(--border)"}`, borderTop: tier ? "3px solid var(--selected-border)" : `1px solid ${isExpanded ? pm.border : "var(--border)"}`, background: isExpanded ? pm.bg : "var(--panel)", cursor: "pointer", minHeight: 88 }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 5 }}>
                 <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text)", lineHeight: 1.3, flex: 1 }}>{prov.service}</div>
@@ -294,7 +306,9 @@ function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }
                 <ParityBadge parity={prov.parityLag} />
               </div>
               {tier && prov.tierNotes?.[tier] && (
-                <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 5, lineHeight: 1.4 }}>{prov.tierNotes[tier]}</div>
+                <div style={{ fontSize: 9, color: "var(--text)", marginTop: 8, lineHeight: 1.45, padding: "6px 8px", borderLeft: "2px solid var(--selected-border)", background: "var(--tier-bg)" }}>
+                  <span style={{ color: "var(--selected-text)", fontWeight: 700 }}>{tier}: </span>{prov.tierNotes[tier]}
+                </div>
               )}
             </div>
           );
@@ -1265,8 +1279,8 @@ export default function App() {
                       <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
                         padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
                         border: `1px solid ${selectedTransparencyStatus === status ? "var(--link)" : "var(--border)"}`,
-                        background: selectedTransparencyStatus === status ? "#1e3a5f" : "transparent",
-                        color: selectedTransparencyStatus === status ? "#93c5fd" : "var(--muted)",
+                        background: selectedTransparencyStatus === status ? "var(--selected-bg)" : "transparent",
+                        color: selectedTransparencyStatus === status ? "var(--selected-text)" : "var(--muted)",
                       }}>{status} ({count})</button>
                     );
                   })}
@@ -1284,8 +1298,8 @@ export default function App() {
                   <button className="hb" onClick={() => setSelectedCategory(null)} style={{
                     padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
                     border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
-                    background: !selectedCategory ? "#1e3a5f" : "transparent",
-                    color: !selectedCategory ? "#93c5fd" : "var(--muted)",
+                    background: !selectedCategory ? "var(--selected-bg)" : "transparent",
+                    color: !selectedCategory ? "var(--selected-text)" : "var(--muted)",
                   }}>ALL ({CAPABILITIES.length})</button>
                   {CATEGORIES.map(cat => {
                     const count = CAPABILITIES.filter(c => c.category === cat).length;
@@ -1293,8 +1307,8 @@ export default function App() {
                       <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
                         padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
                         border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
-                        background: selectedCategory === cat ? "#1e3a5f" : "transparent",
-                        color: selectedCategory === cat ? "#93c5fd" : "var(--muted)",
+                        background: selectedCategory === cat ? "var(--selected-bg)" : "transparent",
+                        color: selectedCategory === cat ? "var(--selected-text)" : "var(--muted)",
                       }}>{cat} ({count})</button>
                     );
                   })}
@@ -1316,9 +1330,9 @@ export default function App() {
                 {META.tiers.map(t => (
                   <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
                     padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${selectedTier === t ? (theme === "dark" ? "#a78bfa" : "#7c3aed") : "var(--border)"}`,
-                    background: selectedTier === t ? (theme === "dark" ? "#4c1d9533" : "#ede9fe") : "transparent",
-                    color: selectedTier === t ? (theme === "dark" ? "#c4b5fd" : "#6d28d9") : "var(--muted)",
+                    border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
+                    background: selectedTier === t ? "var(--selected-bg)" : "transparent",
+                    color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
                   }}>{t}</button>
                 ))}
               </div>
@@ -1372,9 +1386,21 @@ export default function App() {
                   </div>
                 ))}
               </div>
-              {filteredCaps.map(cap => (
-                <CapabilityRow key={cap.capability} cap={cap} activeProviders={activeProviders} expandedId={expandedId} setExpandedId={setExpandedId} tier={selectedTier} />
-              ))}
+              {filteredCaps.map((cap, index) => {
+                const startsCategory = index === 0 || filteredCaps[index - 1]?.category !== cap.category;
+                const categoryCount = startsCategory ? filteredCaps.filter(item => item.category === cap.category).length : 0;
+                return (
+                  <Fragment key={cap.capability}>
+                    {startsCategory && (
+                      <div style={{ margin: index === 0 ? "0 0 8px" : "18px 0 8px", padding: "7px 10px", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em" }}>{cap.category.toUpperCase()}</span>
+                        <span style={{ fontSize: 9, color: "var(--muted)" }}>{categoryCount} capability row(s)</span>
+                      </div>
+                    )}
+                    <CapabilityRow cap={cap} activeProviders={activeProviders} expandedId={expandedId} setExpandedId={setExpandedId} tier={selectedTier} />
+                  </Fragment>
+                );
+              })}
             </div>
           )}
 
