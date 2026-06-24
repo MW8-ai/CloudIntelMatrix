@@ -153,9 +153,9 @@ PROPOSAL_PROVIDER_FIELDS = {
     "govDocsUrl",
 }
 PROPOSAL_URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
-PROPOSAL_REQUIRED = [
-    "capability",
-    "provider",
+PROPOSAL_COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
+PROPOSAL_FACT_URL_FIELDS = PROPOSAL_URL_FIELDS | PROPOSAL_COMPLIANCE_FRAMEWORK_FIELDS
+PROPOSAL_COMMON_REQUIRED = [
     "field",
     "currentValue",
     "proposedValue",
@@ -164,10 +164,16 @@ PROPOSAL_REQUIRED = [
     "rationale",
     "proposedOn",
 ]
-PROPOSAL_ALLOWED = set(PROPOSAL_REQUIRED)
-PROPOSAL_WORK_ITEM_REQUIRED = ["capability", "provider", "field", "currentValue", "reason"]
+PROPOSAL_PROVIDER_REQUIRED = ["capability", "provider"]
+PROPOSAL_COMPLIANCE_FRAMEWORK_REQUIRED = ["targetType", "frameworkId"]
+PROPOSAL_ALLOWED = set(PROPOSAL_COMMON_REQUIRED + PROPOSAL_PROVIDER_REQUIRED + PROPOSAL_COMPLIANCE_FRAMEWORK_REQUIRED)
+PROPOSAL_WORK_ITEM_COMMON_REQUIRED = ["field", "currentValue", "reason"]
+PROPOSAL_WORK_ITEM_PROVIDER_REQUIRED = ["capability", "provider"]
+PROPOSAL_WORK_ITEM_COMPLIANCE_FRAMEWORK_REQUIRED = ["targetType", "frameworkId"]
 PROPOSAL_WORK_ITEM_ALLOWED = set(
-    PROPOSAL_WORK_ITEM_REQUIRED
+    PROPOSAL_WORK_ITEM_COMMON_REQUIRED
+    + PROPOSAL_WORK_ITEM_PROVIDER_REQUIRED
+    + PROPOSAL_WORK_ITEM_COMPLIANCE_FRAMEWORK_REQUIRED
     + ["category", "service", "docsUrl", "govDocsUrl", "sourceNotes", "sourceHints"]
 )
 OFFICIAL_SOURCE_DOMAINS = {
@@ -741,6 +747,12 @@ def is_official_source_url(url):
     return any(host == domain or host.endswith(f".{domain}") for domain in OFFICIAL_SOURCE_DOMAINS)
 
 
+def proposal_target_type(value):
+    if not isinstance(value, dict):
+        return "provider"
+    return value.get("targetType", "provider")
+
+
 def proposal_value_valid(field, value, label):
     if field == "service" and not str(value or "").strip():
         err(f"{label}.proposedValue for service must not be empty")
@@ -750,7 +762,7 @@ def proposal_value_valid(field, value, label):
         err(f"{label}.proposedValue invalid for govAvailability: {value}")
     elif field == "parityLag" and value not in VALID_PARITY:
         err(f"{label}.proposedValue invalid for parityLag: {value}")
-    elif field in PROPOSAL_URL_FIELDS:
+    elif field in PROPOSAL_FACT_URL_FIELDS:
         validate_url(value, f"{label}.proposedValue", True)
     elif field == "govVariant" and value is not None and not str(value).strip():
         err(f"{label}.proposedValue for govVariant must be non-empty or null")
@@ -771,6 +783,11 @@ def validate_proposal_files(matrix):
         cap.get("capability"): cap
         for cap in matrix.get("capabilities", [])
         if isinstance(cap, dict)
+    }
+    compliance_framework_lookup = {
+        framework.get("id"): framework
+        for framework in matrix.get("complianceFrameworks", [])
+        if isinstance(framework, dict)
     }
     proposal_links = []
     files = sorted(proposal_dir.glob("*.json"))
@@ -804,18 +821,32 @@ def validate_proposal_files(matrix):
             work_items = []
         for index, item in enumerate(work_items):
             item_label = f"{label}.workItems[{index}]"
-            require_fields(item, PROPOSAL_WORK_ITEM_REQUIRED, item_label)
+            target_type = proposal_target_type(item)
+            required = PROPOSAL_WORK_ITEM_COMMON_REQUIRED
+            if target_type == "provider":
+                required = required + PROPOSAL_WORK_ITEM_PROVIDER_REQUIRED
+            elif target_type == "complianceFramework":
+                required = required + PROPOSAL_WORK_ITEM_COMPLIANCE_FRAMEWORK_REQUIRED
+            else:
+                err(f"{item_label}.targetType unsupported: {target_type}")
+            require_fields(item, required, item_label)
             if not isinstance(item, dict):
                 continue
             unexpected = set(item) - PROPOSAL_WORK_ITEM_ALLOWED
             if unexpected:
                 err(f"{item_label} contains unsupported fields: {sorted(unexpected)}")
-            if item.get("provider") not in EXPECTED_PROVIDERS:
-                err(f"{item_label}.provider invalid: {item.get('provider')}")
-            if item.get("field") not in PROPOSAL_PROVIDER_FIELDS:
-                err(f"{item_label}.field unsupported: {item.get('field')}")
-            if item.get("capability") not in cap_lookup:
-                err(f"{item_label}.capability unknown: {item.get('capability')}")
+            if target_type == "provider":
+                if item.get("provider") not in EXPECTED_PROVIDERS:
+                    err(f"{item_label}.provider invalid: {item.get('provider')}")
+                if item.get("field") not in PROPOSAL_PROVIDER_FIELDS:
+                    err(f"{item_label}.field unsupported: {item.get('field')}")
+                if item.get("capability") not in cap_lookup:
+                    err(f"{item_label}.capability unknown: {item.get('capability')}")
+            elif target_type == "complianceFramework":
+                if item.get("frameworkId") not in compliance_framework_lookup:
+                    err(f"{item_label}.frameworkId unknown: {item.get('frameworkId')}")
+                if item.get("field") not in PROPOSAL_COMPLIANCE_FRAMEWORK_FIELDS:
+                    err(f"{item_label}.field unsupported: {item.get('field')}")
             if not str(item.get("reason", "")).strip():
                 err(f"{item_label}.reason must not be empty")
 
@@ -825,37 +856,63 @@ def validate_proposal_files(matrix):
             proposals = []
         for index, proposal in enumerate(proposals):
             proposal_label = f"{label}.proposals[{index}]"
-            require_fields(proposal, PROPOSAL_REQUIRED, proposal_label)
+            target_type = proposal_target_type(proposal)
+            required = PROPOSAL_COMMON_REQUIRED
+            if target_type == "provider":
+                required = required + PROPOSAL_PROVIDER_REQUIRED
+            elif target_type == "complianceFramework":
+                required = required + PROPOSAL_COMPLIANCE_FRAMEWORK_REQUIRED
+            else:
+                err(f"{proposal_label}.targetType unsupported: {target_type}")
+            require_fields(proposal, required, proposal_label)
             if not isinstance(proposal, dict):
                 continue
             unexpected = set(proposal) - PROPOSAL_ALLOWED
             if unexpected:
                 err(f"{proposal_label} contains unsupported fields: {sorted(unexpected)}")
 
-            cap = cap_lookup.get(proposal.get("capability"))
-            if not cap:
-                err(f"{proposal_label}.capability unknown: {proposal.get('capability')}")
-                continue
-            provider_key = proposal.get("provider")
-            if provider_key not in EXPECTED_PROVIDERS:
-                err(f"{proposal_label}.provider invalid: {provider_key}")
-                continue
-            provider = cap.get("providers", {}).get(provider_key)
-            if not provider:
-                err(f"{proposal_label} references missing provider record: {provider_key}")
-                continue
-
             field = proposal.get("field")
-            if field not in PROPOSAL_PROVIDER_FIELDS:
-                err(f"{proposal_label}.field unsupported: {field}")
+            if target_type == "provider":
+                cap = cap_lookup.get(proposal.get("capability"))
+                if not cap:
+                    err(f"{proposal_label}.capability unknown: {proposal.get('capability')}")
+                    continue
+                provider_key = proposal.get("provider")
+                if provider_key not in EXPECTED_PROVIDERS:
+                    err(f"{proposal_label}.provider invalid: {provider_key}")
+                    continue
+                provider = cap.get("providers", {}).get(provider_key)
+                if not provider:
+                    err(f"{proposal_label} references missing provider record: {provider_key}")
+                    continue
+
+                if field not in PROPOSAL_PROVIDER_FIELDS:
+                    err(f"{proposal_label}.field unsupported: {field}")
+                else:
+                    expected_field = "proposedValue" if approved else "currentValue"
+                    expected_value = proposal.get(expected_field)
+                    if provider.get(field) != expected_value:
+                        err(
+                            f"{proposal_label}.{expected_field} mismatch for "
+                            f"{proposal.get('capability')}/{provider_key}/{field}"
+                        )
+            elif target_type == "complianceFramework":
+                framework = compliance_framework_lookup.get(proposal.get("frameworkId"))
+                if not framework:
+                    err(f"{proposal_label}.frameworkId unknown: {proposal.get('frameworkId')}")
+                    continue
+                if field not in PROPOSAL_COMPLIANCE_FRAMEWORK_FIELDS:
+                    err(f"{proposal_label}.field unsupported: {field}")
+                else:
+                    expected_field = "proposedValue" if approved else "currentValue"
+                    expected_value = proposal.get(expected_field)
+                    if framework.get(field) != expected_value:
+                        err(
+                            f"{proposal_label}.{expected_field} mismatch for "
+                            f"complianceFrameworks/{proposal.get('frameworkId')}/{field}"
+                        )
             else:
-                expected_field = "proposedValue" if approved else "currentValue"
-                expected_value = proposal.get(expected_field)
-                if provider.get(field) != expected_value:
-                    err(
-                        f"{proposal_label}.{expected_field} mismatch for "
-                        f"{proposal.get('capability')}/{provider_key}/{field}"
-                    )
+                continue
             proposal_value_valid(field, proposal.get("proposedValue"), proposal_label)
 
             source_url = proposal.get("sourceUrl")

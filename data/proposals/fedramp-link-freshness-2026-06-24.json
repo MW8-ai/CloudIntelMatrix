@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Approved official-source proposal for a compliance framework link freshness fix.",
+    "generatedOn": "2026-06-24",
+    "approved": true,
+    "targetFields": [
+      "complianceFrameworks.url"
+    ],
+    "matrixVersion": "3.16.5",
+    "matrixLastVerified": "2026-06-24",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change."
+  },
+  "workItems": [
+    {
+      "targetType": "complianceFramework",
+      "frameworkId": "fedramp",
+      "field": "url",
+      "currentValue": "https://www.fedramp.gov/docs/rev5/playbook/csp/authorization/ssp/",
+      "reason": "The public link checker reports the FedRAMP SSP documentation URL as 404; propose an official resolving URL only if current Rev5 SSP template guidance remains available from FedRAMP."
+    }
+  ],
+  "proposals": [
+    {
+      "targetType": "complianceFramework",
+      "frameworkId": "fedramp",
+      "field": "url",
+      "currentValue": "https://www.fedramp.gov/docs/rev5/playbook/csp/authorization/ssp/",
+      "proposedValue": "https://www.fedramp.gov/rev5/documents-templates/",
+      "sourceUrl": "https://www.fedramp.gov/rev5/documents-templates/",
+      "sourceQuote": "Documents & Templates",
+      "rationale": "FedRAMP's Rev5 Documents & Templates page is an official FedRAMP source that returns 200; the existing SSP documentation path returns 404 in link checks.",
+      "proposedOn": "2026-06-24"
+    }
+  ]
+}
