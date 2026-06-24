@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Microsoft Foundry lineage completion for the Azure foundation-model provider record.",
+    "generatedOn": "2026-06-24",
+    "approved": true,
+    "targetFields": [
+      "service",
+      "docsUrl",
+      "formerNames"
+    ],
+    "matrixVersion": "3.16.4",
+    "matrixLastVerified": "2026-06-23",
+    "sourceRule": "Only official primary sources are valid. Leave values unchanged when no official source supports a change.",
+    "batchScope": "Generative AI / Foundation Models - Azure"
+  },
+  "workItems": [
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "provider": "azure",
+      "service": "Azure OpenAI / Azure AI Foundry",
+      "field": "docsUrl",
+      "currentValue": "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
+      "reason": "Microsoft's current Foundry documentation describes Microsoft Foundry as the unified Azure AI platform and maps Azure AI Studio / Azure AI Foundry to Microsoft Foundry."
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "azure",
+      "field": "service",
+      "currentValue": "Azure OpenAI / Azure AI Foundry",
+      "proposedValue": "Microsoft Foundry Models / Azure OpenAI",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
+      "sourceQuote": "Microsoft Foundry is a unified Azure platform",
+      "rationale": "Microsoft describes Microsoft Foundry as the unified Azure AI platform and the current resource model for agents, models, and tools. The provider service label now names Microsoft Foundry Models while retaining Azure OpenAI for continuity.",
+      "proposedOn": "2026-06-24"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "azure",
+      "field": "docsUrl",
+      "currentValue": "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
+      "proposedValue": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
+      "sourceQuote": "What is Microsoft Foundry?",
+      "rationale": "The current primary documentation for the unified Azure AI platform is the Microsoft Foundry overview. The older Azure OpenAI page is no longer the best primary link for this composite foundation-model row.",
+      "proposedOn": "2026-06-24"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "azure",
+      "field": "formerNames",
+      "currentValue": null,
+      "proposedValue": [
+        "Azure AI Studio",
+        "Azure AI Foundry"
+      ],
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
+      "sourceQuote": "Azure AI Studio / Azure AI Foundry",
+      "rationale": "Microsoft's Evolution of Foundry table maps the prior brand names Azure AI Studio and Azure AI Foundry to the current Microsoft Foundry brand.",
+      "proposedOn": "2026-06-24"
+    }
+  ]
+}

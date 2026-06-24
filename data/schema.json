@@ -253,6 +253,11 @@
       ],
       "properties": {
         "service": { "type": "string", "minLength": 1 },
+        "formerNames": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
         "status": {
           "enum": ["GA", "Preview", "Deprecated", "Retiring", "Unknown"]
         },

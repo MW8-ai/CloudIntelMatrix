@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.16.4",
+    "version": "3.16.5",
     "schema": "capability-v1",
-    "last_verified": "2026-06-23",
+    "last_verified": "2026-06-24",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
     "providers": [
       "aws",
@@ -1069,9 +1069,9 @@
         "LOCK_IN_RISK"
       ],
       "aiClassification": "AI_NATIVE",
-      "architectureNotes": "Managed foundation-model platforms differ by offered models, region availability, data-use commitments, grounding and retrieval integrations, evaluation tooling, customization options, safety controls, quotas, and regulated-workload support.",
+      "architectureNotes": "Managed foundation-model platforms differ by offered models, region availability, data-use commitments, grounding and retrieval integrations, evaluation tooling, customization options, safety controls, quotas, and regulated-workload support. Microsoft documents that Azure OpenAI resources can upgrade into Microsoft Foundry resources while preserving the existing endpoint, API key, state, and security configuration.",
       "operationalConsiderations": "Token costs scale rapidly with usage volume. Prompt engineering and retrieval-augmented generation (RAG) are operationally non-trivial. Data residency and model data retention policies differ significantly and require legal review for regulated workloads. Content filtering and guardrails are essential before enterprise deployment.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-06-24",
       "sourceNotes": "Official regulated-environment documentation establishes selected platform presence for AWS, Azure, and Google Cloud; mapped portfolio breadth, required models and features, OCI support, and all commercial-to-regulated parity still require direct validation.",
       "providers": {
         "aws": {
@@ -1093,22 +1093,26 @@
           }
         },
         "azure": {
-          "service": "Azure OpenAI / Azure AI Foundry",
+          "service": "Microsoft Foundry Models / Azure OpenAI",
           "status": "GA",
           "govAvailability": "Partial",
           "govVariant": "Foundry Models (Azure Government)",
           "parityLag": "Unknown",
-          "docsUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/",
+          "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
           "pricingUrl": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/",
           "complianceUrl": "https://learn.microsoft.com/en-us/azure/ai-services/openai/azure-government",
           "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
-          "sourceNotes": "Microsoft's Azure Government roadmap lists Foundry Models as GA for documented government compliance environments. Availability is recorded as Partial because this composite mapping also names Azure OpenAI and does not assert every model or platform feature; parity remains unasserted.",
+          "sourceNotes": "Microsoft's Azure Government roadmap lists Foundry Models as GA for documented government compliance environments. Availability is recorded as Partial because this composite mapping also names Azure OpenAI and does not assert every model or platform feature; parity remains unasserted. service verified 2026-06-24 from https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry: Microsoft describes Microsoft Foundry as the unified Azure AI platform and the current resource model for agents, models, and tools. The provider service label now names Microsoft Foundry Models while retaining Azure OpenAI for continuity. docsUrl verified 2026-06-24 from https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry: The current primary documentation for the unified Azure AI platform is the Microsoft Foundry overview. The older Azure OpenAI page is no longer the best primary link for this composite foundation-model row. formerNames verified 2026-06-24 from https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry: Microsoft's Evolution of Foundry table maps the prior brand names Azure AI Studio and Azure AI Foundry to the current Microsoft Foundry brand.",
           "tierNotes": {
             "Personal / Free": "Limited free playground; GPT-3.5 free quota",
             "Commercial / SMB": "GPT-4o, o3, DALL-E 3, Whisper; Content Safety; Prompt Shields",
             "Enterprise": "Provisioned Throughput Units (PTU); BYOD; Batch API; AI Search RAG; Copilot Studio",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "formerNames": [
+            "Azure AI Studio",
+            "Azure AI Foundry"
+          ]
         },
         "gcp": {
           "service": "Vertex AI GenAI / Gemini",
