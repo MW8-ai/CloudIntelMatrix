@@ -50,6 +50,12 @@ const THEME_TOKENS = {
     "--category-bg": "#e7f1fb",
     "--category-text": "#17456f",
     "--tier-bg": "#eef6fd",
+    "--verified-bg": "#dcfce7",
+    "--verified-text": "#166534",
+    "--verified-border": "#86efac",
+    "--review-bg": "#f1f5f9",
+    "--review-text": "#475569",
+    "--review-border": "#cbd5e1",
   },
   dark: {
     "--bg": "#070b12",
@@ -66,8 +72,17 @@ const THEME_TOKENS = {
     "--category-bg": "#0d2035",
     "--category-text": "#b8d7ff",
     "--tier-bg": "#0d1c2d",
+    "--verified-bg": "#052e16",
+    "--verified-text": "#86efac",
+    "--verified-border": "#166534",
+    "--review-bg": "#111827",
+    "--review-text": "#cbd5e1",
+    "--review-border": "#475569",
   },
 };
+
+const VERIFICATION_REVIEW_WINDOW_DAYS = 180;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 function getInitialTheme() {
   if (typeof window === "undefined") return "light";
@@ -199,11 +214,76 @@ function TransparencyStatusBadge({ status }) {
   );
 }
 
-function VerifiedStamp({ date }) {
+function getVerificationState(date) {
+  if (!date) {
+    return {
+      label: "REVIEW NEEDED",
+      icon: "!",
+      tone: "review",
+      title: "No lastVerified date is recorded for this item.",
+    };
+  }
+
+  const verifiedAt = new Date(`${date}T00:00:00Z`);
+  if (Number.isNaN(verifiedAt.getTime())) {
+    return {
+      label: `REVIEW ${date}`,
+      icon: "!",
+      tone: "review",
+      title: `The recorded lastVerified value (${date}) is not a valid ISO date.`,
+    };
+  }
+
+  const ageDays = Math.floor((Date.now() - verifiedAt.getTime()) / MS_PER_DAY);
+  if (ageDays >= 0 && ageDays <= VERIFICATION_REVIEW_WINDOW_DAYS) {
+    return {
+      label: `VERIFIED ${date}`,
+      icon: "✓",
+      tone: "verified",
+      title: `Official-source review recorded on ${date}; inside the ${VERIFICATION_REVIEW_WINDOW_DAYS}-day review window.`,
+    };
+  }
+
+  return {
+    label: `REVIEW ${date}`,
+    icon: "!",
+    tone: "review",
+    title: `Official-source review recorded on ${date}; outside the ${VERIFICATION_REVIEW_WINDOW_DAYS}-day review window.`,
+  };
+}
+
+function VerificationPill({ state, label, icon, title }) {
+  const tone = state === "verified" ? "verified" : "review";
   return (
-    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>
-      ✓ VERIFIED {date}
+    <span
+      title={title}
+      aria-label={title}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        width: "fit-content",
+        fontSize: 8,
+        color: `var(--${tone}-text)`,
+        background: `var(--${tone}-bg)`,
+        border: `1px solid var(--${tone}-border)`,
+        borderRadius: 4,
+        padding: "3px 6px",
+        letterSpacing: "0.06em",
+        fontWeight: 700,
+        whiteSpace: "nowrap",
+      }}
+    >
+      <span aria-hidden="true" style={{ fontSize: 9, lineHeight: 1 }}>{icon}</span>
+      {label}
     </span>
+  );
+}
+
+function VerifiedStamp({ date }) {
+  const state = getVerificationState(date);
+  return (
+    <VerificationPill state={state.tone} label={state.label} icon={state.icon} title={state.title} />
   );
 }
 
@@ -1437,6 +1517,23 @@ export default function App() {
                 <span style={{ fontSize: 8, color: "var(--muted)" }}>{def.description}</span>
               </div>
             ))}
+          </div>
+          <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>VERIFICATION</span>
+            <VerificationPill
+              state="verified"
+              label="VERIFIED"
+              icon="✓"
+              title={`Official-source review is inside the ${VERIFICATION_REVIEW_WINDOW_DAYS}-day review window.`}
+            />
+            <span style={{ fontSize: 8, color: "var(--muted)" }}>inside review window</span>
+            <VerificationPill
+              state="review"
+              label="REVIEW NEEDED"
+              icon="!"
+              title="The item is missing a valid review date or is outside the review window."
+            />
+            <span style={{ fontSize: 8, color: "var(--muted)" }}>missing, invalid, or stale review date</span>
           </div>
           <div style={{ marginTop: 10, fontSize: 8, color: "var(--muted)", display: "flex", gap: 16, flexWrap: "wrap" }}>
             <span>Data: official provider documentation only</span>
