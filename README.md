@@ -25,7 +25,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays and 11 selected NIST SP 800-53 Rev. 5 control-family mappings, in matrix data version `3.12.0`.
+**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, and 51 state/DC AI transparency rows, in matrix data version `3.16.5`.
 
 ---
 
@@ -47,6 +47,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `pricingUrl` | Official pricing page |
 | `complianceUrl` | Official compliance/certification page |
 | `govDocsUrl` | Government cloud documentation |
+| `formerNames` | Optional prior or merged product names, used where official provider sources document lineage |
 | `lastVerified` | Date last manually reviewed |
 | `sourceNotes` | Required explanation when a public-source fact is unknown or unavailable |
 | `controlLens` | NIST SP 800-53 Rev. 5 control-family planning mappings to relevant capability decisions; not an assessment result |
@@ -62,7 +63,7 @@ Rows are decision aids, not claims that different provider products are identica
 | `Limited` | Official evidence establishes availability and also identifies material environment-specific limitations relevant to architecture review. |
 | `Unknown` | Public evidence has not yet established a stronger statement for the mapped service or portfolio. |
 
-The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager. The AI architecture depth pass in `3.10.0` adds agent orchestration, vector retrieval/RAG knowledge bases, and accelerated AI/GPU compute across all four providers. The regulated AI evidence pass in `3.11.0` records supported AWS GovCloud, Azure Government, Google Assured Workloads, and Oracle Integration U.S. Government Cloud statements only where official documentation is specific enough. The regulated data-exchange and ML-platform pass in `3.12.0` extends that evidence to analytics platforms, managed transfer, and model-training platforms. Agent availability, unlisted OCI/GCP products, and all `parityLag` comparisons remain `Unknown` unless directly established.
+The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary capabilities, and the high-use core-service pass in `3.7.0` covers virtual machines, serverless functions, object storage, managed Kubernetes, and managed relational databases. The OCI onboarding pass in `3.9.0` maps all current capabilities, including OCI Generative AI, OCI Data Science, and OCI Resource Manager. The AI architecture depth pass in `3.10.0` adds agent orchestration, vector retrieval/RAG knowledge bases, and accelerated AI/GPU compute across all four providers. The regulated AI evidence pass in `3.11.0` records supported AWS GovCloud, Azure Government, Google Assured Workloads, and Oracle Integration U.S. Government Cloud statements only where official documentation is specific enough. Later `3.16.x` passes add state AI transparency records, link-check hygiene, and Microsoft Foundry lineage support. Agent availability, unlisted OCI/GCP products, and all `parityLag` comparisons remain `Unknown` unless directly established.
 
 ### View modes
 
@@ -70,7 +71,9 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 |---|---|
 | **Matrix** | All capabilities by tier, click to expand full detail + links |
 | **Patterns** | Framework-informed planning overlays with provider service maps and review boundaries |
-| **NIST 800-53** | Selected Rev. 5 control-family lens mapped to cloud implementation touchpoints and review questions |
+| **Compliance** | Framework references plus the selected NIST SP 800-53 Rev. 5 planning lens |
+| **History** | Provider cloud journey milestones |
+| **Transparency** | State AI governance and transparency public-record view |
 | **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP ↔ OCI) |
 | **Gov / Parity** | Government availability and parity lag focus |
 | **AI Focus** | AI_NATIVE and AI_CAPABLE capabilities only |
