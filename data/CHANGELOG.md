@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-24 - Category icon polish
+- Added static category icons to matrix category chips, filter buttons, section dividers, and compact comparison labels without changing category keys or data values.
+
 ## 2026-06-24 - Weekly update triage
 - Added AWS Lambda MicroVMs to `upcoming.json` for Serverless Functions boundary review from the official AWS announcement.
 
