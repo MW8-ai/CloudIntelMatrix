@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-24 - Weekly update triage
+- Added AWS Lambda MicroVMs to `upcoming.json` for Serverless Functions boundary review from the official AWS announcement.
+
 ## 2026-06-24 - Shareable sticky controls
 - Consolidated search, tier lens, provider filters, and theme switching into a sticky control bar, with URL-shareable view and filter state.
 
