@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-24 - Shareable sticky controls
+- Consolidated search, tier lens, provider filters, and theme switching into a sticky control bar, with URL-shareable view and filter state.
+
 ## 2026-06-24 - Glossary tooltips
 - Added shared UI glossary definitions and hover/focus/tap tooltips for capability tags, government availability badges, and parity lag badges.
 
