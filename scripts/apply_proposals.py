@@ -31,6 +31,8 @@ ENUMS = {
     "parityLag": {"None", "Minor", "Moderate", "Significant", "Unknown"},
 }
 URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
+COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
+FACT_URL_FIELDS = URL_FIELDS | COMPLIANCE_FRAMEWORK_FIELDS
 OFFICIAL_SOURCE_DOMAINS = {
     "aws.amazon.com",
     "docs.aws.amazon.com",
@@ -107,6 +109,17 @@ def find_capability(matrix, capability_name):
     raise ProposalError(f"Unknown capability in proposal: {capability_name}")
 
 
+def find_compliance_framework(matrix, framework_id):
+    for framework in matrix.get("complianceFrameworks", []):
+        if framework.get("id") == framework_id:
+            return framework
+    raise ProposalError(f"Unknown complianceFramework in proposal: {framework_id}")
+
+
+def proposal_target_type(proposal):
+    return proposal.get("targetType", "provider")
+
+
 def require_approved(payload):
     meta = payload.get("_meta", {})
     if not isinstance(meta, dict) or meta.get("approved") is not True:
@@ -115,8 +128,6 @@ def require_approved(payload):
 
 def validate_proposal_shape(proposal, index):
     required = [
-        "capability",
-        "provider",
         "field",
         "currentValue",
         "proposedValue",
@@ -130,8 +141,20 @@ def validate_proposal_shape(proposal, index):
     for field in required:
         if field not in proposal:
             raise ProposalError(f"proposal[{index}] missing field: {field}")
-    if proposal["field"] not in PROVIDER_FIELDS:
-        raise ProposalError(f"proposal[{index}] uses unsupported field: {proposal['field']}")
+    target_type = proposal_target_type(proposal)
+    if target_type == "provider":
+        for field in ["capability", "provider"]:
+            if field not in proposal:
+                raise ProposalError(f"proposal[{index}] missing field: {field}")
+        if proposal["field"] not in PROVIDER_FIELDS:
+            raise ProposalError(f"proposal[{index}] uses unsupported provider field: {proposal['field']}")
+    elif target_type == "complianceFramework":
+        if "frameworkId" not in proposal:
+            raise ProposalError(f"proposal[{index}] missing field: frameworkId")
+        if proposal["field"] not in COMPLIANCE_FRAMEWORK_FIELDS:
+            raise ProposalError(f"proposal[{index}] uses unsupported complianceFramework field: {proposal['field']}")
+    else:
+        raise ProposalError(f"proposal[{index}] uses unsupported targetType: {target_type}")
     if not str(proposal.get("sourceUrl", "")).strip():
         raise ProposalError(f"proposal[{index}] is missing sourceUrl")
     validate_url(proposal.get("sourceUrl"), f"proposal[{index}].sourceUrl")
@@ -156,7 +179,7 @@ def validate_proposed_value(proposal, index):
         raise ProposalError(f"proposal[{index}].proposedValue for service must not be empty")
     if field in ENUMS and value not in ENUMS[field]:
         raise ProposalError(f"proposal[{index}].proposedValue invalid for {field}: {value}")
-    if field in URL_FIELDS:
+    if field in FACT_URL_FIELDS:
         validate_url(value, f"proposal[{index}].proposedValue")
     if field == "govVariant" and value is not None and not str(value).strip():
         raise ProposalError(f"proposal[{index}].proposedValue for govVariant must be non-empty or null")
@@ -184,43 +207,60 @@ def apply_payload(matrix, payload, source_label):
     if not isinstance(proposals, list) or not proposals:
         raise ProposalError("Proposal file contains no proposals to apply")
 
-    touched = {}
+    touched_records = {}
+    touched_capabilities = {}
     for index, proposal in enumerate(proposals):
         validate_proposal_shape(proposal, index)
         validate_proposed_value(proposal, index)
-        cap = find_capability(matrix, proposal["capability"])
-        provider_key = proposal["provider"]
-        provider = cap.get("providers", {}).get(provider_key)
-        if provider is None:
-            raise ProposalError(f"proposal[{index}] references missing provider: {provider_key}")
-
+        target_type = proposal_target_type(proposal)
         field = proposal["field"]
-        current = provider.get(field)
-        if current != proposal.get("currentValue"):
-            raise ProposalError(
-                f"proposal[{index}] currentValue mismatch for "
-                f"{proposal['capability']}/{provider_key}/{field}: "
-                f"matrix has {current!r}, proposal has {proposal.get('currentValue')!r}"
-            )
+        if target_type == "provider":
+            cap = find_capability(matrix, proposal["capability"])
+            provider_key = proposal["provider"]
+            provider = cap.get("providers", {}).get(provider_key)
+            if provider is None:
+                raise ProposalError(f"proposal[{index}] references missing provider: {provider_key}")
 
-        if field == "govVariant" and proposal.get("proposedValue") is None:
-            provider.pop(field, None)
+            current = provider.get(field)
+            if current != proposal.get("currentValue"):
+                raise ProposalError(
+                    f"proposal[{index}] currentValue mismatch for "
+                    f"{proposal['capability']}/{provider_key}/{field}: "
+                    f"matrix has {current!r}, proposal has {proposal.get('currentValue')!r}"
+                )
+
+            if field == "govVariant" and proposal.get("proposedValue") is None:
+                provider.pop(field, None)
+            else:
+                provider[field] = proposal.get("proposedValue")
+            append_source_note(provider, proposal)
+            touched_capabilities[(proposal["capability"], provider_key)] = proposal["proposedOn"]
+            touched_records[(proposal["capability"], provider_key)] = proposal["proposedOn"]
         else:
-            provider[field] = proposal.get("proposedValue")
-        append_source_note(provider, proposal)
-        touched[(proposal["capability"], provider_key)] = proposal["proposedOn"]
+            framework = find_compliance_framework(matrix, proposal["frameworkId"])
+            current = framework.get(field)
+            if current != proposal.get("currentValue"):
+                raise ProposalError(
+                    f"proposal[{index}] currentValue mismatch for "
+                    f"complianceFrameworks/{proposal['frameworkId']}/{field}: "
+                    f"matrix has {current!r}, proposal has {proposal.get('currentValue')!r}"
+                )
+
+            framework[field] = proposal.get("proposedValue")
+            framework["lastVerified"] = proposal["proposedOn"]
+            touched_records[(f"complianceFrameworks/{proposal['frameworkId']}", field)] = proposal["proposedOn"]
 
     for cap in matrix.get("capabilities", []):
-        dates = [verified for (name, _), verified in touched.items() if name == cap.get("capability")]
+        dates = [verified for (name, _), verified in touched_capabilities.items() if name == cap.get("capability")]
         if dates:
             cap["lastVerified"] = max(dates)
 
     matrix["_meta"]["version"] = bump_patch(matrix["_meta"].get("version", "0.0.0"))
-    matrix["_meta"]["last_verified"] = max(touched.values())
+    matrix["_meta"]["last_verified"] = max(touched_records.values())
     return {
         "proposalCount": len(proposals),
-        "recordCount": len(touched),
-        "date": max(touched.values()),
+        "recordCount": len(touched_records),
+        "date": max(touched_records.values()),
         "source": source_label,
         "version": matrix["_meta"]["version"],
     }
@@ -232,7 +272,7 @@ def append_changelog(path, summary):
     entry = (
         f"\n## {summary['date']} - v{summary['version']} - Approved fact proposals\n"
         f"- Applied {summary['proposalCount']} approved fact proposal(s) from "
-        f"`{summary['source']}` across {summary['recordCount']} capability/provider record(s).\n"
+        f"`{summary['source']}` across {summary['recordCount']} record(s).\n"
     )
     if marker in existing:
         existing = existing.replace(marker, marker + entry, 1)

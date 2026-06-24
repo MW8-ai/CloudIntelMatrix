@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.16.5",
+    "version": "3.16.6",
     "schema": "capability-v1",
     "last_verified": "2026-06-24",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
@@ -305,9 +305,9 @@
       "kind": "authorization-program",
       "scope": "Federal cloud security authorization and continuous monitoring program for cloud products and services used by U.S. federal agencies.",
       "status": "Active",
-      "url": "https://www.fedramp.gov/docs/rev5/playbook/csp/authorization/ssp/",
+      "url": "https://www.fedramp.gov/rev5/documents-templates/",
       "nistAlignment": "FedRAMP Rev. 5 baselines are based on NIST SP 800-53 and include FedRAMP-defined parameters and cloud-specific guidance.",
-      "lastVerified": "2026-06-15"
+      "lastVerified": "2026-06-24"
     },
     {
       "id": "govramp",
