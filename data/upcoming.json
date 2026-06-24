@@ -1,9 +1,23 @@
 {
   "_meta": {
     "description": "Announced, preview, or upcoming changes. Removed and promoted to matrix.json when GA. Official sources only.",
-    "last_reviewed": "2026-06-23"
+    "last_reviewed": "2026-06-24"
   },
   "upcoming": [
+    {
+      "id": "aws-lambda-microvms",
+      "provider": "aws",
+      "category": "Core Infrastructure",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "AWS Lambda MicroVMs",
+      "detail": "AWS introduced Lambda MicroVMs as a serverless compute primitive for isolated execution of user-supplied or AI-generated code, with VM-level isolation, near-instant launch and resume, state preservation, and Firecracker virtualization. Track for the Serverless Functions row because this may affect the AWS mapping boundary between Lambda functions, isolated sandboxes, and AI code execution environments.",
+      "status": "announced",
+      "announced": "2026-06-22",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-lambda-microvms/",
+      "verified": true
+    },
     {
       "id": "aws-transform-fsx-ontap-preview",
       "provider": "aws",
