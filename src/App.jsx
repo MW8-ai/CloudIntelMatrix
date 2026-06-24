@@ -207,6 +207,23 @@ const HISTORY_PHASE_STYLES = {
   "Government state/federal": { bg: "#78350f22", fg: "#f59e0b", border: "#b4530955" },
 };
 
+const CATEGORY_ICON_META = {
+  "Core Infrastructure": { kind: "server" },
+  "Identity & Access": { kind: "key" },
+  Networking: { kind: "network" },
+  Storage: { kind: "bucket" },
+  Databases: { kind: "database" },
+  "Integration & Messaging": { kind: "arrows" },
+  "Security & Compliance": { kind: "shield" },
+  "Monitoring & Operations": { kind: "pulse" },
+  "Data & Analytics": { kind: "bars" },
+  "AI / ML": { kind: "nodes" },
+  "Developer Platform": { kind: "code" },
+  "Government / Sovereign Cloud": { kind: "building" },
+  "Hybrid / Edge": { kind: "hybrid" },
+  "Cost Governance": { kind: "cost" },
+};
+
 const COMPLIANCE_KIND_LABELS = {
   "authorization-program": "Authorization Programs",
   regulation: "Regulations",
@@ -419,6 +436,48 @@ function VerifiedStamp({ date }) {
   );
 }
 
+function CategoryIcon({ category, size = 14 }) {
+  const kind = CATEGORY_ICON_META[category]?.kind || "server";
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true",
+    style: { flexShrink: 0 },
+  };
+  const shapes = {
+    server: <><rect x="4" y="5" width="16" height="6" rx="1.5" /><rect x="4" y="13" width="16" height="6" rx="1.5" /><path d="M7 8h.01M7 16h.01" /></>,
+    key: <><circle cx="8" cy="12" r="3" /><path d="M11 12h9M16 12v3M19 12v2" /></>,
+    network: <><circle cx="6" cy="7" r="2" /><circle cx="18" cy="7" r="2" /><circle cx="12" cy="17" r="2" /><path d="M8 8l3 7M16 8l-3 7M8 7h8" /></>,
+    bucket: <><path d="M5 7c0 2 14 2 14 0" /><path d="M5 7l1.5 11c.5 2 10.5 2 11 0L19 7" /><path d="M7 11c3 1 7 1 10 0" /></>,
+    database: <><ellipse cx="12" cy="6" rx="7" ry="3" /><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6" /><path d="M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" /></>,
+    arrows: <><path d="M4 7h12" /><path d="M13 4l3 3-3 3" /><path d="M20 17H8" /><path d="M11 14l-3 3 3 3" /></>,
+    shield: <><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z" /><path d="M9 12l2 2 4-5" /></>,
+    pulse: <><path d="M3 12h4l2-5 4 10 2-5h6" /></>,
+    bars: <><path d="M5 19V9" /><path d="M12 19V5" /><path d="M19 19v-7" /><path d="M4 19h16" /></>,
+    nodes: <><circle cx="6" cy="12" r="2" /><circle cx="18" cy="7" r="2" /><circle cx="18" cy="17" r="2" /><path d="M8 12l8-5M8 12l8 5" /></>,
+    code: <><path d="M8 8l-4 4 4 4" /><path d="M16 8l4 4-4 4" /><path d="M14 5l-4 14" /></>,
+    building: <><path d="M4 20h16" /><path d="M6 20V9l6-4 6 4v11" /><path d="M9 20v-6h6v6" /><path d="M9 10h.01M12 10h.01M15 10h.01" /></>,
+    hybrid: <><rect x="3" y="6" width="7" height="7" rx="1" /><rect x="14" y="11" width="7" height="7" rx="1" /><path d="M10 10h4M12 8v6" /></>,
+    cost: <><circle cx="12" cy="12" r="8" /><path d="M12 7v10M15 9.5c-.8-.7-1.8-1-3-1-1.7 0-3 .8-3 2s1.3 2 3 2 3 .8 3 2-1.3 2-3 2c-1.2 0-2.3-.3-3-1" /></>,
+  };
+  return <svg {...common}>{shapes[kind] || shapes.server}</svg>;
+}
+
+function CategoryLabel({ category, size = 14, uppercase = false, style = {} }) {
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 6, minWidth: 0, ...style }}>
+      <CategoryIcon category={category} size={size} />
+      <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>{uppercase ? category.toUpperCase() : category}</span>
+    </span>
+  );
+}
+
 function GovAvailabilityGlossaryLegend() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
@@ -537,7 +596,9 @@ function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }
           onClick={() => setExpandedId(isExpanded ? null : cap.capability)}
           style={{ padding: "10px 12px", borderRadius: 4, border: `1px solid ${isExpanded ? "var(--link)" : "var(--border)"}`, borderLeft: `3px solid ${isExpanded ? "var(--link)" : "var(--selected-border)"}`, background: isExpanded ? "var(--panel-alt)" : "var(--panel)", cursor: "pointer", minHeight: 88 }}
         >
-          <div style={{ display: "inline-flex", maxWidth: "100%", padding: "2px 6px", borderRadius: 3, border: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", fontSize: 8, letterSpacing: "0.08em", marginBottom: 6, fontWeight: 700 }}>{cap.category.toUpperCase()}</div>
+          <div style={{ display: "inline-flex", maxWidth: "100%", padding: "2px 6px", borderRadius: 3, border: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", fontSize: 8, letterSpacing: "0.08em", marginBottom: 6, fontWeight: 700 }}>
+            <CategoryLabel category={cap.category} size={11} uppercase />
+          </div>
           <div style={{ fontSize: 11, fontWeight: 700, color: "var(--text)", lineHeight: 1.3, marginBottom: 8 }}>{cap.capability}</div>
           {/* Tags */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginBottom: 6 }}>
@@ -655,7 +716,7 @@ function GovView({ caps, activeProviders }) {
       {caps.map((cap, ci) => (
         <div key={cap.capability} style={{ display: "grid", gridTemplateColumns: `220px ${activeProviders.map(() => "1fr").join(" ")}`, gap: 8, marginBottom: 6 }}>
           <div style={{ padding: "8px 12px", borderRadius: 4, border: "1px solid var(--border)", background: ci % 2 === 0 ? "var(--panel)" : "var(--panel-alt)" }}>
-            <div style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.08em" }}>{cap.category}</div>
+            <CategoryLabel category={cap.category} size={11} style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.08em" }} />
             <div style={{ fontSize: 10, fontWeight: 600, color: "var(--text)", marginTop: 2 }}>{cap.capability}</div>
             <div style={{ display: "flex", gap: 3, marginTop: 4, flexWrap: "wrap" }}>
               {cap.tags.filter(t => ["GOV_AVAILABLE","GOV_LIMITED","PARITY_LAG","COMPLIANCE_RELEVANT"].includes(t)).map(t => (
@@ -708,7 +769,7 @@ function AIView({ caps, activeProviders }) {
         return (
           <div key={cap.capability} style={{ display: "grid", gridTemplateColumns: `220px ${activeProviders.map(() => "1fr").join(" ")}`, gap: 8, marginBottom: 6 }}>
             <div style={{ padding: "8px 12px", borderRadius: 4, border: "1px solid var(--border)", background: ci % 2 === 0 ? "var(--panel)" : "var(--panel-alt)" }}>
-              <div style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.08em" }}>{cap.category}</div>
+              <CategoryLabel category={cap.category} size={11} style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.08em" }} />
               <div style={{ fontSize: 10, fontWeight: 600, color: "var(--text)", marginTop: 2 }}>{cap.capability}</div>
               <div style={{ marginTop: 4 }}><TagBadge tagKey={aiClass} /></div>
             </div>
@@ -755,7 +816,7 @@ function DiffView({ caps, activeProviders }) {
       {caps.map((cap, ci) => (
         <div key={cap.capability} style={{ display: "grid", gridTemplateColumns: `220px ${activeProviders.map(() => "1fr").join(" ")}`, gap: 8, marginBottom: 7 }}>
           <div style={{ padding: "10px 12px", borderRadius: 4, border: "1px solid var(--border)", background: ci % 2 === 0 ? "var(--panel)" : "var(--panel-alt)" }}>
-            <div style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.08em" }}>{cap.category}</div>
+            <CategoryLabel category={cap.category} size={11} style={{ fontSize: 8, color: "var(--link)", letterSpacing: "0.08em" }} />
             <div style={{ fontSize: 10, fontWeight: 600, color: "var(--text)", marginTop: 2 }}>{cap.capability}</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 3, marginTop: 5 }}>
               {cap.tags.slice(0,3).map(t => <TagBadge key={t} tagKey={t} />)}
@@ -855,7 +916,7 @@ function PatternView({ patterns, activeProviders }) {
                   ))}
                   {linkedCaps.flatMap(cap => [
                     <div key={`${cap.capability}-label`} style={{ padding: "7px 8px", borderBottom: "1px solid var(--border)" }}>
-                      <div style={{ fontSize: 9, color: "var(--link)" }}>{cap.category}</div>
+                      <CategoryLabel category={cap.category} size={11} style={{ fontSize: 9, color: "var(--link)" }} />
                       <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 600, lineHeight: 1.4 }}>{cap.capability}</div>
                     </div>,
                     ...activeProviders.map(provKey => {
@@ -1604,11 +1665,14 @@ export default function App() {
                     const count = CAPABILITIES.filter(c => c.category === cat).length;
                     return (
                       <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
-                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
                         border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
                         background: selectedCategory === cat ? "var(--selected-bg)" : "transparent",
                         color: selectedCategory === cat ? "var(--selected-text)" : "var(--muted)",
-                      }}>{cat} ({count})</button>
+                      }}>
+                        <CategoryLabel category={cat} size={12} />
+                        <span>({count})</span>
+                      </button>
                     );
                   })}
                 </div>
@@ -1670,7 +1734,7 @@ export default function App() {
                   <Fragment key={cap.capability}>
                     {startsCategory && (
                       <div style={{ margin: index === 0 ? "0 0 8px" : "18px 0 8px", padding: "7px 10px", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em" }}>{cap.category.toUpperCase()}</span>
+                        <CategoryLabel category={cap.category} size={15} uppercase style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em" }} />
                         <span style={{ fontSize: 9, color: "var(--muted)" }}>{categoryCount} capability row(s)</span>
                       </div>
                     )}
