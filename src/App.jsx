@@ -41,6 +41,10 @@ const PROVIDERS = META.providers;
 const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
 
 const THEME_STORAGE_KEY = "cloudintel-theme";
+const DEFAULT_MODE = "matrix";
+const DEFAULT_TIER = "Enterprise";
+const DEFAULT_TRANSPARENCY_STATUS = "All";
+const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency", "diff", "gov", "ai"];
 
 const THEME_TOKENS = {
   light: {
@@ -101,6 +105,62 @@ function getInitialTheme() {
     // Ignore storage access errors and use the readable default.
   }
   return "light";
+}
+
+function getUrlSearchParams() {
+  if (typeof window === "undefined") return new URLSearchParams();
+  return new URLSearchParams(window.location.search);
+}
+
+function getInitialMode() {
+  const value = getUrlSearchParams().get("view");
+  return VALID_MODES.includes(value) ? value : DEFAULT_MODE;
+}
+
+function getInitialProviders() {
+  const value = getUrlSearchParams().get("providers");
+  if (!value) return [...PROVIDERS];
+  const selected = value.split(",").map(item => item.trim().toLowerCase()).filter(item => PROVIDERS.includes(item));
+  const ordered = PROVIDERS.filter(provider => selected.includes(provider));
+  return ordered.length ? ordered : [...PROVIDERS];
+}
+
+function getInitialCategory() {
+  const value = getUrlSearchParams().get("category");
+  return CATEGORIES.includes(value) ? value : null;
+}
+
+function getInitialSearchQuery() {
+  return getUrlSearchParams().get("q") || "";
+}
+
+function getInitialTier() {
+  const value = getUrlSearchParams().get("tier");
+  if (value === "all") return null;
+  return META.tiers.includes(value) ? value : DEFAULT_TIER;
+}
+
+function getInitialTransparencyStatus() {
+  const value = getUrlSearchParams().get("state");
+  return TRANSPARENCY_STATUS_ORDER.includes(value) ? value : DEFAULT_TRANSPARENCY_STATUS;
+}
+
+function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedTier, selectedTransparencyStatus }) {
+  if (typeof window === "undefined") return;
+  const params = new URLSearchParams();
+  if (mode !== DEFAULT_MODE) params.set("view", mode);
+  const q = searchQuery.trim();
+  if (q) params.set("q", q);
+  if (activeProviders.length !== PROVIDERS.length) params.set("providers", activeProviders.join(","));
+  if (selectedCategory) params.set("category", selectedCategory);
+  if (selectedTier === null) params.set("tier", "all");
+  else if (selectedTier !== DEFAULT_TIER) params.set("tier", selectedTier);
+  if (selectedTransparencyStatus !== DEFAULT_TRANSPARENCY_STATUS) params.set("state", selectedTransparencyStatus);
+
+  const query = params.toString();
+  const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+  const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (nextUrl !== currentUrl) window.history.replaceState(null, "", nextUrl);
 }
 
 const PROVIDER_META = {
@@ -1147,13 +1207,13 @@ function UpcomingBanner({ items }) {
 // ── ROOT ───────────────────────────────────────────────────────────────────
 export default function App() {
   const [theme, setTheme] = useState(getInitialTheme);
-  const [mode, setMode] = useState("matrix");   // matrix | patterns | controls | history | diff | gov | ai
-  const [activeProviders, setActiveProviders] = useState([...PROVIDERS]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [mode, setMode] = useState(getInitialMode);
+  const [activeProviders, setActiveProviders] = useState(getInitialProviders);
+  const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
+  const [searchQuery, setSearchQuery] = useState(getInitialSearchQuery);
   const [expandedId, setExpandedId] = useState(null);
-  const [selectedTier, setSelectedTier] = useState("Enterprise");
-  const [selectedTransparencyStatus, setSelectedTransparencyStatus] = useState("All");
+  const [selectedTier, setSelectedTier] = useState(getInitialTier);
+  const [selectedTransparencyStatus, setSelectedTransparencyStatus] = useState(getInitialTransparencyStatus);
   const themeVars = THEME_TOKENS[theme];
 
   useEffect(() => {
@@ -1164,8 +1224,17 @@ export default function App() {
     }
   }, [theme]);
 
+  useEffect(() => {
+    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedTier, selectedTransparencyStatus });
+  }, [activeProviders, mode, searchQuery, selectedCategory, selectedTier, selectedTransparencyStatus]);
+
   const toggleProvider = p =>
-    setActiveProviders(prev => prev.includes(p) ? (prev.length > 1 ? prev.filter(x => x !== p) : prev) : [...prev, p]);
+    setActiveProviders(prev => {
+      const next = prev.includes(p)
+        ? (prev.length > 1 ? prev.filter(x => x !== p) : prev)
+        : [...prev, p];
+      return PROVIDERS.filter(provider => next.includes(provider));
+    });
 
   const filteredCaps = useMemo(() => {
     let caps = CAPABILITIES;
@@ -1408,33 +1477,8 @@ export default function App() {
             </div>
           </div>
 
-          {/* Search */}
-          <div style={{ marginLeft: 20, flex: 1, maxWidth: 360 }}>
-            <input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search capability, pattern, state, service, tag..."
-              style={{
-                width: "100%", padding: "7px 12px", borderRadius: 4,
-                border: "1px solid var(--border)", background: "var(--panel)",
-                color: "var(--text)", fontSize: 10, fontFamily: "inherit",
-              }}
-            />
-          </div>
-
           {/* Stats strip */}
           <div style={{ marginLeft: "auto", display: "flex", gap: 16, alignItems: "center" }}>
-            <button
-              className="hb"
-              onClick={() => setTheme(prev => prev === "dark" ? "light" : "dark")}
-              style={{
-                padding: "6px 10px", borderRadius: 4, fontSize: 10, fontWeight: 700,
-                border: "1px solid var(--border)", background: "var(--panel)",
-                color: "var(--text)", fontFamily: "inherit", whiteSpace: "nowrap",
-              }}
-            >
-              Theme: {theme === "dark" ? "Dark" : "Light"}
-            </button>
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 16, fontWeight: 700, color: "#f87171" }}>{govAlertCount}</div>
               <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>GOV REVIEW</div>
@@ -1459,23 +1503,65 @@ export default function App() {
               fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", fontFamily: "inherit",
             }}>{m.label}</button>
           ))}
-          {/* Provider toggles pushed right */}
-          <div style={{ marginLeft: "auto", display: "flex", gap: 6, alignItems: "center", paddingBottom: 8 }}>
+        </div>
+      </div>
+
+      {/* ── FILTER BAR ── */}
+      <div style={{ position: "sticky", top: 0, zIndex: 40, padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 280px", minWidth: 240, maxWidth: 440 }}>
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search capability, pattern, state, service, tag..."
+              style={{
+                width: "100%", padding: "7px 12px", borderRadius: 4,
+                border: "1px solid var(--border)", background: "var(--panel-alt)",
+                color: "var(--text)", fontSize: 10, fontFamily: "inherit",
+              }}
+            />
+          </div>
+
+          {mode === "matrix" && (
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>TIER</span>
+              {META.tiers.map(t => (
+                <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
+                  padding: "3px 9px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                  border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
+                  background: selectedTier === t ? "var(--selected-bg)" : "transparent",
+                  color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
+                }}>{t}</button>
+              ))}
+            </div>
+          )}
+
+          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+            <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>PROVIDERS</span>
             {PROVIDERS.map(p => (
               <button key={p} className="hb" onClick={() => toggleProvider(p)} style={{
-                padding: "3px 12px", borderRadius: 4, fontSize: 10, fontWeight: 600, letterSpacing: "0.07em",
+                padding: "3px 10px", borderRadius: 4, fontSize: 10, fontWeight: 600, letterSpacing: "0.07em",
                 border: `1px solid ${activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--border)"}`,
                 background: activeProviders.includes(p) ? `${PROVIDER_META[p].dot}22` : "transparent",
                 color: activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--muted)",
               }}>{PROVIDER_META[p].label}</button>
             ))}
           </div>
-        </div>
-      </div>
 
-      {/* ── FILTER BAR ── */}
-      <div style={{ padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-        <div className={`filter-groups ${mode === "matrix" || mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
+          <button
+            className="hb"
+            onClick={() => setTheme(prev => prev === "dark" ? "light" : "dark")}
+            style={{
+              marginLeft: "auto", padding: "6px 10px", borderRadius: 4, fontSize: 10, fontWeight: 700,
+              border: "1px solid var(--border)", background: "var(--panel-alt)",
+              color: "var(--text)", fontFamily: "inherit", whiteSpace: "nowrap",
+            }}
+          >
+            Theme: {theme === "dark" ? "Dark" : "Light"}
+          </button>
+        </div>
+
+        <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
           <div>
             {mode === "transparency" ? (
               <>
@@ -1529,28 +1615,6 @@ export default function App() {
               </>
             )}
           </div>
-
-          {/* Tier selector (only relevant for matrix mode) */}
-          {mode === "matrix" && (
-            <div className="filter-context">
-              <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>TIER GUIDANCE</span>
-                <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
-                  Showing: {selectedTier || "All tiers"}
-                </span>
-              </div>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                {META.tiers.map(t => (
-                  <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
-                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
-                    background: selectedTier === t ? "var(--selected-bg)" : "transparent",
-                    color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
-                  }}>{t}</button>
-                ))}
-              </div>
-            </div>
-          )}
 
           {mode === "controls" && (
             <div className="filter-context">
