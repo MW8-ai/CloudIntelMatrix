@@ -13,6 +13,14 @@ import {
   printExport,
   transparencyExport,
 } from "./exportHelpers";
+import {
+  GOV_AVAILABILITY_GLOSSARY,
+  PARITY_LAG_GLOSSARY,
+  getGovAvailabilityGlossary,
+  getParityLagGlossary,
+  getTagGlossary,
+  glossaryTitle,
+} from "./glossary";
 
 const {
   capabilities: CAPABILITIES,
@@ -163,36 +171,100 @@ const TRANSPARENCY_STATUS_STYLES = {
   Unknown: { bg: "#33415522", fg: "#64748b", border: "#64748b55" },
 };
 
+function GlossaryBadge({ label, description, styleDef, shape = "pill" }) {
+  const [open, setOpen] = useState(false);
+  const title = glossaryTitle(label, description);
+  return (
+    <span
+      role="button"
+      tabIndex={0}
+      title={title}
+      aria-label={title}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      onFocus={() => setOpen(true)}
+      onBlur={() => setOpen(false)}
+      onClick={() => setOpen(current => !current)}
+      onKeyDown={event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          setOpen(current => !current);
+        }
+      }}
+      style={{
+        position: "relative",
+        display: "inline-flex",
+        alignItems: "center",
+        width: "fit-content",
+        fontSize: 8,
+        padding: shape === "pill" ? "2px 7px" : "2px 6px",
+        borderRadius: shape === "pill" ? 10 : 3,
+        fontWeight: 700,
+        letterSpacing: shape === "pill" ? "0.07em" : "0.06em",
+        background: styleDef.bg,
+        color: styleDef.fg,
+        border: `1px solid ${styleDef.border || `${styleDef.fg}33`}`,
+        cursor: "help",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {label}
+      {open && (
+        <span
+          style={{
+            position: "absolute",
+            left: 0,
+            bottom: "calc(100% + 6px)",
+            width: 230,
+            maxWidth: "min(70vw, 260px)",
+            padding: "8px 9px",
+            borderRadius: 4,
+            border: "1px solid var(--border)",
+            background: "var(--panel)",
+            color: "var(--text)",
+            boxShadow: "0 10px 24px rgba(0,0,0,0.22)",
+            fontSize: 10,
+            fontWeight: 500,
+            lineHeight: 1.45,
+            letterSpacing: 0,
+            textTransform: "none",
+            whiteSpace: "normal",
+            zIndex: 50,
+          }}
+        >
+          <strong style={{ display: "block", color: "var(--link)", fontSize: 9, marginBottom: 3 }}>{label}</strong>
+          {description}
+        </span>
+      )}
+    </span>
+  );
+}
+
 function TagBadge({ tagKey }) {
   const def = TAG_DEFS[tagKey];
   if (!def) return null;
+  const glossary = getTagGlossary(TAG_DEFS, tagKey);
   const s = TAG_STYLES[def.color] || TAG_STYLES.gray;
   return (
-    <span title={def.description} style={{
-      fontSize: 8, padding: "2px 7px", borderRadius: 10, fontWeight: 700, letterSpacing: "0.07em",
-      background: s.bg, color: s.fg, border: `1px solid ${s.border}`,
-      cursor: "help", whiteSpace: "nowrap",
-    }}>{def.label}</span>
+    <GlossaryBadge label={glossary.label} description={glossary.description} styleDef={s} />
   );
 }
 
 function GovBadge({ avail }) {
   const s = GOV_AVAIL_STYLES[avail] || GOV_AVAIL_STYLES["None"];
   if (avail === "None") return null;
+  const glossary = getGovAvailabilityGlossary(avail);
   return (
-    <span style={{ fontSize: 8, padding: "2px 6px", borderRadius: 3, fontWeight: 700, letterSpacing: "0.06em", background: s.bg, color: s.fg, whiteSpace: "nowrap" }}>
-      {s.label}
-    </span>
+    <GlossaryBadge label={s.label} description={glossary.description} styleDef={s} shape="block" />
   );
 }
 
 function ParityBadge({ parity }) {
   if (!parity || parity === "None") return null;
   const s = PARITY_STYLES[parity] || PARITY_STYLES["Minor"];
+  const glossary = getParityLagGlossary(parity);
   return (
-    <span style={{ fontSize: 8, padding: "2px 6px", borderRadius: 3, fontWeight: 700, letterSpacing: "0.06em", background: s.bg, color: s.fg, border: `1px solid ${s.fg}33`, whiteSpace: "nowrap" }}>
-      {s.label}
-    </span>
+    <GlossaryBadge label={s.label} description={glossary.description} styleDef={s} shape="block" />
   );
 }
 
@@ -284,6 +356,53 @@ function VerifiedStamp({ date }) {
   const state = getVerificationState(date);
   return (
     <VerificationPill state={state.tone} label={state.label} icon={state.icon} title={state.title} />
+  );
+}
+
+function GovAvailabilityGlossaryLegend() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+      <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>GOV AVAILABILITY</span>
+      {Object.keys(GOV_AVAILABILITY_GLOSSARY).map(value => {
+        const baseStyle = GOV_AVAIL_STYLES[value] || GOV_AVAIL_STYLES.Unknown;
+        const styleDef = ["None", "Unknown"].includes(value)
+          ? { bg: "var(--panel-alt)", fg: "var(--muted)", border: "var(--border)" }
+          : baseStyle;
+        const glossary = getGovAvailabilityGlossary(value);
+        return (
+          <GlossaryBadge
+            key={value}
+            label={baseStyle.label}
+            description={glossary.description}
+            styleDef={styleDef}
+            shape="block"
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function ParityLagGlossaryLegend() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+      <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>PARITY LAG</span>
+      {Object.keys(PARITY_LAG_GLOSSARY).map(value => {
+        const styleDef = value === "None"
+          ? { bg: "var(--panel-alt)", fg: "var(--muted)", border: "var(--border)" }
+          : PARITY_STYLES[value] || PARITY_STYLES.Unknown;
+        const glossary = getParityLagGlossary(value);
+        return (
+          <GlossaryBadge
+            key={value}
+            label={styleDef.label || "LAG NONE"}
+            description={glossary.description}
+            styleDef={styleDef}
+            shape="block"
+          />
+        );
+      })}
+    </div>
   );
 }
 
@@ -1517,6 +1636,10 @@ export default function App() {
                 <span style={{ fontSize: 8, color: "var(--muted)" }}>{def.description}</span>
               </div>
             ))}
+          </div>
+          <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid var(--border)", display: "grid", gap: 8 }}>
+            <GovAvailabilityGlossaryLegend />
+            <ParityLagGlossaryLegend />
           </div>
           <div style={{ marginTop: 12, paddingTop: 10, borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>VERIFICATION</span>
