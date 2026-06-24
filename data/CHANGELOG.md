@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-24 - Glossary tooltips
+- Added shared UI glossary definitions and hover/focus/tap tooltips for capability tags, government availability badges, and parity lag badges.
+
 ## 2026-06-24 - v3.16.5 - Approved fact proposals
 - Applied 3 approved fact proposal(s) from `data/proposals/foundry-lineage-2026-06-24.json` across 1 capability/provider record(s).
 
