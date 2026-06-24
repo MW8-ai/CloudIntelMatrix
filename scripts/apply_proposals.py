@@ -14,10 +14,12 @@ if hasattr(sys.stdout, "reconfigure"):
 ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
 PROVIDER_FIELDS = {
+    "service",
     "status",
     "govAvailability",
     "parityLag",
     "govVariant",
+    "formerNames",
     "docsUrl",
     "pricingUrl",
     "complianceUrl",
@@ -150,12 +152,19 @@ def validate_proposal_shape(proposal, index):
 def validate_proposed_value(proposal, index):
     field = proposal["field"]
     value = proposal.get("proposedValue")
+    if field == "service" and not str(value or "").strip():
+        raise ProposalError(f"proposal[{index}].proposedValue for service must not be empty")
     if field in ENUMS and value not in ENUMS[field]:
         raise ProposalError(f"proposal[{index}].proposedValue invalid for {field}: {value}")
     if field in URL_FIELDS:
         validate_url(value, f"proposal[{index}].proposedValue")
     if field == "govVariant" and value is not None and not str(value).strip():
         raise ProposalError(f"proposal[{index}].proposedValue for govVariant must be non-empty or null")
+    if field == "formerNames":
+        if not isinstance(value, list) or not value:
+            raise ProposalError(f"proposal[{index}].proposedValue for formerNames must be a non-empty array")
+        if len(value) != len(set(value)) or any(not isinstance(item, str) or not item.strip() for item in value):
+            raise ProposalError(f"proposal[{index}].proposedValue for formerNames must contain unique non-empty strings")
 
 
 def append_source_note(provider, proposal):

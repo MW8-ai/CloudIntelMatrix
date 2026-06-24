@@ -338,6 +338,11 @@ function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }
               return (
                 <div key={provKey} style={{ padding: "10px 12px", borderRadius: 4, border: `1px solid ${pm.border}`, background: pm.bg }}>
                   <div style={{ fontSize: 10, fontWeight: 700, color: pm.dot, marginBottom: 6 }}>{pm.label} — {prov.service}</div>
+                  {prov.formerNames?.length > 0 && (
+                    <div style={{ fontSize: 8, color: "var(--muted)", lineHeight: 1.45, marginBottom: 7 }}>
+                      <span style={{ color: "var(--text)", fontWeight: 700 }}>Formerly: </span>{prov.formerNames.join(" / ")}
+                    </div>
+                  )}
                   <div style={{ display: "flex", gap: 4, marginBottom: 8, flexWrap: "wrap" }}>
                     <GovBadge avail={prov.govAvailability} />
                     <ParityBadge parity={prov.parityLag} />
@@ -974,7 +979,10 @@ export default function App() {
         c.tags.some(t => t.toLowerCase().includes(q)) ||
         c.architectureNotes?.toLowerCase().includes(q) ||
         c.operationalConsiderations?.toLowerCase().includes(q) ||
-        Object.values(c.providers).some(p => p.service?.toLowerCase().includes(q))
+        Object.values(c.providers).some(p =>
+          p.service?.toLowerCase().includes(q) ||
+          p.formerNames?.some(name => name.toLowerCase().includes(q))
+        )
       );
     }
     return caps;
@@ -998,7 +1006,10 @@ export default function App() {
           pattern.reviewPrompts.some(prompt => prompt.toLowerCase().includes(q)) ||
           linkedCaps.some(cap =>
             cap.capability.toLowerCase().includes(q) ||
-            Object.values(cap.providers).some(provider => provider.service.toLowerCase().includes(q))
+            Object.values(cap.providers).some(provider =>
+              provider.service.toLowerCase().includes(q) ||
+              provider.formerNames?.some(name => name.toLowerCase().includes(q))
+            )
           )
         );
       });
@@ -1024,7 +1035,10 @@ export default function App() {
           family.reviewPrompts.some(prompt => prompt.toLowerCase().includes(q)) ||
           linkedCaps.some(cap =>
             cap.capability.toLowerCase().includes(q) ||
-            Object.values(cap.providers).some(provider => provider.service.toLowerCase().includes(q))
+            Object.values(cap.providers).some(provider =>
+              provider.service.toLowerCase().includes(q) ||
+              provider.formerNames?.some(name => name.toLowerCase().includes(q))
+            )
           )
         );
       });

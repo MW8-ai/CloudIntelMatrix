@@ -141,10 +141,12 @@ TRANSPARENCY_REQUIRED = [
 ]
 TRANSPARENCY_ALLOWED = set(TRANSPARENCY_REQUIRED)
 PROPOSAL_PROVIDER_FIELDS = {
+    "service",
     "status",
     "govAvailability",
     "parityLag",
     "govVariant",
+    "formerNames",
     "docsUrl",
     "pricingUrl",
     "complianceUrl",
@@ -196,7 +198,7 @@ PROV_REQUIRED = [
     "complianceUrl",
     "tierNotes",
 ]
-PROV_ALLOWED = set(PROV_REQUIRED + ["govVariant", "govDocsUrl", "sourceNotes"])
+PROV_ALLOWED = set(PROV_REQUIRED + ["formerNames", "govVariant", "govDocsUrl", "sourceNotes"])
 
 ERRORS = []
 WARNINGS = []
@@ -420,6 +422,12 @@ def validate_matrix(mdata):
                 validate_url(provider.get(field), f"'{name}/{pkey}'.{field}", notes_available)
             if "govDocsUrl" in provider:
                 validate_url(provider.get("govDocsUrl"), f"'{name}/{pkey}'.govDocsUrl", notes_available)
+            if "formerNames" in provider:
+                former_names = provider.get("formerNames")
+                if not isinstance(former_names, list) or not former_names:
+                    err(f"'{name}/{pkey}'.formerNames must be a non-empty array when present")
+                elif len(former_names) != len(set(former_names)) or any(not isinstance(item, str) or not item.strip() for item in former_names):
+                    err(f"'{name}/{pkey}'.formerNames must contain unique non-empty strings")
 
             tier_notes = provider.get("tierNotes", {})
             if not isinstance(tier_notes, dict):
@@ -734,7 +742,9 @@ def is_official_source_url(url):
 
 
 def proposal_value_valid(field, value, label):
-    if field == "status" and value not in VALID_STATUS:
+    if field == "service" and not str(value or "").strip():
+        err(f"{label}.proposedValue for service must not be empty")
+    elif field == "status" and value not in VALID_STATUS:
         err(f"{label}.proposedValue invalid for status: {value}")
     elif field == "govAvailability" and value not in VALID_GOV:
         err(f"{label}.proposedValue invalid for govAvailability: {value}")
@@ -744,6 +754,11 @@ def proposal_value_valid(field, value, label):
         validate_url(value, f"{label}.proposedValue", True)
     elif field == "govVariant" and value is not None and not str(value).strip():
         err(f"{label}.proposedValue for govVariant must be non-empty or null")
+    elif field == "formerNames":
+        if not isinstance(value, list) or not value:
+            err(f"{label}.proposedValue for formerNames must be a non-empty array")
+        elif len(value) != len(set(value)) or any(not isinstance(item, str) or not item.strip() for item in value):
+            err(f"{label}.proposedValue for formerNames must contain unique non-empty strings")
 
 
 def validate_proposal_files(matrix):

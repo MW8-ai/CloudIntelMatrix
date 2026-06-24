@@ -4,6 +4,12 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-24 - v3.16.5 - Approved fact proposals
+- Applied 3 approved fact proposal(s) from `data/proposals/foundry-lineage-2026-06-24.json` across 1 capability/provider record(s).
+
+## 2026-06-24 - Foundry lineage field support
+- Added optional provider `formerNames` support across schema validation, proposal application, browser display, CSV/XLSX exports, and search.
+
 ## 2026-06-23 - Link-check cadence hygiene
 - Updated the public link checker to retry with GET when a source returns a method-sensitive HEAD response, reducing false warnings for official source pages that are reachable in a browser.
 
