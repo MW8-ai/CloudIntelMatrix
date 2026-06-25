@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Azure pricing link-check noise reduction
+- Changed the public link checker to report repeated Azure pricing-page timeouts as informational output instead of recurring warnings, while preserving warnings for actual HTTP/link failures.
+
 ## 2026-06-25 - Issue #54 late high-value update triage
 - Added `upcoming.json` tracking entries for Azure Application Gateway for Containers inference gateway preview, Amazon EC2 AMI Watermarks, and Amazon GuardDuty AI-powered investigations preview from official provider sources.
 
