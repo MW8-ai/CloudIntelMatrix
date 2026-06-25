@@ -1035,11 +1035,11 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
         time.sleep(0.2)
 
     if azure_pricing_timeouts or azure_pricing_skipped:
-        warn(
-            "Azure pricing link review remains unverified for this run: "
+        info(
+            "Azure pricing link review skipped after repeated timeouts: "
             f"{len(azure_pricing_timeouts)} distinct URL(s) timed out and "
             f"{len(azure_pricing_skipped)} additional URL(s) were skipped "
-            "after repeated timeouts."
+            "to keep public link checks actionable."
         )
 
 
