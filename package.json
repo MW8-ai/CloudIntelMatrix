@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "verify": "python scripts/verify.py",
+    "verify:view-model": "node scripts/verify_view_model.mjs",
     "generate-xlsx": "python scripts/generate_xlsx.py",
     "check-updates": "python scripts/check_upcoming.py"
   },
