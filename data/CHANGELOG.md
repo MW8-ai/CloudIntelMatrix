@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 Azure retirement triage
+- Added `upcoming.json` tracking entries for Azure VM size-series retirements and Azure Load Balancer Inbound NAT Pools retirement using official Microsoft Learn sources.
+
 ## 2026-06-24 - v3.16.6 - Approved fact proposals
 - Applied 1 approved fact proposal(s) from `data/proposals/fedramp-link-freshness-2026-06-24.json` across 1 record(s).
 

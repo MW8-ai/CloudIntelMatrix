@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Announced, preview, or upcoming changes. Removed and promoted to matrix.json when GA. Official sources only.",
-    "last_reviewed": "2026-06-24"
+    "last_reviewed": "2026-06-25"
   },
   "upcoming": [
     {
@@ -44,6 +44,34 @@
       "announced": "2025-09",
       "expected_ga": "2026-10",
       "source": "https://learn.microsoft.com/en-us/azure/storage/common/legacy-blob-storage-account-migration-overview",
+      "verified": true
+    },
+    {
+      "id": "azure-vm-size-series-retirements-2028",
+      "provider": "azure",
+      "category": "Core Infrastructure",
+      "tier": "Enterprise",
+      "type": "deprecation_notice",
+      "title": "Azure previous-generation VM size series retirements",
+      "detail": "Microsoft lists multiple Azure VM size series as announced for retirement, including D, Ds, Dv2, Dsv2, and Ls on May 1, 2028, and Av2/Amv2, B v1, F, Fs, Fsv2, G, Gs, and Lsv2 on November 15, 2028. Track for Azure Virtual Machines architecture planning because affected VM and Azure Batch pools may require size-family migration; this does not change the mapped Azure Virtual Machines service status.",
+      "status": "deprecated",
+      "announced": "2025-03-31/2025-10-15",
+      "expected_ga": "2028",
+      "source": "https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/retirement/retired-sizes-list",
+      "verified": true
+    },
+    {
+      "id": "azure-load-balancer-inbound-nat-pools-retirement",
+      "provider": "azure",
+      "category": "Networking",
+      "tier": "Enterprise",
+      "type": "deprecation_notice",
+      "title": "Azure Load Balancer Inbound NAT Pools retirement",
+      "detail": "Microsoft documents retirement of Inbound NAT Pools, the Virtual Machine Scale Sets-specific feature of Inbound NAT rules V1, on September 30, 2027, with new Inbound NAT Pool creation blocked starting November 15, 2026. Track for Azure networking and VMSS access design; single-VM Inbound NAT rules V1 are explicitly not affected.",
+      "status": "deprecated",
+      "announced": "2026-06-11",
+      "expected_ga": "2027-09-30",
+      "source": "https://learn.microsoft.com/en-us/azure/load-balancer/inbound-nat-rules",
       "verified": true
     },
     {
