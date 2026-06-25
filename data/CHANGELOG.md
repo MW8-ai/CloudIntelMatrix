@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 late high-value update triage
+- Added `upcoming.json` tracking entries for Azure Application Gateway for Containers inference gateway preview, Amazon EC2 AMI Watermarks, and Amazon GuardDuty AI-powered investigations preview from official provider sources.
+
 ## 2026-06-25 - Issue #54 GCP platform triage
 - Added `upcoming.json` tracking entries for Gemini Enterprise Agent Platform GA agent gateway, observability, registry, and Terraform support; Google Cloud API Gateway runtime architecture behavior; and BigQuery autonomous embedding generation from official Google Cloud release notes.
 

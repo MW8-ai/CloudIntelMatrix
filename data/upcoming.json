@@ -89,6 +89,20 @@
       "verified": true
     },
     {
+      "id": "azure-app-gateway-containers-inference-gateway-preview",
+      "provider": "azure",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Application Gateway for Containers inference gateway preview",
+      "detail": "Microsoft documents Application Gateway for Containers inference gateway in public preview for self-hosted model servers, using the Kubernetes Gateway API Inference Extension for model-aware and load-aware routing, and pairing inference traffic with Web Application Firewall controls. Track for Managed Kubernetes, AI serving, and gateway architecture decisions; do not change regulated availability or parity from this preview documentation alone.",
+      "status": "preview",
+      "announced": "2026-06-24",
+      "expected_ga": null,
+      "source": "https://learn.microsoft.com/en-us/azure/application-gateway/for-containers/inference-gateway",
+      "verified": true
+    },
+    {
       "id": "gcp-ai-hypercomputer-preview-updates",
       "provider": "gcp",
       "category": "AI / ML",
@@ -240,6 +254,34 @@
       "announced": "2026-06-23",
       "expected_ga": null,
       "source": "https://aws.amazon.com/about-aws/whats-new/2026/02/g7e-new-launch-sagemaker-studio-notebooks/",
+      "verified": true
+    },
+    {
+      "id": "aws-ec2-ami-watermarks-governance",
+      "provider": "aws",
+      "category": "Security & Compliance",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon EC2 AMI Watermarks for AMI governance",
+      "detail": "AWS announced AMI Watermarks for Amazon EC2, letting customers embed custom identifiers in private AMIs that carry forward to AMIs derived from the original. Track for Landing Zone & Resource Governance and Virtual Machines decisions because approved-image lineage and AMI governance affect enterprise control evidence; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-24",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/ec2-image-watermarks-allowed-images/",
+      "verified": true
+    },
+    {
+      "id": "aws-guardduty-ai-powered-investigations-preview",
+      "provider": "aws",
+      "category": "Security & Compliance",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon GuardDuty AI-powered investigations preview",
+      "detail": "AWS announced a preview of AI-powered investigations in Amazon GuardDuty that analyzes GuardDuty findings and accounts to help distinguish true threats from noisy findings and accelerate threat response. Track for Security & Compliance Posture Management and SIEM decisions because AI-assisted investigation changes alert triage and response workflow design; do not change regulated availability or parity from this preview announcement alone.",
+      "status": "preview",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-guardduty/",
       "verified": true
     },
     {
