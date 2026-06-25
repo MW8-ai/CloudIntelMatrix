@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 Azure Migrate preview triage
+- Added an `upcoming.json` tracking entry for Azure Migrate GitHub Copilot Modernization code insights preview using official Microsoft Learn documentation.
+
 ## 2026-06-25 - Issue #54 Azure retirement triage
 - Added `upcoming.json` tracking entries for Azure VM size-series retirements and Azure Load Balancer Inbound NAT Pools retirement using official Microsoft Learn sources.
 

@@ -75,6 +75,20 @@
       "verified": true
     },
     {
+      "id": "azure-migrate-copilot-modernization-preview",
+      "provider": "azure",
+      "category": "Hybrid / Edge",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Azure Migrate - GitHub Copilot Modernization code insights preview",
+      "detail": "Microsoft documents a public preview Azure Migrate integration with GitHub Copilot Modernization for code insights during application migration assessment. The workflow can generate code assessment reports for .NET and Java web apps and map recommendations back into Azure Migrate for Azure App Service and AKS targets. Track for the Cloud Migration Tooling row because this adds AI-assisted modernization assessment to Azure Migrate; do not change GA status or regulated parity until official sources establish those separately.",
+      "status": "preview",
+      "announced": "2026-06-17",
+      "expected_ga": null,
+      "source": "https://learn.microsoft.com/en-us/azure/migrate/add-copilot-code-insights",
+      "verified": true
+    },
+    {
       "id": "aws-finops-agent-preview",
       "provider": "aws",
       "category": "Cost Governance",
