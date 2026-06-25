@@ -103,6 +103,48 @@
       "verified": true
     },
     {
+      "id": "gcp-gemini-enterprise-agent-platform-ga-updates",
+      "provider": "gcp",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Gemini Enterprise Agent Platform GA agent gateway, observability, and registry updates",
+      "detail": "Google Cloud release notes document GA Agent Gateway, GA Agent Observability, and GA Agent Registry features for Gemini Enterprise Agent Platform. Agent Registry includes API v1 and client libraries, Agent-to-Agent protocol v1 support, and Terraform support for agents, MCP servers, endpoints, and bindings; documented limitations include unavailable Access Transparency and Access Approval for Agent Registry configurations and limited data residency compliance reporting. Track for the AI Agents & Tool Orchestration row; do not change regulated availability or parity from these commercial release notes alone.",
+      "status": "announced",
+      "announced": "2026-06-18",
+      "expected_ga": null,
+      "source": "https://docs.cloud.google.com/release-notes#June_18_2026",
+      "verified": true
+    },
+    {
+      "id": "gcp-api-gateway-runtime-architecture-update",
+      "provider": "gcp",
+      "category": "Integration & Messaging",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Google Cloud API Gateway runtime architecture update",
+      "detail": "Google Cloud release notes document an API Gateway runtime architecture update with changed gRPC error status codes and fail-closed behavior for 4xx client-side quota failures. Track for the API Management & Integration Gateway row because request rejection and error-code behavior can affect client handling, quotas, and integration testing; do not change regulated availability or parity from this release note alone.",
+      "status": "announced",
+      "announced": "2026-06-18",
+      "expected_ga": null,
+      "source": "https://docs.cloud.google.com/release-notes#June_18_2026",
+      "verified": true
+    },
+    {
+      "id": "gcp-bigquery-autonomous-embedding-generation-ga",
+      "provider": "gcp",
+      "category": "Data & Analytics",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "BigQuery autonomous embedding generation generally available",
+      "detail": "Google Cloud release notes document general availability of autonomous embedding generation in BigQuery, where BigQuery maintains an embedding column from a source column and updates embeddings when source data changes. Track for the Data Warehouse / Analytics Platform and Vector Retrieval & RAG Knowledge Bases rows because warehouse-native embedding lifecycle changes analytics and retrieval architecture; do not change regulated availability or parity from this commercial release note alone.",
+      "status": "announced",
+      "announced": "2026-06-17",
+      "expected_ga": null,
+      "source": "https://docs.cloud.google.com/release-notes#June_17_2026",
+      "verified": true
+    },
+    {
       "id": "aws-agentcore-memory-cross-account-access",
       "provider": "aws",
       "category": "AI / ML",

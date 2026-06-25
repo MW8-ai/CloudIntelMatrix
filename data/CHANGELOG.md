@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 GCP platform triage
+- Added `upcoming.json` tracking entries for Gemini Enterprise Agent Platform GA agent gateway, observability, registry, and Terraform support; Google Cloud API Gateway runtime architecture behavior; and BigQuery autonomous embedding generation from official Google Cloud release notes.
+
 ## 2026-06-25 - Issue #54 AWS accelerated compute triage
 - Added `upcoming.json` tracking entries for Amazon EC2 G7 general availability and SageMaker notebook G6e/G7e accelerator support from official AWS announcements.
 
