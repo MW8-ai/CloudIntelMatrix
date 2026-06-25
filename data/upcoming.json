@@ -89,6 +89,20 @@
       "verified": true
     },
     {
+      "id": "gcp-ai-hypercomputer-preview-updates",
+      "provider": "gcp",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Google Cloud AI Hypercomputer preview cluster-planning and RoCE updates",
+      "detail": "Google Cloud release notes document preview AI Hypercomputer updates: Gemini in the Google Cloud console can help evaluate hardware options, estimate deployment costs, and recommend cluster configurations, and RoCE VPC networks for VM instances support assigning alias IP ranges to MRDMA vNICs. Track for the Accelerated AI Compute & GPU Infrastructure row because these affect enterprise AI cluster design and network planning; do not change GCP service status, regulated availability, or parity from preview release notes alone.",
+      "status": "preview",
+      "announced": "2026-06-22/2026-06-23",
+      "expected_ga": null,
+      "source": "https://docs.cloud.google.com/release-notes#June_22_2026",
+      "verified": true
+    },
+    {
       "id": "aws-finops-agent-preview",
       "provider": "aws",
       "category": "Cost Governance",

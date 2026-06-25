@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 GCP AI Hypercomputer triage
+- Added an `upcoming.json` tracking entry for Google Cloud AI Hypercomputer preview cluster-planning and RoCE VPC/MRDMA networking updates from official Google Cloud release notes.
+
 ## 2026-06-25 - Issue #54 Azure Migrate preview triage
 - Added an `upcoming.json` tracking entry for Azure Migrate GitHub Copilot Modernization code insights preview using official Microsoft Learn documentation.
 
