@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 AWS Bedrock AI triage
+- Added `upcoming.json` tracking entries for Amazon Bedrock AgentCore Memory cross-account access and Amazon Bedrock Guardrails automated reasoning policy-refinement workflows from official AWS announcements.
+
 ## 2026-06-25 - Issue #54 GCP AI Hypercomputer triage
 - Added an `upcoming.json` tracking entry for Google Cloud AI Hypercomputer preview cluster-planning and RoCE VPC/MRDMA networking updates from official Google Cloud release notes.
 
