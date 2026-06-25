@@ -103,6 +103,34 @@
       "verified": true
     },
     {
+      "id": "aws-agentcore-memory-cross-account-access",
+      "provider": "aws",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon Bedrock AgentCore Memory cross-account access",
+      "detail": "AWS announced cross-account access for Amazon Bedrock AgentCore Memory, using resource-based policies so principals in one account can call memory data plane APIs against memory resources in another account, with cross-account delivery destinations for Amazon S3, Amazon SNS, and Amazon Kinesis Data Streams. Track for the AI Agents & Tool Orchestration row because multi-account memory design affects enterprise agent architectures; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/agentcore-memory-cross-account-access/",
+      "verified": true
+    },
+    {
+      "id": "aws-bedrock-guardrails-automated-reasoning-refinement",
+      "provider": "aws",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon Bedrock Guardrails automated reasoning policy refinement",
+      "detail": "AWS announced policy refinement workflows for Automated Reasoning checks in Amazon Bedrock Guardrails, including iterative policy improvement from natural-language tests and ambiguity reduction for translations. Track for the Generative AI / Foundation Models and AI governance surface because guardrail validation design affects enterprise GenAI controls; do not change regulated availability or parity from this commercial feature note alone.",
+      "status": "announced",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-bedrock-guardrails/",
+      "verified": true
+    },
+    {
       "id": "aws-finops-agent-preview",
       "provider": "aws",
       "category": "Cost Governance",
