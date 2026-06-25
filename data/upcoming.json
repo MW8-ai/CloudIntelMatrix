@@ -159,6 +159,48 @@
       "verified": true
     },
     {
+      "id": "aws-ec2-g7-ga",
+      "provider": "aws",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon EC2 G7 instances generally available",
+      "detail": "AWS announced general availability of Amazon EC2 G7 instances with NVIDIA RTX PRO 4500 Blackwell Server Edition GPUs, custom Intel Xeon 6 processors, and up to 700 Gbps of Elastic Fabric Adapter networking bandwidth. Track for the Accelerated AI Compute & GPU Infrastructure row because accelerator family, region, networking, and capacity choices affect AI inference, graphics, and analytics architecture; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-18",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ec2-g7-generally-available/",
+      "verified": true
+    },
+    {
+      "id": "aws-sagemaker-notebook-g6e-support",
+      "provider": "aws",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon SageMaker notebook instances support G6e",
+      "detail": "AWS announced general availability of Amazon EC2 G6e instances on SageMaker notebook instances. Track for the ML Platform & Model Training row because notebook accelerator choices affect fine-tuning, model testing, and interactive training workflows; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/03/g6e-new-launch-sagemaker-notebook-instances/",
+      "verified": true
+    },
+    {
+      "id": "aws-sagemaker-studio-notebook-g7e-support",
+      "provider": "aws",
+      "category": "AI / ML",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon SageMaker Studio notebooks support G7e",
+      "detail": "AWS announced Amazon SageMaker Studio notebook support for EC2 G7e instances with NVIDIA RTX PRO 6000 Blackwell Server Edition GPUs, high memory per GPU, EFA networking, and GPUDirect capabilities. Track for the ML Platform & Model Training row because managed notebook accelerator options affect agentic AI, multimodal model, and physical AI experimentation; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/02/g7e-new-launch-sagemaker-studio-notebooks/",
+      "verified": true
+    },
+    {
       "id": "aws-finops-agent-preview",
       "provider": "aws",
       "category": "Cost Governance",

@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 AWS accelerated compute triage
+- Added `upcoming.json` tracking entries for Amazon EC2 G7 general availability and SageMaker notebook G6e/G7e accelerator support from official AWS announcements.
+
 ## 2026-06-25 - Issue #54 AWS CloudWatch triage
 - Added `upcoming.json` tracking entries for Amazon CloudWatch Logs managed syslog ingestion and CloudWatch OTel Container Insights for Amazon EKS from official AWS announcements.
 
