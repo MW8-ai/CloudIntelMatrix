@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - Issue #54 AWS CloudWatch triage
+- Added `upcoming.json` tracking entries for Amazon CloudWatch Logs managed syslog ingestion and CloudWatch OTel Container Insights for Amazon EKS from official AWS announcements.
+
 ## 2026-06-25 - Issue #54 AWS Bedrock AI triage
 - Added `upcoming.json` tracking entries for Amazon Bedrock AgentCore Memory cross-account access and Amazon Bedrock Guardrails automated reasoning policy-refinement workflows from official AWS announcements.
 

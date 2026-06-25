@@ -131,6 +131,34 @@
       "verified": true
     },
     {
+      "id": "aws-cloudwatch-logs-managed-syslog-ingestion",
+      "provider": "aws",
+      "category": "Monitoring & Operations",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon CloudWatch Logs managed syslog ingestion",
+      "detail": "AWS announced managed syslog ingestion for Amazon CloudWatch Logs, allowing syslog from firewalls, routers, switches, and Linux servers over TCP, TCP+TLS, or UDP to a VPC endpoint without customer-managed agents. Track for Observability & Monitoring and SIEM design because infrastructure and security log collection architecture changes; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-syslog-ingestion/",
+      "verified": true
+    },
+    {
+      "id": "aws-cloudwatch-otel-container-insights-eks",
+      "provider": "aws",
+      "category": "Monitoring & Operations",
+      "tier": "Enterprise",
+      "type": "new_feature",
+      "title": "Amazon CloudWatch OTel Container Insights for EKS",
+      "detail": "AWS announced CloudWatch OTel Container Insights for Amazon EKS, collecting infrastructure metrics at 30-second granularity with OpenTelemetry semantic conventions, Kubernetes labels, prebuilt dashboards, and a CloudWatch PromQL endpoint. Track for Observability & Monitoring and Managed Kubernetes rows because EKS telemetry architecture and Prometheus/Grafana integration choices change; do not change regulated availability or parity from this commercial announcement alone.",
+      "status": "announced",
+      "announced": "2026-06-23",
+      "expected_ga": null,
+      "source": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-otel-amazon-eks/",
+      "verified": true
+    },
+    {
       "id": "aws-finops-agent-preview",
       "provider": "aws",
       "category": "Cost Governance",
