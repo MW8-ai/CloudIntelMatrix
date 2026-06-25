@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-25 - README version consistency
+- Updated the README current-coverage note to match matrix data version `3.16.6`.
+
 ## 2026-06-25 - Azure pricing link-check noise reduction
 - Changed the public link checker to report repeated Azure pricing-page timeouts as informational output instead of recurring warnings, while preserving warnings for actual HTTP/link failures.
 
