@@ -71,6 +71,7 @@ function mapProvider(providerKey, provider = {}) {
     price: empty(provider.pricingUrl),
     compliance: empty(provider.complianceUrl),
     formerNames: provider.formerNames || [],
+    tierNotes: provider.tierNotes || {},
   };
 }
 

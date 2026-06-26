@@ -95,6 +95,10 @@ for (const capability of capabilities) {
     if (!sameArray(mapped.formerNames, source.formerNames)) {
       err(`formerNames drifted for "${capability.capability}" ${label}.`);
     }
+
+    if (JSON.stringify(mapped.tierNotes || {}) !== JSON.stringify(source.tierNotes || {})) {
+      err(`tierNotes drifted for "${capability.capability}" ${label}.`);
+    }
   }
 }
 
