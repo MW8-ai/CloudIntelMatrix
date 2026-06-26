@@ -1004,6 +1004,53 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
   );
 }
 
+function ViewHero({ eyebrow, title, body, meta }) {
+  return (
+    <div className="design-view-hero">
+      <div>
+        <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 800, letterSpacing: "0.12em", marginBottom: 4 }}>{eyebrow}</div>
+        <div style={{ fontSize: 14, color: "var(--text)", fontWeight: 800, lineHeight: 1.25 }}>{title}</div>
+        <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6, marginTop: 6, maxWidth: 880 }}>{body}</div>
+      </div>
+      {meta && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", justifyContent: "flex-end" }}>
+          {meta}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function StatTile({ label, value, tone = "var(--link)" }) {
+  return (
+    <div style={{ minWidth: 88, padding: "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel-alt)", textAlign: "center" }}>
+      <div style={{ fontSize: 15, color: tone, fontWeight: 900, lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.08em", fontWeight: 800, marginTop: 5 }}>{label}</div>
+    </div>
+  );
+}
+
+function ProviderServiceTile({ providerKey, provider, showLinks = false }) {
+  const pm = PROVIDER_META[providerKey];
+  if (!provider) return null;
+
+  return (
+    <div className="design-provider-tile" style={{ borderColor: pm.border, background: pm.bg }}>
+      <div style={{ color: pm.dot, fontSize: 9, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{pm.label}</div>
+      <div style={{ color: "var(--text)", fontSize: 11, fontWeight: 800, lineHeight: 1.35, marginBottom: 8 }}>{provider.service}</div>
+      <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+        <GovBadge avail={provider.govAvailability} />
+        <ParityBadge parity={provider.parityLag} />
+      </div>
+      {showLinks && provider.docsUrl && (
+        <a href={provider.docsUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginTop: 8, color: "var(--link)", fontSize: 9, fontWeight: 700, textDecoration: "none" }}>
+          Docs
+        </a>
+      )}
+    </div>
+  );
+}
+
 // -- GOV FOCUS VIEW ---------------------------------------------------------
 function GovView({ caps, activeProviders }) {
   return (
@@ -1104,6 +1151,77 @@ function AIView({ caps, activeProviders }) {
 }
 
 // ── DIFF VIEW ──────────────────────────────────────────────────────────────
+function AIViewDesign({ caps, activeProviders }) {
+  const aiCaps = caps.filter(c => c.tags.some(t => ["AI_NATIVE","AI_CAPABLE"].includes(t)));
+  const groups = [
+    {
+      key: "AI_NATIVE",
+      label: "AI-native",
+      note: "Purpose-built AI and machine-learning services.",
+      tone: "#0f766e",
+    },
+    {
+      key: "AI_CAPABLE",
+      label: "AI-capable",
+      note: "Services that directly support AI workloads without being the AI product itself.",
+      tone: "#0b62b9",
+    },
+  ].map(group => ({
+    ...group,
+    items: aiCaps.filter(cap => cap.tags.includes(group.key)),
+  }));
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="AI FOCUS"
+        title="AI-native and AI-capable services by provider"
+        body="AI_NATIVE means the capability is itself an AI product. AI_CAPABLE means the capability directly supports AI workloads. Government availability and parity are still fact fields, not inferred from commercial launch status."
+        meta={[
+          <StatTile key="native" label="AI_NATIVE" value={groups.find(group => group.key === "AI_NATIVE")?.items.length || 0} tone="#0f766e" />,
+          <StatTile key="capable" label="AI_CAPABLE" value={groups.find(group => group.key === "AI_CAPABLE")?.items.length || 0} tone="#0b62b9" />,
+        ]}
+      />
+      {!aiCaps.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No AI-focused capabilities match the current filter.</div>
+      )}
+      {groups.filter(group => group.items.length).map(group => (
+        <section key={group.key} style={{ marginTop: 14 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "9px 12px", borderTop: `2px solid ${group.tone}`, borderBottom: "1px solid var(--border)", background: `${group.tone}14` }}>
+            <div>
+              <div style={{ color: "var(--text)", fontSize: 11, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>{group.label}</div>
+              <div style={{ color: "var(--muted)", fontSize: 9, marginTop: 3 }}>{group.note}</div>
+            </div>
+            <span style={{ color: "var(--muted)", fontSize: 9, fontWeight: 800 }}>{group.items.length} row(s)</span>
+          </div>
+          <div style={{ display: "grid", gap: 10, marginTop: 10 }}>
+            {group.items.map(cap => (
+              <div key={cap.capability} className="design-secondary-card">
+                <div className="design-secondary-card-head">
+                  <div>
+                    <CategoryLabel category={cap.category} size={14} uppercase style={{ color: "var(--category-text)", fontSize: 9, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }} />
+                    <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.25 }}>{cap.capability}</div>
+                    <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 6 }}>{cap.architectureNotes}</div>
+                  </div>
+                  <div style={{ display: "flex", gap: 5, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <TagBadge tagKey={group.key} />
+                    <VerifiedStamp date={cap.lastVerified} />
+                  </div>
+                </div>
+                <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(160px, 1fr)").join(" ") }}>
+                  {activeProviders.map(providerKey => (
+                    <ProviderServiceTile key={providerKey} providerKey={providerKey} provider={cap.providers[providerKey]} showLinks />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
 function DiffView({ caps, activeProviders }) {
   return (
     <div>
@@ -1263,6 +1381,140 @@ function PatternView({ patterns, activeProviders }) {
 }
 
 // -- COMPLIANCE LENS -------------------------------------------------------
+function PatternViewDesign({ patterns, activeProviders }) {
+  const [expandedPatternId, setExpandedPatternId] = useState(patterns[0]?.id || null);
+
+  if (!patterns.length) {
+    return <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No architecture patterns match the current filter.</div>;
+  }
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="ARCHITECTURE PATTERNS"
+        title="Curated capability stacks for common cloud decisions"
+        body="Patterns are planning overlays derived from provider-authored architecture framework and foundation guidance. They organize review work; they are not compliance approval or claims of product equivalence."
+        meta={[
+          <StatTile key="patterns" label="PATTERNS" value={patterns.length} />,
+          <StatTile key="providers" label="PROVIDERS" value={activeProviders.length} />,
+        ]}
+      />
+
+      <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(190px, 1fr)").join(" "), marginBottom: 14 }}>
+        {activeProviders.map(provKey => {
+          const guidance = FRAMEWORKS[provKey];
+          const pm = PROVIDER_META[provKey];
+          return (
+            <div key={provKey} className="design-provider-tile" style={{ borderColor: pm.border, background: pm.bg }}>
+              <div style={{ color: pm.dot, fontSize: 10, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }}>{pm.label}</div>
+              <a href={guidance.frameworkUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block", color: "var(--link)", fontSize: 9, fontWeight: 700, textDecoration: "none", lineHeight: 1.35, marginBottom: 4 }}>
+                {guidance.framework}
+              </a>
+              <a href={guidance.foundationUrl} target="_blank" rel="noopener noreferrer" style={{ display: "block", color: "var(--link)", fontSize: 9, fontWeight: 700, textDecoration: "none", lineHeight: 1.35 }}>
+                {guidance.foundation}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ display: "grid", gap: 12 }}>
+        {patterns.map(pattern => {
+          const isExpanded = expandedPatternId === pattern.id;
+          const linkedCaps = pattern.capabilities.map(name => CAPABILITY_MAP[name]).filter(Boolean);
+          const providerIssueCounts = Object.fromEntries(activeProviders.map(providerKey => [
+            providerKey,
+            linkedCaps.filter(cap => {
+              const provider = cap.providers[providerKey];
+              return provider && (provider.govAvailability !== "Full" || (provider.parityLag && provider.parityLag !== "None"));
+            }).length,
+          ]));
+
+          return (
+            <section key={pattern.id} className="design-secondary-card">
+              <button
+                className="hb"
+                type="button"
+                onClick={() => setExpandedPatternId(isExpanded ? null : pattern.id)}
+                aria-expanded={isExpanded}
+                style={{ width: "100%", textAlign: "left", border: "none", background: "transparent", color: "var(--text)", fontFamily: "inherit", padding: 0 }}
+              >
+                <div className="design-secondary-card-head">
+                  <div>
+                    <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.25 }}>{pattern.name}</div>
+                    <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 6, maxWidth: 880 }}>{pattern.summary}</div>
+                    <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.5, marginTop: 7 }}>
+                      <strong style={{ color: "var(--link)" }}>Fit: </strong>{pattern.whenToUse}
+                    </div>
+                  </div>
+                  <div style={{ display: "grid", gap: 6, justifyItems: "end" }}>
+                    <span style={{ color: "var(--link)", fontSize: 9, fontWeight: 900, letterSpacing: "0.08em" }}>{isExpanded ? "COLLAPSE" : "EXPAND"}</span>
+                    <VerifiedStamp date={pattern.lastVerified} />
+                  </div>
+                </div>
+              </button>
+
+              <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(140px, 1fr)").join(" "), marginTop: 10 }}>
+                {activeProviders.map(providerKey => {
+                  const pm = PROVIDER_META[providerKey];
+                  return (
+                    <div key={providerKey} className="design-provider-tile" style={{ borderColor: pm.border, background: pm.bg }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                        <span style={{ color: pm.dot, fontSize: 10, fontWeight: 900 }}>{pm.label}</span>
+                        <span style={{ color: "var(--text)", fontSize: 12, fontWeight: 900 }}>{linkedCaps.length - providerIssueCounts[providerKey]}/{linkedCaps.length}</span>
+                      </div>
+                      <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.4, marginTop: 5 }}>capabilities without gov/parity review flags</div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {isExpanded && (
+                <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid var(--border)" }}>
+                  <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 8 }}>CAPABILITY STACK</div>
+                  <div style={{ display: "grid", gap: 9 }}>
+                    {linkedCaps.map(cap => (
+                      <div key={cap.capability} style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel-alt)", padding: 10 }}>
+                        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 9, flexWrap: "wrap" }}>
+                          <div>
+                            <CategoryLabel category={cap.category} size={12} uppercase style={{ color: "var(--category-text)", fontSize: 8, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 4 }} />
+                            <div style={{ color: "var(--text)", fontSize: 11, fontWeight: 900 }}>{cap.capability}</div>
+                          </div>
+                          <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                            {cap.tags.slice(0, 3).map(tag => <TagBadge key={tag} tagKey={tag} />)}
+                          </div>
+                        </div>
+                        <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(150px, 1fr)").join(" ") }}>
+                          {activeProviders.map(providerKey => (
+                            <ProviderServiceTile key={providerKey} providerKey={providerKey} provider={cap.providers[providerKey]} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="design-two-col" style={{ marginTop: 14 }}>
+                    <div>
+                      <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 900, marginBottom: 6 }}>REVIEW QUESTIONS</div>
+                      {pattern.reviewPrompts.map(prompt => (
+                        <div key={prompt} style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.5, marginBottom: 6, paddingLeft: 10, borderLeft: "2px solid var(--border)" }}>{prompt}</div>
+                      ))}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 900, marginBottom: 6 }}>VERIFICATION BOUNDARY</div>
+                      <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.65 }}>{pattern.verificationNote}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ControlLensView({ lens, families, frameworks }) {
   const groupedFrameworks = Object.entries(COMPLIANCE_KIND_LABELS)
     .map(([kind, label]) => ({
@@ -1361,6 +1613,118 @@ function ControlLensView({ lens, families, frameworks }) {
 }
 
 // -- CLOUD HISTORY VIEW -------------------------------------------------------
+function ControlLensViewDesign({ lens, families, frameworks }) {
+  const groupedFrameworks = Object.entries(COMPLIANCE_KIND_LABELS)
+    .map(([kind, label]) => ({
+      kind,
+      label,
+      items: frameworks.filter(framework => framework.kind === kind),
+    }))
+    .filter(group => group.items.length);
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="COMPLIANCE & CONTROLS"
+        title={`${lens.name} ${lens.release} planning lens`}
+        body={lens.scopeNote}
+        meta={[
+          <StatTile key="frameworks" label="FRAMEWORKS" value={frameworks.length} />,
+          <StatTile key="families" label="NIST FAMILIES" value={families.length} />,
+          <VerifiedStamp key="verified" date={lens.lastVerified} />,
+        ]}
+      />
+
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 14 }}>
+        <a href={lens.catalogUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Official catalog</a>
+        <a href={lens.baselineUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Control baselines</a>
+        <a href={lens.oscalUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">OSCAL source</a>
+      </div>
+
+      <section style={{ marginBottom: 18 }}>
+        <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 8 }}>FRAMEWORKS AND PROGRAMS</div>
+        {!frameworks.length && (
+          <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No compliance frameworks match the current search.</div>
+        )}
+        <div style={{ display: "grid", gap: 12 }}>
+          {groupedFrameworks.map(group => (
+            <div key={group.kind}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "8px 10px", borderTop: "2px solid var(--link)", borderBottom: "1px solid var(--border)", background: "var(--panel-alt)", marginBottom: 8 }}>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 900, letterSpacing: "0.08em" }}>{group.label.toUpperCase()}</div>
+                <div style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>{group.items.length} item(s)</div>
+              </div>
+              <div className="design-framework-grid">
+                {group.items.map(framework => (
+                  <article key={framework.id} className="design-secondary-card">
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 9 }}>
+                      <div>
+                        <div style={{ fontSize: 12, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{framework.name}</div>
+                        <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 4 }}>{framework.issuer}</div>
+                      </div>
+                      <ComplianceStatusBadge status={framework.status} />
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.55, marginBottom: 9 }}>{framework.scope}</div>
+                    <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.5, marginBottom: 9 }}>
+                      <strong style={{ color: "var(--text)" }}>NIST alignment: </strong>
+                      {Array.isArray(framework.nistAlignment) ? framework.nistAlignment.join("; ") : framework.nistAlignment}
+                    </div>
+                    {framework.historicalNote && (
+                      <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.5, marginBottom: 9 }}>{framework.historicalNote}</div>
+                    )}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <a href={framework.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Official source</a>
+                      <VerifiedStamp date={framework.lastVerified} />
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section>
+        <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 8 }}>NIST SP 800-53 FAMILY LENS</div>
+        {!families.length && (
+          <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No control families match the current filter.</div>
+        )}
+        <div style={{ display: "grid", gap: 10 }}>
+          {families.map(family => (
+            <article key={family.id} className="design-secondary-card">
+              <div className="design-secondary-card-head">
+                <div>
+                  <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>FAMILY {family.id}</div>
+                  <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, marginBottom: 6 }}>{family.name}</div>
+                  <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.55 }}>{family.applicability}</div>
+                </div>
+                <StatTile label="TOUCHPOINTS" value={family.capabilities.length} />
+              </div>
+              <div className="design-two-col">
+                <div>
+                  <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 900, marginBottom: 6 }}>IMPLEMENTATION TOUCHPOINTS</div>
+                  <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+                    {family.capabilities.map(capabilityName => (
+                      <span key={capabilityName} style={{ padding: "4px 7px", border: "1px solid var(--border)", borderRadius: 4, background: "var(--panel-alt)", color: "var(--text)", fontSize: 9 }}>
+                        {capabilityName}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", fontWeight: 900, marginBottom: 6 }}>ARCHITECTURE REVIEW QUESTIONS</div>
+                  {family.reviewPrompts.map(prompt => (
+                    <div key={prompt} style={{ fontSize: 10, color: "var(--text)", lineHeight: 1.5, marginBottom: 6, paddingLeft: 10, borderLeft: "2px solid var(--border)" }}>{prompt}</div>
+                  ))}
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function HistoryView({ items, meta, activeProviders }) {
   const years = Array.from(new Set(items.map(item => item.year))).sort((a, b) => a - b);
   const grouped = activeProviders
@@ -1851,9 +2215,71 @@ export default function App() {
           border-radius: 6px;
           background: var(--panel);
         }
+        .design-view-hero {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin: 10px 0 14px;
+          padding: 14px 16px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel);
+        }
+        .design-secondary-card {
+          padding: 13px 14px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel);
+        }
+        .design-secondary-card-head {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          gap: 14px;
+          align-items: start;
+          margin-bottom: 12px;
+        }
+        .design-provider-tile-grid {
+          display: grid;
+          gap: 8px;
+        }
+        .design-provider-tile {
+          padding: 9px 10px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel-alt);
+          min-width: 0;
+        }
+        .design-source-link {
+          display: inline-flex;
+          align-items: center;
+          width: fit-content;
+          padding: 5px 8px;
+          border: 1px solid var(--border);
+          border-radius: 4px;
+          color: var(--link);
+          background: var(--panel-alt);
+          font-size: 9px;
+          font-weight: 800;
+          text-decoration: none;
+        }
+        .design-two-col {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 16px;
+        }
+        .design-framework-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 10px;
+        }
         @media (max-width: 980px) {
           .design-matrix-shell { grid-template-columns: 1fr; }
           .design-detail-panel { position: static; max-height: none; }
+          .design-secondary-card-head,
+          .design-two-col { grid-template-columns: 1fr; }
+          .design-provider-tile-grid { grid-template-columns: 1fr !important; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
@@ -2093,9 +2519,9 @@ export default function App() {
 
           {mode === "diff" && <DiffView caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "gov"  && <GovView  caps={filteredCaps} activeProviders={activeProviders} />}
-          {mode === "ai"   && <AIView   caps={filteredAiCaps} activeProviders={activeProviders} />}
-          {mode === "patterns" && <PatternView patterns={filteredPatterns} activeProviders={activeProviders} />}
-          {mode === "controls" && <ControlLensView lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
+          {mode === "ai"   && <AIViewDesign caps={filteredAiCaps} activeProviders={activeProviders} />}
+          {mode === "patterns" && <PatternViewDesign patterns={filteredPatterns} activeProviders={activeProviders} />}
+          {mode === "controls" && <ControlLensViewDesign lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
           {mode === "history" && <HistoryView items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
           {mode === "transparency" && <TransparencyView items={filteredTransparency} meta={TRANSPARENCY_META} />}
         </div>

@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-26 - Secondary view design polish
+- Ported AI Focus, Architecture Patterns, and Compliance views to the redesigned card-and-provider-tile treatment while preserving existing source data, filters, and exports.
+
 ## 2026-06-26 - New design matrix view
 - Ported the capability matrix surface to the design-view adapter with architecture-layer grouping, provider coverage summaries, and a detail rail while preserving existing data sources and export behavior.
 
