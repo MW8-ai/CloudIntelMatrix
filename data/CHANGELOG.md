@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-26 - PR verification build/export coverage
+- Extended the verify workflow to install export dependencies, run the Vite build, and generate XLSX/static CSV exports on pull requests and pushes.
+
 ## 2026-06-26 - Legacy view cleanup
 - Removed unused pre-redesign view components from `src/App.jsx` after the redesigned Matrix, AI Focus, Architecture Patterns, Compliance, Government/Parity, Equivalency, History, and State AI Transparency views were wired in.
 
