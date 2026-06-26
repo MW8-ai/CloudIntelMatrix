@@ -23,8 +23,19 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install frontend dependencies
+        run: npm ci
+
       - name: Validate data contract
         run: python scripts/verify.py
+
+      - name: Validate design view model
+        run: npm run verify:view-model
 
       - name: Check public source links
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'

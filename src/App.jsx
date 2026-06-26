@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 import historyData  from "../data/history.json";
@@ -21,6 +21,11 @@ import {
   getTagGlossary,
   glossaryTitle,
 } from "./glossary";
+import {
+  PROVIDER_LABELS,
+  buildDesignViewModel,
+  groupRowsByLayer,
+} from "./viewModels.mjs";
 
 const {
   capabilities: CAPABILITIES,
@@ -39,6 +44,8 @@ const TRANSPARENCY = transparencyData.mandates || [];
 const TRANSPARENCY_META = transparencyData._meta || {};
 const PROVIDERS = META.providers;
 const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
+const DESIGN_MODEL = buildDesignViewModel({ matrixData, historyData, transparencyData, upcomingData });
+const DESIGN_ROW_MAP = Object.fromEntries(DESIGN_MODEL.CIM_DATA.map(row => [row.cap, row]));
 
 const THEME_STORAGE_KEY = "cloudintel-theme";
 const DEFAULT_MODE = "matrix";
@@ -222,6 +229,14 @@ const CATEGORY_ICON_META = {
   "Government / Sovereign Cloud": { kind: "building" },
   "Hybrid / Edge": { kind: "hybrid" },
   "Cost Governance": { kind: "cost" },
+};
+
+const DESIGN_LAYER_STYLES = {
+  Foundation: { color: "#0b62b9", bg: "#0b62b914" },
+  "Data & AI": { color: "#0f766e", bg: "#0f766e14" },
+  "Apps & Integration": { color: "#b45309", bg: "#b4530914" },
+  "Security & Governance": { color: "#b91c1c", bg: "#b91c1c12" },
+  "Operating Model": { color: "#475569", bg: "#47556914" },
 };
 
 const COMPLIANCE_KIND_LABELS = {
@@ -696,7 +711,300 @@ function CapabilityRow({ cap, activeProviders, expandedId, setExpandedId, tier }
   );
 }
 
-// ── GOV FOCUS VIEW ─────────────────────────────────────────────────────────
+// -- DESIGN MATRIX VIEW -----------------------------------------------------
+function providerLabelForKey(providerKey) {
+  return PROVIDER_LABELS[providerKey] || PROVIDER_META[providerKey]?.label || providerKey;
+}
+
+function getDesignGovStyle(value) {
+  const base = GOV_AVAIL_STYLES[value] || GOV_AVAIL_STYLES.Unknown;
+  if (value === "Unknown" || value === "None") {
+    return { bg: "var(--panel-alt)", fg: "var(--muted)", border: "var(--border)", label: base.label };
+  }
+  return base;
+}
+
+function MatrixCoverageStrip({ rows, activeProviders }) {
+  const statuses = ["Full", "Partial", "Limited", "Unknown", "None"];
+
+  return (
+    <div className="design-coverage-strip">
+      {activeProviders.map(providerKey => {
+        const label = providerLabelForKey(providerKey);
+        const counts = Object.fromEntries(statuses.map(status => [status, 0]));
+        rows.forEach(row => {
+          const status = row.providers?.[label]?.gov || "Unknown";
+          counts[status] = (counts[status] || 0) + 1;
+        });
+        const total = rows.length || 1;
+        const documented = counts.Full + counts.Partial + counts.Limited;
+
+        return (
+          <div key={providerKey} className="design-coverage-card" style={{ borderColor: PROVIDER_META[providerKey].border }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+              <div style={{ color: PROVIDER_META[providerKey].dot, fontSize: 12, fontWeight: 800, letterSpacing: "0.08em" }}>{label}</div>
+              <div style={{ color: "var(--text)", fontSize: 12, fontWeight: 800 }}>{Math.round((documented / total) * 100)}%</div>
+            </div>
+            <div style={{ display: "flex", height: 7, overflow: "hidden", borderRadius: 999, background: "var(--panel-alt)", border: "1px solid var(--border)", marginTop: 8 }}>
+              {statuses.map(status => {
+                const style = getDesignGovStyle(status);
+                return (
+                  <span
+                    key={status}
+                    title={`${status}: ${counts[status] || 0}`}
+                    style={{
+                      width: `${((counts[status] || 0) / total) * 100}%`,
+                      minWidth: counts[status] ? 3 : 0,
+                      background: style.fg,
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.45, marginTop: 7 }}>
+              {documented} of {rows.length} documented. {counts.Full} full / {counts.Partial} scoped / {counts.Limited} gaps.
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function DesignProviderCell({ row, providerKey, selected, onSelect, tier }) {
+  const label = providerLabelForKey(providerKey);
+  const provider = row.providers?.[label];
+  const pm = PROVIDER_META[providerKey];
+  if (!provider) {
+    return <div className="design-provider-cell" style={{ borderColor: "var(--border)" }} />;
+  }
+
+  const govStyle = getDesignGovStyle(provider.gov);
+  const tierNote = tier ? provider.tierNotes?.[tier] : null;
+
+  return (
+    <button
+      className="hb design-provider-cell"
+      type="button"
+      onClick={onSelect}
+      aria-label={`${row.cap} ${label} detail`}
+      style={{
+        borderColor: selected ? pm.dot : "var(--border)",
+        background: selected ? pm.bg : "var(--panel)",
+        color: "var(--text)",
+      }}
+    >
+      <span style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, minWidth: 0 }}>
+        <span style={{ minWidth: 0 }}>
+          <span style={{ display: "block", color: pm.dot, fontSize: 9, fontWeight: 800, letterSpacing: "0.08em", marginBottom: 4 }}>{label}</span>
+          <span style={{ display: "block", fontSize: 11, fontWeight: 700, lineHeight: 1.35, overflowWrap: "anywhere" }}>{provider.svc || "Not mapped"}</span>
+        </span>
+        <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: 3, background: govStyle.fg, flexShrink: 0, marginTop: 2 }} />
+      </span>
+      <span style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 9 }}>
+        <GovBadge avail={provider.gov} />
+        <ParityBadge parity={provider.lag} />
+      </span>
+      {tierNote && (
+        <span style={{ display: "block", marginTop: 9, padding: "6px 8px", borderLeft: "2px solid var(--selected-border)", background: "var(--tier-bg)", color: "var(--text)", fontSize: 9, lineHeight: 1.45 }}>
+          <strong style={{ color: "var(--selected-text)" }}>{tier}: </strong>{tierNote}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function DesignMatrixDetail({ row, activeProviders, tier }) {
+  if (!row) {
+    return (
+      <aside className="design-detail-panel">
+        <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 8 }}>DETAIL</div>
+        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 800, marginBottom: 7 }}>Select a capability</div>
+        <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>Click any matrix cell to inspect service mapping, government availability, parity lag, source notes, and official links.</div>
+      </aside>
+    );
+  }
+
+  return (
+    <aside className="design-detail-panel">
+      <div style={{ display: "inline-flex", maxWidth: "100%", padding: "3px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", fontSize: 8, letterSpacing: "0.08em", marginBottom: 8, fontWeight: 800 }}>
+        <CategoryLabel category={row.cat} size={12} uppercase />
+      </div>
+      <div style={{ fontSize: 15, color: "var(--text)", fontWeight: 800, lineHeight: 1.25, marginBottom: 8 }}>{row.cap}</div>
+      <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
+        {row.tags.map(tag => <TagBadge key={tag} tagKey={tag} />)}
+      </div>
+      <VerifiedStamp date={row.lastVerified} />
+
+      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+        <div>
+          <div style={{ fontSize: 8, color: "var(--link)", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 4 }}>ARCHITECTURE NOTE</div>
+          <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>{row.architectureNotes}</div>
+        </div>
+        <div>
+          <div style={{ fontSize: 8, color: "var(--link)", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 4 }}>OPERATIONS NOTE</div>
+          <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>{row.operationalConsiderations}</div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+        {activeProviders.map(providerKey => {
+          const label = providerLabelForKey(providerKey);
+          const provider = row.providers?.[label];
+          const pm = PROVIDER_META[providerKey];
+          if (!provider) return null;
+          const tierNote = tier ? provider.tierNotes?.[tier] : null;
+
+          return (
+            <div key={providerKey} style={{ padding: "10px 11px", borderRadius: 6, border: `1px solid ${pm.border}`, background: pm.bg }}>
+              <div style={{ color: pm.dot, fontSize: 10, fontWeight: 800, letterSpacing: "0.08em", marginBottom: 5 }}>{label}</div>
+              <div style={{ color: "var(--text)", fontSize: 11, fontWeight: 800, lineHeight: 1.35 }}>{provider.svc || "Not mapped"}</div>
+              {provider.formerNames?.length > 0 && (
+                <div style={{ color: "var(--muted)", fontSize: 8, lineHeight: 1.45, marginTop: 5 }}>
+                  <strong style={{ color: "var(--text)" }}>Formerly: </strong>{provider.formerNames.join(" / ")}
+                </div>
+              )}
+              <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
+                <GovBadge avail={provider.gov} />
+                <ParityBadge parity={provider.lag} />
+              </div>
+              <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.5, marginTop: 8 }}>
+                <strong style={{ color: "var(--text)" }}>Variant: </strong>{provider.variant || "Not recorded"}
+              </div>
+              {provider.note && (
+                <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.5, marginTop: 6 }}>{provider.note}</div>
+              )}
+              {tierNote && (
+                <div style={{ color: "var(--text)", fontSize: 9, lineHeight: 1.45, marginTop: 8, padding: "6px 8px", borderLeft: "2px solid var(--selected-border)", background: "var(--tier-bg)" }}>
+                  <strong style={{ color: "var(--selected-text)" }}>{tier}: </strong>{tierNote}
+                </div>
+              )}
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+                {provider.doc && <a href={provider.doc} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Docs</a>}
+                {provider.price && <a href={provider.price} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Pricing</a>}
+                {provider.compliance && <a href={provider.compliance} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Compliance</a>}
+                {provider.govdoc && <a href={provider.govdoc} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Gov docs</a>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </aside>
+  );
+}
+
+function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, tier }) {
+  const groupedLayers = useMemo(() => groupRowsByLayer(rows), [rows]);
+  const selectedRow = rows.find(row => row.cap === selectedId) || null;
+  const gridTemplateColumns = `minmax(240px, 1.15fr) ${activeProviders.map(() => "minmax(170px, 1fr)").join(" ")}`;
+
+  if (!rows.length) {
+    return (
+      <div style={{ padding: "22px 0", fontSize: 10, color: "var(--muted)" }}>
+        No capability rows match the current filters.
+      </div>
+    );
+  }
+
+  return (
+    <div className="design-matrix-shell">
+      <div style={{ minWidth: activeProviders.length > 3 ? 980 : 760 }}>
+        <div style={{ marginBottom: 14, padding: "14px 16px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)" }}>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, flexWrap: "wrap", marginBottom: 12 }}>
+            <div>
+              <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 800, letterSpacing: "0.12em", marginBottom: 4 }}>CAPABILITY MATRIX</div>
+              <div style={{ fontSize: 14, color: "var(--text)", fontWeight: 800, lineHeight: 1.25 }}>Layered architecture view by provider</div>
+              <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.55, marginTop: 5, maxWidth: 760 }}>
+                Grouped into architecture layers, then source categories. Cells show mapped service, government availability, parity lag, and selected tier guidance.
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 800 }}>VISIBLE</span>
+              <span style={{ fontSize: 10, color: "var(--text)", fontWeight: 800 }}>{rows.length} capabilities</span>
+              {tier && <span style={{ fontSize: 10, color: "var(--selected-text)", fontWeight: 800 }}>Tier: {tier}</span>}
+            </div>
+          </div>
+          <MatrixCoverageStrip rows={rows} activeProviders={activeProviders} />
+        </div>
+
+        <div className="design-matrix-grid" style={{ gridTemplateColumns }}>
+          <div className="design-grid-head">Capability</div>
+          {activeProviders.map(providerKey => (
+            <div key={providerKey} className="design-grid-head" style={{ borderColor: PROVIDER_META[providerKey].border, background: PROVIDER_META[providerKey].bg }}>
+              <div style={{ color: PROVIDER_META[providerKey].dot, fontSize: 11, fontWeight: 800, letterSpacing: "0.1em" }}>{PROVIDER_META[providerKey].label}</div>
+              <div style={{ color: "var(--muted)", fontSize: 8, marginTop: 2 }}>{PROVIDER_META[providerKey].long}</div>
+            </div>
+          ))}
+        </div>
+
+        {groupedLayers.map(layer => {
+          const layerStyle = DESIGN_LAYER_STYLES[layer.layer] || DESIGN_LAYER_STYLES["Operating Model"];
+          const layerCount = layer.categories.reduce((total, category) => total + category.items.length, 0);
+
+          return (
+            <section key={layer.layer} style={{ marginTop: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "9px 12px", borderTop: `2px solid ${layerStyle.color}`, borderBottom: "1px solid var(--border)", background: layerStyle.bg, color: "var(--text)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span aria-hidden="true" style={{ width: 10, height: 10, borderRadius: 3, background: layerStyle.color }} />
+                  <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>{layer.layer}</span>
+                </div>
+                <span style={{ fontSize: 9, color: "var(--muted)", fontWeight: 700 }}>{layerCount} capability row(s)</span>
+              </div>
+
+              {layer.categories.map(category => (
+                <div key={category.category}>
+                  <div style={{ marginTop: 9, marginBottom: 7, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, color: "var(--category-text)" }}>
+                    <CategoryLabel category={category.category} size={15} uppercase style={{ fontSize: 10, fontWeight: 900, letterSpacing: "0.08em" }} />
+                    <span style={{ color: "var(--muted)", fontSize: 9 }}>{category.items.length}</span>
+                  </div>
+                  <div style={{ display: "grid", gap: 7 }}>
+                    {category.items.map(row => {
+                      const selected = selectedId === row.cap;
+                      return (
+                        <div key={row.cap} className="design-matrix-grid" style={{ gridTemplateColumns }}>
+                          <button
+                            className="hb design-capability-cell"
+                            type="button"
+                            onClick={() => setSelectedId(selected ? null : row.cap)}
+                            aria-label={`${row.cap} detail`}
+                            style={{
+                              borderColor: selected ? "var(--link)" : "var(--border)",
+                              background: selected ? "var(--selected-bg)" : "var(--panel)",
+                              color: "var(--text)",
+                            }}
+                          >
+                            <span style={{ display: "block", fontSize: 12, fontWeight: 800, lineHeight: 1.3, marginBottom: 7 }}>{row.cap}</span>
+                            <span style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 7 }}>
+                              {row.tags.slice(0, 4).map(tag => <TagBadge key={tag} tagKey={tag} />)}
+                            </span>
+                            <VerifiedStamp date={row.lastVerified} />
+                          </button>
+                          {activeProviders.map(providerKey => (
+                            <DesignProviderCell
+                              key={providerKey}
+                              row={row}
+                              providerKey={providerKey}
+                              selected={selected}
+                              onSelect={() => setSelectedId(row.cap)}
+                              tier={tier}
+                            />
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </section>
+          );
+        })}
+      </div>
+      <DesignMatrixDetail row={selectedRow} activeProviders={activeProviders} tier={tier} />
+    </div>
+  );
+}
+
+// -- GOV FOCUS VIEW ---------------------------------------------------------
 function GovView({ caps, activeProviders }) {
   return (
     <div>
@@ -1317,6 +1625,11 @@ export default function App() {
     return caps;
   }, [selectedCategory, searchQuery]);
 
+  const filteredDesignRows = useMemo(
+    () => filteredCaps.map(cap => DESIGN_ROW_MAP[cap.capability]).filter(Boolean),
+    [filteredCaps]
+  );
+
   const filteredPatterns = useMemo(() => {
     let patterns = PATTERNS;
     if (selectedCategory) {
@@ -1484,7 +1797,63 @@ export default function App() {
         .filter-groups { display: grid; gap: 14px; }
         .filter-groups.with-context { grid-template-columns: minmax(420px, 1fr) minmax(280px, 370px); }
         .filter-context { padding-left: 16px; border-left: 1px solid var(--border); }
+        .design-matrix-shell {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+          gap: 14px;
+          align-items: start;
+        }
+        .design-coverage-strip {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 8px;
+        }
+        .design-coverage-card {
+          padding: 10px 11px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel-alt);
+        }
+        .design-matrix-grid {
+          display: grid;
+          gap: 7px;
+          align-items: stretch;
+        }
+        .design-grid-head {
+          padding: 8px 11px;
+          border: 1px solid var(--border);
+          border-radius: 5px;
+          background: var(--panel-alt);
+          color: var(--muted);
+          font-size: 9px;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .design-capability-cell,
+        .design-provider-cell {
+          display: block;
+          width: 100%;
+          min-height: 104px;
+          text-align: left;
+          padding: 10px 11px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          font-family: inherit;
+        }
+        .design-detail-panel {
+          position: sticky;
+          top: 98px;
+          max-height: calc(100vh - 118px);
+          overflow: auto;
+          padding: 14px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel);
+        }
         @media (max-width: 980px) {
+          .design-matrix-shell { grid-template-columns: 1fr; }
+          .design-detail-panel { position: static; max-height: none; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
@@ -1713,36 +2082,13 @@ export default function App() {
           <ExportToolbar exportData={exportData} />
 
           {mode === "matrix" && (
-            <div>
-              {/* Provider header */}
-              <div style={{ display: "grid", gridTemplateColumns: `220px ${activeProviders.map(() => "1fr").join(" ")}`, gap: 8, marginBottom: 8 }}>
-                <div style={{ padding: "8px 12px", borderRadius: 4, background: "var(--panel-alt)", border: "1px solid var(--border)" }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, color: "var(--muted)" }}>CAPABILITY</div>
-                  {selectedTier && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 2 }}>Tier: {selectedTier}</div>}
-                </div>
-                {activeProviders.map(p => (
-                  <div key={p} style={{ padding: "8px 14px", borderRadius: 4, border: `1px solid ${PROVIDER_META[p].border}`, background: PROVIDER_META[p].bg, textAlign: "center" }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, color: PROVIDER_META[p].dot, letterSpacing: "0.1em" }}>{PROVIDER_META[p].label}</div>
-                    <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 1 }}>{PROVIDER_META[p].long.toUpperCase()}</div>
-                  </div>
-                ))}
-              </div>
-              {filteredCaps.map((cap, index) => {
-                const startsCategory = index === 0 || filteredCaps[index - 1]?.category !== cap.category;
-                const categoryCount = startsCategory ? filteredCaps.filter(item => item.category === cap.category).length : 0;
-                return (
-                  <Fragment key={cap.capability}>
-                    {startsCategory && (
-                      <div style={{ margin: index === 0 ? "0 0 8px" : "18px 0 8px", padding: "7px 10px", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-                        <CategoryLabel category={cap.category} size={15} uppercase style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.08em" }} />
-                        <span style={{ fontSize: 9, color: "var(--muted)" }}>{categoryCount} capability row(s)</span>
-                      </div>
-                    )}
-                    <CapabilityRow cap={cap} activeProviders={activeProviders} expandedId={expandedId} setExpandedId={setExpandedId} tier={selectedTier} />
-                  </Fragment>
-                );
-              })}
-            </div>
+            <DesignMatrixView
+              rows={filteredDesignRows}
+              activeProviders={activeProviders}
+              selectedId={expandedId}
+              setSelectedId={setExpandedId}
+              tier={selectedTier}
+            />
           )}
 
           {mode === "diff" && <DiffView caps={filteredCaps} activeProviders={activeProviders} />}

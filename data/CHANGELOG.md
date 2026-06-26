@@ -4,6 +4,12 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-26 - New design matrix view
+- Ported the capability matrix surface to the design-view adapter with architecture-layer grouping, provider coverage summaries, and a detail rail while preserving existing data sources and export behavior.
+
+## 2026-06-25 - New design transition adapter
+- Added a source-JSON-to-design-view-model adapter and CI verification step so the redesigned front-end can be ported without making prototype-transcribed data authoritative.
+
 ## 2026-06-25 - README version consistency
 - Updated the README current-coverage note to match matrix data version `3.16.6`.
 
