@@ -31,11 +31,17 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install frontend dependencies
+        run: npm ci
 
       - name: Install Python dependencies
         run: pip install openpyxl
+
+      - name: Validate data contract
+        run: python scripts/verify.py
+
+      - name: Validate design view model
+        run: npm run verify:view-model
 
       - name: Build
         run: npm run build
