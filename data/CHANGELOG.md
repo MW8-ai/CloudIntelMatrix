@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-26 - Reference view design polish
+- Ported Government/Parity, Equivalency, History, and State AI Transparency views to the redesigned card-and-provider-tile treatment while preserving existing source data, filters, and exports.
+
 ## 2026-06-26 - Secondary view design polish
 - Ported AI Focus, Architecture Patterns, and Compliance views to the redesigned card-and-provider-tile treatment while preserving existing source data, filters, and exports.
 

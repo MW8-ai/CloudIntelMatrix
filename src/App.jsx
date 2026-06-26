@@ -1030,7 +1030,7 @@ function StatTile({ label, value, tone = "var(--link)" }) {
   );
 }
 
-function ProviderServiceTile({ providerKey, provider, showLinks = false }) {
+function ProviderServiceTile({ providerKey, provider, showLinks = false, showGovVariant = false, showGovLinks = false }) {
   const pm = PROVIDER_META[providerKey];
   if (!provider) return null;
 
@@ -1042,9 +1042,19 @@ function ProviderServiceTile({ providerKey, provider, showLinks = false }) {
         <GovBadge avail={provider.govAvailability} />
         <ParityBadge parity={provider.parityLag} />
       </div>
+      {showGovVariant && (
+        <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.45, marginTop: 7 }}>
+          {provider.govVariant || "No gov variant recorded"}
+        </div>
+      )}
       {showLinks && provider.docsUrl && (
         <a href={provider.docsUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginTop: 8, color: "var(--link)", fontSize: 9, fontWeight: 700, textDecoration: "none" }}>
           Docs
+        </a>
+      )}
+      {showGovLinks && provider.govDocsUrl && (
+        <a href={provider.govDocsUrl} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginTop: showLinks && provider.docsUrl ? 5 : 8, marginLeft: showLinks && provider.docsUrl ? 8 : 0, color: "var(--link)", fontSize: 9, fontWeight: 700, textDecoration: "none" }}>
+          Gov docs
         </a>
       )}
     </div>
@@ -1102,6 +1112,86 @@ function GovView({ caps, activeProviders }) {
 }
 
 // ── AI FOCUS VIEW ──────────────────────────────────────────────────────────
+function GovViewDesign({ caps, activeProviders }) {
+  const reviewRows = caps.filter(cap =>
+    activeProviders.some(providerKey => {
+      const provider = cap.providers[providerKey];
+      return provider && (provider.govAvailability !== "Full" || (provider.parityLag && provider.parityLag !== "None"));
+    })
+  );
+  const providerCounts = activeProviders.map(providerKey => ({
+    providerKey,
+    reviewCount: caps.filter(cap => {
+      const provider = cap.providers[providerKey];
+      return provider && (provider.govAvailability !== "Full" || (provider.parityLag && provider.parityLag !== "None"));
+    }).length,
+  }));
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="GOVERNMENT & PARITY"
+        title="Regulated-region availability and parity review"
+        body="This view surfaces govAvailability, parityLag, and govVariant values without inferring parity from commercial availability. Unknown remains an honest value until an official government or regulated-environment source supports a stronger claim."
+        meta={[
+          <StatTile key="rows" label="ROWS" value={caps.length} />,
+          <StatTile key="review" label="REVIEW ROWS" value={reviewRows.length} tone="#b45309" />,
+          <StatTile key="providers" label="PROVIDERS" value={activeProviders.length} />,
+        ]}
+      />
+
+      <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(160px, 1fr)").join(" "), marginBottom: 14 }}>
+        {providerCounts.map(({ providerKey, reviewCount }) => {
+          const pm = PROVIDER_META[providerKey];
+          return (
+            <div key={providerKey} className="design-provider-tile" style={{ borderColor: pm.border, background: pm.bg }}>
+              <div style={{ color: pm.dot, fontSize: 10, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }}>{pm.label}</div>
+              <div style={{ color: "var(--text)", fontSize: 18, fontWeight: 900, lineHeight: 1 }}>{reviewCount}</div>
+              <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.45, marginTop: 5 }}>capability/provider cells with gov or parity review flags</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {!caps.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No government availability rows match the current filter.</div>
+      )}
+
+      <div style={{ display: "grid", gap: 10 }}>
+        {caps.map(cap => {
+          const highlightedTags = cap.tags.filter(tag => ["GOV_AVAILABLE", "GOV_LIMITED", "PARITY_LAG", "COMPLIANCE_RELEVANT"].includes(tag));
+          return (
+            <article key={cap.capability} className="design-secondary-card">
+              <div className="design-secondary-card-head">
+                <div>
+                  <CategoryLabel category={cap.category} size={14} uppercase style={{ color: "var(--category-text)", fontSize: 9, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }} />
+                  <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.25 }}>{cap.capability}</div>
+                  <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 6 }}>{cap.architectureNotes}</div>
+                </div>
+                <div style={{ display: "flex", gap: 5, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                  {highlightedTags.map(tag => <TagBadge key={tag} tagKey={tag} />)}
+                  <VerifiedStamp date={cap.lastVerified} />
+                </div>
+              </div>
+              <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(165px, 1fr)").join(" ") }}>
+                {activeProviders.map(providerKey => (
+                  <ProviderServiceTile
+                    key={providerKey}
+                    providerKey={providerKey}
+                    provider={cap.providers[providerKey]}
+                    showGovVariant
+                    showGovLinks
+                  />
+                ))}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function AIView({ caps, activeProviders }) {
   const aiCaps = caps.filter(c => c.tags.some(t => ["AI_NATIVE","AI_CAPABLE"].includes(t)));
   return (
@@ -1269,6 +1359,57 @@ function DiffView({ caps, activeProviders }) {
 }
 
 // ── ARCHITECTURE PATTERN VIEW ──────────────────────────────────────────────
+function DiffViewDesign({ caps, activeProviders }) {
+  const categories = Array.from(new Set(caps.map(cap => cap.category)));
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="SERVICE EQUIVALENCY"
+        title="Side-by-side provider service mapping"
+        body="Equivalency maps the provider services that perform the same capability-level job. This is a planning map, not a feature parity claim; gov availability and parity fields remain separate factual signals."
+        meta={[
+          <StatTile key="rows" label="ROWS" value={caps.length} />,
+          <StatTile key="categories" label="CATEGORIES" value={categories.length} />,
+          <StatTile key="providers" label="PROVIDERS" value={activeProviders.length} />,
+        ]}
+      />
+
+      {!caps.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No equivalency rows match the current filter.</div>
+      )}
+
+      <div style={{ display: "grid", gap: 10 }}>
+        {caps.map(cap => (
+          <article key={cap.capability} className="design-secondary-card">
+            <div className="design-secondary-card-head">
+              <div>
+                <CategoryLabel category={cap.category} size={14} uppercase style={{ color: "var(--category-text)", fontSize: 9, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }} />
+                <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.25 }}>{cap.capability}</div>
+                <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 6 }}>{cap.architectureNotes}</div>
+              </div>
+              <div style={{ display: "flex", gap: 5, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                {cap.tags.slice(0, 3).map(tag => <TagBadge key={tag} tagKey={tag} />)}
+                <VerifiedStamp date={cap.lastVerified} />
+              </div>
+            </div>
+            <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(165px, 1fr)").join(" ") }}>
+              {activeProviders.map(providerKey => (
+                <ProviderServiceTile
+                  key={providerKey}
+                  providerKey={providerKey}
+                  provider={cap.providers[providerKey]}
+                  showLinks
+                />
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function PatternView({ patterns, activeProviders }) {
   const [expandedPatternId, setExpandedPatternId] = useState(patterns[0]?.id || null);
 
@@ -1903,6 +2044,156 @@ function TransparencyView({ items, meta }) {
   );
 }
 
+function HistoryViewDesign({ items, meta, activeProviders }) {
+  const years = Array.from(new Set(items.map(item => item.year))).sort((a, b) => a - b);
+  const grouped = activeProviders
+    .map(provider => ({
+      provider,
+      items: items
+        .filter(item => item.provider === provider)
+        .sort((a, b) => a.year - b.year || a.date.localeCompare(b.date)),
+    }))
+    .filter(group => group.items.length);
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="PROVIDER HISTORY"
+        title="Cloud journey milestones by provider"
+        body={meta.scopeNote}
+        meta={[
+          <StatTile key="milestones" label="MILESTONES" value={items.length} />,
+          <StatTile key="years" label="YEARS" value={years.length} />,
+          <StatTile key="providers" label="PROVIDERS" value={grouped.length} />,
+          <VerifiedStamp key="verified" date={meta.lastVerified} />,
+        ]}
+      />
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+        {Object.entries(HISTORY_PHASE_STYLES).map(([phase, style]) => (
+          <span key={phase} style={{ fontSize: 8, padding: "4px 8px", borderRadius: 4, border: `1px solid ${style.border}`, background: style.bg, color: style.fg, fontWeight: 800, letterSpacing: "0.06em" }}>
+            {phase.toUpperCase()}
+          </span>
+        ))}
+      </div>
+
+      {!items.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No history milestones match the current filter.</div>
+      )}
+
+      <div className="design-framework-grid">
+        {grouped.map(group => {
+          const pm = PROVIDER_META[group.provider];
+          return (
+            <article key={group.provider} className="design-secondary-card" style={{ borderColor: pm.border }}>
+              <div className="design-secondary-card-head">
+                <div>
+                  <div style={{ color: pm.dot, fontSize: 10, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{pm.label}</div>
+                  <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900 }}>{pm.long}</div>
+                </div>
+                <StatTile label="EVENTS" value={group.items.length} tone={pm.dot} />
+              </div>
+
+              <div style={{ display: "grid", gap: 9 }}>
+                {group.items.map(item => {
+                  const phaseStyle = HISTORY_PHASE_STYLES[item.phase] || HISTORY_PHASE_STYLES["Commercial cloud"];
+                  return (
+                    <div key={item.id} style={{ padding: "10px 11px", border: `1px solid ${phaseStyle.border}`, borderLeft: `3px solid ${pm.dot}`, borderRadius: 6, background: phaseStyle.bg }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline", marginBottom: 5 }}>
+                        <span style={{ fontSize: 8, color: phaseStyle.fg, fontWeight: 900, letterSpacing: "0.06em" }}>{item.phase.toUpperCase()}</span>
+                        <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800, whiteSpace: "nowrap" }}>{item.dateLabel}</span>
+                      </div>
+                      <div style={{ fontSize: 11, color: "var(--text)", lineHeight: 1.35, fontWeight: 900 }}>{item.title}</div>
+                      <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55, marginTop: 5 }}>{item.summary}</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", marginTop: 7 }}>
+                        {item.scope.map(scope => (
+                          <span key={scope} style={{ fontSize: 7, padding: "2px 5px", borderRadius: 3, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--muted)", fontWeight: 800 }}>{scope}</span>
+                        ))}
+                        <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="design-source-link" style={{ marginLeft: 2 }}>
+                          {item.sourceLabel}
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function TransparencyViewDesign({ items, meta }) {
+  const federalContext = meta.federalContext || {};
+  const counts = TRANSPARENCY_STATUS_ORDER
+    .filter(status => status !== "All")
+    .map(status => ({ status, count: items.filter(item => item.status === status).length }))
+    .filter(item => item.count);
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="STATE AI TRANSPARENCY"
+        title="Point-in-time public AI governance record"
+        body={meta.scopeNote}
+        meta={[
+          <StatTile key="rows" label="ROWS" value={items.length} tone="#b45309" />,
+          <StatTile key="statuses" label="STATUSES" value={counts.length} />,
+          <VerifiedStamp key="verified" date={meta.last_verified} />,
+        ]}
+      />
+
+      <section className="design-secondary-card" style={{ borderColor: "#b4530955", marginBottom: 14 }}>
+        <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 6 }}>FEDERAL CONTEXT</div>
+        <div style={{ color: "var(--text)", fontSize: 10, lineHeight: 1.6 }}>
+          Federal-state AI policy is volatile as of {meta.last_verified}. Context: {federalContext.citation} ({federalContext.title}).
+        </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 9 }}>
+          {federalContext.url && <a href={federalContext.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Federal Register source</a>}
+          <VerifiedStamp date={federalContext.lastVerified || meta.last_verified} />
+        </div>
+      </section>
+
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+        {counts.map(({ status, count }) => (
+          <span key={status} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--panel)" }}>
+            <TransparencyStatusBadge status={status} />
+            <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>{count}</span>
+          </span>
+        ))}
+      </div>
+
+      {!items.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No state transparency rows match the current filters.</div>
+      )}
+
+      <div className="design-framework-grid">
+        {items.map(item => (
+          <article key={`${item.state}-${item.title}`} className="design-secondary-card">
+            <div className="design-secondary-card-head">
+              <div>
+                <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>{item.state}</div>
+                <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{item.stateName}</div>
+              </div>
+              <TransparencyStatusBadge status={item.status} />
+            </div>
+            <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{item.instrument}</div>
+            <div style={{ fontSize: 11, color: "var(--text)", fontWeight: 900, lineHeight: 1.45 }}>{item.title}</div>
+            {item.citation && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 5, lineHeight: 1.45 }}>{item.citation}</div>}
+            <div style={{ fontSize: 9, color: "var(--text)", lineHeight: 1.6, marginTop: 8 }}>{item.summary}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+              {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Official source</a>}
+              <VerifiedStamp date={item.lastVerified} />
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
@@ -2144,6 +2435,8 @@ export default function App() {
     { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
     { id: "ai",     label: "AI FOCUS", desc: "AI_NATIVE and AI_CAPABLE only" },
   ];
+  const providerGridModes = ["matrix", "diff", "gov", "ai", "patterns"];
+  const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
 
   return (
     <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Mono','Courier New',monospace", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
@@ -2255,6 +2548,7 @@ export default function App() {
           display: inline-flex;
           align-items: center;
           width: fit-content;
+          max-width: 100%;
           padding: 5px 8px;
           border: 1px solid var(--border);
           border-radius: 4px;
@@ -2262,7 +2556,10 @@ export default function App() {
           background: var(--panel-alt);
           font-size: 9px;
           font-weight: 800;
+          line-height: 1.35;
           text-decoration: none;
+          overflow-wrap: anywhere;
+          white-space: normal;
         }
         .design-two-col {
           display: grid;
@@ -2495,7 +2792,7 @@ export default function App() {
 
       {/* ── CONTENT ── */}
       <div style={{ padding: "14px 24px 40px", overflowX: "auto" }}>
-        <div style={{ minWidth: mode === "history" || mode === "controls" || mode === "transparency" ? 1080 : activeProviders.length > 3 ? 1040 : 780 }}>
+        <div style={{ minWidth: `min(${contentMinWidthPx}px, 100%)` }}>
           <UpcomingBanner items={UPCOMING} />
 
           {/* Search result count */}
@@ -2517,13 +2814,13 @@ export default function App() {
             />
           )}
 
-          {mode === "diff" && <DiffView caps={filteredCaps} activeProviders={activeProviders} />}
-          {mode === "gov"  && <GovView  caps={filteredCaps} activeProviders={activeProviders} />}
+          {mode === "diff" && <DiffViewDesign caps={filteredCaps} activeProviders={activeProviders} />}
+          {mode === "gov"  && <GovViewDesign  caps={filteredCaps} activeProviders={activeProviders} />}
           {mode === "ai"   && <AIViewDesign caps={filteredAiCaps} activeProviders={activeProviders} />}
           {mode === "patterns" && <PatternViewDesign patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensViewDesign lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
-          {mode === "history" && <HistoryView items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
-          {mode === "transparency" && <TransparencyView items={filteredTransparency} meta={TRANSPARENCY_META} />}
+          {mode === "history" && <HistoryViewDesign items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
+          {mode === "transparency" && <TransparencyViewDesign items={filteredTransparency} meta={TRANSPARENCY_META} />}
         </div>
 
         {/* Tag legend */}
