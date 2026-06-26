@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-26 - Legacy view cleanup
+- Removed unused pre-redesign view components from `src/App.jsx` after the redesigned Matrix, AI Focus, Architecture Patterns, Compliance, Government/Parity, Equivalency, History, and State AI Transparency views were wired in.
+
 ## 2026-06-26 - Reference view design polish
 - Ported Government/Parity, Equivalency, History, and State AI Transparency views to the redesigned card-and-provider-tile treatment while preserving existing source data, filters, and exports.
 
