@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-27 - Visual design port
+- Ported the external visual design treatment into the React/Vite app with local provider/logo assets, refreshed theme tokens, matrix coverage cards, a slide-over matrix detail panel, and a chronological cloud timeline while preserving source JSON data and exports.
+
 ## 2026-06-27 - Roadmap TODO
 - Added a durable `TODO.md` roadmap with current unknown counts, next proposal batches, transparency expansion, realm-class planning, design-review follow-up, and validation guardrails.
 
