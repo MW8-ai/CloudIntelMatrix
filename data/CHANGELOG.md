@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-27 - Realm-class planning
+- Added a provider-neutral realm-class planning note for future regulated and sovereign environment schema work, without changing matrix data or current summary fields.
+
 ## 2026-06-27 - Task 5 AI / ML regulated availability proposals
 - Added a proposal-only batch for selected AI / ML regulated availability and parity gaps covering Amazon Bedrock, Bedrock Knowledge Bases, AI agent orchestration, Azure Microsoft Sentinel availability, and OCI Generative AI government/sovereign region evidence.
 

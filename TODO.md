@@ -17,6 +17,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 ## Near-Term PRs
 
 1. Start the next Task 5 proposal batch for AI / ML.
+   - Initial proposal batch landed in `data/proposals/ai-ml-regulated-availability-2026-06-27.json`.
    - Use proposal files only.
    - Do not edit `data/matrix.json` directly.
    - Focus on official provider government and regulated-environment sources.
@@ -28,6 +29,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
    - Prefer 3 to 5 states per PR so review stays practical.
 
 3. Add a provider-neutral realm-class plan before changing data shape.
+   - Planning note: `docs/realm-class-plan.md`.
    - Candidate values: `commercial`, `us-gov`, `eu-sovereign`, `other-sovereign`.
    - Treat AWS European Sovereign Cloud, Azure Government, GCP Assured Workloads, OCI Government realms, and similar environments evenly.
    - Start with a design/schema proposal before migrating matrix records.
