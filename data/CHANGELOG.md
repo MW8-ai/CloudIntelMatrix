@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-27 - Roadmap TODO
+- Added a durable `TODO.md` roadmap with current unknown counts, next proposal batches, transparency expansion, realm-class planning, design-review follow-up, and validation guardrails.
+
 ## 2026-06-26 - Deploy workflow validation hardening
 - Aligned the GitHub Pages deploy workflow with the verified build path by using `npm ci` and running data/view-model validation before build and export generation.
 
