@@ -26,6 +26,7 @@ import {
   buildDesignViewModel,
   groupRowsByLayer,
 } from "./viewModels.mjs";
+import { LOGOS, ICONS } from "./assets/cimAssets.js";
 
 const {
   capabilities: CAPABILITIES,
@@ -55,18 +56,18 @@ const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency"
 
 const THEME_TOKENS = {
   light: {
-    "--bg": "#f4f7fb",
-    "--header-bg": "linear-gradient(180deg,#ffffff 0%,#eef3f8 100%)",
+    "--bg": "#f5f5f1",
+    "--header-bg": "#ffffff",
     "--panel": "#ffffff",
-    "--panel-alt": "#edf3f9",
-    "--text": "#172033",
-    "--muted": "#556477",
-    "--border": "#cfd8e3",
+    "--panel-alt": "#fbfbf9",
+    "--text": "#1b1c20",
+    "--muted": "#71747c",
+    "--border": "#e7e6e0",
     "--link": "#0b62b9",
     "--selected-bg": "#dceeff",
     "--selected-text": "#064f9f",
     "--selected-border": "#0b62b9",
-    "--category-bg": "#e7f1fb",
+    "--category-bg": "#eef3f8",
     "--category-text": "#17456f",
     "--tier-bg": "#eef6fd",
     "--verified-bg": "#dcfce7",
@@ -75,15 +76,22 @@ const THEME_TOKENS = {
     "--review-bg": "#f1f5f9",
     "--review-text": "#475569",
     "--review-border": "#cbd5e1",
+    "--ink2": "#4a4d57",
+    "--faint": "#8896aa",
+    "--head": "#f0efeb",
+    "--rowalt": "#faf9f6",
+    "--border2": "#eeede8",
+    "--shadow": "rgba(22,22,20,.07)",
+    "--cols": "minmax(240px, 1.15fr) repeat(4, minmax(170px, 1fr))",
   },
   dark: {
-    "--bg": "#070b12",
-    "--header-bg": "linear-gradient(180deg,#101827 0%,#070b12 100%)",
-    "--panel": "#111827",
-    "--panel-alt": "#0b1220",
-    "--text": "#e7edf7",
-    "--muted": "#9aa8ba",
-    "--border": "#2a3a52",
+    "--bg": "#14161b",
+    "--header-bg": "#1c1f26",
+    "--panel": "#1c1f26",
+    "--panel-alt": "#191c22",
+    "--text": "#eceef2",
+    "--muted": "#969ba6",
+    "--border": "#2b2f38",
     "--link": "#78aefc",
     "--selected-bg": "#102a46",
     "--selected-text": "#b8d7ff",
@@ -97,6 +105,13 @@ const THEME_TOKENS = {
     "--review-bg": "#111827",
     "--review-text": "#cbd5e1",
     "--review-border": "#475569",
+    "--ink2": "#c3c7d0",
+    "--faint": "#6f747f",
+    "--head": "#222630",
+    "--rowalt": "#191c22",
+    "--border2": "#262a32",
+    "--shadow": "rgba(0,0,0,.35)",
+    "--cols": "minmax(240px, 1.15fr) repeat(4, minmax(170px, 1fr))",
   },
 };
 
@@ -171,26 +186,26 @@ function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory
 }
 
 const PROVIDER_META = {
-  aws:   { label: "AWS",   long: "Amazon Web Services",  dot: "#ff9900", bg: "#ff990011", border: "#ff990033" },
-  azure: { label: "Azure", long: "Microsoft Azure",      dot: "#00b4d8", bg: "#00b4d811", border: "#00b4d833" },
-  gcp:   { label: "GCP",   long: "Google Cloud",         dot: "#4285f4", bg: "#4285f411", border: "#4285f433" },
-  oci:   { label: "OCI",   long: "Oracle Cloud Infrastructure", dot: "#c74634", bg: "#c7463411", border: "#c7463344" },
+  aws:   { label: "AWS",   long: "Amazon Web Services",         dot: "#FF9900", bg: "#FF990011", border: "#FF990033" },
+  azure: { label: "Azure", long: "Microsoft Azure",             dot: "#0078D4", bg: "#0078D411", border: "#0078D433" },
+  gcp:   { label: "GCP",   long: "Google Cloud",                dot: "#1a73e8", bg: "#1a73e811", border: "#1a73e833" },
+  oci:   { label: "OCI",   long: "Oracle Cloud Infrastructure", dot: "#C74634", bg: "#C7463411", border: "#C7463444" },
 };
 
 const GOV_AVAIL_STYLES = {
-  "Full":        { bg: "#14532d", fg: "#4ade80", label: "GOV FULL" },
-  "Partial":     { bg: "#78350f", fg: "#fbbf24", label: "GOV PARTIAL" },
-  "Limited":     { bg: "#7c2d12", fg: "#fb923c", label: "GOV LIMITED" },
-  "None":        { bg: "#1f2937", fg: "#6b7280", label: "GOV NONE" },
-  "Unknown":     { bg: "#1f2937", fg: "#cbd5e1", label: "GOV UNKNOWN" },
+  "Full":    { bg: "#e7f4ec", fg: "#13693f", border: "#bfe3cf", dot: "#1f8a5b", label: "Full" },
+  "Partial": { bg: "#f8efda", fg: "#946610", border: "#ecd6a4", dot: "#c98a1a", label: "Partial" },
+  "Limited": { bg: "#f8e8de", fg: "#a3471c", border: "#eccab5", dot: "#cf5f2c", label: "Limited" },
+  "None":    { bg: "#f0f0ee", fg: "#6f717a", border: "#dededa", dot: "#9a9ca3", label: "None" },
+  "Unknown": { bg: "#f0f0ee", fg: "#6f717a", border: "#dededa", dot: "#9a9ca3", label: "Unknown" },
 };
 
 const PARITY_STYLES = {
-  "None":        { bg: "transparent", fg: "#374151", label: "" },
-  "Minor":       { bg: "#78350f22", fg: "#f59e0b", label: "LAG MINOR" },
-  "Moderate":    { bg: "#7f1d1d22", fg: "#f87171", label: "LAG MODERATE" },
-  "Significant": { bg: "#7f1d1d44", fg: "#ef4444", label: "LAG SIGNIFICANT" },
-  "Unknown":     { bg: "#1f293722", fg: "#94a3b8", label: "LAG UNKNOWN" },
+  "None":        { dot: "#1f8a5b", text: "no gap",          label: "LAG NONE",        bg: "#e7f4ec22", fg: "#13693f", border: "#13693f44" },
+  "Minor":       { dot: "#7aa64a", text: "minor gap",       label: "LAG MINOR",       bg: "#f0f5e422", fg: "#527a1a", border: "#527a1a44" },
+  "Moderate":    { dot: "#c98a1a", text: "moderate gap",    label: "LAG MODERATE",    bg: "#f8efda22", fg: "#946610", border: "#94661044" },
+  "Significant": { dot: "#c0392b", text: "significant gap", label: "LAG SIGNIFICANT", bg: "#f8e8de22", fg: "#a3471c", border: "#a3471c44" },
+  "Unknown":     { dot: "#b8bac0", text: "gap n/a",         label: "LAG UNKNOWN",     bg: "#f0f0ee22", fg: "#6f717a", border: "#6f717a44" },
 };
 
 const TAG_STYLES = {
@@ -209,9 +224,9 @@ const TAG_STYLES = {
 };
 
 const HISTORY_PHASE_STYLES = {
-  "Commercial cloud": { bg: "#1e3a5f22", fg: "#60a5fa", border: "#2563eb55" },
-  "Personal / Free": { bg: "#14532d22", fg: "#22c55e", border: "#15803d55" },
-  "Government state/federal": { bg: "#78350f22", fg: "#f59e0b", border: "#b4530955" },
+  "Commercial cloud": { bg: "#e7f0fb", fg: "#0a6ec2", border: "#b7d3f0" },
+  "Personal / Free": { bg: "#e7f4ec", fg: "#1f8a5b", border: "#bfe3cf" },
+  "Government state/federal": { bg: "#f8e8e8", fg: "#bb3b34", border: "#e7b9b6" },
 };
 
 const CATEGORY_ICON_META = {
@@ -343,8 +358,7 @@ function TagBadge({ tagKey }) {
 }
 
 function GovBadge({ avail }) {
-  const s = GOV_AVAIL_STYLES[avail] || GOV_AVAIL_STYLES["None"];
-  if (avail === "None") return null;
+  const s = GOV_AVAIL_STYLES[avail] || GOV_AVAIL_STYLES["Unknown"];
   const glossary = getGovAvailabilityGlossary(avail);
   return (
     <GlossaryBadge label={s.label} description={glossary.description} styleDef={s} shape="block" />
@@ -717,290 +731,299 @@ function providerLabelForKey(providerKey) {
 }
 
 function getDesignGovStyle(value) {
-  const base = GOV_AVAIL_STYLES[value] || GOV_AVAIL_STYLES.Unknown;
-  if (value === "Unknown" || value === "None") {
-    return { bg: "var(--panel-alt)", fg: "var(--muted)", border: "var(--border)", label: base.label };
-  }
-  return base;
+  return GOV_AVAIL_STYLES[value] || GOV_AVAIL_STYLES["Unknown"];
 }
 
 function MatrixCoverageStrip({ rows, activeProviders }) {
-  const statuses = ["Full", "Partial", "Limited", "Unknown", "None"];
+  const statuses = ["Full", "Partial", "Limited", "Unknown"];
 
   return (
-    <div className="design-coverage-strip">
-      {activeProviders.map(providerKey => {
-        const label = providerLabelForKey(providerKey);
-        const counts = Object.fromEntries(statuses.map(status => [status, 0]));
-        rows.forEach(row => {
-          const status = row.providers?.[label]?.gov || "Unknown";
-          counts[status] = (counts[status] || 0) + 1;
-        });
-        const total = rows.length || 1;
-        const documented = counts.Full + counts.Partial + counts.Limited;
-
-        return (
-          <div key={providerKey} className="design-coverage-card" style={{ borderColor: PROVIDER_META[providerKey].border }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-              <div style={{ color: PROVIDER_META[providerKey].dot, fontSize: 12, fontWeight: 800, letterSpacing: "0.08em" }}>{label}</div>
-              <div style={{ color: "var(--text)", fontSize: 12, fontWeight: 800 }}>{Math.round((documented / total) * 100)}%</div>
-            </div>
-            <div style={{ display: "flex", height: 7, overflow: "hidden", borderRadius: 999, background: "var(--panel-alt)", border: "1px solid var(--border)", marginTop: 8 }}>
-              {statuses.map(status => {
-                const style = getDesignGovStyle(status);
-                return (
-                  <span
-                    key={status}
-                    title={`${status}: ${counts[status] || 0}`}
-                    style={{
-                      width: `${((counts[status] || 0) / total) * 100}%`,
-                      minWidth: counts[status] ? 3 : 0,
-                      background: style.fg,
-                    }}
-                  />
-                );
-              })}
-            </div>
-            <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.45, marginTop: 7 }}>
-              {documented} of {rows.length} documented. {counts.Full} full / {counts.Partial} scoped / {counts.Limited} gaps.
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function DesignProviderCell({ row, providerKey, selected, onSelect, tier }) {
-  const label = providerLabelForKey(providerKey);
-  const provider = row.providers?.[label];
-  const pm = PROVIDER_META[providerKey];
-  if (!provider) {
-    return <div className="design-provider-cell" style={{ borderColor: "var(--border)" }} />;
-  }
-
-  const govStyle = getDesignGovStyle(provider.gov);
-  const tierNote = tier ? provider.tierNotes?.[tier] : null;
-
-  return (
-    <button
-      className="hb design-provider-cell"
-      type="button"
-      onClick={onSelect}
-      aria-label={`${row.cap} ${label} detail`}
-      style={{
-        borderColor: selected ? pm.dot : "var(--border)",
-        background: selected ? pm.bg : "var(--panel)",
-        color: "var(--text)",
-      }}
-    >
-      <span style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, minWidth: 0 }}>
-        <span style={{ minWidth: 0 }}>
-          <span style={{ display: "block", color: pm.dot, fontSize: 9, fontWeight: 800, letterSpacing: "0.08em", marginBottom: 4 }}>{label}</span>
-          <span style={{ display: "block", fontSize: 11, fontWeight: 700, lineHeight: 1.35, overflowWrap: "anywhere" }}>{provider.svc || "Not mapped"}</span>
-        </span>
-        <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: 3, background: govStyle.fg, flexShrink: 0, marginTop: 2 }} />
-      </span>
-      <span style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 9 }}>
-        <GovBadge avail={provider.gov} />
-        <ParityBadge parity={provider.lag} />
-      </span>
-      {tierNote && (
-        <span style={{ display: "block", marginTop: 9, padding: "6px 8px", borderLeft: "2px solid var(--selected-border)", background: "var(--tier-bg)", color: "var(--text)", fontSize: 9, lineHeight: 1.45 }}>
-          <strong style={{ color: "var(--selected-text)" }}>{tier}: </strong>{tierNote}
-        </span>
-      )}
-    </button>
-  );
-}
-
-function DesignMatrixDetail({ row, activeProviders, tier }) {
-  if (!row) {
-    return (
-      <aside className="design-detail-panel">
-        <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 8 }}>DETAIL</div>
-        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 800, marginBottom: 7 }}>Select a capability</div>
-        <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>Click any matrix cell to inspect service mapping, government availability, parity lag, source notes, and official links.</div>
-      </aside>
-    );
-  }
-
-  return (
-    <aside className="design-detail-panel">
-      <div style={{ display: "inline-flex", maxWidth: "100%", padding: "3px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", fontSize: 8, letterSpacing: "0.08em", marginBottom: 8, fontWeight: 800 }}>
-        <CategoryLabel category={row.cat} size={12} uppercase />
-      </div>
-      <div style={{ fontSize: 15, color: "var(--text)", fontWeight: 800, lineHeight: 1.25, marginBottom: 8 }}>{row.cap}</div>
-      <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 10 }}>
-        {row.tags.map(tag => <TagBadge key={tag} tagKey={tag} />)}
-      </div>
-      <VerifiedStamp date={row.lastVerified} />
-
-      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
-        <div>
-          <div style={{ fontSize: 8, color: "var(--link)", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 4 }}>ARCHITECTURE NOTE</div>
-          <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>{row.architectureNotes}</div>
-        </div>
-        <div>
-          <div style={{ fontSize: 8, color: "var(--link)", fontWeight: 800, letterSpacing: "0.1em", marginBottom: 4 }}>OPERATIONS NOTE</div>
-          <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.6 }}>{row.operationalConsiderations}</div>
-        </div>
-      </div>
-
-      <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
+    <div>
+      <div className="design-coverage-strip">
         {activeProviders.map(providerKey => {
           const label = providerLabelForKey(providerKey);
-          const provider = row.providers?.[label];
           const pm = PROVIDER_META[providerKey];
-          if (!provider) return null;
-          const tierNote = tier ? provider.tierNotes?.[tier] : null;
+          const counts = Object.fromEntries([...statuses, "None"].map(status => [status, 0]));
+          rows.forEach(row => {
+            const status = row.providers?.[label]?.gov || "Unknown";
+            counts[status] = (counts[status] || 0) + 1;
+          });
+          const total = rows.length || 1;
+          const documented = counts.Full + counts.Partial + counts.Limited;
+          const pct = Math.round((documented / total) * 100);
 
           return (
-            <div key={providerKey} style={{ padding: "10px 11px", borderRadius: 6, border: `1px solid ${pm.border}`, background: pm.bg }}>
-              <div style={{ color: pm.dot, fontSize: 10, fontWeight: 800, letterSpacing: "0.08em", marginBottom: 5 }}>{label}</div>
-              <div style={{ color: "var(--text)", fontSize: 11, fontWeight: 800, lineHeight: 1.35 }}>{provider.svc || "Not mapped"}</div>
-              {provider.formerNames?.length > 0 && (
-                <div style={{ color: "var(--muted)", fontSize: 8, lineHeight: 1.45, marginTop: 5 }}>
-                  <strong style={{ color: "var(--text)" }}>Formerly: </strong>{provider.formerNames.join(" / ")}
+            <div key={providerKey} className="design-coverage-card">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <span aria-hidden="true" style={{ display: "inline-block", width: 28, height: 28, borderRadius: 7, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 17, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{label}</span>
                 </div>
-              )}
-              <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
-                <GovBadge avail={provider.gov} />
-                <ParityBadge parity={provider.lag} />
+                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)" }}>{pct}%</span>
               </div>
-              <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.5, marginTop: 8 }}>
-                <strong style={{ color: "var(--text)" }}>Variant: </strong>{provider.variant || "Not recorded"}
+              <div style={{ height: 7, borderRadius: 4, overflow: "hidden", background: "var(--border2)", display: "flex" }}>
+                {statuses.map(status => {
+                  const style = GOV_AVAIL_STYLES[status];
+                  const width = ((counts[status] || 0) / total) * 100;
+                  return width > 0 ? (
+                    <span key={status} title={`${status}: ${counts[status]}`} style={{ width: `${width}%`, background: style.dot, minWidth: 3 }} />
+                  ) : null;
+                })}
               </div>
-              {provider.note && (
-                <div style={{ color: "var(--muted)", fontSize: 9, lineHeight: 1.5, marginTop: 6 }}>{provider.note}</div>
-              )}
-              {tierNote && (
-                <div style={{ color: "var(--text)", fontSize: 9, lineHeight: 1.45, marginTop: 8, padding: "6px 8px", borderLeft: "2px solid var(--selected-border)", background: "var(--tier-bg)" }}>
-                  <strong style={{ color: "var(--selected-text)" }}>{tier}: </strong>{tierNote}
-                </div>
-              )}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
-                {provider.doc && <a href={provider.doc} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Docs</a>}
-                {provider.price && <a href={provider.price} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Pricing</a>}
-                {provider.compliance && <a href={provider.compliance} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Compliance</a>}
-                {provider.govdoc && <a href={provider.govdoc} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", textDecoration: "none" }}>Gov docs</a>}
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", lineHeight: 1.45, marginTop: 7 }}>
+                {documented} of {rows.length} documented. {counts.Full} full / {counts.Partial} scoped / {counts.Limited} gaps
               </div>
             </div>
           );
         })}
       </div>
-    </aside>
+      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", lineHeight: 1.6, marginBottom: 18 }}>
+        % = share of {rows.length} tracked capabilities with documented government-cloud availability. Bar shows the breakdown.
+      </div>
+    </div>
   );
 }
 
 function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, tier }) {
   const groupedLayers = useMemo(() => groupRowsByLayer(rows), [rows]);
-  const selectedRow = rows.find(row => row.cap === selectedId) || null;
-  const gridTemplateColumns = `minmax(240px, 1.15fr) ${activeProviders.map(() => "minmax(170px, 1fr)").join(" ")}`;
 
   if (!rows.length) {
-    return (
-      <div style={{ padding: "22px 0", fontSize: 10, color: "var(--muted)" }}>
-        No capability rows match the current filters.
-      </div>
-    );
+    return <div style={{ padding: "22px 0", fontSize: 13, color: "var(--muted)" }}>No capability rows match the current filters.</div>;
   }
+
+  const numProviders = activeProviders.length;
+  const gridTemplateColumns = `minmax(240px, 1.15fr) repeat(${numProviders}, minmax(160px, 1fr))`;
 
   return (
     <div className="design-matrix-shell">
-      <div style={{ minWidth: activeProviders.length > 3 ? 980 : 760 }}>
-        <div style={{ marginBottom: 14, padding: "14px 16px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)" }}>
-          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, flexWrap: "wrap", marginBottom: 12 }}>
-            <div>
-              <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 800, letterSpacing: "0.12em", marginBottom: 4 }}>CAPABILITY MATRIX</div>
-              <div style={{ fontSize: 14, color: "var(--text)", fontWeight: 800, lineHeight: 1.25 }}>Layered architecture view by provider</div>
-              <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.55, marginTop: 5, maxWidth: 760 }}>
-                Grouped into architecture layers, then source categories. Cells show mapped service, government availability, parity lag, and selected tier guidance.
-              </div>
+      <div style={{ overflowX: "auto", border: "1px solid var(--border)", borderRadius: 14, background: "var(--panel)", boxShadow: "0 2px 10px var(--shadow)" }}>
+        <div style={{ minWidth: numProviders > 3 ? 980 : 760 }}>
+          <div style={{ display: "grid", gridTemplateColumns, position: "sticky", top: 0, zIndex: 5, background: "var(--head)", borderBottom: "1px solid var(--border)" }}>
+            <div style={{ padding: "11px 16px", fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.05em" }}>
+              Capability
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 800 }}>VISIBLE</span>
-              <span style={{ fontSize: 10, color: "var(--text)", fontWeight: 800 }}>{rows.length} capabilities</span>
-              {tier && <span style={{ fontSize: 10, color: "var(--selected-text)", fontWeight: 800 }}>Tier: {tier}</span>}
-            </div>
+            {activeProviders.map(providerKey => {
+              const label = providerLabelForKey(providerKey);
+              const pm = PROVIDER_META[providerKey];
+              return (
+                <div key={providerKey} style={{ padding: "10px 13px", borderLeft: "1px solid var(--border2)", borderBottom: `2px solid ${pm.dot}` }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span aria-hidden="true" style={{ display: "inline-block", width: 24, height: 24, borderRadius: 6, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 14, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{label}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <MatrixCoverageStrip rows={rows} activeProviders={activeProviders} />
-        </div>
-
-        <div className="design-matrix-grid" style={{ gridTemplateColumns }}>
-          <div className="design-grid-head">Capability</div>
-          {activeProviders.map(providerKey => (
-            <div key={providerKey} className="design-grid-head" style={{ borderColor: PROVIDER_META[providerKey].border, background: PROVIDER_META[providerKey].bg }}>
-              <div style={{ color: PROVIDER_META[providerKey].dot, fontSize: 11, fontWeight: 800, letterSpacing: "0.1em" }}>{PROVIDER_META[providerKey].label}</div>
-              <div style={{ color: "var(--muted)", fontSize: 8, marginTop: 2 }}>{PROVIDER_META[providerKey].long}</div>
-            </div>
-          ))}
-        </div>
 
         {groupedLayers.map(layer => {
           const layerStyle = DESIGN_LAYER_STYLES[layer.layer] || DESIGN_LAYER_STYLES["Operating Model"];
           const layerCount = layer.categories.reduce((total, category) => total + category.items.length, 0);
 
           return (
-            <section key={layer.layer} style={{ marginTop: 14 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "9px 12px", borderTop: `2px solid ${layerStyle.color}`, borderBottom: "1px solid var(--border)", background: layerStyle.bg, color: "var(--text)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span aria-hidden="true" style={{ width: 10, height: 10, borderRadius: 3, background: layerStyle.color }} />
-                  <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>{layer.layer}</span>
-                </div>
-                <span style={{ fontSize: 9, color: "var(--muted)", fontWeight: 700 }}>{layerCount} capability row(s)</span>
+            <section key={layer.layer}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 16px", background: "var(--head)", borderTop: `2px solid ${layerStyle.color}`, borderBottom: "1px solid var(--border2)" }}>
+                <span aria-hidden="true" style={{ display: "inline-block", width: 16, height: 16, background: layerStyle.color, WebkitMaskImage: `url(${ICONS.layers})`, maskImage: `url(${ICONS.layers})`, WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center", flexShrink: 0 }} />
+                <span style={{ fontSize: 12.5, fontWeight: 700, letterSpacing: "0.02em", color: "var(--text)" }}>{layer.layer}</span>
+                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)" }}>{layerCount}</span>
               </div>
 
               {layer.categories.map(category => (
                 <div key={category.category}>
-                  <div style={{ marginTop: 9, marginBottom: 7, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, color: "var(--category-text)" }}>
-                    <CategoryLabel category={category.category} size={15} uppercase style={{ fontSize: 10, fontWeight: 900, letterSpacing: "0.08em" }} />
-                    <span style={{ color: "var(--muted)", fontSize: 9 }}>{category.items.length}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 18px", background: "var(--rowalt)", borderBottom: "1px solid var(--border2)" }}>
+                    <CategoryIcon category={category.category} size={13} />
+                    <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: "0.02em", color: "var(--muted)", textTransform: "uppercase" }}>{category.category}</span>
                   </div>
-                  <div style={{ display: "grid", gap: 7 }}>
-                    {category.items.map(row => {
-                      const selected = selectedId === row.cap;
-                      return (
-                        <div key={row.cap} className="design-matrix-grid" style={{ gridTemplateColumns }}>
-                          <button
-                            className="hb design-capability-cell"
-                            type="button"
-                            onClick={() => setSelectedId(selected ? null : row.cap)}
-                            aria-label={`${row.cap} detail`}
-                            style={{
-                              borderColor: selected ? "var(--link)" : "var(--border)",
-                              background: selected ? "var(--selected-bg)" : "var(--panel)",
-                              color: "var(--text)",
-                            }}
-                          >
-                            <span style={{ display: "block", fontSize: 12, fontWeight: 800, lineHeight: 1.3, marginBottom: 7 }}>{row.cap}</span>
-                            <span style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 7 }}>
-                              {row.tags.slice(0, 4).map(tag => <TagBadge key={tag} tagKey={tag} />)}
+                  {category.items.map(row => {
+                    const selected = selectedId === row.cap;
+                    const aiBadge =
+                      row.ai === "AI_NATIVE" ? { label: "AI-native", bg: "#ece4fb", fg: "#6b3fc0" } :
+                      row.ai === "AI_CAPABLE" ? { label: "AI-capable", bg: "#d9efeb", fg: "#0d7d70" } :
+                      null;
+                    return (
+                      <div key={row.cap} style={{ display: "grid", gridTemplateColumns, borderBottom: "1px solid var(--border2)", background: selected ? "var(--selected-bg)" : undefined, transition: "background .12s" }}>
+                        <button
+                          className="hb"
+                          type="button"
+                          onClick={() => setSelectedId(selected ? null : row.cap)}
+                          aria-label={`${row.cap} detail`}
+                          style={{ padding: "13px 16px", textAlign: "left", display: "flex", flexDirection: "column", gap: 6, justifyContent: "center", background: "none", border: "none", cursor: "pointer", color: "var(--text)", fontFamily: "inherit" }}
+                        >
+                          <span style={{ fontSize: 13.5, fontWeight: 600, lineHeight: 1.3 }}>{row.cap}</span>
+                          {aiBadge && (
+                            <span style={{ alignSelf: "flex-start", fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, fontWeight: 600, letterSpacing: "0.04em", padding: "2px 7px", borderRadius: 4, background: aiBadge.bg, color: aiBadge.fg }}>
+                              {aiBadge.label}
                             </span>
-                            <VerifiedStamp date={row.lastVerified} />
-                          </button>
-                          {activeProviders.map(providerKey => (
-                            <DesignProviderCell
+                          )}
+                        </button>
+                        {activeProviders.map(providerKey => {
+                          const label = providerLabelForKey(providerKey);
+                          const provider = row.providers?.[label];
+                          if (!provider) {
+                            return <div key={providerKey} style={{ borderLeft: "1px solid var(--border2)", padding: "12px 13px" }} />;
+                          }
+                          const govStyle = getDesignGovStyle(provider.gov);
+                          const parStyle = PARITY_STYLES[provider.lag] || PARITY_STYLES.Unknown;
+                          return (
+                            <button
                               key={providerKey}
-                              row={row}
-                              providerKey={providerKey}
-                              selected={selected}
-                              onSelect={() => setSelectedId(row.cap)}
-                              tier={tier}
-                            />
-                          ))}
-                        </div>
-                      );
-                    })}
-                  </div>
+                              className="hb"
+                              type="button"
+                              onClick={() => setSelectedId(selected ? null : row.cap)}
+                              aria-label={`${row.cap} ${label} detail`}
+                              style={{ border: "none", borderLeft: "1px solid var(--border2)", padding: "12px 13px", display: "flex", flexDirection: "column", gap: 7, justifyContent: "center", background: "none", cursor: "pointer", fontFamily: "inherit", color: "var(--text)", textAlign: "left" }}
+                            >
+                              <span style={{ fontSize: 11.5, fontWeight: 500, lineHeight: 1.3, color: "var(--ink2)" }}>{provider.svc || "Not mapped"}</span>
+                              <span style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 9px 3px 8px", borderRadius: 6, background: govStyle.bg, border: `1px solid ${govStyle.border}` }}>
+                                <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: govStyle.dot, border: provider.gov === "Unknown" ? `1.5px solid ${govStyle.fg}` : "none", flexShrink: 0 }} />
+                                <span style={{ fontSize: 11.5, fontWeight: 600, color: govStyle.fg }}>{provider.gov || "Unknown"}</span>
+                              </span>
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--muted)" }}>
+                                <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: parStyle.dot, flexShrink: 0 }} />
+                                {parStyle.text}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </section>
           );
         })}
+        </div>
       </div>
-      <DesignMatrixDetail row={selectedRow} activeProviders={activeProviders} tier={tier} />
     </div>
+  );
+}
+
+function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
+  if (!row) return null;
+
+  return (
+    <>
+      <div
+        onClick={onClose}
+        aria-hidden="true"
+        style={{ position: "fixed", inset: 0, background: "rgba(15,15,14,.32)", backdropFilter: "blur(1.5px)", zIndex: 40 }}
+      />
+      <aside
+        role="dialog"
+        aria-label={`${row.cap} detail`}
+        className="design-detail-panel"
+        style={{
+          position: "fixed", top: 0, right: 0, height: "100vh",
+          width: "min(440px, 92vw)", background: "var(--panel)",
+          borderLeft: "1px solid var(--border)", zIndex: 50,
+          boxShadow: "-8px 0 30px var(--shadow)",
+          display: "flex", flexDirection: "column",
+          animation: "cimSlide .26s cubic-bezier(.2,.7,.3,1) both",
+        }}
+      >
+        <div style={{ padding: "20px 22px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, flexShrink: 0 }}>
+          <div>
+            <div style={{ display: "inline-flex", maxWidth: "100%", padding: "3px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--category-bg)", color: "var(--category-text)", fontSize: 8, letterSpacing: "0.08em", marginBottom: 9, fontWeight: 800 }}>
+              <CategoryLabel category={row.cat} size={12} uppercase />
+            </div>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, lineHeight: 1.25, color: "var(--text)" }}>{row.cap}</h2>
+            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 7 }}>
+              {row.tags.map(tag => <TagBadge key={tag} tagKey={tag} />)}
+            </div>
+            {row.lastVerified && <div style={{ marginTop: 6 }}><VerifiedStamp date={row.lastVerified} /></div>}
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close detail panel"
+            style={{ background: "var(--panel-alt)", border: "1px solid var(--border)", borderRadius: 8, width: 30, height: 30, cursor: "pointer", color: "var(--muted)", fontSize: 15, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+          >x</button>
+        </div>
+
+        <div style={{ overflowY: "auto", flex: 1, padding: "18px 22px" }}>
+          {row.architectureNotes && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Architecture note</div>
+              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.62, color: "var(--ink2)" }}>{row.architectureNotes}</p>
+            </div>
+          )}
+          {row.operationalConsiderations && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Operations note</div>
+              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.62, color: "var(--ink2)" }}>{row.operationalConsiderations}</p>
+            </div>
+          )}
+
+          {activeProviders.map(providerKey => {
+            const label = providerLabelForKey(providerKey);
+            const provider = row.providers?.[label];
+            const pm = PROVIDER_META[providerKey];
+            if (!provider) return null;
+            const govStyle = getDesignGovStyle(provider.gov);
+            const parStyle = PARITY_STYLES[provider.lag] || PARITY_STYLES.Unknown;
+            const tierNote = tier ? provider.tierNotes?.[tier] : null;
+
+            return (
+              <div key={providerKey} style={{ marginBottom: 14, padding: "14px 15px", borderRadius: 10, border: `1px solid ${pm.border}`, background: pm.bg }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span aria-hidden="true" style={{ display: "inline-block", width: 24, height: 24, borderRadius: 6, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 14, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--muted)" }}>{label}</span>
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", margin: "10px 0" }}>{provider.svc || "Not mapped"}</div>
+                {provider.formerNames?.length > 0 && (
+                  <div style={{ marginBottom: 10, fontSize: 11, color: "var(--muted)", lineHeight: 1.45 }}>
+                    <strong style={{ color: "var(--text)" }}>Formerly: </strong>{provider.formerNames.join(" / ")}
+                  </div>
+                )}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9, marginBottom: 12 }}>
+                  <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "10px 11px" }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 6 }}>Gov availability</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: 3, background: govStyle.dot, flexShrink: 0 }} />
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{provider.gov || "Unknown"}</span>
+                    </div>
+                  </div>
+                  <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "10px 11px" }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 6 }}>Parity lag</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: "50%", background: parStyle.dot, flexShrink: 0 }} />
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{parStyle.text}</span>
+                    </div>
+                  </div>
+                </div>
+                {provider.variant && (
+                  <div style={{ marginBottom: 10 }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Regulated variant</div>
+                    <div style={{ fontSize: 12, color: "var(--ink2)" }}>{provider.variant}</div>
+                  </div>
+                )}
+                {provider.note && (
+                  <div style={{ marginBottom: 10 }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Source notes</div>
+                    <p style={{ margin: 0, fontSize: 12, lineHeight: 1.6, color: "var(--ink2)" }}>{provider.note}</p>
+                  </div>
+                )}
+                {tierNote && (
+                  <div style={{ padding: "8px 10px", borderLeft: "2px solid var(--selected-border)", background: "var(--tier-bg)", color: "var(--text)", fontSize: 11, lineHeight: 1.45, marginBottom: 10 }}>
+                    <strong style={{ color: "var(--selected-text)" }}>{tier}: </strong>{tierNote}
+                  </div>
+                )}
+                <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+                  {provider.doc && <a href={provider.doc} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, fontWeight: 500, padding: "5px 10px", borderRadius: 7, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--link)", textDecoration: "none" }}>Docs</a>}
+                  {provider.govdoc && <a href={provider.govdoc} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, fontWeight: 500, padding: "5px 10px", borderRadius: 7, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--link)", textDecoration: "none" }}>Gov docs</a>}
+                  {provider.price && <a href={provider.price} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, fontWeight: 500, padding: "5px 10px", borderRadius: 7, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--link)", textDecoration: "none" }}>Pricing</a>}
+                  {provider.compliance && <a href={provider.compliance} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, fontWeight: 500, padding: "5px 10px", borderRadius: 7, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--link)", textDecoration: "none" }}>Compliance</a>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ padding: "12px 22px", borderTop: "1px solid var(--border)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", flexShrink: 0 }}>
+          Cross-provider comparison. Verify against official docs.
+        </div>
+      </aside>
+    </>
   );
 }
 
@@ -1523,80 +1546,71 @@ function ControlLensViewDesign({ lens, families, frameworks }) {
 
 // -- STATE AI TRANSPARENCY VIEW --------------------------------------------
 
-function HistoryViewDesign({ items, meta, activeProviders }) {
-  const years = Array.from(new Set(items.map(item => item.year))).sort((a, b) => a - b);
-  const grouped = activeProviders
-    .map(provider => ({
-      provider,
-      items: items
-        .filter(item => item.provider === provider)
-        .sort((a, b) => a.year - b.year || a.date.localeCompare(b.date)),
-    }))
-    .filter(group => group.items.length);
+function HistoryViewDesign({ items, meta }) {
+  const sortedItems = useMemo(() => (
+    [...items].sort((a, b) => a.year - b.year || (a.date || "").localeCompare(b.date || ""))
+  ), [items]);
+  const years = Array.from(new Set(sortedItems.map(item => item.year)));
 
   return (
     <div>
       <ViewHero
-        eyebrow="PROVIDER HISTORY"
-        title="Cloud journey milestones by provider"
+        eyebrow="CLOUD TIMELINE"
+        title="Provider cloud journey chronological"
         body={meta.scopeNote}
         meta={[
-          <StatTile key="milestones" label="MILESTONES" value={items.length} />,
+          <StatTile key="events" label="EVENTS" value={items.length} />,
           <StatTile key="years" label="YEARS" value={years.length} />,
-          <StatTile key="providers" label="PROVIDERS" value={grouped.length} />,
           <VerifiedStamp key="verified" date={meta.lastVerified} />,
         ]}
       />
 
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22 }}>
         {Object.entries(HISTORY_PHASE_STYLES).map(([phase, style]) => (
-          <span key={phase} style={{ fontSize: 8, padding: "4px 8px", borderRadius: 4, border: `1px solid ${style.border}`, background: style.bg, color: style.fg, fontWeight: 800, letterSpacing: "0.06em" }}>
-            {phase.toUpperCase()}
+          <span key={phase} style={{ fontSize: 9, padding: "4px 10px", borderRadius: 6, border: `1px solid ${style.border}`, background: style.bg, color: style.fg, fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+            {phase}
           </span>
         ))}
       </div>
 
-      {!items.length && (
-        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No history milestones match the current filter.</div>
+      {!sortedItems.length && (
+        <div style={{ padding: "16px 0", fontSize: 13, color: "var(--muted)" }}>No history milestones match the current filter.</div>
       )}
 
-      <div className="design-framework-grid">
-        {grouped.map(group => {
-          const pm = PROVIDER_META[group.provider];
+      <div style={{ display: "grid", gap: 16 }}>
+        {sortedItems.map(item => {
+          const pm = PROVIDER_META[item.provider] || {};
+          const label = providerLabelForKey(item.provider);
+          const phaseStyle = HISTORY_PHASE_STYLES[item.phase] || HISTORY_PHASE_STYLES["Commercial cloud"];
           return (
-            <article key={group.provider} className="design-secondary-card" style={{ borderColor: pm.border }}>
-              <div className="design-secondary-card-head">
-                <div>
-                  <div style={{ color: pm.dot, fontSize: 10, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{pm.label}</div>
-                  <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900 }}>{pm.long}</div>
+            <div key={item.id} className="design-timeline-row">
+              <div style={{ textAlign: "right", paddingTop: 5 }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 18, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>{item.year}</div>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", marginTop: 3 }}>{item.dateLabel}</div>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}>
+                  <span aria-hidden="true" style={{ display: "inline-block", width: 26, height: 26, borderRadius: 7, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 15, backgroundPosition: "center", backgroundRepeat: "no-repeat" }} />
                 </div>
-                <StatTile label="EVENTS" value={group.items.length} tone={pm.dot} />
               </div>
 
-              <div style={{ display: "grid", gap: 9 }}>
-                {group.items.map(item => {
-                  const phaseStyle = HISTORY_PHASE_STYLES[item.phase] || HISTORY_PHASE_STYLES["Commercial cloud"];
-                  return (
-                    <div key={item.id} style={{ padding: "10px 11px", border: `1px solid ${phaseStyle.border}`, borderLeft: `3px solid ${pm.dot}`, borderRadius: 6, background: phaseStyle.bg }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "baseline", marginBottom: 5 }}>
-                        <span style={{ fontSize: 8, color: phaseStyle.fg, fontWeight: 900, letterSpacing: "0.06em" }}>{item.phase.toUpperCase()}</span>
-                        <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800, whiteSpace: "nowrap" }}>{item.dateLabel}</span>
-                      </div>
-                      <div style={{ fontSize: 11, color: "var(--text)", lineHeight: 1.35, fontWeight: 900 }}>{item.title}</div>
-                      <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55, marginTop: 5 }}>{item.summary}</div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, alignItems: "center", marginTop: 7 }}>
-                        {item.scope.map(scope => (
-                          <span key={scope} style={{ fontSize: 7, padding: "2px 5px", borderRadius: 3, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--muted)", fontWeight: 800 }}>{scope}</span>
-                        ))}
-                        <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="design-source-link" style={{ marginLeft: 2 }}>
-                          {item.sourceLabel}
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </article>
+              <article style={{ padding: "14px 16px", borderRadius: 10, border: "1px solid var(--border)", borderLeft: `3px solid ${pm.dot || "var(--border)"}`, background: "var(--panel)", boxShadow: "0 1px 3px var(--shadow)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 9, padding: "3px 9px", borderRadius: 6, border: `1px solid ${phaseStyle.border}`, background: phaseStyle.bg, color: phaseStyle.fg, fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", whiteSpace: "nowrap" }}>
+                    {item.phase}
+                  </span>
+                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: pm.dot, fontWeight: 700 }}>{label}</span>
+                </div>
+                <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.3, color: "var(--text)", marginBottom: 7 }}>{item.title}</div>
+                <div style={{ fontSize: 12.5, color: "var(--ink2)", lineHeight: 1.58 }}>{item.summary}</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center", marginTop: 10 }}>
+                  {item.scope.map(scope => (
+                    <span key={scope} style={{ fontSize: 9, padding: "2px 7px", borderRadius: 4, border: "1px solid var(--border)", background: "var(--panel-alt)", color: "var(--muted)", fontWeight: 600, fontFamily: "'IBM Plex Mono', monospace" }}>{scope}</span>
+                  ))}
+                  <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 11, fontWeight: 500, padding: "3px 9px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--panel-alt)", color: "var(--link)", textDecoration: "none" }}>
+                    {item.sourceLabel}
+                  </a>
+                </div>
+              </article>
+            </div>
           );
         })}
       </div>
@@ -1892,10 +1906,6 @@ export default function App() {
     return matrixExport("matrix", "Capability Matrix", filteredCaps, activeProviders, selectedTier);
   }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredPatterns, filteredTransparency, mode, selectedTier]);
 
-  const govAlertCount = CAPABILITIES.filter(c =>
-    Object.values(c.providers).some(p => p.govAvailability !== "Full" || (p.parityLag && p.parityLag !== "None"))
-  ).length;
-
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
     mode === "controls" ? filteredControlFamilies.length + filteredComplianceFrameworks.length :
@@ -1905,22 +1915,22 @@ export default function App() {
     filteredCaps.length;
 
   const modes = [
-    { id: "matrix", label: "MATRIX", desc: "All capabilities by tier" },
-    { id: "patterns", label: "PATTERNS", desc: "Architecture planning overlays" },
-    { id: "controls", label: "COMPLIANCE", desc: "Framework references plus NIST 800-53 planning lens" },
-    { id: "history", label: "HISTORY", desc: "Provider cloud journey milestones" },
-    { id: "transparency", label: "TRANSPARENCY", desc: "State AI governance public record" },
-    { id: "diff",   label: "EQUIVALENCY", desc: "Side-by-side service mapping" },
-    { id: "gov",    label: `GOV / PARITY`, desc: "Government availability focus" },
-    { id: "ai",     label: "AI FOCUS", desc: "AI_NATIVE and AI_CAPABLE only" },
+    { id: "matrix",       label: "Capability Matrix",     iconKey: "layers",        desc: "All capabilities by layer and tier" },
+    { id: "patterns",     label: "Architecture Patterns", iconKey: "blocks",        desc: "Architecture planning overlays" },
+    { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
+    { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
+    { id: "transparency", label: "Transparency",          iconKey: null,            desc: "State AI governance public record" },
+    { id: "diff",         label: "Equivalency",           iconKey: null,            desc: "Side-by-side service mapping" },
+    { id: "gov",          label: "Gov / Parity",          iconKey: null,            desc: "Government availability focus" },
+    { id: "ai",           label: "AI Focus",              iconKey: "brain-circuit", desc: "AI_NATIVE and AI_CAPABLE capabilities" },
   ];
   const providerGridModes = ["matrix", "diff", "gov", "ai", "patterns"];
   const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
 
   return (
-    <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Mono','Courier New',monospace", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
+    <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
         body { margin: 0; }
         ::-webkit-scrollbar { width: 6px; height: 6px; background: var(--panel-alt); }
@@ -1933,22 +1943,22 @@ export default function App() {
         .filter-groups { display: grid; gap: 14px; }
         .filter-groups.with-context { grid-template-columns: minmax(420px, 1fr) minmax(280px, 370px); }
         .filter-context { padding-left: 16px; border-left: 1px solid var(--border); }
-        .design-matrix-shell {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
-          gap: 14px;
-          align-items: start;
+        @keyframes cimSlide {
+          from { transform: translateX(24px); opacity: 0; }
+          to { transform: none; opacity: 1; }
         }
+        .design-matrix-shell { display: block; }
         .design-coverage-strip {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-          gap: 8px;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 10px;
         }
         .design-coverage-card {
-          padding: 10px 11px;
+          padding: 14px 15px;
           border: 1px solid var(--border);
-          border-radius: 6px;
-          background: var(--panel-alt);
+          border-radius: 12px;
+          background: var(--panel);
+          box-shadow: 0 1px 2px var(--shadow);
         }
         .design-matrix-grid {
           display: grid;
@@ -1978,13 +1988,7 @@ export default function App() {
           font-family: inherit;
         }
         .design-detail-panel {
-          position: sticky;
-          top: 98px;
-          max-height: calc(100vh - 118px);
           overflow: auto;
-          padding: 14px;
-          border: 1px solid var(--border);
-          border-radius: 6px;
           background: var(--panel);
         }
         .design-view-hero {
@@ -2050,14 +2054,22 @@ export default function App() {
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           gap: 10px;
         }
+        .design-timeline-row {
+          display: grid;
+          grid-template-columns: 80px minmax(0, 1fr);
+          gap: 16px;
+          align-items: flex-start;
+        }
         @media (max-width: 980px) {
-          .design-matrix-shell { grid-template-columns: 1fr; }
           .design-detail-panel { position: static; max-height: none; }
           .design-secondary-card-head,
           .design-two-col { grid-template-columns: 1fr; }
           .design-provider-tile-grid { grid-template-columns: 1fr !important; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
+        }
+        @media (max-width: 620px) {
+          .design-timeline-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; }
         }
         .print-export { display: none; }
         @media print {
@@ -2093,49 +2105,60 @@ export default function App() {
 
       <div className="app-screen">
 
-      {/* ── HEADER ── */}
-      <div style={{ borderBottom: "1px solid var(--border)", padding: "14px 24px 0", background: "var(--header-bg)" }}>
-        {/* Top bar */}
-        <div style={{ display: "flex", alignItems: "flex-start", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontSize: 9, letterSpacing: "0.2em", color: "var(--link)", marginBottom: 3, fontWeight: 700 }}>
-              ENTERPRISE CLOUD CAPABILITY INTELLIGENCE
+      {/* HEADER */}
+      <div style={{ borderBottom: "1px solid var(--border)", padding: "20px 28px 0", background: "var(--header-bg)" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+            <div aria-hidden="true" style={{ width: 26, height: 26, borderRadius: 6, background: "var(--text)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 4 }}>
+              <div style={{ width: 11, height: 11, borderRadius: 2, border: "2px solid var(--bg)" }} />
             </div>
-            <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text)", letterSpacing: "-0.01em" }}>
-              {PROVIDERS.map(provider => PROVIDER_META[provider].label).join(" · ")}
-            </div>
-            <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>
-              {CAPABILITIES.length} capabilities · {PATTERNS.length} patterns · {COMPLIANCE_FRAMEWORKS.length} compliance frameworks · {CONTROL_LENS.families.length} NIST families · {HISTORY.length} history milestones · {TRANSPARENCY.length} state AI rows · {CATEGORIES.length} categories · fact-first · official sources only
+            <div>
+              <div style={{ fontSize: 9, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.15em", color: "var(--muted)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase" }}>
+                Cloud Intelligence Matrix
+              </div>
+              <div style={{ fontSize: 26, fontWeight: 700, color: "var(--text)", lineHeight: 1.15 }}>
+                Regulated cloud capability intelligence
+              </div>
+              <div style={{ fontSize: 13.5, color: "var(--ink2)", lineHeight: 1.55, marginTop: 6, maxWidth: 620 }}>
+                Which services are usable in each provider's government / sovereign cloud and how far commercial capabilities extend into regulated environments.
+              </div>
             </div>
           </div>
 
-          {/* Stats strip */}
-          <div style={{ marginLeft: "auto", display: "flex", gap: 16, alignItems: "center" }}>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: "#f87171" }}>{govAlertCount}</div>
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>GOV REVIEW</div>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: "#c084fc" }}>{CAPABILITIES.filter(c => c.tags.includes("AI_NATIVE")).length}</div>
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>AI_NATIVE</div>
-            </div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 16, fontWeight: 700, color: "#22d3ee" }}>{CAPABILITIES.filter(c => c.tags.includes("COMPLIANCE_RELEVANT")).length}</div>
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.06em" }}>COMPLIANCE</div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
+            <button
+              className="hb"
+              onClick={() => setTheme(prev => prev === "dark" ? "light" : "dark")}
+              style={{ padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: 600, fontFamily: "'IBM Plex Mono', monospace", border: "1px solid var(--border)", background: "var(--panel)", color: "var(--text)", display: "flex", alignItems: "center", gap: 7, cursor: "pointer", whiteSpace: "nowrap" }}
+            >
+              <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: "50%", background: theme === "dark" ? "#fbbf24" : "#64748b" }} />
+              {theme === "dark" ? "Dark" : "Light"}
+            </button>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)" }}>
+              verified {META.last_verified}
             </div>
           </div>
         </div>
 
-        {/* Mode tabs */}
-        <div style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", flexWrap: "wrap" }}>
+        <nav aria-label="View tabs" style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", overflowX: "auto" }}>
           {modes.map(m => (
-            <button key={m.id} className="hb" onClick={() => setMode(m.id)} style={{
-              padding: "8px 18px", border: "none", borderBottom: mode === m.id ? "2px solid var(--link)" : "2px solid transparent",
-              background: "transparent", color: mode === m.id ? "var(--link)" : "var(--muted)",
-              fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", fontFamily: "inherit",
-            }}>{m.label}</button>
+            <button key={m.id} className="hb" onClick={() => setMode(m.id)} title={m.desc} style={{
+              display: "inline-flex", alignItems: "center", gap: 7,
+              padding: "11px 16px", border: "none",
+              borderBottom: `2px solid ${mode === m.id ? "var(--text)" : "transparent"}`,
+              marginBottom: -1,
+              background: "transparent",
+              color: mode === m.id ? "var(--text)" : "var(--muted)",
+              fontSize: 13.5, fontWeight: 600, fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+              whiteSpace: "nowrap", cursor: "pointer", transition: "color .15s",
+            }}>
+              {m.iconKey && ICONS[m.iconKey] && (
+                <span aria-hidden="true" style={{ display: "inline-block", width: 15, height: 15, background: mode === m.id ? "var(--text)" : "var(--muted)", WebkitMaskImage: `url(${ICONS[m.iconKey]})`, maskImage: `url(${ICONS[m.iconKey]})`, WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center", flexShrink: 0 }} />
+              )}
+              {m.label}
+            </button>
           ))}
-        </div>
+        </nav>
       </div>
 
       {/* ── FILTER BAR ── */}
@@ -2180,17 +2203,6 @@ export default function App() {
             ))}
           </div>
 
-          <button
-            className="hb"
-            onClick={() => setTheme(prev => prev === "dark" ? "light" : "dark")}
-            style={{
-              marginLeft: "auto", padding: "6px 10px", borderRadius: 4, fontSize: 10, fontWeight: 700,
-              border: "1px solid var(--border)", background: "var(--panel-alt)",
-              color: "var(--text)", fontFamily: "inherit", whiteSpace: "nowrap",
-            }}
-          >
-            Theme: {theme === "dark" ? "Dark" : "Light"}
-          </button>
         </div>
 
         <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
@@ -2284,13 +2296,16 @@ export default function App() {
           <ExportToolbar exportData={exportData} />
 
           {mode === "matrix" && (
-            <DesignMatrixView
-              rows={filteredDesignRows}
-              activeProviders={activeProviders}
-              selectedId={expandedId}
-              setSelectedId={setExpandedId}
-              tier={selectedTier}
-            />
+            <>
+              <MatrixCoverageStrip rows={filteredDesignRows} activeProviders={activeProviders} />
+              <DesignMatrixView
+                rows={filteredDesignRows}
+                activeProviders={activeProviders}
+                selectedId={expandedId}
+                setSelectedId={setExpandedId}
+                tier={selectedTier}
+              />
+            </>
           )}
 
           {mode === "diff" && <DiffViewDesign caps={filteredCaps} activeProviders={activeProviders} />}
@@ -2343,6 +2358,14 @@ export default function App() {
             <a href="https://github.com/MW8-ai/CloudIntelMatrix/issues/new/choose" target="_blank" rel="noopener noreferrer" style={{ color: "var(--link)" }}>↗ Report correction</a>
           </div>
         </div>
+        {mode === "matrix" && expandedId && (
+          <DesignMatrixDetail
+            row={filteredDesignRows.find(row => row.cap === expandedId) || null}
+            activeProviders={activeProviders}
+            tier={selectedTier}
+            onClose={() => setExpandedId(null)}
+          />
+        )}
       </div>
       </div>
       <PrintableExport exportData={exportData} />
