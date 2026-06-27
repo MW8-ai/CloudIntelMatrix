@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-27 - Task 5 AI / ML regulated availability proposals
+- Added a proposal-only batch for selected AI / ML regulated availability and parity gaps covering Amazon Bedrock, Bedrock Knowledge Bases, AI agent orchestration, Azure Microsoft Sentinel availability, and OCI Generative AI government/sovereign region evidence.
+
 ## 2026-06-27 - Visual design port
 - Ported the external visual design treatment into the React/Vite app with local provider/logo assets, refreshed theme tokens, matrix coverage cards, a slide-over matrix detail panel, and a chronological cloud timeline while preserving source JSON data and exports.
 

@@ -1,0 +1,197 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Task 5 AI / ML regulated availability and parity proposal batch. Proposals are human-review inputs only and do not edit matrix.json.",
+    "generatedOn": "2026-06-27",
+    "approved": false,
+    "targetFields": [
+      "govAvailability",
+      "parityLag",
+      "govVariant"
+    ],
+    "matrixVersion": "3.16.6",
+    "matrixLastVerified": "2026-06-24",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change.",
+    "batchScope": "Generative AI / Foundation Models, Vector Retrieval & RAG Knowledge Bases, AI Agents & Tool Orchestration, and Microsoft Sentinel SIEM availability."
+  },
+  "workItems": [
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "provider": "aws",
+      "service": "Amazon Bedrock",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bedrock.html",
+      "reason": "Review documented Amazon Bedrock model and feature differences in AWS GovCloud before asserting commercial-to-government parity."
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "category": "AI / ML",
+      "provider": "aws",
+      "service": "Knowledge Bases for Amazon Bedrock",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-retrieval.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html",
+      "reason": "Review documented Knowledge Bases region, model, and feature support differences before asserting parity."
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "provider": "aws",
+      "service": "Agents for Amazon Bedrock",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/general/latest/gr/bedrock.html",
+      "reason": "Review AWS General Reference endpoint tables for Agents and Agents runtime before asserting government-region availability."
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "provider": "azure",
+      "service": "Microsoft Foundry Agent Service",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/agents/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Review Microsoft Foundry Agent Service status in Azure Government roadmap before asserting availability."
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "category": "Security & Compliance",
+      "provider": "azure",
+      "service": "Microsoft Sentinel",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/sentinel/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Review Microsoft Sentinel status in the Azure Government roadmap before asserting government availability."
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Generative AI",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/model-endpoint-regions.htm",
+      "reason": "Review Oracle's model-region table for government and sovereign regions before asserting regulated availability."
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Generative AI",
+      "field": "govVariant",
+      "currentValue": "Oracle U.S. Government Cloud",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/model-endpoint-regions.htm",
+      "reason": "Review whether the current U.S. Government Cloud variant label should broaden to OCI government and sovereign regions."
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Generative AI",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/model-endpoint-regions.htm",
+      "reason": "Review Oracle's model-region table for model-set differences before asserting commercial-to-regulated parity."
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bedrock.html",
+      "sourceQuote": "The following models have FedRAMP and IL4/5 authorization",
+      "rationale": "AWS documents Amazon Bedrock in AWS GovCloud and separately identifies authorized model sets, feature support by Region, and GovCloud-specific feature notes. Because foundation-model availability depends on model and feature coverage, the proposed parity lag is Moderate rather than None.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "aws",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html",
+      "sourceQuote": "Region and model support differ for some features",
+      "rationale": "AWS documents Knowledge Bases support differences by Region, including GovCloud-specific availability for structured data retrieval and narrower model support. Core Knowledge Bases remain available, but feature and model limitations are material to RAG design, so the proposed lag is Moderate.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "aws",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "None",
+      "sourceUrl": "https://docs.aws.amazon.com/general/latest/gr/bedrock.html",
+      "sourceQuote": "supports for creating and managing agents and knowledge bases",
+      "rationale": "The AWS General Reference endpoint tables identify separate Agents for Amazon Bedrock and Agents for Amazon Bedrock Runtime endpoints but do not list AWS GovCloud Regions for those agent services. Because this is inferred from the official endpoint table rather than a direct unsupported-features statement, it should receive careful human review.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "azure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "None",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceQuote": "Foundry Agent Service Forecasted Forecasted Forecasted Forecasted",
+      "rationale": "Microsoft's Azure Government product roadmap lists Foundry Agent Service as Forecasted across the documented government compliance environments rather than GA. For current usability in Azure Government, the proposed availability value is None pending launch.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "azure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Full",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceQuote": "Microsoft Sentinel GA GA GA GA",
+      "rationale": "Microsoft's Azure Government product roadmap lists Microsoft Sentinel as GA across the documented government compliance environments. This supports government availability for the mapped Microsoft Sentinel SIEM row; it does not assert feature parity, which remains Unknown.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "oci",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "proposedValue": "Partial",
+      "sourceUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/model-endpoint-regions.htm",
+      "sourceQuote": "UK Gov South (London) (OC4)",
+      "rationale": "Oracle's OCI Generative AI model-region table includes government and sovereign regions for selected models, including UK Gov South and EU Sovereign Central. Because support is region and model specific rather than universal, the proposed availability value is Partial.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "oci",
+      "field": "govVariant",
+      "currentValue": "Oracle U.S. Government Cloud",
+      "proposedValue": "OCI government and sovereign regions",
+      "sourceUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/model-endpoint-regions.htm",
+      "sourceQuote": "EU Sovereign Central (Frankfurt) (OC19)",
+      "rationale": "Oracle's current model-region evidence supports selected government and sovereign OCI realms rather than only Oracle U.S. Government Cloud. The proposed variant label avoids overstating U.S. government availability while preserving the regulated-environment lens.",
+      "proposedOn": "2026-06-27"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "oci",
+      "field": "parityLag",
+      "currentValue": "Unknown",
+      "proposedValue": "Moderate",
+      "sourceUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/model-endpoint-regions.htm",
+      "sourceQuote": "Each region in the table has one of the following symbols",
+      "rationale": "Oracle's model-region table shows model availability as region-specific, including government and sovereign regions with selected model support. Because model choice is central to the foundation-model capability, the proposed parity lag is Moderate.",
+      "proposedOn": "2026-06-27"
+    }
+  ]
+}
