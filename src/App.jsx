@@ -22,6 +22,8 @@ import {
   glossaryTitle,
 } from "./glossary";
 import {
+  CATEGORY_TO_LAYER,
+  DESIGN_LAYERS,
   PROVIDER_LABELS,
   buildDesignViewModel,
   groupRowsByLayer,
@@ -51,8 +53,13 @@ const DESIGN_ROW_MAP = Object.fromEntries(DESIGN_MODEL.CIM_DATA.map(row => [row.
 const THEME_STORAGE_KEY = "cloudintel-theme";
 const DEFAULT_MODE = "matrix";
 const DEFAULT_TIER = "Enterprise";
+const DEFAULT_LAYER = "All";
+const DEFAULT_MATRIX_AI_SCOPE = "All";
+const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
 const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency", "diff", "gov", "ai"];
+const MATRIX_AI_FILTERS = ["All", "AI_NATIVE", "AI_CAPABLE", "STANDARD"];
+const MATRIX_DENSITIES = ["Detailed", "Compact"];
 
 const THEME_TOKENS = {
   light: {
@@ -152,6 +159,21 @@ function getInitialCategory() {
   return CATEGORIES.includes(value) ? value : null;
 }
 
+function getInitialLayer() {
+  const value = getUrlSearchParams().get("layer");
+  return DESIGN_LAYERS.some(layer => layer.label === value) ? value : DEFAULT_LAYER;
+}
+
+function getInitialMatrixAiScope() {
+  const value = getUrlSearchParams().get("ai");
+  return MATRIX_AI_FILTERS.includes(value) ? value : DEFAULT_MATRIX_AI_SCOPE;
+}
+
+function getInitialMatrixDensity() {
+  const value = getUrlSearchParams().get("density");
+  return MATRIX_DENSITIES.includes(value) ? value : DEFAULT_MATRIX_DENSITY;
+}
+
 function getInitialSearchQuery() {
   return getUrlSearchParams().get("q") || "";
 }
@@ -167,7 +189,7 @@ function getInitialTransparencyStatus() {
   return TRANSPARENCY_STATUS_ORDER.includes(value) ? value : DEFAULT_TRANSPARENCY_STATUS;
 }
 
-function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedTier, selectedTransparencyStatus }) {
+function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus }) {
   if (typeof window === "undefined") return;
   const params = new URLSearchParams();
   if (mode !== DEFAULT_MODE) params.set("view", mode);
@@ -175,6 +197,11 @@ function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory
   if (q) params.set("q", q);
   if (activeProviders.length !== PROVIDERS.length) params.set("providers", activeProviders.join(","));
   if (selectedCategory) params.set("category", selectedCategory);
+  if (mode === "matrix") {
+    if (selectedLayer !== DEFAULT_LAYER) params.set("layer", selectedLayer);
+    if (selectedMatrixAiScope !== DEFAULT_MATRIX_AI_SCOPE) params.set("ai", selectedMatrixAiScope);
+    if (matrixDensity !== DEFAULT_MATRIX_DENSITY) params.set("density", matrixDensity);
+  }
   if (selectedTier === null) params.set("tier", "all");
   else if (selectedTier !== DEFAULT_TIER) params.set("tier", selectedTier);
   if (selectedTransparencyStatus !== DEFAULT_TRANSPARENCY_STATUS) params.set("state", selectedTransparencyStatus);
@@ -784,20 +811,88 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
   );
 }
 
-function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, tier }) {
+function MatrixReadKey({ onDismiss }) {
+  const govLevels = ["Full", "Partial", "Limited", "None", "Unknown"];
+  const parityLevels = ["None", "Minor", "Moderate", "Significant", "Unknown"];
+
+  return (
+    <section style={{ margin: "0 0 14px", padding: "13px 15px", border: "1px solid var(--border)", borderRadius: 10, background: "var(--panel)", boxShadow: "0 1px 2px var(--shadow)" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 10 }}>
+        <div>
+          <div style={{ fontSize: 10, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.1em", fontWeight: 700, textTransform: "uppercase" }}>How to read this matrix</div>
+          <div style={{ fontSize: 12, color: "var(--ink2)", lineHeight: 1.5, marginTop: 4, maxWidth: 760 }}>
+            Availability is documented regulated-environment presence. Parity is a separate commercial-to-regulated feature-gap signal. Unknown means public official evidence has not established a stronger claim.
+          </div>
+        </div>
+        <button
+          type="button"
+          className="hb"
+          onClick={onDismiss}
+          aria-label="Hide matrix reading key"
+          style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel-alt)", color: "var(--muted)", padding: "4px 8px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace" }}
+        >
+          Hide
+        </button>
+      </div>
+      <div className="design-read-key-grid">
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text)", marginBottom: 7 }}>Government availability</div>
+          <div style={{ display: "grid", gap: 6 }}>
+            {govLevels.map(level => {
+              const style = GOV_AVAIL_STYLES[level] || GOV_AVAIL_STYLES.Unknown;
+              return (
+                <div key={level} style={{ display: "grid", gridTemplateColumns: "88px minmax(0, 1fr)", gap: 9, alignItems: "start" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: "fit-content", padding: "2px 7px", borderRadius: 6, border: `1px solid ${style.border}`, background: style.bg, color: style.fg, fontSize: 10, fontWeight: 700 }}>
+                    <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: style.dot, flexShrink: 0 }} />
+                    {level}
+                  </span>
+                  <span style={{ fontSize: 10.5, lineHeight: 1.45, color: "var(--muted)" }}>{GOV_AVAILABILITY_GLOSSARY[level]}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "var(--text)", marginBottom: 7 }}>Parity lag</div>
+          <div style={{ display: "grid", gap: 6 }}>
+            {parityLevels.map(level => {
+              const style = PARITY_STYLES[level] || PARITY_STYLES.Unknown;
+              return (
+                <div key={level} style={{ display: "grid", gridTemplateColumns: "112px minmax(0, 1fr)", gap: 9, alignItems: "start" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: style.fg, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 700 }}>
+                    <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: style.dot, flexShrink: 0 }} />
+                    {level}
+                  </span>
+                  <span style={{ fontSize: 10.5, lineHeight: 1.45, color: "var(--muted)" }}>{PARITY_LAG_GLOSSARY[level]}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, tier, density = DEFAULT_MATRIX_DENSITY }) {
   const groupedLayers = useMemo(() => groupRowsByLayer(rows), [rows]);
 
   if (!rows.length) {
     return <div style={{ padding: "22px 0", fontSize: 13, color: "var(--muted)" }}>No capability rows match the current filters.</div>;
   }
 
+  const compact = density === "Compact";
   const numProviders = activeProviders.length;
-  const gridTemplateColumns = `minmax(240px, 1.15fr) repeat(${numProviders}, minmax(160px, 1fr))`;
+  const gridTemplateColumns = `minmax(${compact ? 210 : 240}px, 1.15fr) repeat(${numProviders}, minmax(${compact ? 140 : 160}px, 1fr))`;
+  const minWidth = compact ? (numProviders > 3 ? 860 : 680) : (numProviders > 3 ? 980 : 760);
+  const capabilityPad = compact ? "9px 13px" : "13px 16px";
+  const providerPad = compact ? "9px 11px" : "12px 13px";
+  const cellGap = compact ? 5 : 7;
 
   return (
     <div className="design-matrix-shell">
       <div style={{ overflowX: "auto", border: "1px solid var(--border)", borderRadius: 14, background: "var(--panel)", boxShadow: "0 2px 10px var(--shadow)" }}>
-        <div style={{ minWidth: numProviders > 3 ? 980 : 760 }}>
+        <div style={{ minWidth }}>
           <div style={{ display: "grid", gridTemplateColumns, position: "sticky", top: 0, zIndex: 5, background: "var(--head)", borderBottom: "1px solid var(--border)" }}>
             <div style={{ padding: "11px 16px", fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: "0.05em" }}>
               Capability
@@ -847,10 +942,10 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
                           type="button"
                           onClick={() => setSelectedId(selected ? null : row.cap)}
                           aria-label={`${row.cap} detail`}
-                          style={{ padding: "13px 16px", textAlign: "left", display: "flex", flexDirection: "column", gap: 6, justifyContent: "center", background: "none", border: "none", cursor: "pointer", color: "var(--text)", fontFamily: "inherit" }}
+                          style={{ padding: capabilityPad, textAlign: "left", display: "flex", flexDirection: "column", gap: compact ? 4 : 6, justifyContent: "center", background: "none", border: "none", cursor: "pointer", color: "var(--text)", fontFamily: "inherit" }}
                         >
-                          <span style={{ fontSize: 13.5, fontWeight: 600, lineHeight: 1.3 }}>{row.cap}</span>
-                          {aiBadge && (
+                          <span style={{ fontSize: compact ? 12.5 : 13.5, fontWeight: 600, lineHeight: 1.3 }}>{row.cap}</span>
+                          {aiBadge && !compact && (
                             <span style={{ alignSelf: "flex-start", fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, fontWeight: 600, letterSpacing: "0.04em", padding: "2px 7px", borderRadius: 4, background: aiBadge.bg, color: aiBadge.fg }}>
                               {aiBadge.label}
                             </span>
@@ -871,12 +966,12 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
                               type="button"
                               onClick={() => setSelectedId(selected ? null : row.cap)}
                               aria-label={`${row.cap} ${label} detail`}
-                              style={{ border: "none", borderLeft: "1px solid var(--border2)", padding: "12px 13px", display: "flex", flexDirection: "column", gap: 7, justifyContent: "center", background: "none", cursor: "pointer", fontFamily: "inherit", color: "var(--text)", textAlign: "left" }}
+                              style={{ border: "none", borderLeft: "1px solid var(--border2)", padding: providerPad, display: "flex", flexDirection: "column", gap: cellGap, justifyContent: "center", background: "none", cursor: "pointer", fontFamily: "inherit", color: "var(--text)", textAlign: "left" }}
                             >
-                              <span style={{ fontSize: 11.5, fontWeight: 500, lineHeight: 1.3, color: "var(--ink2)" }}>{provider.svc || "Not mapped"}</span>
+                              <span style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 500, lineHeight: 1.3, color: "var(--ink2)" }}>{provider.svc || "Not mapped"}</span>
                               <span style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 9px 3px 8px", borderRadius: 6, background: govStyle.bg, border: `1px solid ${govStyle.border}` }}>
                                 <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: govStyle.dot, border: provider.gov === "Unknown" ? `1.5px solid ${govStyle.fg}` : "none", flexShrink: 0 }} />
-                                <span style={{ fontSize: 11.5, fontWeight: 600, color: govStyle.fg }}>{provider.gov || "Unknown"}</span>
+                                <span style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 600, color: govStyle.fg }}>{provider.gov || "Unknown"}</span>
                               </span>
                               <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--muted)" }}>
                                 <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: parStyle.dot, flexShrink: 0 }} />
@@ -1727,6 +1822,10 @@ export default function App() {
   const [mode, setMode] = useState(getInitialMode);
   const [activeProviders, setActiveProviders] = useState(getInitialProviders);
   const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
+  const [selectedLayer, setSelectedLayer] = useState(getInitialLayer);
+  const [selectedMatrixAiScope, setSelectedMatrixAiScope] = useState(getInitialMatrixAiScope);
+  const [matrixDensity, setMatrixDensity] = useState(getInitialMatrixDensity);
+  const [showMatrixReadKey, setShowMatrixReadKey] = useState(true);
   const [searchQuery, setSearchQuery] = useState(getInitialSearchQuery);
   const [expandedId, setExpandedId] = useState(null);
   const [selectedTier, setSelectedTier] = useState(getInitialTier);
@@ -1742,8 +1841,8 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedTier, selectedTransparencyStatus });
-  }, [activeProviders, mode, searchQuery, selectedCategory, selectedTier, selectedTransparencyStatus]);
+    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus });
+  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedTier, selectedTransparencyStatus]);
 
   const toggleProvider = p =>
     setActiveProviders(prev => {
@@ -1773,9 +1872,20 @@ export default function App() {
     return caps;
   }, [selectedCategory, searchQuery]);
 
+  const filteredMatrixCaps = useMemo(() => {
+    let caps = filteredCaps;
+    if (selectedLayer !== DEFAULT_LAYER) {
+      caps = caps.filter(c => CATEGORY_TO_LAYER[c.category] === selectedLayer);
+    }
+    if (selectedMatrixAiScope !== DEFAULT_MATRIX_AI_SCOPE) {
+      caps = caps.filter(c => c.aiClassification === selectedMatrixAiScope);
+    }
+    return caps;
+  }, [filteredCaps, selectedLayer, selectedMatrixAiScope]);
+
   const filteredDesignRows = useMemo(
-    () => filteredCaps.map(cap => DESIGN_ROW_MAP[cap.capability]).filter(Boolean),
-    [filteredCaps]
+    () => filteredMatrixCaps.map(cap => DESIGN_ROW_MAP[cap.capability]).filter(Boolean),
+    [filteredMatrixCaps]
   );
 
   const filteredPatterns = useMemo(() => {
@@ -1903,8 +2013,8 @@ export default function App() {
     if (mode === "diff") return matrixExport("diff", "Service Equivalency", filteredCaps, activeProviders, selectedTier);
     if (mode === "gov") return matrixExport("gov", "Government Availability and Parity", filteredCaps, activeProviders, selectedTier);
     if (mode === "ai") return matrixExport("ai", "AI Focus", filteredAiCaps, activeProviders, selectedTier);
-    return matrixExport("matrix", "Capability Matrix", filteredCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredPatterns, filteredTransparency, mode, selectedTier]);
+    return matrixExport("matrix", "Capability Matrix", filteredMatrixCaps, activeProviders, selectedTier);
+  }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredTransparency, mode, selectedTier]);
 
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
@@ -1912,6 +2022,7 @@ export default function App() {
     mode === "history" ? filteredHistory.length :
     mode === "transparency" ? filteredTransparency.length :
     mode === "ai" ? filteredAiCaps.length :
+    mode === "matrix" ? filteredMatrixCaps.length :
     filteredCaps.length;
 
   const modes = [
@@ -1930,7 +2041,6 @@ export default function App() {
   return (
     <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
         body { margin: 0; }
         ::-webkit-scrollbar { width: 6px; height: 6px; background: var(--panel-alt); }
@@ -1959,6 +2069,11 @@ export default function App() {
           border-radius: 12px;
           background: var(--panel);
           box-shadow: 0 1px 2px var(--shadow);
+        }
+        .design-read-key-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 18px;
         }
         .design-matrix-grid {
           display: grid;
@@ -2065,6 +2180,7 @@ export default function App() {
           .design-secondary-card-head,
           .design-two-col { grid-template-columns: 1fr; }
           .design-provider-tile-grid { grid-template-columns: 1fr !important; }
+          .design-read-key-grid { grid-template-columns: 1fr; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
@@ -2205,6 +2321,71 @@ export default function App() {
 
         </div>
 
+        {mode === "matrix" && (
+          <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>LAYER</span>
+              <button className="hb" onClick={() => setSelectedLayer(DEFAULT_LAYER)} style={{
+                padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                border: `1px solid ${selectedLayer === DEFAULT_LAYER ? "var(--link)" : "var(--border)"}`,
+                background: selectedLayer === DEFAULT_LAYER ? "var(--selected-bg)" : "transparent",
+                color: selectedLayer === DEFAULT_LAYER ? "var(--selected-text)" : "var(--muted)",
+              }}>All ({filteredCaps.length})</button>
+              {DESIGN_LAYERS.map(layer => {
+                const count = filteredCaps.filter(c => CATEGORY_TO_LAYER[c.category] === layer.label).length;
+                const active = selectedLayer === layer.label;
+                const layerStyle = DESIGN_LAYER_STYLES[layer.label] || DESIGN_LAYER_STYLES["Operating Model"];
+                return (
+                  <button key={layer.id} className="hb" onClick={() => setSelectedLayer(active ? DEFAULT_LAYER : layer.label)} style={{
+                    display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                    border: `1px solid ${active ? layerStyle.color : "var(--border)"}`,
+                    background: active ? layerStyle.bg : "transparent",
+                    color: active ? layerStyle.color : "var(--muted)",
+                  }}>
+                    <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: layerStyle.color, flexShrink: 0 }} />
+                    {layer.label} ({count})
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>AI FOCUS</span>
+                {MATRIX_AI_FILTERS.map(scope => {
+                  const active = selectedMatrixAiScope === scope;
+                  const label =
+                    scope === "AI_NATIVE" ? "AI-native" :
+                    scope === "AI_CAPABLE" ? "AI-capable" :
+                    scope === "STANDARD" ? "Standard" :
+                    "All";
+                  const count = scope === DEFAULT_MATRIX_AI_SCOPE ? filteredCaps.length : filteredCaps.filter(c => c.aiClassification === scope).length;
+                  return (
+                    <button key={scope} className="hb" onClick={() => setSelectedMatrixAiScope(scope)} style={{
+                      padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                      border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
+                      background: active ? "var(--selected-bg)" : "transparent",
+                      color: active ? "var(--selected-text)" : "var(--muted)",
+                    }}>{label} ({count})</button>
+                  );
+                })}
+              </div>
+
+              <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>DENSITY</span>
+                {MATRIX_DENSITIES.map(value => (
+                  <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
+                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                    border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
+                    background: matrixDensity === value ? "var(--selected-bg)" : "transparent",
+                    color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
+                  }}>{value}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
           <div>
             {mode === "transparency" ? (
@@ -2297,6 +2478,7 @@ export default function App() {
 
           {mode === "matrix" && (
             <>
+              {showMatrixReadKey && <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} />}
               <MatrixCoverageStrip rows={filteredDesignRows} activeProviders={activeProviders} />
               <DesignMatrixView
                 rows={filteredDesignRows}
@@ -2304,6 +2486,7 @@ export default function App() {
                 selectedId={expandedId}
                 setSelectedId={setExpandedId}
                 tier={selectedTier}
+                density={matrixDensity}
               />
             </>
           )}

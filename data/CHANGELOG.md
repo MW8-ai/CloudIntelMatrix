@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-28 - Matrix handoff polish
+- Added the handoff-requested Matrix reading key, layer filter chips, AI scope chips, and detailed/compact density control while preserving the existing React/Vite data pipeline and removing the runtime Google Fonts import.
+
 ## 2026-06-27 - Realm-class planning
 - Added a provider-neutral realm-class planning note for future regulated and sovereign environment schema work, without changing matrix data or current summary fields.
 
