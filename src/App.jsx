@@ -818,6 +818,7 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
             const status = row.providers?.[label]?.gov || "Unknown";
             counts[status] = (counts[status] || 0) + 1;
           });
+          const total = rows.length || 1;
           const documented = counts.Full + counts.Partial + counts.Limited;
           const unresolved = counts.None + counts.Unknown;
 
