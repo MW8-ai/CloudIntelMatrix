@@ -2049,7 +2049,13 @@ export default function App() {
         .hb:hover { opacity: 0.78; }
         a:hover { opacity: 0.8; }
         input::placeholder { color: var(--muted); opacity: 0.72; }
-        input:focus { outline: none; border-color: var(--link) !important; }
+        input:focus, select:focus { outline: none; border-color: var(--link) !important; }
+        .matrix-control-summary {
+          display: grid;
+          grid-template-columns: minmax(220px, 360px) minmax(0, 1fr);
+          gap: 10px;
+          align-items: stretch;
+        }
         .filter-groups { display: grid; gap: 14px; }
         .filter-groups.with-context { grid-template-columns: minmax(420px, 1fr) minmax(280px, 370px); }
         .filter-context { padding-left: 16px; border-left: 1px solid var(--border); }
@@ -2181,6 +2187,7 @@ export default function App() {
           .design-two-col { grid-template-columns: 1fr; }
           .design-provider-tile-grid { grid-template-columns: 1fr !important; }
           .design-read-key-grid { grid-template-columns: 1fr; }
+          .matrix-control-summary { grid-template-columns: 1fr; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
@@ -2383,83 +2390,122 @@ export default function App() {
                 ))}
               </div>
             </div>
+
+            <div className="matrix-control-summary">
+              <label style={{ display: "grid", gap: 6, padding: "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel-alt)" }}>
+                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CATEGORY</span>
+                <select
+                  value={selectedCategory || ""}
+                  onChange={event => setSelectedCategory(event.target.value || null)}
+                  style={{
+                    width: "100%",
+                    minWidth: 0,
+                    padding: "7px 9px",
+                    borderRadius: 4,
+                    border: "1px solid var(--border)",
+                    background: "var(--panel)",
+                    color: "var(--text)",
+                    fontSize: 10,
+                    fontFamily: "inherit",
+                  }}
+                >
+                  <option value="">All categories ({CAPABILITIES.length})</option>
+                  {CATEGORIES.map(cat => (
+                    <option key={cat} value={cat}>
+                      {cat} ({CAPABILITIES.filter(c => c.category === cat).length})
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div style={{ padding: "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel-alt)", display: "grid", gap: 5, alignContent: "center" }}>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 800 }}>
+                  Organized by {DESIGN_LAYERS.length} architecture layers and {CATEGORIES.length} capability categories.
+                </div>
+                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
+                  Showing {filteredMatrixCaps.length} matrix row(s). Active category: {selectedCategory || "All categories"}.
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
-        <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
-          <div>
-            {mode === "transparency" ? (
-              <>
-                <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
-                  <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
-                    Active: {selectedTransparencyStatus}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                  {TRANSPARENCY_STATUS_ORDER.map(status => {
-                    const count = status === "All" ? TRANSPARENCY.length : TRANSPARENCY.filter(item => item.status === status).length;
-                    return (
-                      <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
-                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                        border: `1px solid ${selectedTransparencyStatus === status ? "var(--link)" : "var(--border)"}`,
-                        background: selectedTransparencyStatus === status ? "var(--selected-bg)" : "transparent",
-                        color: selectedTransparencyStatus === status ? "var(--selected-text)" : "var(--muted)",
-                      }}>{status} ({count})</button>
-                    );
-                  })}
-                </div>
-              </>
-            ) : (
-              <>
-                <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
-                  <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
-                    Active: {selectedCategory || "All categories"}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                  <button className="hb" onClick={() => setSelectedCategory(null)} style={{
-                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
-                    background: !selectedCategory ? "var(--selected-bg)" : "transparent",
-                    color: !selectedCategory ? "var(--selected-text)" : "var(--muted)",
-                  }}>ALL ({CAPABILITIES.length})</button>
-                  {CATEGORIES.map(cat => {
-                    const count = CAPABILITIES.filter(c => c.category === cat).length;
-                    return (
-                      <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
-                        display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                        border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
-                        background: selectedCategory === cat ? "var(--selected-bg)" : "transparent",
-                        color: selectedCategory === cat ? "var(--selected-text)" : "var(--muted)",
-                      }}>
-                        <CategoryLabel category={cat} size={12} />
-                        <span>({count})</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </>
+        {mode !== "matrix" && (
+          <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
+            <div>
+              {mode === "transparency" ? (
+                <>
+                  <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
+                    <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                      Active: {selectedTransparencyStatus}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    {TRANSPARENCY_STATUS_ORDER.map(status => {
+                      const count = status === "All" ? TRANSPARENCY.length : TRANSPARENCY.filter(item => item.status === status).length;
+                      return (
+                        <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
+                          padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                          border: `1px solid ${selectedTransparencyStatus === status ? "var(--link)" : "var(--border)"}`,
+                          background: selectedTransparencyStatus === status ? "var(--selected-bg)" : "transparent",
+                          color: selectedTransparencyStatus === status ? "var(--selected-text)" : "var(--muted)",
+                        }}>{status} ({count})</button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
+                    <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                      Active: {selectedCategory || "All categories"}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    <button className="hb" onClick={() => setSelectedCategory(null)} style={{
+                      padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                      border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
+                      background: !selectedCategory ? "var(--selected-bg)" : "transparent",
+                      color: !selectedCategory ? "var(--selected-text)" : "var(--muted)",
+                    }}>ALL ({CAPABILITIES.length})</button>
+                    {CATEGORIES.map(cat => {
+                      const count = CAPABILITIES.filter(c => c.category === cat).length;
+                      return (
+                        <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
+                          display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                          border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
+                          background: selectedCategory === cat ? "var(--selected-bg)" : "transparent",
+                          color: selectedCategory === cat ? "var(--selected-text)" : "var(--muted)",
+                        }}>
+                          <CategoryLabel category={cat} size={12} />
+                          <span>({count})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {mode === "controls" && (
+              <div className="filter-context">
+                <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE LENS</div>
+                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
+              </div>
+            )}
+
+            {mode === "transparency" && (
+              <div className="filter-context">
+                <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>STATE AI TRANSPARENCY</div>
+                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.</div>
+              </div>
             )}
           </div>
-
-          {mode === "controls" && (
-            <div className="filter-context">
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE LENS</div>
-              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
-            </div>
-          )}
-
-          {mode === "transparency" && (
-            <div className="filter-context">
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>STATE AI TRANSPARENCY</div>
-              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.</div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* ── CONTENT ── */}
