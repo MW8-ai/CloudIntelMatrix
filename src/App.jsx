@@ -1339,20 +1339,49 @@ function GovViewDesign({ caps, activeProviders }) {
 
 
 // ── DIFF VIEW ──────────────────────────────────────────────────────────────
-function AIViewDesign({ caps, activeProviders }) {
-  const aiCaps = caps.filter(c => c.tags.some(t => ["AI_NATIVE","AI_CAPABLE"].includes(t)));
+function AIProviderStatusRow({ cap, providerKey, selected, onOpen }) {
+  const provider = cap.providers[providerKey];
+  const label = PROVIDER_META[providerKey]?.label || providerKey;
+  if (!provider) return null;
+
+  return (
+    <div
+      className="ai-focus-provider-row hb"
+      role="button"
+      tabIndex={0}
+      onClick={() => onOpen(cap.capability)}
+      onKeyDown={event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen(cap.capability);
+        }
+      }}
+      aria-label={`${cap.capability} ${label} detail`}
+      style={{ background: selected ? "var(--selected-bg)" : "transparent" }}
+    >
+      <span aria-hidden="true" className="ai-focus-provider-logo" style={{ backgroundImage: `url(${LOGOS[label]})` }} />
+      <span className="ai-focus-provider-service">{provider.service || "Not mapped"}</span>
+      <span className="ai-focus-provider-badge"><GovBadge avail={provider.govAvailability} /></span>
+    </div>
+  );
+}
+
+function AIViewDesign({ caps, activeProviders, selectedId, setSelectedId }) {
+  const aiCaps = caps.filter(c => c.tags.some(t => ["AI_NATIVE", "AI_CAPABLE"].includes(t)));
   const groups = [
     {
       key: "AI_NATIVE",
       label: "AI-native",
-      note: "Purpose-built AI and machine-learning services.",
-      tone: "#0f766e",
+      note: "Capabilities that are themselves AI products.",
+      tone: "#6d5bd0",
+      bg: "#ece7fb",
     },
     {
       key: "AI_CAPABLE",
       label: "AI-capable",
-      note: "Services that directly support AI workloads without being the AI product itself.",
-      tone: "#0b62b9",
+      note: "Capabilities that directly support AI workloads.",
+      tone: "#0f766e",
+      bg: "#dcefed",
     },
   ].map(group => ({
     ...group,
@@ -1361,47 +1390,44 @@ function AIViewDesign({ caps, activeProviders }) {
 
   return (
     <div>
-      <ViewHero
-        eyebrow="AI FOCUS"
-        title="AI-native and AI-capable services by provider"
-        body="AI_NATIVE means the capability is itself an AI product. AI_CAPABLE means the capability directly supports AI workloads. Government availability and parity are still fact fields, not inferred from commercial launch status."
-        meta={[
-          <StatTile key="native" label="AI_NATIVE" value={groups.find(group => group.key === "AI_NATIVE")?.items.length || 0} tone="#0f766e" />,
-          <StatTile key="capable" label="AI_CAPABLE" value={groups.find(group => group.key === "AI_CAPABLE")?.items.length || 0} tone="#0b62b9" />,
-        ]}
-      />
+      <div style={{ color: "var(--ink2)", fontSize: 14, lineHeight: 1.55, maxWidth: 980, margin: "0 0 18px" }}>
+        Capabilities that are themselves AI products (AI-native) or directly enable AI workloads (AI-capable), with government availability and service mapping per provider. Click any provider row for full detail.
+      </div>
       {!aiCaps.length && (
         <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No AI-focused capabilities match the current filter.</div>
       )}
       {groups.filter(group => group.items.length).map(group => (
-        <section key={group.key} style={{ marginTop: 14 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "9px 12px", borderTop: `2px solid ${group.tone}`, borderBottom: "1px solid var(--border)", background: `${group.tone}14` }}>
-            <div>
-              <div style={{ color: "var(--text)", fontSize: 11, fontWeight: 900, letterSpacing: "0.08em", textTransform: "uppercase" }}>{group.label}</div>
-              <div style={{ color: "var(--muted)", fontSize: 9, marginTop: 3 }}>{group.note}</div>
-            </div>
-            <span style={{ color: "var(--muted)", fontSize: 9, fontWeight: 800 }}>{group.items.length} row(s)</span>
+        <section key={group.key} style={{ marginTop: 18 }}>
+          <div className="ai-focus-section-head">
+            <span style={{ display: "inline-flex", alignItems: "center", padding: "6px 12px", borderRadius: 7, background: group.bg, color: group.tone, fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, fontWeight: 900, letterSpacing: "0.03em" }}>
+              {group.label}
+            </span>
+            <span style={{ color: "var(--faint)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 13 }}>
+              {group.items.length} capabilities
+            </span>
+            <span style={{ color: "var(--muted)", fontSize: 11, lineHeight: 1.45 }}>
+              {group.note}
+            </span>
           </div>
-          <div style={{ display: "grid", gap: 10, marginTop: 10 }}>
+          <div className="ai-focus-grid">
             {group.items.map(cap => (
-              <div key={cap.capability} className="design-secondary-card">
-                <div className="design-secondary-card-head">
-                  <div>
-                    <CategoryLabel category={cap.category} size={14} uppercase style={{ color: "var(--category-text)", fontSize: 9, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }} />
-                    <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.25 }}>{cap.capability}</div>
-                    <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 6 }}>{cap.architectureNotes}</div>
-                  </div>
-                  <div style={{ display: "flex", gap: 5, alignItems: "flex-start", flexWrap: "wrap", justifyContent: "flex-end" }}>
-                    <TagBadge tagKey={group.key} />
-                    <VerifiedStamp date={cap.lastVerified} />
-                  </div>
+              <article key={cap.capability} className="ai-focus-card">
+                <div className="ai-focus-card-head">
+                  <CategoryIcon category={cap.category} size={16} />
+                  <h3>{cap.capability}</h3>
                 </div>
-                <div className="design-provider-tile-grid" style={{ gridTemplateColumns: activeProviders.map(() => "minmax(160px, 1fr)").join(" ") }}>
+                <div className="ai-focus-provider-list">
                   {activeProviders.map(providerKey => (
-                    <ProviderServiceTile key={providerKey} providerKey={providerKey} provider={cap.providers[providerKey]} showLinks />
+                    <AIProviderStatusRow
+                      key={providerKey}
+                      cap={cap}
+                      providerKey={providerKey}
+                      selected={selectedId === cap.capability}
+                      onOpen={setSelectedId}
+                    />
                   ))}
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </section>
@@ -2131,6 +2157,7 @@ export default function App() {
   const providerControlModes = ["matrix", "patterns", "history"];
   const showProviderControls = providerControlModes.includes(mode);
   const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
+  const showMatrixDensityControl = selectedMatrixLens !== "diff" && selectedMatrixLens !== "ai";
   const providerControlCard = (
     <div className="filter-control-card">
       <div className="filter-control-head">
@@ -2405,6 +2432,76 @@ export default function App() {
           line-height: 1.25;
           text-decoration: none;
         }
+        .ai-focus-section-head {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          flex-wrap: wrap;
+          margin-bottom: 12px;
+        }
+        .ai-focus-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(280px, 1fr));
+          gap: 14px;
+        }
+        .ai-focus-card {
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          background: var(--panel);
+          box-shadow: 0 1px 3px var(--shadow);
+          overflow: hidden;
+          min-width: 0;
+        }
+        .ai-focus-card-head {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-height: 54px;
+          padding: 14px 16px;
+          border-bottom: 1px solid var(--border);
+          background: var(--panel);
+        }
+        .ai-focus-card-head h3 {
+          margin: 0;
+          color: var(--text);
+          font-size: 15px;
+          font-weight: 900;
+          line-height: 1.25;
+        }
+        .ai-focus-provider-list {
+          display: grid;
+        }
+        .ai-focus-provider-row {
+          display: grid;
+          grid-template-columns: 32px minmax(0, 1fr) auto;
+          gap: 12px;
+          align-items: center;
+          padding: 12px 16px;
+          border-bottom: 1px solid var(--border2);
+          color: var(--text);
+        }
+        .ai-focus-provider-row:last-child { border-bottom: none; }
+        .ai-focus-provider-logo {
+          width: 24px;
+          height: 24px;
+          border-radius: 7px;
+          border: 1px solid var(--border);
+          background-color: #fff;
+          background-size: 16px;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+        .ai-focus-provider-service {
+          min-width: 0;
+          color: var(--ink2);
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1.35;
+        }
+        .ai-focus-provider-badge {
+          display: flex;
+          justify-content: flex-end;
+        }
         .design-two-col {
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2431,12 +2528,21 @@ export default function App() {
           .primary-filter-grid.provider-only,
           .primary-filter-grid.matrix-primary,
           .primary-filter-grid.matrix-primary.no-density,
-          .matrix-lens-grid { grid-template-columns: 1fr; }
+          .matrix-lens-grid,
+          .ai-focus-grid { grid-template-columns: 1fr; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
         @media (max-width: 620px) {
           .design-timeline-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; }
+          .ai-focus-provider-row {
+            grid-template-columns: 28px minmax(0, 1fr);
+            align-items: flex-start;
+          }
+          .ai-focus-provider-badge {
+            grid-column: 2;
+            justify-content: flex-start;
+          }
         }
         .print-export { display: none; }
         @media print {
@@ -2645,11 +2751,11 @@ export default function App() {
               </div>
             </div>
 
-            <div className={`primary-filter-grid matrix-primary ${selectedMatrixLens === "diff" ? "no-density" : ""}`}>
+            <div className={`primary-filter-grid matrix-primary ${showMatrixDensityControl ? "" : "no-density"}`}>
               {providerControlCard}
               {tierLensControlCard}
               {categoryControlCard}
-              {selectedMatrixLens !== "diff" && densityControlCard}
+              {showMatrixDensityControl && densityControlCard}
             </div>
           </div>
         )}
@@ -2750,7 +2856,16 @@ export default function App() {
             <DiffViewDesign caps={filteredMatrixCaps} activeProviders={activeProviders} />
           )}
 
-          {mode === "matrix" && selectedMatrixLens !== "diff" && (
+          {mode === "matrix" && selectedMatrixLens === "ai" && (
+            <AIViewDesign
+              caps={filteredMatrixCaps}
+              activeProviders={activeProviders}
+              selectedId={expandedId}
+              setSelectedId={setExpandedId}
+            />
+          )}
+
+          {mode === "matrix" && selectedMatrixLens !== "diff" && selectedMatrixLens !== "ai" && (
             <>
               {showMatrixReadKey && <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} />}
               {!showMatrixReadKey && (

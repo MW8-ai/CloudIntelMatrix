@@ -6,6 +6,7 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ## 2026-06-29 - Matrix UX tightening
 - Moved the high-use Matrix provider, tier, category, and density controls closer to the table, clarified coverage percentages, restored the hidden reading-guide affordance, and added detailed-cell source snippets and links.
+- Restored the design-style AI Focus lens with grouped AI-native and AI-capable cards, provider service rows, and Matrix detail-panel access.
 
 ## 2026-06-29 - Equivalency lens consolidation
 - Folded Service Equivalency into the Matrix view lens selector while preserving its side-by-side provider mapping layout, export behavior, and legacy `view=diff` URL routing.
