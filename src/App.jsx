@@ -600,7 +600,7 @@ function ParityLagGlossaryLegend() {
 }
 
 // ── CAPABILITY ROW ─────────────────────────────────────────────────────────
-function ExportToolbar({ exportData }) {
+function ExportToolbar({ exportData, compact = false }) {
   const disabled = !exportData?.rows?.length;
   const buttonStyle = {
     padding: "5px 9px",
@@ -615,9 +615,9 @@ function ExportToolbar({ exportData }) {
   };
 
   return (
-    <div className="export-toolbar" style={{ marginBottom: 12, padding: "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+    <div className={`export-toolbar ${compact ? "compact-export-toolbar" : ""}`} style={{ marginBottom: compact ? 0 : 12, padding: compact ? "9px 10px" : "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: compact ? "var(--panel-alt)" : "var(--panel)", display: "flex", alignItems: compact ? "flex-start" : "center", justifyContent: "space-between", gap: compact ? 8 : 12, flexWrap: "wrap" }}>
       <div>
-        <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 700, letterSpacing: "0.1em" }}>EXPORT VISIBLE VIEW</div>
+        <div style={{ fontSize: compact ? 8 : 9, color: "var(--link)", fontWeight: 700, letterSpacing: "0.1em" }}>{compact ? "EXPORT" : "EXPORT VISIBLE VIEW"}</div>
         <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>{exportData.label} - {exportData.rows.length} row(s)</div>
       </div>
       <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
@@ -818,9 +818,8 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
             const status = row.providers?.[label]?.gov || "Unknown";
             counts[status] = (counts[status] || 0) + 1;
           });
-          const total = rows.length || 1;
           const documented = counts.Full + counts.Partial + counts.Limited;
-          const pct = Math.round((documented / total) * 100);
+          const unresolved = counts.None + counts.Unknown;
 
           return (
             <div key={providerKey} className="design-coverage-card">
@@ -830,8 +829,8 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                   <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{label}</span>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>{pct}%</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 700, color: "var(--faint)", marginTop: 3, textTransform: "uppercase" }}>documented</div>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>{documented}/{rows.length}</div>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 700, color: "var(--faint)", marginTop: 3, textTransform: "uppercase" }}>evidence found</div>
                 </div>
               </div>
               <div style={{ height: 7, borderRadius: 4, overflow: "hidden", background: "var(--border2)", display: "flex" }}>
@@ -844,14 +843,14 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                 })}
               </div>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", lineHeight: 1.45, marginTop: 7 }}>
-                {documented} of {rows.length} rows have Full, Partial, or Limited regulated availability evidence.
+                {counts.Full} full / {counts.Partial} partial / {counts.Limited} limited / {unresolved} none or unknown
               </div>
             </div>
           );
         })}
       </div>
       <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", lineHeight: 1.6, marginBottom: 18 }}>
-        Coverage % = documented regulated-availability rows divided by visible rows. The bar also includes None and Unknown.
+        Evidence found counts only Full, Partial, and Limited regulated availability from official sources. None and Unknown remain visible so gaps are not hidden.
       </div>
     </div>
   );
@@ -1887,30 +1886,49 @@ function TransparencyViewDesign({ items, meta }) {
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
   if (!items.length) return null;
+  const visibleItems = open ? items : items.slice(0, 2);
+  const hiddenCount = Math.max(items.length - visibleItems.length, 0);
   return (
-    <div style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
-      <div onClick={() => setOpen(v => !v)} style={{ padding: "8px 14px", background: "var(--panel-alt)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.1em", color: "#f59e0b" }}>▶ ANNOUNCED / PREVIEW / UPCOMING — {items.length} item(s)</span>
-        <span style={{ fontSize: 9, color: "#78350f" }}>{open ? "COLLAPSE ▲" : "EXPAND ▼"}</span>
+    <div className="global-news-panel" style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
+      <div style={{ padding: "8px 14px", background: "var(--panel-alt)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+        <div>
+          <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", color: "#b45309" }}>GLOBAL CLOUD PROVIDER NEWS</div>
+          <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>
+            Announced, preview, and upcoming provider changes. Showing {visibleItems.length} of {items.length}.
+          </div>
+        </div>
+        <button
+          type="button"
+          className="hb"
+          onClick={() => setOpen(v => !v)}
+          style={{ border: "1px solid #d97706", borderRadius: 5, background: "var(--panel)", color: "#b45309", padding: "5px 9px", fontSize: 9, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 800 }}
+        >
+          {open ? "SHOW LESS" : `SHOW ALL ${items.length}`}
+        </button>
       </div>
-      {open && (
+      {visibleItems.length > 0 && (
         <div style={{ padding: "10px 14px", background: "var(--panel)" }}>
-          {items.map(item => (
-            <div key={item.id} style={{ display: "flex", gap: 8, marginBottom: 8, paddingBottom: 8, borderBottom: "1px solid var(--border)" }}>
+          {visibleItems.map((item, index) => (
+            <div key={item.id} style={{ display: "flex", gap: 8, marginBottom: index === visibleItems.length - 1 ? 0 : 8, paddingBottom: index === visibleItems.length - 1 ? 0 : 8, borderBottom: index === visibleItems.length - 1 ? "none" : "1px solid var(--border)" }}>
               <div style={{ fontSize: 8, padding: "2px 6px", borderRadius: 3, background: "#78350f", color: "#fbbf24", fontWeight: 700, flexShrink: 0, height: "fit-content", marginTop: 1 }}>
                 {item.status?.toUpperCase()}
               </div>
               <div>
                 <div style={{ fontSize: 10, color: PROVIDER_META[item.provider?.toLowerCase()]?.dot || "var(--text)", fontWeight: 600 }}>
-                  {item.provider} · {item.category}
-                  {item.expected_ga && <span style={{ color: "var(--muted)", fontWeight: 400 }}> · Expected: {item.expected_ga}</span>}
+                  {item.provider} - {item.category}
+                  {item.expected_ga && <span style={{ color: "var(--muted)", fontWeight: 400 }}> - Expected: {item.expected_ga}</span>}
                 </div>
                 <div style={{ fontSize: 10, color: "var(--text)", marginTop: 2 }}>{item.title}</div>
-                <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>{item.detail}</div>
-                {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", marginTop: 3, display: "block" }}>↗ Official source</a>}
+                {open && <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>{item.detail}</div>}
+                {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", marginTop: 3, display: "block" }}>Official source</a>}
               </div>
             </div>
           ))}
+          {!open && hiddenCount > 0 && (
+            <div style={{ marginTop: 8, fontSize: 9, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace" }}>
+              {hiddenCount} more global provider news item(s) hidden.
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -2008,7 +2026,6 @@ export default function App() {
   }), [activeProviders, filteredCaps]);
 
   const activeMatrixLens = MATRIX_LENSES.find(lens => lens.id === selectedMatrixLens) || MATRIX_LENSES[0];
-  const matrixLensRowLabel = selectedMatrixLens === "diff" ? "equivalency row(s)" : "matrix row(s)";
 
   const filteredDesignRows = useMemo(
     () => filteredMatrixCaps.map(cap => DESIGN_ROW_MAP[cap.capability]).filter(Boolean),
@@ -2245,6 +2262,13 @@ export default function App() {
         a:hover { opacity: 0.8; }
         input::placeholder { color: var(--muted); opacity: 0.72; }
         input:focus, select:focus { outline: none; border-color: var(--link) !important; }
+        .top-nav {
+          display: flex;
+          gap: 0;
+          border-bottom: 1px solid var(--border);
+          flex-wrap: wrap;
+          overflow-x: visible;
+        }
         .primary-filter-grid {
           display: grid;
           grid-template-columns: minmax(280px, 1.4fr) minmax(220px, .8fr) minmax(260px, 1fr);
@@ -2253,10 +2277,10 @@ export default function App() {
         }
         .primary-filter-grid.provider-only { grid-template-columns: minmax(280px, 560px); }
         .primary-filter-grid.matrix-primary {
-          grid-template-columns: minmax(250px, 1.2fr) minmax(210px, .82fr) minmax(260px, 1fr) minmax(170px, .58fr);
+          grid-template-columns: minmax(220px, 1.1fr) minmax(185px, .72fr) minmax(220px, .9fr) minmax(145px, .55fr) minmax(180px, .68fr);
         }
         .primary-filter-grid.matrix-primary.no-density {
-          grid-template-columns: minmax(250px, 1.2fr) minmax(210px, .82fr) minmax(260px, 1fr);
+          grid-template-columns: minmax(220px, 1.1fr) minmax(185px, .72fr) minmax(220px, .9fr) minmax(180px, .68fr);
         }
         .filter-control-card {
           padding: 9px 10px;
@@ -2300,6 +2324,16 @@ export default function App() {
           color: var(--text);
           font-size: 10px;
           font-family: inherit;
+        }
+        .filter-bar {
+          position: sticky;
+        }
+        .compact-export-toolbar {
+          min-width: 0;
+        }
+        .compact-export-toolbar > div:first-child {
+          min-width: 0;
+          flex: 1 1 100%;
         }
         .matrix-lens-grid {
           display: grid;
@@ -2530,8 +2564,24 @@ export default function App() {
           .primary-filter-grid.matrix-primary.no-density,
           .matrix-lens-grid,
           .ai-focus-grid { grid-template-columns: 1fr; }
+          .top-nav { gap: 6px; padding-bottom: 8px; }
+          .top-nav-tab {
+            flex: 1 1 calc(50% - 3px);
+            min-width: 0;
+            justify-content: center;
+            border: 1px solid var(--border) !important;
+            border-radius: 6px;
+            margin-bottom: 0 !important;
+            background: var(--panel-alt) !important;
+            white-space: normal !important;
+            text-align: center;
+            padding: 8px 9px !important;
+            font-size: 12px !important;
+            line-height: 1.2;
+          }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
+          .filter-bar { position: static !important; }
         }
         @media (max-width: 620px) {
           .design-timeline-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; }
@@ -2613,9 +2663,9 @@ export default function App() {
           </div>
         </div>
 
-        <nav aria-label="View tabs" style={{ display: "flex", gap: 0, borderBottom: "1px solid var(--border)", overflowX: "auto" }}>
+        <nav aria-label="View tabs" className="top-nav">
           {modes.map(m => (
-            <button key={m.id} className="hb" onClick={() => setMode(m.id)} title={m.desc} style={{
+            <button key={m.id} className="hb top-nav-tab" onClick={() => setMode(m.id)} title={m.desc} style={{
               display: "inline-flex", alignItems: "center", gap: 7,
               padding: "11px 16px", border: "none",
               borderBottom: `2px solid ${mode === m.id ? "var(--text)" : "transparent"}`,
@@ -2635,7 +2685,7 @@ export default function App() {
       </div>
 
       {/* ── FILTER BAR ── */}
-      <div style={{ position: "sticky", top: 0, zIndex: 40, padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
+      <div className="filter-bar" style={{ top: 0, zIndex: 40, padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
         <div style={{ display: "grid", gap: 10, marginBottom: 10 }}>
           <div style={{ width: "100%" }}>
             <input
@@ -2742,20 +2792,12 @@ export default function App() {
               </div>
             </div>
 
-            <div className="filter-control-card" style={{ display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
-              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 800 }}>
-                Organized by {DESIGN_LAYERS.length} architecture layers and {CATEGORIES.length} capability categories.
-              </div>
-              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
-                Showing {filteredMatrixCaps.length} {matrixLensRowLabel}. Active view: {activeMatrixLens.label}. Active category: {selectedCategory || "All categories"}.
-              </div>
-            </div>
-
             <div className={`primary-filter-grid matrix-primary ${showMatrixDensityControl ? "" : "no-density"}`}>
               {providerControlCard}
               {tierLensControlCard}
               {categoryControlCard}
               {showMatrixDensityControl && densityControlCard}
+              <ExportToolbar exportData={exportData} compact />
             </div>
           </div>
         )}
@@ -2850,7 +2892,7 @@ export default function App() {
             </div>
           )}
 
-          <ExportToolbar exportData={exportData} />
+          {mode !== "matrix" && <ExportToolbar exportData={exportData} />}
 
           {mode === "matrix" && selectedMatrixLens === "diff" && (
             <DiffViewDesign caps={filteredMatrixCaps} activeProviders={activeProviders} />
