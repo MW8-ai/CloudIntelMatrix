@@ -2036,6 +2036,8 @@ export default function App() {
     { id: "ai",           label: "AI Focus",              iconKey: "brain-circuit", desc: "AI_NATIVE and AI_CAPABLE capabilities" },
   ];
   const providerGridModes = ["matrix", "diff", "gov", "ai", "patterns"];
+  const providerControlModes = ["matrix", "diff", "gov", "ai", "patterns", "history"];
+  const showProviderControls = providerControlModes.includes(mode);
   const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
 
   return (
@@ -2049,7 +2051,64 @@ export default function App() {
         .hb:hover { opacity: 0.78; }
         a:hover { opacity: 0.8; }
         input::placeholder { color: var(--muted); opacity: 0.72; }
-        input:focus { outline: none; border-color: var(--link) !important; }
+        input:focus, select:focus { outline: none; border-color: var(--link) !important; }
+        .primary-filter-grid {
+          display: grid;
+          grid-template-columns: minmax(280px, 1.4fr) minmax(220px, .8fr) minmax(260px, 1fr);
+          gap: 10px;
+          align-items: stretch;
+        }
+        .primary-filter-grid.provider-only { grid-template-columns: minmax(280px, 560px); }
+        .filter-control-card {
+          padding: 9px 10px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel-alt);
+          min-width: 0;
+        }
+        .filter-control-head {
+          display: flex;
+          gap: 10px;
+          align-items: baseline;
+          justify-content: space-between;
+          margin-bottom: 7px;
+          flex-wrap: wrap;
+        }
+        .filter-control-label {
+          font-size: 8px;
+          color: var(--muted);
+          letter-spacing: 0.1em;
+          font-weight: 800;
+        }
+        .filter-control-note {
+          font-size: 9px;
+          color: var(--muted);
+          font-weight: 700;
+        }
+        .filter-chip-row {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        .filter-select {
+          width: 100%;
+          min-width: 0;
+          padding: 7px 9px;
+          border-radius: 4px;
+          border: 1px solid var(--border);
+          background: var(--panel);
+          color: var(--text);
+          font-size: 10px;
+          font-family: inherit;
+        }
+        .matrix-lens-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.5fr) minmax(260px, .9fr);
+          gap: 10px;
+          align-items: stretch;
+        }
+        .matrix-lens-stack { display: grid; gap: 10px; }
         .filter-groups { display: grid; gap: 14px; }
         .filter-groups.with-context { grid-template-columns: minmax(420px, 1fr) minmax(280px, 370px); }
         .filter-context { padding-left: 16px; border-left: 1px solid var(--border); }
@@ -2181,6 +2240,9 @@ export default function App() {
           .design-two-col { grid-template-columns: 1fr; }
           .design-provider-tile-grid { grid-template-columns: 1fr !important; }
           .design-read-key-grid { grid-template-columns: 1fr; }
+          .primary-filter-grid,
+          .primary-filter-grid.provider-only,
+          .matrix-lens-grid { grid-template-columns: 1fr; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
         }
@@ -2279,8 +2341,8 @@ export default function App() {
 
       {/* ── FILTER BAR ── */}
       <div style={{ position: "sticky", top: 0, zIndex: 40, padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10, flexWrap: "wrap" }}>
-          <div style={{ flex: "1 1 280px", minWidth: 240, maxWidth: 440 }}>
+        <div style={{ display: "grid", gap: 10, marginBottom: 10 }}>
+          <div style={{ width: "100%" }}>
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
@@ -2293,173 +2355,237 @@ export default function App() {
             />
           </div>
 
-          {mode === "matrix" && (
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>TIER</span>
-              {META.tiers.map(t => (
-                <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
-                  padding: "3px 9px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                  border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
-                  background: selectedTier === t ? "var(--selected-bg)" : "transparent",
-                  color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
-                }}>{t}</button>
-              ))}
+          {(showProviderControls || mode === "matrix") && (
+            <div className={`primary-filter-grid ${mode === "matrix" ? "" : "provider-only"}`}>
+              {showProviderControls && (
+                <div className="filter-control-card">
+                  <div className="filter-control-head">
+                    <span className="filter-control-label">COMPARE PROVIDERS</span>
+                    <span className="filter-control-note">{activeProviders.length} of {PROVIDERS.length} visible</span>
+                  </div>
+                  <div className="filter-chip-row">
+                    {PROVIDERS.map(p => (
+                      <button key={p} className="hb" onClick={() => toggleProvider(p)} style={{
+                        padding: "5px 10px", borderRadius: 5, fontSize: 10, fontWeight: 800, letterSpacing: "0.07em",
+                        border: `1px solid ${activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--border)"}`,
+                        background: activeProviders.includes(p) ? `${PROVIDER_META[p].dot}22` : "var(--panel)",
+                        color: activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--muted)",
+                      }}>{PROVIDER_META[p].label}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {mode === "matrix" && (
+                <>
+                  <div className="filter-control-card">
+                    <div className="filter-control-head">
+                      <span className="filter-control-label">TIER LENS</span>
+                      <span className="filter-control-note">{selectedTier || "All tiers"}</span>
+                    </div>
+                    <div className="filter-chip-row">
+                      {META.tiers.map(t => (
+                        <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
+                          padding: "5px 10px", borderRadius: 5, fontSize: 10, fontFamily: "inherit", fontWeight: 800,
+                          border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
+                          background: selectedTier === t ? "var(--selected-bg)" : "var(--panel)",
+                          color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
+                        }}>{t}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <label className="filter-control-card" style={{ display: "grid", gap: 7 }}>
+                    <div className="filter-control-head" style={{ marginBottom: 0 }}>
+                      <span className="filter-control-label">CATEGORY</span>
+                      <span className="filter-control-note">{selectedCategory || "All categories"}</span>
+                    </div>
+                    <select
+                      className="filter-select"
+                      value={selectedCategory || ""}
+                      onChange={event => setSelectedCategory(event.target.value || null)}
+                    >
+                      <option value="">All categories ({CAPABILITIES.length} capabilities)</option>
+                      {CATEGORIES.map(cat => (
+                        <option key={cat} value={cat}>
+                          {cat} ({CAPABILITIES.filter(c => c.category === cat).length})
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </>
+              )}
             </div>
           )}
-
-          <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>PROVIDERS</span>
-            {PROVIDERS.map(p => (
-              <button key={p} className="hb" onClick={() => toggleProvider(p)} style={{
-                padding: "3px 10px", borderRadius: 4, fontSize: 10, fontWeight: 600, letterSpacing: "0.07em",
-                border: `1px solid ${activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--border)"}`,
-                background: activeProviders.includes(p) ? `${PROVIDER_META[p].dot}22` : "transparent",
-                color: activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--muted)",
-              }}>{PROVIDER_META[p].label}</button>
-            ))}
-          </div>
-
         </div>
 
         {mode === "matrix" && (
           <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
-            <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-              <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>LAYER</span>
-              <button className="hb" onClick={() => setSelectedLayer(DEFAULT_LAYER)} style={{
-                padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                border: `1px solid ${selectedLayer === DEFAULT_LAYER ? "var(--link)" : "var(--border)"}`,
-                background: selectedLayer === DEFAULT_LAYER ? "var(--selected-bg)" : "transparent",
-                color: selectedLayer === DEFAULT_LAYER ? "var(--selected-text)" : "var(--muted)",
-              }}>All ({filteredCaps.length})</button>
-              {DESIGN_LAYERS.map(layer => {
-                const count = filteredCaps.filter(c => CATEGORY_TO_LAYER[c.category] === layer.label).length;
-                const active = selectedLayer === layer.label;
-                const layerStyle = DESIGN_LAYER_STYLES[layer.label] || DESIGN_LAYER_STYLES["Operating Model"];
-                return (
-                  <button key={layer.id} className="hb" onClick={() => setSelectedLayer(active ? DEFAULT_LAYER : layer.label)} style={{
-                    display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${active ? layerStyle.color : "var(--border)"}`,
-                    background: active ? layerStyle.bg : "transparent",
-                    color: active ? layerStyle.color : "var(--muted)",
-                  }}>
-                    <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: layerStyle.color, flexShrink: 0 }} />
-                    {layer.label} ({count})
-                  </button>
-                );
-              })}
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
-              <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>AI FOCUS</span>
-                {MATRIX_AI_FILTERS.map(scope => {
-                  const active = selectedMatrixAiScope === scope;
-                  const label =
-                    scope === "AI_NATIVE" ? "AI-native" :
-                    scope === "AI_CAPABLE" ? "AI-capable" :
-                    scope === "STANDARD" ? "Standard" :
-                    "All";
-                  const count = scope === DEFAULT_MATRIX_AI_SCOPE ? filteredCaps.length : filteredCaps.filter(c => c.aiClassification === scope).length;
-                  return (
-                    <button key={scope} className="hb" onClick={() => setSelectedMatrixAiScope(scope)} style={{
-                      padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                      border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
-                      background: active ? "var(--selected-bg)" : "transparent",
-                      color: active ? "var(--selected-text)" : "var(--muted)",
-                    }}>{label} ({count})</button>
-                  );
-                })}
+            <div className="matrix-lens-grid">
+              <div className="filter-control-card">
+                <div className="filter-control-head">
+                  <span className="filter-control-label">LAYER</span>
+                  <span className="filter-control-note">{selectedLayer === DEFAULT_LAYER ? "All architecture layers" : selectedLayer}</span>
+                </div>
+                <div className="filter-chip-row">
+                  <button className="hb" onClick={() => setSelectedLayer(DEFAULT_LAYER)} style={{
+                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                    border: `1px solid ${selectedLayer === DEFAULT_LAYER ? "var(--link)" : "var(--border)"}`,
+                    background: selectedLayer === DEFAULT_LAYER ? "var(--selected-bg)" : "var(--panel)",
+                    color: selectedLayer === DEFAULT_LAYER ? "var(--selected-text)" : "var(--muted)",
+                  }}>All ({filteredCaps.length})</button>
+                  {DESIGN_LAYERS.map(layer => {
+                    const count = filteredCaps.filter(c => CATEGORY_TO_LAYER[c.category] === layer.label).length;
+                    const active = selectedLayer === layer.label;
+                    const layerStyle = DESIGN_LAYER_STYLES[layer.label] || DESIGN_LAYER_STYLES["Operating Model"];
+                    return (
+                      <button key={layer.id} className="hb" onClick={() => setSelectedLayer(active ? DEFAULT_LAYER : layer.label)} style={{
+                        display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        border: `1px solid ${active ? layerStyle.color : "var(--border)"}`,
+                        background: active ? layerStyle.bg : "var(--panel)",
+                        color: active ? layerStyle.color : "var(--muted)",
+                      }}>
+                        <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: layerStyle.color, flexShrink: 0 }} />
+                        {layer.label} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
-              <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-                <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>DENSITY</span>
-                {MATRIX_DENSITIES.map(value => (
-                  <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
-                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
-                    background: matrixDensity === value ? "var(--selected-bg)" : "transparent",
-                    color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
-                  }}>{value}</button>
-                ))}
+              <div className="matrix-lens-stack">
+                <div className="filter-control-card">
+                  <div className="filter-control-head">
+                    <span className="filter-control-label">AI FOCUS</span>
+                    <span className="filter-control-note">{selectedMatrixAiScope === DEFAULT_MATRIX_AI_SCOPE ? "All AI classes" : selectedMatrixAiScope}</span>
+                  </div>
+                  <div className="filter-chip-row">
+                    {MATRIX_AI_FILTERS.map(scope => {
+                      const active = selectedMatrixAiScope === scope;
+                      const label =
+                        scope === "AI_NATIVE" ? "AI-native" :
+                        scope === "AI_CAPABLE" ? "AI-capable" :
+                        scope === "STANDARD" ? "Standard" :
+                        "All";
+                      const count = scope === DEFAULT_MATRIX_AI_SCOPE ? filteredCaps.length : filteredCaps.filter(c => c.aiClassification === scope).length;
+                      return (
+                        <button key={scope} className="hb" onClick={() => setSelectedMatrixAiScope(scope)} style={{
+                          padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                          border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
+                          background: active ? "var(--selected-bg)" : "var(--panel)",
+                          color: active ? "var(--selected-text)" : "var(--muted)",
+                        }}>{label} ({count})</button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="filter-control-card">
+                  <div className="filter-control-head">
+                    <span className="filter-control-label">DENSITY</span>
+                    <span className="filter-control-note">{matrixDensity}</span>
+                  </div>
+                  <div className="filter-chip-row">
+                    {MATRIX_DENSITIES.map(value => (
+                      <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
+                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
+                        background: matrixDensity === value ? "var(--selected-bg)" : "var(--panel)",
+                        color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
+                      }}>{value}</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="filter-control-card" style={{ display: "flex", gap: 10, alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" }}>
+              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 800 }}>
+                Organized by {DESIGN_LAYERS.length} architecture layers and {CATEGORIES.length} capability categories.
+              </div>
+              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
+                Showing {filteredMatrixCaps.length} matrix row(s). Active category: {selectedCategory || "All categories"}.
               </div>
             </div>
           </div>
         )}
 
-        <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
-          <div>
-            {mode === "transparency" ? (
-              <>
-                <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
-                  <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
-                    Active: {selectedTransparencyStatus}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                  {TRANSPARENCY_STATUS_ORDER.map(status => {
-                    const count = status === "All" ? TRANSPARENCY.length : TRANSPARENCY.filter(item => item.status === status).length;
-                    return (
-                      <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
-                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                        border: `1px solid ${selectedTransparencyStatus === status ? "var(--link)" : "var(--border)"}`,
-                        background: selectedTransparencyStatus === status ? "var(--selected-bg)" : "transparent",
-                        color: selectedTransparencyStatus === status ? "var(--selected-text)" : "var(--muted)",
-                      }}>{status} ({count})</button>
-                    );
-                  })}
-                </div>
-              </>
-            ) : (
-              <>
-                <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-                  <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
-                  <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
-                    Active: {selectedCategory || "All categories"}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-                  <button className="hb" onClick={() => setSelectedCategory(null)} style={{
-                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                    border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
-                    background: !selectedCategory ? "var(--selected-bg)" : "transparent",
-                    color: !selectedCategory ? "var(--selected-text)" : "var(--muted)",
-                  }}>ALL ({CAPABILITIES.length})</button>
-                  {CATEGORIES.map(cat => {
-                    const count = CAPABILITIES.filter(c => c.category === cat).length;
-                    return (
-                      <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
-                        display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                        border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
-                        background: selectedCategory === cat ? "var(--selected-bg)" : "transparent",
-                        color: selectedCategory === cat ? "var(--selected-text)" : "var(--muted)",
-                      }}>
-                        <CategoryLabel category={cat} size={12} />
-                        <span>({count})</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </>
+        {mode !== "matrix" && (
+          <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
+            <div>
+              {mode === "transparency" ? (
+                <>
+                  <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
+                    <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                      Active: {selectedTransparencyStatus}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    {TRANSPARENCY_STATUS_ORDER.map(status => {
+                      const count = status === "All" ? TRANSPARENCY.length : TRANSPARENCY.filter(item => item.status === status).length;
+                      return (
+                        <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
+                          padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                          border: `1px solid ${selectedTransparencyStatus === status ? "var(--link)" : "var(--border)"}`,
+                          background: selectedTransparencyStatus === status ? "var(--selected-bg)" : "transparent",
+                          color: selectedTransparencyStatus === status ? "var(--selected-text)" : "var(--muted)",
+                        }}>{status} ({count})</button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
+                    <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
+                      Active: {selectedCategory || "All categories"}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                    <button className="hb" onClick={() => setSelectedCategory(null)} style={{
+                      padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                      border: `1px solid ${!selectedCategory ? "var(--link)" : "var(--border)"}`,
+                      background: !selectedCategory ? "var(--selected-bg)" : "transparent",
+                      color: !selectedCategory ? "var(--selected-text)" : "var(--muted)",
+                    }}>ALL ({CAPABILITIES.length})</button>
+                    {CATEGORIES.map(cat => {
+                      const count = CAPABILITIES.filter(c => c.category === cat).length;
+                      return (
+                        <button key={cat} className="hb" onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)} style={{
+                          display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                          border: `1px solid ${selectedCategory === cat ? "var(--link)" : "var(--border)"}`,
+                          background: selectedCategory === cat ? "var(--selected-bg)" : "transparent",
+                          color: selectedCategory === cat ? "var(--selected-text)" : "var(--muted)",
+                        }}>
+                          <CategoryLabel category={cat} size={12} />
+                          <span>({count})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {mode === "controls" && (
+              <div className="filter-context">
+                <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE LENS</div>
+                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
+              </div>
+            )}
+
+            {mode === "transparency" && (
+              <div className="filter-context">
+                <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
+                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>STATE AI TRANSPARENCY</div>
+                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.</div>
+              </div>
             )}
           </div>
-
-          {mode === "controls" && (
-            <div className="filter-context">
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE LENS</div>
-              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
-            </div>
-          )}
-
-          {mode === "transparency" && (
-            <div className="filter-context">
-              <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-              <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>STATE AI TRANSPARENCY</div>
-              <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.</div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* ── CONTENT ── */}

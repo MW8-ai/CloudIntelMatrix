@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-29 - Front-page category polish
+- Reworked the Matrix front-page filters so search has its own row, provider / tier / category controls are grouped as primary controls, and layer / AI / density controls stay organized below while preserving existing filters and exports.
+
 ## 2026-06-29 - State AI transparency batch
 - Populated Massachusetts, New Jersey, and Oregon AI governance transparency rows from official state executive order and action-plan sources.
 
