@@ -6,11 +6,18 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 jobs:
   dependency-review:
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     steps:
       - name: Dependency review
         uses: actions/dependency-review-action@v4
+
+  skipped-private-repo:
+    if: ${{ github.event.repository.private }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip on private repos without GHAS dependency review support
+        run: echo "Skipping dependency review on private repo unless GitHub Advanced Security is enabled."
