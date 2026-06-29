@@ -1,4 +1,9 @@
-# ☁️ Cloud Intelligence Matrix
+﻿# ☁️ Cloud Intelligence Matrix
+
+<!-- repo-badges:start -->
+[![Visibility](https://img.shields.io/badge/visibility-public-brightgreen)](https://github.com/MW8-ai/CloudIntelMatrix) [![GitHub last commit](https://img.shields.io/github/last-commit/MW8-ai/CloudIntelMatrix)](https://github.com/MW8-ai/CloudIntelMatrix/commits) [![GitHub repo size](https://img.shields.io/github/repo-size/MW8-ai/CloudIntelMatrix)](https://github.com/MW8-ai/CloudIntelMatrix) [![Maintained](https://img.shields.io/badge/maintained-yes-brightgreen)](https://github.com/MW8-ai/CloudIntelMatrix) [![License](https://img.shields.io/github/license/MW8-ai/CloudIntelMatrix)](https://github.com/MW8-ai/CloudIntelMatrix/blob/main/LICENSE)
+<!-- repo-badges:end -->
+
 
 > Enterprise and government cloud capability intelligence — AWS · Azure · GCP · OCI
 
@@ -151,3 +156,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions require an official so
 Data: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) · Code: [MIT](LICENSE)
 
 See [DISCLAIMER.md](DISCLAIMER.md). Not affiliated with Amazon, Microsoft, Google, Oracle, AWS, Azure, Google Cloud, or Oracle Cloud Infrastructure.
+
+## Overview
+Enterprise and government cloud capability intelligence — AWS · Azure · GCP
+
+## Quick Start
+Add setup and run steps for this repository.
+
+## Project Status
+Active development.
+
