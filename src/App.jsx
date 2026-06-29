@@ -54,10 +54,16 @@ const THEME_STORAGE_KEY = "cloudintel-theme";
 const DEFAULT_MODE = "matrix";
 const DEFAULT_TIER = "Enterprise";
 const DEFAULT_LAYER = "All";
+const DEFAULT_MATRIX_LENS = "all";
 const DEFAULT_MATRIX_AI_SCOPE = "All";
 const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
 const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency", "diff", "gov", "ai"];
+const MATRIX_LENSES = [
+  { id: "all", label: "Capability", note: "All capability rows" },
+  { id: "gov", label: "Gov / Parity", note: "Rows needing regulated availability or parity review" },
+  { id: "ai", label: "AI Focus", note: "AI-native and AI-capable rows" },
+];
 const MATRIX_AI_FILTERS = ["All", "AI_NATIVE", "AI_CAPABLE", "STANDARD"];
 const MATRIX_DENSITIES = ["Detailed", "Compact"];
 
@@ -143,6 +149,7 @@ function getUrlSearchParams() {
 
 function getInitialMode() {
   const value = getUrlSearchParams().get("view");
+  if (value === "gov" || value === "ai") return DEFAULT_MODE;
   return VALID_MODES.includes(value) ? value : DEFAULT_MODE;
 }
 
@@ -162,6 +169,15 @@ function getInitialCategory() {
 function getInitialLayer() {
   const value = getUrlSearchParams().get("layer");
   return DESIGN_LAYERS.some(layer => layer.label === value) ? value : DEFAULT_LAYER;
+}
+
+function getInitialMatrixLens() {
+  const params = getUrlSearchParams();
+  const lens = params.get("lens");
+  if (MATRIX_LENSES.some(item => item.id === lens)) return lens;
+  const legacyView = params.get("view");
+  if (legacyView === "gov" || legacyView === "ai") return legacyView;
+  return DEFAULT_MATRIX_LENS;
 }
 
 function getInitialMatrixAiScope() {
@@ -189,7 +205,7 @@ function getInitialTransparencyStatus() {
   return TRANSPARENCY_STATUS_ORDER.includes(value) ? value : DEFAULT_TRANSPARENCY_STATUS;
 }
 
-function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus }) {
+function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus }) {
   if (typeof window === "undefined") return;
   const params = new URLSearchParams();
   if (mode !== DEFAULT_MODE) params.set("view", mode);
@@ -198,6 +214,7 @@ function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory
   if (activeProviders.length !== PROVIDERS.length) params.set("providers", activeProviders.join(","));
   if (selectedCategory) params.set("category", selectedCategory);
   if (mode === "matrix") {
+    if (selectedMatrixLens !== DEFAULT_MATRIX_LENS) params.set("lens", selectedMatrixLens);
     if (selectedLayer !== DEFAULT_LAYER) params.set("layer", selectedLayer);
     if (selectedMatrixAiScope !== DEFAULT_MATRIX_AI_SCOPE) params.set("ai", selectedMatrixAiScope);
     if (matrixDensity !== DEFAULT_MATRIX_DENSITY) params.set("density", matrixDensity);
@@ -1823,6 +1840,7 @@ export default function App() {
   const [activeProviders, setActiveProviders] = useState(getInitialProviders);
   const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
   const [selectedLayer, setSelectedLayer] = useState(getInitialLayer);
+  const [selectedMatrixLens, setSelectedMatrixLens] = useState(getInitialMatrixLens);
   const [selectedMatrixAiScope, setSelectedMatrixAiScope] = useState(getInitialMatrixAiScope);
   const [matrixDensity, setMatrixDensity] = useState(getInitialMatrixDensity);
   const [showMatrixReadKey, setShowMatrixReadKey] = useState(true);
@@ -1841,8 +1859,8 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus });
-  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedTier, selectedTransparencyStatus]);
+    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus });
+  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedMatrixLens, selectedTier, selectedTransparencyStatus]);
 
   const toggleProvider = p =>
     setActiveProviders(prev => {
@@ -1874,6 +1892,16 @@ export default function App() {
 
   const filteredMatrixCaps = useMemo(() => {
     let caps = filteredCaps;
+    if (selectedMatrixLens === "gov") {
+      caps = caps.filter(cap =>
+        activeProviders.some(providerKey => {
+          const provider = cap.providers[providerKey];
+          return provider && (provider.govAvailability !== "Full" || (provider.parityLag && provider.parityLag !== "None"));
+        })
+      );
+    } else if (selectedMatrixLens === "ai") {
+      caps = caps.filter(c => c.tags.some(t => ["AI_NATIVE", "AI_CAPABLE"].includes(t)));
+    }
     if (selectedLayer !== DEFAULT_LAYER) {
       caps = caps.filter(c => CATEGORY_TO_LAYER[c.category] === selectedLayer);
     }
@@ -1881,7 +1909,18 @@ export default function App() {
       caps = caps.filter(c => c.aiClassification === selectedMatrixAiScope);
     }
     return caps;
-  }, [filteredCaps, selectedLayer, selectedMatrixAiScope]);
+  }, [activeProviders, filteredCaps, selectedLayer, selectedMatrixAiScope, selectedMatrixLens]);
+
+  const matrixLensCounts = useMemo(() => ({
+    all: filteredCaps.length,
+    gov: filteredCaps.filter(cap =>
+      activeProviders.some(providerKey => {
+        const provider = cap.providers[providerKey];
+        return provider && (provider.govAvailability !== "Full" || (provider.parityLag && provider.parityLag !== "None"));
+      })
+    ).length,
+    ai: filteredCaps.filter(c => c.tags.some(t => ["AI_NATIVE", "AI_CAPABLE"].includes(t))).length,
+  }), [activeProviders, filteredCaps]);
 
   const filteredDesignRows = useMemo(
     () => filteredMatrixCaps.map(cap => DESIGN_ROW_MAP[cap.capability]).filter(Boolean),
@@ -2032,8 +2071,6 @@ export default function App() {
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
     { id: "transparency", label: "Transparency",          iconKey: null,            desc: "State AI governance public record" },
     { id: "diff",         label: "Equivalency",           iconKey: null,            desc: "Side-by-side service mapping" },
-    { id: "gov",          label: "Gov / Parity",          iconKey: null,            desc: "Government availability focus" },
-    { id: "ai",           label: "AI Focus",              iconKey: "brain-circuit", desc: "AI_NATIVE and AI_CAPABLE capabilities" },
   ];
   const providerGridModes = ["matrix", "diff", "gov", "ai", "patterns"];
   const providerControlModes = ["matrix", "diff", "gov", "ai", "patterns", "history"];
@@ -2421,6 +2458,28 @@ export default function App() {
 
         {mode === "matrix" && (
           <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
+            <div className="filter-control-card">
+              <div className="filter-control-head">
+                <span className="filter-control-label">MATRIX VIEW</span>
+                <span className="filter-control-note">{MATRIX_LENSES.find(lens => lens.id === selectedMatrixLens)?.note}</span>
+              </div>
+              <div className="filter-chip-row">
+                {MATRIX_LENSES.map(lens => {
+                  const active = selectedMatrixLens === lens.id;
+                  return (
+                    <button key={lens.id} className="hb" onClick={() => setSelectedMatrixLens(lens.id)} title={lens.note} style={{
+                      padding: "4px 10px", borderRadius: 4, fontSize: 9, fontFamily: "inherit", fontWeight: 800,
+                      border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
+                      background: active ? "var(--selected-bg)" : "var(--panel)",
+                      color: active ? "var(--selected-text)" : "var(--muted)",
+                    }}>
+                      {lens.label} ({matrixLensCounts[lens.id]})
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <div className="matrix-lens-grid">
               <div className="filter-control-card">
                 <div className="filter-control-head">
@@ -2504,7 +2563,7 @@ export default function App() {
                 Organized by {DESIGN_LAYERS.length} architecture layers and {CATEGORIES.length} capability categories.
               </div>
               <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
-                Showing {filteredMatrixCaps.length} matrix row(s). Active category: {selectedCategory || "All categories"}.
+                Showing {filteredMatrixCaps.length} matrix row(s). Active view: {MATRIX_LENSES.find(lens => lens.id === selectedMatrixLens)?.label}. Active category: {selectedCategory || "All categories"}.
               </div>
             </div>
           </div>
