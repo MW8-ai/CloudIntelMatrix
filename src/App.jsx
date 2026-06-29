@@ -58,9 +58,10 @@ const DEFAULT_MATRIX_LENS = "all";
 const DEFAULT_MATRIX_AI_SCOPE = "All";
 const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
-const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency", "diff", "gov", "ai"];
+const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency"];
 const MATRIX_LENSES = [
   { id: "all", label: "Capability", note: "All capability rows" },
+  { id: "diff", label: "Equivalency", note: "Side-by-side provider service mapping" },
   { id: "gov", label: "Gov / Parity", note: "Rows needing regulated availability or parity review" },
   { id: "ai", label: "AI Focus", note: "AI-native and AI-capable rows" },
 ];
@@ -149,7 +150,7 @@ function getUrlSearchParams() {
 
 function getInitialMode() {
   const value = getUrlSearchParams().get("view");
-  if (value === "gov" || value === "ai") return DEFAULT_MODE;
+  if (["diff", "gov", "ai"].includes(value)) return DEFAULT_MODE;
   return VALID_MODES.includes(value) ? value : DEFAULT_MODE;
 }
 
@@ -176,7 +177,7 @@ function getInitialMatrixLens() {
   const lens = params.get("lens");
   if (MATRIX_LENSES.some(item => item.id === lens)) return lens;
   const legacyView = params.get("view");
-  if (legacyView === "gov" || legacyView === "ai") return legacyView;
+  if (["diff", "gov", "ai"].includes(legacyView)) return legacyView;
   return DEFAULT_MATRIX_LENS;
 }
 
@@ -1913,6 +1914,7 @@ export default function App() {
 
   const matrixLensCounts = useMemo(() => ({
     all: filteredCaps.length,
+    diff: filteredCaps.length,
     gov: filteredCaps.filter(cap =>
       activeProviders.some(providerKey => {
         const provider = cap.providers[providerKey];
@@ -1921,6 +1923,9 @@ export default function App() {
     ).length,
     ai: filteredCaps.filter(c => c.tags.some(t => ["AI_NATIVE", "AI_CAPABLE"].includes(t))).length,
   }), [activeProviders, filteredCaps]);
+
+  const activeMatrixLens = MATRIX_LENSES.find(lens => lens.id === selectedMatrixLens) || MATRIX_LENSES[0];
+  const matrixLensRowLabel = selectedMatrixLens === "diff" ? "equivalency row(s)" : "matrix row(s)";
 
   const filteredDesignRows = useMemo(
     () => filteredMatrixCaps.map(cap => DESIGN_ROW_MAP[cap.capability]).filter(Boolean),
@@ -2039,28 +2044,22 @@ export default function App() {
     return items;
   }, [searchQuery, selectedTransparencyStatus]);
 
-  const filteredAiCaps = useMemo(
-    () => filteredCaps.filter(c => c.tags.some(t => ["AI_NATIVE","AI_CAPABLE"].includes(t))),
-    [filteredCaps]
-  );
-
   const exportData = useMemo(() => {
     if (mode === "patterns") return patternExport(filteredPatterns, activeProviders, CAPABILITY_MAP, FRAMEWORKS);
     if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies, filteredComplianceFrameworks);
     if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
     if (mode === "transparency") return transparencyExport(filteredTransparency);
-    if (mode === "diff") return matrixExport("diff", "Service Equivalency", filteredCaps, activeProviders, selectedTier);
-    if (mode === "gov") return matrixExport("gov", "Government Availability and Parity", filteredCaps, activeProviders, selectedTier);
-    if (mode === "ai") return matrixExport("ai", "AI Focus", filteredAiCaps, activeProviders, selectedTier);
+    if (mode === "matrix" && selectedMatrixLens === "diff") return matrixExport("diff", "Service Equivalency", filteredMatrixCaps, activeProviders, selectedTier);
+    if (mode === "matrix" && selectedMatrixLens === "gov") return matrixExport("gov", "Government Availability and Parity", filteredMatrixCaps, activeProviders, selectedTier);
+    if (mode === "matrix" && selectedMatrixLens === "ai") return matrixExport("ai", "AI Focus", filteredMatrixCaps, activeProviders, selectedTier);
     return matrixExport("matrix", "Capability Matrix", filteredMatrixCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredAiCaps, filteredCaps, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredTransparency, mode, selectedTier]);
+  }, [activeProviders, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredTransparency, mode, selectedMatrixLens, selectedTier]);
 
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
     mode === "controls" ? filteredControlFamilies.length + filteredComplianceFrameworks.length :
     mode === "history" ? filteredHistory.length :
     mode === "transparency" ? filteredTransparency.length :
-    mode === "ai" ? filteredAiCaps.length :
     mode === "matrix" ? filteredMatrixCaps.length :
     filteredCaps.length;
 
@@ -2070,10 +2069,9 @@ export default function App() {
     { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
     { id: "transparency", label: "Transparency",          iconKey: null,            desc: "State AI governance public record" },
-    { id: "diff",         label: "Equivalency",           iconKey: null,            desc: "Side-by-side service mapping" },
   ];
-  const providerGridModes = ["matrix", "diff", "gov", "ai", "patterns"];
-  const providerControlModes = ["matrix", "diff", "gov", "ai", "patterns", "history"];
+  const providerGridModes = ["matrix", "patterns"];
+  const providerControlModes = ["matrix", "patterns", "history"];
   const showProviderControls = providerControlModes.includes(mode);
   const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
 
@@ -2461,13 +2459,13 @@ export default function App() {
             <div className="filter-control-card">
               <div className="filter-control-head">
                 <span className="filter-control-label">MATRIX VIEW</span>
-                <span className="filter-control-note">{MATRIX_LENSES.find(lens => lens.id === selectedMatrixLens)?.note}</span>
+                <span className="filter-control-note">{activeMatrixLens.note}</span>
               </div>
               <div className="filter-chip-row">
                 {MATRIX_LENSES.map(lens => {
                   const active = selectedMatrixLens === lens.id;
                   return (
-                    <button key={lens.id} className="hb" onClick={() => setSelectedMatrixLens(lens.id)} title={lens.note} style={{
+                    <button key={lens.id} className="hb" onClick={() => { setSelectedMatrixLens(lens.id); setExpandedId(null); }} title={lens.note} style={{
                       padding: "4px 10px", borderRadius: 4, fontSize: 9, fontFamily: "inherit", fontWeight: 800,
                       border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
                       background: active ? "var(--selected-bg)" : "var(--panel)",
@@ -2539,22 +2537,24 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="filter-control-card">
-                  <div className="filter-control-head">
-                    <span className="filter-control-label">DENSITY</span>
-                    <span className="filter-control-note">{matrixDensity}</span>
+                {selectedMatrixLens !== "diff" && (
+                  <div className="filter-control-card">
+                    <div className="filter-control-head">
+                      <span className="filter-control-label">DENSITY</span>
+                      <span className="filter-control-note">{matrixDensity}</span>
+                    </div>
+                    <div className="filter-chip-row">
+                      {MATRIX_DENSITIES.map(value => (
+                        <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
+                          padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                          border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
+                          background: matrixDensity === value ? "var(--selected-bg)" : "var(--panel)",
+                          color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
+                        }}>{value}</button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="filter-chip-row">
-                    {MATRIX_DENSITIES.map(value => (
-                      <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
-                        padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                        border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
-                        background: matrixDensity === value ? "var(--selected-bg)" : "var(--panel)",
-                        color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
-                      }}>{value}</button>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -2563,7 +2563,7 @@ export default function App() {
                 Organized by {DESIGN_LAYERS.length} architecture layers and {CATEGORIES.length} capability categories.
               </div>
               <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
-                Showing {filteredMatrixCaps.length} matrix row(s). Active view: {MATRIX_LENSES.find(lens => lens.id === selectedMatrixLens)?.label}. Active category: {selectedCategory || "All categories"}.
+                Showing {filteredMatrixCaps.length} {matrixLensRowLabel}. Active view: {activeMatrixLens.label}. Active category: {selectedCategory || "All categories"}.
               </div>
             </div>
           </div>
@@ -2661,7 +2661,11 @@ export default function App() {
 
           <ExportToolbar exportData={exportData} />
 
-          {mode === "matrix" && (
+          {mode === "matrix" && selectedMatrixLens === "diff" && (
+            <DiffViewDesign caps={filteredMatrixCaps} activeProviders={activeProviders} />
+          )}
+
+          {mode === "matrix" && selectedMatrixLens !== "diff" && (
             <>
               {showMatrixReadKey && <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} />}
               <MatrixCoverageStrip rows={filteredDesignRows} activeProviders={activeProviders} />
@@ -2676,9 +2680,6 @@ export default function App() {
             </>
           )}
 
-          {mode === "diff" && <DiffViewDesign caps={filteredCaps} activeProviders={activeProviders} />}
-          {mode === "gov"  && <GovViewDesign  caps={filteredCaps} activeProviders={activeProviders} />}
-          {mode === "ai"   && <AIViewDesign caps={filteredAiCaps} activeProviders={activeProviders} />}
           {mode === "patterns" && <PatternViewDesign patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensViewDesign lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
           {mode === "history" && <HistoryViewDesign items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
@@ -2726,7 +2727,7 @@ export default function App() {
             <a href="https://github.com/MW8-ai/CloudIntelMatrix/issues/new/choose" target="_blank" rel="noopener noreferrer" style={{ color: "var(--link)" }}>↗ Report correction</a>
           </div>
         </div>
-        {mode === "matrix" && expandedId && (
+        {mode === "matrix" && selectedMatrixLens !== "diff" && expandedId && (
           <DesignMatrixDetail
             row={filteredDesignRows.find(row => row.cap === expandedId) || null}
             activeProviders={activeProviders}

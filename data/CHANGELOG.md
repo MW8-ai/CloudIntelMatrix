@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-29 - Equivalency lens consolidation
+- Folded Service Equivalency into the Matrix view lens selector while preserving its side-by-side provider mapping layout, export behavior, and legacy `view=diff` URL routing.
+
 ## 2026-06-29 - Matrix view lens consolidation
 - Folded AI Focus and Gov / Parity into Matrix view lenses, keeping the top navigation focused while preserving filtered exports and legacy URL behavior.
 
