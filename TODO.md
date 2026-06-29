@@ -1,6 +1,6 @@
 # CloudIntelMatrix TODO
 
-Last updated: 2026-06-27
+Last updated: 2026-06-29
 
 This is the working roadmap for the next small pull requests. Keep factual data changes proposal-only unless a human has approved applying proposals through `scripts/apply_proposals.py`.
 
@@ -12,7 +12,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 - Matrix last verified date: `2026-06-24`.
 - Coverage: 30 capability rows, 4 providers, 120 provider cells.
 - Remaining unknowns: 97 `parityLag` cells and 26 `govAvailability` cells.
-- Transparency coverage: 10 populated state/DC rows out of 51.
+- Transparency coverage: 13 populated state/DC rows out of 51.
 
 ## Near-Term PRs
 
@@ -24,6 +24,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
    - Keep `parityLag` as `Unknown` unless an official source establishes a commercial-to-regulated feature difference or equivalence.
 
 2. Expand state AI transparency in small official-source batches.
+   - Initial follow-up batch populated Massachusetts, New Jersey, and Oregon.
    - Add only state-government or official state-domain sources.
    - Keep unverified states as `Unknown`.
    - Prefer 3 to 5 states per PR so review stays practical.

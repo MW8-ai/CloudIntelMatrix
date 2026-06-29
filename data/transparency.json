@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Point-in-time state AI governance and transparency record. Populated entries must cite official state sources; Unknown rows are launch scaffolding for future official-source review.",
-    "last_verified": "2026-06-23",
+    "last_verified": "2026-06-29",
     "scopeNote": "Planning and reference aid only. Entries summarize official state public records located for this project; they do not determine legal applicability, compliance status, or whether an agency has fully disclosed every AI use.",
     "federalContext": {
       "title": "Ensuring a National Policy Framework for Artificial Intelligence",
@@ -247,13 +247,13 @@
     {
       "state": "MA",
       "stateName": "Massachusetts",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order No. 629: Establishing an Artificial Intelligence Strategic Task Force",
+      "citation": "Commonwealth of Massachusetts Executive Order No. 629",
+      "status": "Active",
+      "summary": "Massachusetts established an AI Strategic Task Force to study AI and generative AI impacts on the state, including effects on state employees, constituents, private business, and higher education, collect stakeholder input, and advise the Governor and executive branch through a written report.",
+      "url": "https://www.mass.gov/executive-orders/no-629-establishing-an-artificial-intelligence-strategic-task-force",
+      "lastVerified": "2026-06-29"
     },
     {
       "state": "MI",
@@ -346,13 +346,13 @@
     {
       "state": "NJ",
       "stateName": "New Jersey",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order No. 346: Artificial Intelligence Task Force",
+      "citation": "State of New Jersey Executive Order No. 346",
+      "status": "Active",
+      "summary": "New Jersey established an Artificial Intelligence Task Force to study emerging AI technologies, issue findings on societal impacts, recommend government actions for ethical and responsible AI use, make its report available to the Legislature and public, and direct state technology and innovation offices to develop AI policy, training, and service-improvement work.",
+      "url": "https://nj.gov/infobank/eo/056murphy/pdf/EO-346.pdf",
+      "lastVerified": "2026-06-29"
     },
     {
       "state": "NM",
@@ -423,13 +423,13 @@
     {
       "state": "OR",
       "stateName": "Oregon",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order and action plan",
+      "title": "Executive Order 23-26 and State Government AI Advisory Council Action Plan",
+      "citation": "State of Oregon Executive Order 23-26; State Government AI Advisory Council Final Recommended Action Plan",
+      "status": "Active",
+      "summary": "Oregon established the State Government AI Advisory Council through Executive Order 23-26 and finalized an action plan to guide state-government AI use, recommending executive actions for AI governance, security frameworks, reference architecture, privacy, workforce readiness, and responsible service delivery.",
+      "url": "https://apps.oregon.gov/oregon-newsroom/OR/GOV/Posts/Post/governor-kotek-announces-artificial-intelligence-action-plan",
+      "lastVerified": "2026-06-29"
     },
     {
       "state": "PA",
