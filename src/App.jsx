@@ -779,8 +779,33 @@ function getDesignGovStyle(value) {
   return GOV_AVAIL_STYLES[value] || GOV_AVAIL_STYLES["Unknown"];
 }
 
+function truncateText(value, maxLength = 120) {
+  const clean = String(value || "").replace(/\s+/g, " ").trim();
+  if (!clean) return "";
+  if (clean.length <= maxLength) return clean;
+  return `${clean.slice(0, maxLength - 1).trim()}...`;
+}
+
+function getProviderPreviewText(provider, tier) {
+  return truncateText(
+    provider.note ||
+    (tier ? provider.tierNotes?.[tier] : "") ||
+    provider.variant,
+    128
+  );
+}
+
+function getProviderQuickLinks(provider) {
+  return [
+    provider.doc ? { label: "Docs", href: provider.doc } : null,
+    provider.govdoc ? { label: "Gov", href: provider.govdoc } : null,
+    provider.price ? { label: "Price", href: provider.price } : null,
+    provider.compliance ? { label: "Compliance", href: provider.compliance } : null,
+  ].filter(Boolean);
+}
+
 function MatrixCoverageStrip({ rows, activeProviders }) {
-  const statuses = ["Full", "Partial", "Limited", "Unknown"];
+  const statuses = ["Full", "Partial", "Limited", "None", "Unknown"];
 
   return (
     <div>
@@ -788,7 +813,7 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
         {activeProviders.map(providerKey => {
           const label = providerLabelForKey(providerKey);
           const pm = PROVIDER_META[providerKey];
-          const counts = Object.fromEntries([...statuses, "None"].map(status => [status, 0]));
+          const counts = Object.fromEntries(statuses.map(status => [status, 0]));
           rows.forEach(row => {
             const status = row.providers?.[label]?.gov || "Unknown";
             counts[status] = (counts[status] || 0) + 1;
@@ -804,7 +829,10 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                   <span aria-hidden="true" style={{ display: "inline-block", width: 28, height: 28, borderRadius: 7, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 17, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
                   <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{label}</span>
                 </div>
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)" }}>{pct}%</span>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>{pct}%</div>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 700, color: "var(--faint)", marginTop: 3, textTransform: "uppercase" }}>documented</div>
+                </div>
               </div>
               <div style={{ height: 7, borderRadius: 4, overflow: "hidden", background: "var(--border2)", display: "flex" }}>
                 {statuses.map(status => {
@@ -816,14 +844,14 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                 })}
               </div>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", lineHeight: 1.45, marginTop: 7 }}>
-                {documented} of {rows.length} documented. {counts.Full} full / {counts.Partial} scoped / {counts.Limited} gaps
+                {documented} of {rows.length} rows have Full, Partial, or Limited regulated availability evidence.
               </div>
             </div>
           );
         })}
       </div>
       <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", lineHeight: 1.6, marginBottom: 18 }}>
-        % = share of {rows.length} tracked capabilities with documented government-cloud availability. Bar shows the breakdown.
+        Coverage % = documented regulated-availability rows divided by visible rows. The bar also includes None and Unknown.
       </div>
     </div>
   );
@@ -977,16 +1005,45 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
                           }
                           const govStyle = getDesignGovStyle(provider.gov);
                           const parStyle = PARITY_STYLES[provider.lag] || PARITY_STYLES.Unknown;
+                          const previewText = compact ? "" : getProviderPreviewText(provider, tier);
+                          const quickLinks = compact ? [] : getProviderQuickLinks(provider);
                           return (
-                            <button
+                            <div
                               key={providerKey}
                               className="hb"
-                              type="button"
+                              role="button"
+                              tabIndex={0}
                               onClick={() => setSelectedId(selected ? null : row.cap)}
+                              onKeyDown={event => {
+                                if (event.key === "Enter" || event.key === " ") {
+                                  event.preventDefault();
+                                  setSelectedId(selected ? null : row.cap);
+                                }
+                              }}
                               aria-label={`${row.cap} ${label} detail`}
                               style={{ border: "none", borderLeft: "1px solid var(--border2)", padding: providerPad, display: "flex", flexDirection: "column", gap: cellGap, justifyContent: "center", background: "none", cursor: "pointer", fontFamily: "inherit", color: "var(--text)", textAlign: "left" }}
                             >
                               <span style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 500, lineHeight: 1.3, color: "var(--ink2)" }}>{provider.svc || "Not mapped"}</span>
+                              {previewText && (
+                                <span style={{ fontSize: 9.5, lineHeight: 1.45, color: "var(--muted)" }}>{previewText}</span>
+                              )}
+                              {quickLinks.length > 0 && (
+                                <span style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+                                  {quickLinks.map(link => (
+                                    <a
+                                      key={link.label}
+                                      className="design-provider-cell-link"
+                                      href={link.href}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={event => event.stopPropagation()}
+                                      onKeyDown={event => event.stopPropagation()}
+                                    >
+                                      {link.label}
+                                    </a>
+                                  ))}
+                                </span>
+                              )}
                               <span style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 9px 3px 8px", borderRadius: 6, background: govStyle.bg, border: `1px solid ${govStyle.border}` }}>
                                 <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: govStyle.dot, border: provider.gov === "Unknown" ? `1.5px solid ${govStyle.fg}` : "none", flexShrink: 0 }} />
                                 <span style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 600, color: govStyle.fg }}>{provider.gov || "Unknown"}</span>
@@ -995,7 +1052,7 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
                                 <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: parStyle.dot, flexShrink: 0 }} />
                                 {parStyle.text}
                               </span>
-                            </button>
+                            </div>
                           );
                         })}
                       </div>
@@ -2074,6 +2131,80 @@ export default function App() {
   const providerControlModes = ["matrix", "patterns", "history"];
   const showProviderControls = providerControlModes.includes(mode);
   const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
+  const providerControlCard = (
+    <div className="filter-control-card">
+      <div className="filter-control-head">
+        <span className="filter-control-label">COMPARE PROVIDERS</span>
+        <span className="filter-control-note">{activeProviders.length} of {PROVIDERS.length} visible</span>
+      </div>
+      <div className="filter-chip-row">
+        {PROVIDERS.map(p => (
+          <button key={p} className="hb" onClick={() => toggleProvider(p)} style={{
+            padding: "5px 10px", borderRadius: 5, fontSize: 10, fontWeight: 800, letterSpacing: "0.07em",
+            border: `1px solid ${activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--border)"}`,
+            background: activeProviders.includes(p) ? `${PROVIDER_META[p].dot}22` : "var(--panel)",
+            color: activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--muted)",
+          }}>{PROVIDER_META[p].label}</button>
+        ))}
+      </div>
+    </div>
+  );
+  const tierLensControlCard = (
+    <div className="filter-control-card">
+      <div className="filter-control-head">
+        <span className="filter-control-label">TIER LENS</span>
+        <span className="filter-control-note">{selectedTier || "All tiers"}</span>
+      </div>
+      <div className="filter-chip-row">
+        {META.tiers.map(t => (
+          <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
+            padding: "5px 10px", borderRadius: 5, fontSize: 10, fontFamily: "inherit", fontWeight: 800,
+            border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
+            background: selectedTier === t ? "var(--selected-bg)" : "var(--panel)",
+            color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
+          }}>{t}</button>
+        ))}
+      </div>
+    </div>
+  );
+  const categoryControlCard = (
+    <label className="filter-control-card" style={{ display: "grid", gap: 7 }}>
+      <div className="filter-control-head" style={{ marginBottom: 0 }}>
+        <span className="filter-control-label">CATEGORY</span>
+        <span className="filter-control-note">{selectedCategory || "All categories"}</span>
+      </div>
+      <select
+        className="filter-select"
+        value={selectedCategory || ""}
+        onChange={event => setSelectedCategory(event.target.value || null)}
+      >
+        <option value="">All categories ({CAPABILITIES.length} capabilities)</option>
+        {CATEGORIES.map(cat => (
+          <option key={cat} value={cat}>
+            {cat} ({CAPABILITIES.filter(c => c.category === cat).length})
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+  const densityControlCard = (
+    <div className="filter-control-card">
+      <div className="filter-control-head">
+        <span className="filter-control-label">DENSITY</span>
+        <span className="filter-control-note">{matrixDensity}</span>
+      </div>
+      <div className="filter-chip-row">
+        {MATRIX_DENSITIES.map(value => (
+          <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
+            padding: "5px 10px", borderRadius: 5, fontSize: 10, fontFamily: "inherit", fontWeight: 800,
+            border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
+            background: matrixDensity === value ? "var(--selected-bg)" : "var(--panel)",
+            color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
+          }}>{value}</button>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
@@ -2094,6 +2225,12 @@ export default function App() {
           align-items: stretch;
         }
         .primary-filter-grid.provider-only { grid-template-columns: minmax(280px, 560px); }
+        .primary-filter-grid.matrix-primary {
+          grid-template-columns: minmax(250px, 1.2fr) minmax(210px, .82fr) minmax(260px, 1fr) minmax(170px, .58fr);
+        }
+        .primary-filter-grid.matrix-primary.no-density {
+          grid-template-columns: minmax(250px, 1.2fr) minmax(210px, .82fr) minmax(260px, 1fr);
+        }
         .filter-control-card {
           padding: 9px 10px;
           border: 1px solid var(--border);
@@ -2253,6 +2390,21 @@ export default function App() {
           overflow-wrap: anywhere;
           white-space: normal;
         }
+        .design-provider-cell-link {
+          display: inline-flex;
+          align-items: center;
+          width: fit-content;
+          max-width: 100%;
+          padding: 2px 6px;
+          border: 1px solid var(--border);
+          border-radius: 5px;
+          background: var(--panel);
+          color: var(--link);
+          font-size: 9px;
+          font-weight: 800;
+          line-height: 1.25;
+          text-decoration: none;
+        }
         .design-two-col {
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2277,6 +2429,8 @@ export default function App() {
           .design-read-key-grid { grid-template-columns: 1fr; }
           .primary-filter-grid,
           .primary-filter-grid.provider-only,
+          .primary-filter-grid.matrix-primary,
+          .primary-filter-grid.matrix-primary.no-density,
           .matrix-lens-grid { grid-template-columns: 1fr; }
           .filter-groups.with-context { grid-template-columns: 1fr; }
           .filter-context { padding-left: 0; padding-top: 10px; border-left: none; border-top: 1px solid var(--border); }
@@ -2390,66 +2544,9 @@ export default function App() {
             />
           </div>
 
-          {(showProviderControls || mode === "matrix") && (
-            <div className={`primary-filter-grid ${mode === "matrix" ? "" : "provider-only"}`}>
-              {showProviderControls && (
-                <div className="filter-control-card">
-                  <div className="filter-control-head">
-                    <span className="filter-control-label">COMPARE PROVIDERS</span>
-                    <span className="filter-control-note">{activeProviders.length} of {PROVIDERS.length} visible</span>
-                  </div>
-                  <div className="filter-chip-row">
-                    {PROVIDERS.map(p => (
-                      <button key={p} className="hb" onClick={() => toggleProvider(p)} style={{
-                        padding: "5px 10px", borderRadius: 5, fontSize: 10, fontWeight: 800, letterSpacing: "0.07em",
-                        border: `1px solid ${activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--border)"}`,
-                        background: activeProviders.includes(p) ? `${PROVIDER_META[p].dot}22` : "var(--panel)",
-                        color: activeProviders.includes(p) ? PROVIDER_META[p].dot : "var(--muted)",
-                      }}>{PROVIDER_META[p].label}</button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {mode === "matrix" && (
-                <>
-                  <div className="filter-control-card">
-                    <div className="filter-control-head">
-                      <span className="filter-control-label">TIER LENS</span>
-                      <span className="filter-control-note">{selectedTier || "All tiers"}</span>
-                    </div>
-                    <div className="filter-chip-row">
-                      {META.tiers.map(t => (
-                        <button key={t} className="hb" onClick={() => setSelectedTier(selectedTier === t ? null : t)} style={{
-                          padding: "5px 10px", borderRadius: 5, fontSize: 10, fontFamily: "inherit", fontWeight: 800,
-                          border: `1px solid ${selectedTier === t ? "var(--selected-border)" : "var(--border)"}`,
-                          background: selectedTier === t ? "var(--selected-bg)" : "var(--panel)",
-                          color: selectedTier === t ? "var(--selected-text)" : "var(--muted)",
-                        }}>{t}</button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <label className="filter-control-card" style={{ display: "grid", gap: 7 }}>
-                    <div className="filter-control-head" style={{ marginBottom: 0 }}>
-                      <span className="filter-control-label">CATEGORY</span>
-                      <span className="filter-control-note">{selectedCategory || "All categories"}</span>
-                    </div>
-                    <select
-                      className="filter-select"
-                      value={selectedCategory || ""}
-                      onChange={event => setSelectedCategory(event.target.value || null)}
-                    >
-                      <option value="">All categories ({CAPABILITIES.length} capabilities)</option>
-                      {CATEGORIES.map(cat => (
-                        <option key={cat} value={cat}>
-                          {cat} ({CAPABILITIES.filter(c => c.category === cat).length})
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                </>
-              )}
+          {showProviderControls && mode !== "matrix" && (
+            <div className="primary-filter-grid provider-only">
+              {providerControlCard}
             </div>
           )}
         </div>
@@ -2536,25 +2633,6 @@ export default function App() {
                     })}
                   </div>
                 </div>
-
-                {selectedMatrixLens !== "diff" && (
-                  <div className="filter-control-card">
-                    <div className="filter-control-head">
-                      <span className="filter-control-label">DENSITY</span>
-                      <span className="filter-control-note">{matrixDensity}</span>
-                    </div>
-                    <div className="filter-chip-row">
-                      {MATRIX_DENSITIES.map(value => (
-                        <button key={value} className="hb" onClick={() => setMatrixDensity(value)} style={{
-                          padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                          border: `1px solid ${matrixDensity === value ? "var(--link)" : "var(--border)"}`,
-                          background: matrixDensity === value ? "var(--selected-bg)" : "var(--panel)",
-                          color: matrixDensity === value ? "var(--selected-text)" : "var(--muted)",
-                        }}>{value}</button>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -2565,6 +2643,13 @@ export default function App() {
               <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
                 Showing {filteredMatrixCaps.length} {matrixLensRowLabel}. Active view: {activeMatrixLens.label}. Active category: {selectedCategory || "All categories"}.
               </div>
+            </div>
+
+            <div className={`primary-filter-grid matrix-primary ${selectedMatrixLens === "diff" ? "no-density" : ""}`}>
+              {providerControlCard}
+              {tierLensControlCard}
+              {categoryControlCard}
+              {selectedMatrixLens !== "diff" && densityControlCard}
             </div>
           </div>
         )}
@@ -2668,6 +2753,18 @@ export default function App() {
           {mode === "matrix" && selectedMatrixLens !== "diff" && (
             <>
               {showMatrixReadKey && <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} />}
+              {!showMatrixReadKey && (
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+                  <button
+                    type="button"
+                    className="hb"
+                    onClick={() => setShowMatrixReadKey(true)}
+                    style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", color: "var(--muted)", padding: "5px 9px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}
+                  >
+                    Show reading guide
+                  </button>
+                </div>
+              )}
               <MatrixCoverageStrip rows={filteredDesignRows} activeProviders={activeProviders} />
               <DesignMatrixView
                 rows={filteredDesignRows}
