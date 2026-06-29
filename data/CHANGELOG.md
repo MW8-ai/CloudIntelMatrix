@@ -7,6 +7,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 ## 2026-06-29 - Matrix filter and news polish
 - Replaced Matrix coverage percentages with official-source evidence counts, moved Matrix export controls into the primary filter row, made the top navigation wrap on narrow screens, and renamed the upcoming panel as global cloud provider news with two visible items by default.
 
+## 2026-06-29 - Coverage bar runtime fix
+- Restored the Matrix coverage bar denominator used for visual segment widths after replacing percentage labels with evidence counts.
+
 ## 2026-06-29 - Matrix UX tightening
 - Moved the high-use Matrix provider, tier, category, and density controls closer to the table, clarified coverage percentages, restored the hidden reading-guide affordance, and added detailed-cell source snippets and links.
 - Restored the design-style AI Focus lens with grouped AI-native and AI-capable cards, provider service rows, and Matrix detail-panel access.
