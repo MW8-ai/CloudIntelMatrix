@@ -258,8 +258,18 @@ const PARITY_STYLES = {
   "Minor":       { dot: "#7aa64a", text: "minor gap",       label: "LAG MINOR",       bg: "#f0f5e422", fg: "#527a1a", border: "#527a1a44" },
   "Moderate":    { dot: "#c98a1a", text: "moderate gap",    label: "LAG MODERATE",    bg: "#f8efda22", fg: "#946610", border: "#94661044" },
   "Significant": { dot: "#c0392b", text: "significant gap", label: "LAG SIGNIFICANT", bg: "#f8e8de22", fg: "#a3471c", border: "#a3471c44" },
-  "Unknown":     { dot: "#b8bac0", text: "gap n/a",         label: "LAG UNKNOWN",     bg: "#f0f0ee22", fg: "#6f717a", border: "#6f717a44" },
+  "Unknown":     { dot: "#b8bac0", text: "not established", label: "NOT ESTABLISHED", bg: "#f0f0ee22", fg: "#6f717a", border: "#6f717a44" },
 };
+
+function govAvailabilityDisplay(value, long = false) {
+  if (!value || value === "Unknown") return long ? "Not officially documented" : "Not documented";
+  return value;
+}
+
+function parityLagDisplay(value) {
+  if (!value || value === "Unknown") return "not established";
+  return PARITY_STYLES[value]?.text || value;
+}
 
 const TAG_STYLES = {
   gray:   { bg: "#1f2937", fg: "#9ca3af", border: "#374151" },
@@ -414,7 +424,7 @@ function GovBadge({ avail }) {
   const s = GOV_AVAIL_STYLES[avail] || GOV_AVAIL_STYLES["Unknown"];
   const glossary = getGovAvailabilityGlossary(avail);
   return (
-    <GlossaryBadge label={s.label} description={glossary.description} styleDef={s} shape="block" />
+    <GlossaryBadge label={govAvailabilityDisplay(avail)} description={glossary.description} styleDef={s} shape="block" />
   );
 }
 
@@ -423,7 +433,7 @@ function ParityBadge({ parity }) {
   const s = PARITY_STYLES[parity] || PARITY_STYLES["Minor"];
   const glossary = getParityLagGlossary(parity);
   return (
-    <GlossaryBadge label={s.label} description={glossary.description} styleDef={s} shape="block" />
+    <GlossaryBadge label={parity === "Unknown" ? "Not established" : s.label} description={glossary.description} styleDef={s} shape="block" />
   );
 }
 
@@ -573,7 +583,7 @@ function GovAvailabilityGlossaryLegend() {
         return (
           <GlossaryBadge
             key={value}
-            label={baseStyle.label}
+            label={govAvailabilityDisplay(value)}
             description={glossary.description}
             styleDef={styleDef}
             shape="block"
@@ -596,7 +606,7 @@ function ParityLagGlossaryLegend() {
         return (
           <GlossaryBadge
             key={value}
-            label={styleDef.label || "LAG NONE"}
+            label={value === "Unknown" ? "Not established" : styleDef.label || "LAG NONE"}
             description={glossary.description}
             styleDef={styleDef}
             shape="block"
@@ -812,7 +822,7 @@ function getProviderQuickLinks(provider) {
   ].filter(Boolean);
 }
 
-function MatrixCoverageStrip({ rows, activeProviders }) {
+function MatrixCoverageStrip({ rows, activeProviders, onDismiss }) {
   const statuses = ["Full", "Partial", "Limited", "None", "Unknown"];
   const evidenceStatuses = new Set(["Full", "Partial", "Limited"]);
   const [expandedProvider, setExpandedProvider] = useState(null);
@@ -838,9 +848,7 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
         note: provider?.note || "",
       };
     });
-    const total = rows.length || 1;
     const documented = counts.Full + counts.Partial + counts.Limited;
-    const unresolved = counts.None + counts.Unknown;
     return {
       providerKey,
       label,
@@ -848,10 +856,10 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
       counts,
       detailRows,
       evidenceRows: detailRows.filter(row => evidenceStatuses.has(row.status)),
-      gapRows: detailRows.filter(row => !evidenceStatuses.has(row.status)),
-      total,
+      unavailableRows: detailRows.filter(row => row.status === "None"),
+      unknownRows: detailRows.filter(row => row.status === "Unknown"),
+      parityUnknownRows: detailRows.filter(row => row.parity === "Unknown"),
       documented,
-      unresolved,
     };
   });
   const expandedSummary = providerSummaries.find(summary => summary.providerKey === expandedProvider);
@@ -861,10 +869,28 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
   }
 
   return (
-    <div>
+    <section className="design-coverage-detail" style={{ marginBottom: 14 }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, marginBottom: 12, flexWrap: "wrap" }}>
+        <div>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--link)", letterSpacing: "0.1em", fontWeight: 900, textTransform: "uppercase" }}>
+            About matrix evidence
+          </div>
+          <div style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.55, marginTop: 4, maxWidth: 820 }}>
+            Counts here describe the currently visible capability rows, not provider scores, document totals, or completeness ratings. None means official documentation says the mapped service is unavailable. Not documented means public official evidence has not established a stronger claim.
+          </div>
+        </div>
+        <button
+          type="button"
+          className="hb"
+          onClick={onDismiss}
+          style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", color: "var(--muted)", padding: "5px 9px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 800 }}
+        >
+          Hide
+        </button>
+      </div>
       <div className="design-coverage-strip">
         {providerSummaries.map(summary => {
-          const { providerKey, label, pm, counts, total, documented, unresolved } = summary;
+          const { providerKey, label, pm, counts, documented } = summary;
           const isExpanded = expandedProvider === providerKey;
 
           return (
@@ -875,30 +901,20 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
               onClick={() => toggleExpandedProvider(providerKey)}
               aria-expanded={isExpanded}
               aria-controls={`evidence-detail-${providerKey}`}
-              title={`Show ${label} evidence rows`}
+              title={`Show ${label} evidence posture rows`}
               style={{ borderColor: isExpanded ? pm.dot : "var(--border)" }}
             >
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 11 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                   <span aria-hidden="true" style={{ display: "inline-block", width: 28, height: 28, borderRadius: 7, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 17, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
                   <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{label}</span>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>{documented}/{rows.length}</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 700, color: "var(--faint)", marginTop: 3, textTransform: "uppercase" }}>availability evidence</div>
-                </div>
               </div>
-              <div style={{ height: 7, borderRadius: 4, overflow: "hidden", background: "var(--border2)", display: "flex" }}>
-                {statuses.map(status => {
-                  const style = GOV_AVAIL_STYLES[status];
-                  const width = ((counts[status] || 0) / total) * 100;
-                  return width > 0 ? (
-                    <span key={status} title={`${status}: ${counts[status]}`} style={{ width: `${width}%`, background: style.dot, minWidth: 3 }} />
-                  ) : null;
-                })}
-              </div>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", lineHeight: 1.45, marginTop: 7 }}>
-                {counts.Full} full / {counts.Partial} partial / {counts.Limited} limited / {unresolved} none or unknown
+              <div className="design-posture-counts">
+                <div><strong>{documented}</strong><span>Documented</span></div>
+                <div><strong>{counts.None}</strong><span>None</span></div>
+                <div><strong>{counts.Unknown}</strong><span>Not documented</span></div>
+                <div><strong>{summary.parityUnknownRows.length}</strong><span>Parity not established</span></div>
               </div>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, color: isExpanded ? pm.dot : "var(--faint)", lineHeight: 1.45, marginTop: 7, fontWeight: 800 }}>
                 {isExpanded ? "Hide row detail" : "Show row detail"}
@@ -912,10 +928,10 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
             <div>
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: expandedSummary.pm.dot, letterSpacing: "0.1em", fontWeight: 900, textTransform: "uppercase" }}>
-                {expandedSummary.label} evidence detail
+                {expandedSummary.label} evidence posture
               </div>
               <div style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.55, marginTop: 4 }}>
-                Found means the visible row has Full, Partial, or Limited regulated-availability evidence. None and Unknown stay in the gap list.
+                Availability groups are mutually exclusive. The parity group is separate because parity is not inferred from availability.
               </div>
             </div>
             <button
@@ -929,8 +945,10 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
           </div>
           <div className="design-evidence-columns">
             {[
-              { title: `Evidence found (${expandedSummary.evidenceRows.length})`, rows: expandedSummary.evidenceRows },
-              { title: `Needs evidence or unavailable (${expandedSummary.gapRows.length})`, rows: expandedSummary.gapRows },
+              { title: `Documented availability (${expandedSummary.evidenceRows.length})`, rows: expandedSummary.evidenceRows },
+              { title: `Officially unavailable (${expandedSummary.unavailableRows.length})`, rows: expandedSummary.unavailableRows },
+              { title: `Not officially documented (${expandedSummary.unknownRows.length})`, rows: expandedSummary.unknownRows },
+              { title: `Parity not established (${expandedSummary.parityUnknownRows.length})`, rows: expandedSummary.parityUnknownRows },
             ].map(group => (
               <div key={group.title} style={{ minWidth: 0 }}>
                 <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", letterSpacing: "0.08em", fontWeight: 900, textTransform: "uppercase", marginBottom: 8 }}>
@@ -953,10 +971,14 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                           </div>
                           <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "2px 6px", borderRadius: 5, background: statusStyle.bg, color: statusStyle.fg, border: `1px solid ${statusStyle.border}`, fontSize: 9, fontWeight: 800, flexShrink: 0 }}>
                             <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: statusStyle.dot }} />
-                            {row.status}
+                            {govAvailabilityDisplay(row.status)}
                           </span>
                         </div>
                         <div style={{ fontSize: 10, color: "var(--ink2)", lineHeight: 1.45, marginTop: 7 }}>{row.service}</div>
+                        <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 7, fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--muted)" }}>
+                          <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: (PARITY_STYLES[row.parity] || PARITY_STYLES.Unknown).dot }} />
+                          Parity {parityLagDisplay(row.parity)}
+                        </div>
                         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 7, fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
                           <div><strong style={{ color: "var(--text)" }}>Variant:</strong> {row.variant}</div>
                           <div><strong style={{ color: "var(--text)" }}>Last checked:</strong> {row.lastVerified}</div>
@@ -987,10 +1009,7 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
           </div>
         </div>
       )}
-      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", lineHeight: 1.6, marginBottom: 18 }}>
-        Availability evidence counts visible capability rows where official sources support Full, Partial, or Limited regulated availability. It is not a document count, and the denominator changes with filters.
-      </div>
-    </div>
+    </section>
   );
 }
 
@@ -1004,7 +1023,7 @@ function MatrixReadKey({ onDismiss }) {
         <div>
           <div style={{ fontSize: 10, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.1em", fontWeight: 700, textTransform: "uppercase" }}>How to read this matrix</div>
           <div style={{ fontSize: 12, color: "var(--ink2)", lineHeight: 1.5, marginTop: 4, maxWidth: 760 }}>
-            Availability is documented regulated-environment presence. Parity is a separate commercial-to-regulated feature-gap signal. Unknown means public official evidence has not established a stronger claim.
+            Availability is documented regulated-environment presence. Parity is a separate commercial-to-regulated feature-gap signal. Unknown is shown as not documented or not established when public official evidence has not established a stronger claim.
           </div>
         </div>
         <button
@@ -1024,10 +1043,10 @@ function MatrixReadKey({ onDismiss }) {
             {govLevels.map(level => {
               const style = GOV_AVAIL_STYLES[level] || GOV_AVAIL_STYLES.Unknown;
               return (
-                <div key={level} style={{ display: "grid", gridTemplateColumns: "88px minmax(0, 1fr)", gap: 9, alignItems: "start" }}>
+                <div key={level} style={{ display: "grid", gridTemplateColumns: "132px minmax(0, 1fr)", gap: 9, alignItems: "start" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 6, width: "fit-content", padding: "2px 7px", borderRadius: 6, border: `1px solid ${style.border}`, background: style.bg, color: style.fg, fontSize: 10, fontWeight: 700 }}>
                     <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: style.dot, flexShrink: 0 }} />
-                    {level}
+                    {govAvailabilityDisplay(level)}
                   </span>
                   <span style={{ fontSize: 10.5, lineHeight: 1.45, color: "var(--muted)" }}>{GOV_AVAILABILITY_GLOSSARY[level]}</span>
                 </div>
@@ -1041,10 +1060,10 @@ function MatrixReadKey({ onDismiss }) {
             {parityLevels.map(level => {
               const style = PARITY_STYLES[level] || PARITY_STYLES.Unknown;
               return (
-                <div key={level} style={{ display: "grid", gridTemplateColumns: "112px minmax(0, 1fr)", gap: 9, alignItems: "start" }}>
+                <div key={level} style={{ display: "grid", gridTemplateColumns: "132px minmax(0, 1fr)", gap: 9, alignItems: "start" }}>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: style.fg, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fontWeight: 700 }}>
                     <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: style.dot, flexShrink: 0 }} />
-                    {level}
+                    {level === "Unknown" ? "Not established" : level}
                   </span>
                   <span style={{ fontSize: 10.5, lineHeight: 1.45, color: "var(--muted)" }}>{PARITY_LAG_GLOSSARY[level]}</span>
                 </div>
@@ -1183,11 +1202,11 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
                               )}
                               <span style={{ alignSelf: "flex-start", display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 9px 3px 8px", borderRadius: 6, background: govStyle.bg, border: `1px solid ${govStyle.border}` }}>
                                 <span aria-hidden="true" style={{ width: 8, height: 8, borderRadius: "50%", background: govStyle.dot, border: provider.gov === "Unknown" ? `1.5px solid ${govStyle.fg}` : "none", flexShrink: 0 }} />
-                                <span style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 600, color: govStyle.fg }}>{provider.gov || "Unknown"}</span>
+                                <span style={{ fontSize: compact ? 10.5 : 11.5, fontWeight: 600, color: govStyle.fg }}>{govAvailabilityDisplay(provider.gov)}</span>
                               </span>
                               <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--muted)" }}>
                                 <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: parStyle.dot, flexShrink: 0 }} />
-                                {parStyle.text}
+                                {parityLagDisplay(provider.lag)}
                               </span>
                             </div>
                           );
@@ -1287,14 +1306,14 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
                     <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 6 }}>Gov availability</div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: 3, background: govStyle.dot, flexShrink: 0 }} />
-                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{provider.gov || "Unknown"}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{govAvailabilityDisplay(provider.gov)}</span>
                     </div>
                   </div>
                   <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "10px 11px" }}>
                     <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 6 }}>Parity lag</div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                       <span aria-hidden="true" style={{ width: 9, height: 9, borderRadius: "50%", background: parStyle.dot, flexShrink: 0 }} />
-                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{parStyle.text}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>{parityLagDisplay(provider.lag)}</span>
                     </div>
                   </div>
                 </div>
@@ -2275,6 +2294,7 @@ export default function App() {
   const [selectedMatrixAiScope, setSelectedMatrixAiScope] = useState(getInitialMatrixAiScope);
   const [matrixDensity, setMatrixDensity] = useState(getInitialMatrixDensity);
   const [showMatrixReadKey, setShowMatrixReadKey] = useState(true);
+  const [showMatrixEvidencePanel, setShowMatrixEvidencePanel] = useState(false);
   const [searchQuery, setSearchQuery] = useState(getInitialSearchQuery);
   const [expandedId, setExpandedId] = useState(null);
   const [selectedTier, setSelectedTier] = useState(getInitialTier);
@@ -2731,6 +2751,35 @@ export default function App() {
           text-align: left;
           appearance: none;
         }
+        .design-posture-counts {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 7px;
+        }
+        .design-posture-counts div {
+          min-width: 0;
+          padding: 7px 8px;
+          border-radius: 7px;
+          border: 1px solid var(--border);
+          background: var(--panel-alt);
+        }
+        .design-posture-counts strong {
+          display: block;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 14px;
+          color: var(--text);
+          line-height: 1.1;
+        }
+        .design-posture-counts span {
+          display: block;
+          margin-top: 3px;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 8px;
+          font-weight: 800;
+          color: var(--faint);
+          line-height: 1.35;
+          text-transform: uppercase;
+        }
         .design-coverage-detail {
           margin: 10px 0 10px;
           padding: 13px 14px;
@@ -2741,7 +2790,7 @@ export default function App() {
         }
         .design-evidence-columns {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
           gap: 12px;
         }
         .design-evidence-list {
@@ -3327,8 +3376,8 @@ export default function App() {
           {mode === "matrix" && selectedMatrixLens !== "diff" && selectedMatrixLens !== "ai" && (
             <>
               {showMatrixReadKey && <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} />}
-              {!showMatrixReadKey && (
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+                {!showMatrixReadKey && (
                   <button
                     type="button"
                     className="hb"
@@ -3337,9 +3386,24 @@ export default function App() {
                   >
                     Show reading guide
                   </button>
-                </div>
+                )}
+                <button
+                  type="button"
+                  className="hb"
+                  onClick={() => setShowMatrixEvidencePanel(current => !current)}
+                  aria-expanded={showMatrixEvidencePanel}
+                  style={{ border: "1px solid var(--border)", borderRadius: 6, background: showMatrixEvidencePanel ? "var(--selected-bg)" : "var(--panel)", color: showMatrixEvidencePanel ? "var(--selected-text)" : "var(--muted)", padding: "5px 9px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}
+                >
+                  {showMatrixEvidencePanel ? "Hide matrix evidence" : "About matrix evidence"}
+                </button>
+              </div>
+              {showMatrixEvidencePanel && (
+                <MatrixCoverageStrip
+                  rows={filteredDesignRows}
+                  activeProviders={activeProviders}
+                  onDismiss={() => setShowMatrixEvidencePanel(false)}
+                />
               )}
-              <MatrixCoverageStrip rows={filteredDesignRows} activeProviders={activeProviders} />
               <DesignMatrixView
                 rows={filteredDesignRows}
                 activeProviders={activeProviders}
