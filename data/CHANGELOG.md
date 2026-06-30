@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-30 - Provider metadata proposals
+- Added an unapproved official-source proposal seed for Virtual Machines provider metadata covering region and realm-class labels for AWS, Azure, GCP, and OCI, leaving GCP `realmClass` as an explicit decision work item.
+
 ## 2026-06-30 - Provider metadata scaffold
 - Added optional provider-level `region`, `realmClass`, and `lastVerified` scaffolding across schema validation, proposals, design view-model mapping, UI detail display, CSV/XLSX exports, and documentation without changing matrix fact values.
 - Renamed the Transparency tab to AI Transparency for clearer scope.
