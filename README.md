@@ -46,6 +46,8 @@ Rows are decision aids, not claims that different provider products are identica
 | `aiClassification` | STANDARD / AI_CAPABLE / AI_NATIVE |
 | `govAvailability` | Full / Partial / Limited / None / Unknown - documented regulated-environment availability per provider |
 | `govVariant` | Name of the government cloud offering |
+| `region` | Optional provider-level region or realm label when official evidence supports one |
+| `realmClass` | Optional provider-level realm class: `commercial`, `us-gov`, `eu-sovereign`, or `other-sovereign` |
 | `parityLag` | None / Minor / Moderate / Significant / Unknown - separately verified commercial vs regulated comparison |
 | `architectureNotes` | Operational and architectural context |
 | `operationalConsiderations` | Real-world deployment realities |
@@ -80,7 +82,7 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 | **Patterns** | Framework-informed planning overlays with provider service maps and review boundaries |
 | **Compliance** | Framework references plus the selected NIST SP 800-53 Rev. 5 planning lens |
 | **History** | Provider cloud journey milestones |
-| **Transparency** | State AI governance and transparency public-record view |
+| **AI Transparency** | State AI governance and transparency public-record view |
 | **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP ↔ OCI) |
 | **Gov / Parity** | Government availability and parity lag focus |
 | **AI Focus** | AI_NATIVE and AI_CAPABLE capabilities only |

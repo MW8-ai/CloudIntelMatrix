@@ -265,6 +265,11 @@
           "enum": ["Full", "Partial", "Limited", "None", "Unknown"]
         },
         "govVariant": { "type": "string" },
+        "region": { "type": "string", "minLength": 1 },
+        "realmClass": {
+          "enum": ["commercial", "us-gov", "eu-sovereign", "other-sovereign"]
+        },
+        "lastVerified": { "type": "string", "format": "date" },
         "parityLag": {
           "enum": ["None", "Minor", "Moderate", "Significant", "Unknown"]
         },

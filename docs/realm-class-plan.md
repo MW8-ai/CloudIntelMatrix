@@ -19,7 +19,11 @@ regulated environment being evaluated so AWS GovCloud, Azure Government,
 provider sovereign clouds, and control-package approaches can be compared
 without creating provider-specific special cases.
 
-This document is a planning note only. It does not change schema, data, or UI.
+This document began as a planning note. As of 2026-06-30, the schema allows
+optional provider-level `region`, `realmClass`, and `lastVerified` fields as an
+interim scaffold. Matrix facts still must be populated through proposal files
+only, and the preferred future shape remains provider-level `regulatedRealms`
+when the product needs multiple realms per provider/capability cell.
 
 ## Design Goals
 
@@ -60,7 +64,7 @@ Cons:
 - Not enough for providers with more than one regulated or sovereign offering.
 - Forces one summary value to stand in for multiple environments.
 
-Recommendation: do not use this as the final shape.
+Recommendation: use only as an interim scaffold for single-realm display.
 
 ### Option B: Add Provider-Level `regulatedRealms`
 
