@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-30 - Matrix evidence legibility
+- Reframed Matrix evidence counts as an optional methodology panel, split `None` from `Unknown`, and presented `Unknown` values as neutral not-officially-documented / not-established states instead of gaps.
+
 ## 2026-06-30 - AI lab watch sources
 - Added `data/ai_watch.json` with official model documentation, release, news, and safety-source links for OpenAI, Anthropic, Google Gemini, xAI, DeepSeek, and Stability AI.
 - Added validator, UI tab, client export, static CSV export, and XLSX sheet support for AI lab watch sources without fetching live model-news data at runtime.
