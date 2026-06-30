@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-30 - Provider news columns
+- Reworked the global cloud provider news panel into AWS, Azure, GCP, and OCI columns using the existing official-source upcoming data, with two visible items per provider by default and expandable detail preserved.
+
 ## 2026-06-30 - Matrix evidence clarity
 - Clarified Matrix provider evidence counts, added expandable found/gap row detail, prioritized selected tier notes in Matrix previews, updated the product title copy, and moved light mode to a cooler neutral palette.
 
