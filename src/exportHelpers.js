@@ -16,10 +16,25 @@ const MATRIX_COLUMNS = [
   "status",
   "govAvailability",
   "parityLag",
+  "parityDetail",
   "govVariant",
   "region",
   "realmClass",
   "providerLastVerified",
+  "constraints",
+  "costShape",
+  "egressSensitive",
+  "commitmentDiscountAvailable",
+  "pqcStatus",
+  "pqcKem",
+  "pqcSignature",
+  "pqcTls",
+  "pqcVpn",
+  "pqcMilestoneDate",
+  "pqcFipsEndpointParity",
+  "pqcSource",
+  "fedrampLevel",
+  "dodImpactLevel",
   "docsUrl",
   "govDocsUrl",
   "complianceUrl",
@@ -116,7 +131,13 @@ const AI_WATCH_COLUMNS = [
 function asText(value) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join("; ");
+  if (typeof value === "object") return JSON.stringify(value);
   return String(value);
+}
+
+function fieldValue(value, field) {
+  if (value && typeof value === "object" && !Array.isArray(value)) return value[field];
+  return "";
 }
 
 function joinNotes(parts) {
@@ -400,6 +421,8 @@ export function buildMatrixRows(caps, activeProviders, selectedTier = null) {
   return caps.flatMap(cap =>
     activeProviders.map(providerKey => {
       const provider = cap.providers?.[providerKey] || {};
+      const costModel = provider.costModel || {};
+      const pqcReadiness = provider.pqcReadiness || {};
       const tierNote = selectedTier && provider.tierNotes?.[selectedTier]
         ? `Tier guidance (${selectedTier}): ${provider.tierNotes[selectedTier]}`
         : "";
@@ -414,10 +437,25 @@ export function buildMatrixRows(caps, activeProviders, selectedTier = null) {
         status: provider.status,
         govAvailability: provider.govAvailability,
         parityLag: provider.parityLag,
+        parityDetail: provider.parityDetail,
         govVariant: provider.govVariant,
         region: provider.region,
         realmClass: provider.realmClass,
         providerLastVerified: provider.lastVerified,
+        constraints: provider.constraints,
+        costShape: fieldValue(costModel, "shape"),
+        egressSensitive: fieldValue(costModel, "egressSensitive"),
+        commitmentDiscountAvailable: fieldValue(costModel, "commitmentDiscountAvailable"),
+        pqcStatus: fieldValue(pqcReadiness, "status"),
+        pqcKem: fieldValue(pqcReadiness, "kem"),
+        pqcSignature: fieldValue(pqcReadiness, "signature"),
+        pqcTls: fieldValue(pqcReadiness, "tls"),
+        pqcVpn: fieldValue(pqcReadiness, "vpn"),
+        pqcMilestoneDate: fieldValue(pqcReadiness, "milestoneDate"),
+        pqcFipsEndpointParity: fieldValue(pqcReadiness, "fipsEndpointParity"),
+        pqcSource: fieldValue(pqcReadiness, "source"),
+        fedrampLevel: provider.fedrampLevel,
+        dodImpactLevel: provider.dodImpactLevel,
         docsUrl: provider.docsUrl,
         govDocsUrl: provider.govDocsUrl,
         complianceUrl: provider.complianceUrl,

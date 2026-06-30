@@ -180,8 +180,10 @@ def build_detail_sheet(ws):
     ws.freeze_panes = "A3"
     hdr(ws, "Capability Detail - Architecture Notes - Operational Considerations - All Tier Notes", 16)
 
-    hdrs = ["Category","Capability","Provider","Service","Former Names","Gov Avail","Parity Lag","Gov Variant",
-            "Region","Realm Class","Provider Verified","Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
+    hdrs = ["Category","Capability","Provider","Service","Former Names","Gov Avail","Parity Lag","Parity Detail","Gov Variant",
+            "Region","Realm Class","Provider Verified","Constraints","Cost Shape","Egress Sensitive","Commitment Discount",
+            "PQC Status","PQC KEM","PQC Signature","PQC TLS","PQC VPN","PQC Milestone","PQC FIPS Parity","PQC Source",
+            "FedRAMP Level","DoD Impact Level","Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("1E3A5F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -192,11 +194,17 @@ def build_detail_sheet(ws):
     for cap in CAPS:
         for pi, pkey in enumerate(PROVIDERS):
             prov = cap.get("providers",{}).get(pkey,{})
+            cost_model = prov.get("costModel", {})
+            pqc = prov.get("pqcReadiness", {})
             bg = PROV_COLORS[pkey]["svc"]
             vals = [
                 cap["category"], cap["capability"], PROV_LABELS[pkey],
                 prov.get("service",""), cell_text(prov.get("formerNames","")), prov.get("govAvailability",""), prov.get("parityLag",""),
-                prov.get("govVariant",""), prov.get("region",""), prov.get("realmClass",""), prov.get("lastVerified",""),
+                prov.get("parityDetail",""), prov.get("govVariant",""), prov.get("region",""), prov.get("realmClass",""), prov.get("lastVerified",""),
+                cell_text(prov.get("constraints","")), field_value(cost_model, "shape"), field_value(cost_model, "egressSensitive"),
+                field_value(cost_model, "commitmentDiscountAvailable"), field_value(pqc, "status"), field_value(pqc, "kem"),
+                field_value(pqc, "signature"), field_value(pqc, "tls"), field_value(pqc, "vpn"), field_value(pqc, "milestoneDate"),
+                field_value(pqc, "fipsEndpointParity"), field_value(pqc, "source"), prov.get("fedrampLevel",""), prov.get("dodImpactLevel",""),
                 prov.get("docsUrl",""), prov.get("pricingUrl",""), prov.get("complianceUrl",""),
                 cap.get("architectureNotes",""), cap.get("operationalConsiderations",""),
             ]
@@ -207,7 +215,11 @@ def build_detail_sheet(ws):
             ws.row_dimensions[row].height = 40
             row += 1
 
-    for col, w in {"A":16,"B":22,"C":8,"D":30,"E":32,"F":12,"G":14,"H":26,"I":24,"J":16,"K":14,"L":44,"M":44,"N":44,"O":60,"P":60}.items():
+    for col, w in {
+        "A":16,"B":22,"C":8,"D":30,"E":32,"F":12,"G":14,"H":34,"I":26,"J":24,"K":16,"L":14,
+        "M":36,"N":16,"O":14,"P":18,"Q":16,"R":18,"S":18,"T":18,"U":18,"V":18,"W":18,"X":42,
+        "Y":16,"Z":16,"AA":44,"AB":44,"AC":44,"AD":60,"AE":60,
+    }.items():
         ws.column_dimensions[col].width = w
 
 def build_gov_sheet(ws):
@@ -655,8 +667,11 @@ def build_ai_watch_sheet(ws):
 
 MATRIX_EXPORT_HEADERS = [
     "capability", "category", "tags", "aiClassification", "provider", "service",
-    "formerNames", "status", "govAvailability", "parityLag", "govVariant", "docsUrl", "govDocsUrl",
-    "region", "realmClass", "providerLastVerified", "complianceUrl", "pricingUrl", "lastVerified", "sourceNotes",
+    "formerNames", "status", "govAvailability", "parityLag", "parityDetail", "govVariant", "region", "realmClass",
+    "providerLastVerified", "constraints", "costShape", "egressSensitive", "commitmentDiscountAvailable",
+    "pqcStatus", "pqcKem", "pqcSignature", "pqcTls", "pqcVpn", "pqcMilestoneDate", "pqcFipsEndpointParity",
+    "pqcSource", "fedrampLevel", "dodImpactLevel", "docsUrl", "govDocsUrl", "complianceUrl", "pricingUrl",
+    "lastVerified", "sourceNotes",
 ]
 PATTERN_EXPORT_HEADERS = [
     "pattern", "summary", "whenToUse", "capability", "category", "provider",
@@ -689,7 +704,14 @@ def cell_text(value):
         return ""
     if isinstance(value, list):
         return "; ".join(str(item) for item in value)
+    if isinstance(value, dict):
+        return json.dumps(value, sort_keys=True)
     return str(value)
+
+def field_value(value, field):
+    if isinstance(value, dict):
+        return value.get(field, "")
+    return ""
 
 def export_notes(*parts):
     return " ".join(cell_text(part).strip() for part in parts if cell_text(part).strip())
@@ -699,6 +721,8 @@ def matrix_export_rows(caps):
     for cap in caps:
         for pkey in PROVIDERS:
             provider = cap.get("providers", {}).get(pkey, {})
+            cost_model = provider.get("costModel", {})
+            pqc = provider.get("pqcReadiness", {})
             rows.append({
                 "capability": cap.get("capability", ""),
                 "category": cap.get("category", ""),
@@ -710,10 +734,25 @@ def matrix_export_rows(caps):
                 "status": provider.get("status", ""),
                 "govAvailability": provider.get("govAvailability", ""),
                 "parityLag": provider.get("parityLag", ""),
+                "parityDetail": provider.get("parityDetail", ""),
                 "govVariant": provider.get("govVariant", ""),
                 "region": provider.get("region", ""),
                 "realmClass": provider.get("realmClass", ""),
                 "providerLastVerified": provider.get("lastVerified", ""),
+                "constraints": provider.get("constraints", ""),
+                "costShape": field_value(cost_model, "shape"),
+                "egressSensitive": field_value(cost_model, "egressSensitive"),
+                "commitmentDiscountAvailable": field_value(cost_model, "commitmentDiscountAvailable"),
+                "pqcStatus": field_value(pqc, "status"),
+                "pqcKem": field_value(pqc, "kem"),
+                "pqcSignature": field_value(pqc, "signature"),
+                "pqcTls": field_value(pqc, "tls"),
+                "pqcVpn": field_value(pqc, "vpn"),
+                "pqcMilestoneDate": field_value(pqc, "milestoneDate"),
+                "pqcFipsEndpointParity": field_value(pqc, "fipsEndpointParity"),
+                "pqcSource": field_value(pqc, "source"),
+                "fedrampLevel": provider.get("fedrampLevel", ""),
+                "dodImpactLevel": provider.get("dodImpactLevel", ""),
                 "docsUrl": provider.get("docsUrl", ""),
                 "govDocsUrl": provider.get("govDocsUrl", ""),
                 "complianceUrl": provider.get("complianceUrl", ""),

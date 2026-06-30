@@ -23,6 +23,9 @@ VALID_GOV = {"Full", "Partial", "Limited", "None", "Unknown"}
 VALID_PARITY = {"None", "Minor", "Moderate", "Significant", "Unknown"}
 VALID_STATUS = {"GA", "Preview", "Deprecated", "Retiring", "Unknown"}
 VALID_REALM_CLASS = {"commercial", "us-gov", "eu-sovereign", "other-sovereign"}
+VALID_COST_SHAPE = {"consumption", "provisioned", "hybrid", "Unknown"}
+VALID_PQC_STATUS = {"GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"}
+VALID_PQC_FIPS_PARITY = {"AtParity", "Lagging", "Unknown"}
 VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
 VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
@@ -197,15 +200,22 @@ PROPOSAL_PROVIDER_FIELDS = {
     "status",
     "govAvailability",
     "parityLag",
+    "parityDetail",
     "govVariant",
     "region",
     "realmClass",
     "lastVerified",
     "formerNames",
+    "constraints",
+    "costModel",
+    "pqcReadiness",
+    "fedrampLevel",
+    "dodImpactLevel",
     "docsUrl",
     "pricingUrl",
     "complianceUrl",
     "govDocsUrl",
+    "sourceNotes",
 }
 PROPOSAL_URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
 PROPOSAL_COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
@@ -259,7 +269,26 @@ PROV_REQUIRED = [
     "complianceUrl",
     "tierNotes",
 ]
-PROV_ALLOWED = set(PROV_REQUIRED + ["formerNames", "govVariant", "region", "realmClass", "lastVerified", "govDocsUrl", "sourceNotes"])
+PROVIDER_DEPTH_FIELDS = {
+    "parityDetail",
+    "constraints",
+    "costModel",
+    "pqcReadiness",
+    "fedrampLevel",
+    "dodImpactLevel",
+}
+PROV_ALLOWED = set(
+    PROV_REQUIRED
+    + [
+        "formerNames",
+        "govVariant",
+        "region",
+        "realmClass",
+        "lastVerified",
+        "govDocsUrl",
+        "sourceNotes",
+    ]
+) | PROVIDER_DEPTH_FIELDS
 
 ERRORS = []
 WARNINGS = []
@@ -316,6 +345,81 @@ def validate_url(value, label, notes_available):
     parsed = urlparse(value)
     if parsed.scheme not in {"https", "http"} or not parsed.netloc:
         err(f"{label} must be a public HTTP(S) URL: {value}")
+
+
+def validate_non_empty_string(value, label):
+    if not isinstance(value, str) or not value.strip():
+        err(f"{label} must be a non-empty string")
+
+
+def validate_constraints(value, label, notes_available):
+    if isinstance(value, str):
+        validate_non_empty_string(value, label)
+    elif isinstance(value, dict):
+        if not value:
+            err(f"{label} must not be an empty object")
+    else:
+        err(f"{label} must be a non-empty string or object")
+    if not notes_available:
+        err(f"{label} needs sourceNotes because it asserts provider-specific constraints")
+
+
+def validate_cost_model(value, label, notes_available):
+    if not isinstance(value, dict) or not value:
+        err(f"{label} must be a non-empty object")
+        return
+    allowed = {"shape", "egressSensitive", "commitmentDiscountAvailable"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        err(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    if "shape" in value and value.get("shape") not in VALID_COST_SHAPE:
+        err(f"{label}.shape invalid: {value.get('shape')}")
+    for field in ["egressSensitive", "commitmentDiscountAvailable"]:
+        if field in value and not isinstance(value.get(field), bool):
+            err(f"{label}.{field} must be boolean")
+    if not notes_available:
+        err(f"{label} needs sourceNotes because it asserts provider-specific cost behavior")
+
+
+def validate_pqc_readiness(value, label, notes_available):
+    if not isinstance(value, dict) or not value:
+        err(f"{label} must be a non-empty object")
+        return
+    allowed = {"kem", "signature", "tls", "vpn", "status", "milestoneDate", "fipsEndpointParity", "source"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        err(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    for field in ["kem", "signature", "tls", "vpn", "milestoneDate"]:
+        if field in value:
+            validate_non_empty_string(value.get(field), f"{label}.{field}")
+    if "status" in value and value.get("status") not in VALID_PQC_STATUS:
+        err(f"{label}.status invalid: {value.get('status')}")
+    if "fipsEndpointParity" in value and value.get("fipsEndpointParity") not in VALID_PQC_FIPS_PARITY:
+        err(f"{label}.fipsEndpointParity invalid: {value.get('fipsEndpointParity')}")
+    if "source" in value:
+        validate_url(value.get("source"), f"{label}.source", True)
+    if not (notes_available or value.get("source")):
+        err(f"{label} needs sourceNotes or pqcReadiness.source because it asserts provider-specific PQC readiness")
+
+
+def validate_provider_depth_fields(provider, label, notes_available):
+    if "parityDetail" in provider:
+        validate_non_empty_string(provider.get("parityDetail"), f"{label}.parityDetail")
+    if "constraints" in provider:
+        validate_constraints(provider.get("constraints"), f"{label}.constraints", notes_available)
+    if "costModel" in provider:
+        validate_cost_model(provider.get("costModel"), f"{label}.costModel", notes_available)
+    if "pqcReadiness" in provider:
+        validate_pqc_readiness(provider.get("pqcReadiness"), f"{label}.pqcReadiness", notes_available)
+    if "fedrampLevel" in provider:
+        if provider.get("fedrampLevel") not in {"High", "Moderate", "Low", "Unknown"}:
+            err(f"{label}.fedrampLevel invalid: {provider.get('fedrampLevel')}")
+        if not notes_available:
+            err(f"{label}.fedrampLevel needs sourceNotes because it asserts a FedRAMP level")
+    if "dodImpactLevel" in provider:
+        validate_non_empty_string(provider.get("dodImpactLevel"), f"{label}.dodImpactLevel")
+        if not notes_available:
+            err(f"{label}.dodImpactLevel needs sourceNotes because it asserts a DoD impact level")
 
 
 def validate_schema_contract(schema):
@@ -495,6 +599,7 @@ def validate_matrix(mdata):
                     err(f"'{name}/{pkey}'.formerNames must be a non-empty array when present")
                 elif len(former_names) != len(set(former_names)) or any(not isinstance(item, str) or not item.strip() for item in former_names):
                     err(f"'{name}/{pkey}'.formerNames must contain unique non-empty strings")
+            validate_provider_depth_fields(provider, f"'{name}/{pkey}'", notes_available)
 
             tier_notes = provider.get("tierNotes", {})
             if not isinstance(tier_notes, dict):
@@ -919,12 +1024,24 @@ def proposal_value_valid(field, value, label):
         err(f"{label}.proposedValue invalid for govAvailability: {value}")
     elif field == "parityLag" and value not in VALID_PARITY:
         err(f"{label}.proposedValue invalid for parityLag: {value}")
+    elif field == "parityDetail":
+        validate_non_empty_string(value, f"{label}.proposedValue for parityDetail")
     elif field == "realmClass" and value not in VALID_REALM_CLASS:
         err(f"{label}.proposedValue invalid for realmClass: {value}")
     elif field == "lastVerified":
         validate_date(value, f"{label}.proposedValue for lastVerified")
     elif field == "region" and not str(value or "").strip():
         err(f"{label}.proposedValue for region must not be empty")
+    elif field == "constraints":
+        validate_constraints(value, f"{label}.proposedValue for constraints", True)
+    elif field == "costModel":
+        validate_cost_model(value, f"{label}.proposedValue for costModel", True)
+    elif field == "pqcReadiness":
+        validate_pqc_readiness(value, f"{label}.proposedValue for pqcReadiness", True)
+    elif field == "fedrampLevel" and value not in {"High", "Moderate", "Low", "Unknown"}:
+        err(f"{label}.proposedValue invalid for fedrampLevel: {value}")
+    elif field in {"dodImpactLevel", "sourceNotes"}:
+        validate_non_empty_string(value, f"{label}.proposedValue for {field}")
     elif field in PROPOSAL_FACT_URL_FIELDS:
         validate_url(value, f"{label}.proposedValue", True)
     elif field == "govVariant" and value is not None and not str(value).strip():

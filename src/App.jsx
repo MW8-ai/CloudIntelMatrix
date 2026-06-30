@@ -822,6 +822,71 @@ function getProviderQuickLinks(provider) {
   ].filter(Boolean);
 }
 
+function hasDepthValue(value) {
+  if (value === null || value === undefined) return false;
+  if (typeof value === "string") return value.trim().length > 0;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === "object") return Object.keys(value).length > 0;
+  return true;
+}
+
+function formatDepthValue(value) {
+  if (!hasDepthValue(value)) return "";
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (Array.isArray(value)) return value.join("; ");
+  if (typeof value === "object") {
+    return Object.entries(value)
+      .filter(([, entryValue]) => hasDepthValue(entryValue))
+      .map(([key, entryValue]) => `${key}: ${formatDepthValue(entryValue)}`)
+      .join("; ");
+  }
+  return String(value);
+}
+
+function formatCostModel(costModel = {}) {
+  const parts = [];
+  if (hasDepthValue(costModel.shape)) parts.push(`Shape: ${costModel.shape}`);
+  if (typeof costModel.egressSensitive === "boolean") parts.push(`Egress sensitive: ${formatDepthValue(costModel.egressSensitive)}`);
+  if (typeof costModel.commitmentDiscountAvailable === "boolean") parts.push(`Commitment discount: ${formatDepthValue(costModel.commitmentDiscountAvailable)}`);
+  return parts.join("; ");
+}
+
+function formatPqcReadiness(pqcReadiness = {}) {
+  const parts = [];
+  if (hasDepthValue(pqcReadiness.status)) parts.push(`Status: ${pqcReadiness.status}`);
+  if (hasDepthValue(pqcReadiness.fipsEndpointParity)) parts.push(`FIPS endpoint parity: ${pqcReadiness.fipsEndpointParity}`);
+  if (hasDepthValue(pqcReadiness.milestoneDate)) parts.push(`Milestone: ${pqcReadiness.milestoneDate}`);
+  if (hasDepthValue(pqcReadiness.kem)) parts.push(`KEM: ${pqcReadiness.kem}`);
+  if (hasDepthValue(pqcReadiness.signature)) parts.push(`Signature: ${pqcReadiness.signature}`);
+  if (hasDepthValue(pqcReadiness.tls)) parts.push(`TLS: ${pqcReadiness.tls}`);
+  if (hasDepthValue(pqcReadiness.vpn)) parts.push(`VPN: ${pqcReadiness.vpn}`);
+  if (hasDepthValue(pqcReadiness.source)) parts.push(`Source: ${pqcReadiness.source}`);
+  return parts.join("; ");
+}
+
+function getParityReasoning(provider) {
+  if (hasDepthValue(provider.parityDetail)) return provider.parityDetail;
+  const note = String(provider.note || "").trim();
+  if (!note) return "";
+  const marker = "paritylag verified";
+  const index = note.toLowerCase().indexOf(marker);
+  if (index >= 0) return note.slice(index).trim();
+  if (provider.lag && provider.lag !== "None") return note;
+  return "";
+}
+
+function ProviderDepthField({ label, value }) {
+  const populated = hasDepthValue(value);
+  return (
+    <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px", minWidth: 0 }}>
+      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>{label}</div>
+      <div style={{ fontSize: 11.5, color: populated ? "var(--ink2)" : "var(--faint)", lineHeight: 1.45, overflowWrap: "anywhere" }}>
+        {populated ? value : "Not populated"}
+      </div>
+    </div>
+  );
+}
+
 function MatrixCoverageStrip({ rows, activeProviders, onDismiss }) {
   const statuses = ["Full", "Partial", "Limited", "None", "Unknown"];
   const evidenceStatuses = new Set(["Full", "Partial", "Limited"]);
@@ -1005,7 +1070,7 @@ function MatrixCoverageStrip({ rows, activeProviders, onDismiss }) {
             ))}
           </div>
           <div style={{ fontSize: 9, color: "var(--faint)", lineHeight: 1.55, marginTop: 10 }}>
-            Last checked is currently capability-level. Provider-specific dates and structured region or realm class are planned schema work.
+            Last checked uses provider-specific dates when present, then capability-level dates. Region and realm class appear only when sourced in the matrix data.
           </div>
         </div>
       )}
@@ -1288,6 +1353,14 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
             const govStyle = getDesignGovStyle(provider.gov);
             const parStyle = PARITY_STYLES[provider.lag] || PARITY_STYLES.Unknown;
             const tierNote = tier ? provider.tierNotes?.[tier] : null;
+            const parityReasoning = getParityReasoning(provider);
+            const depthItems = [
+              { label: "Constraints", value: formatDepthValue(provider.constraints) },
+              { label: "Cost model", value: formatCostModel(provider.costModel) },
+              { label: "PQC readiness", value: formatPqcReadiness(provider.pqcReadiness) },
+              { label: "FedRAMP", value: provider.fedrampLevel },
+              { label: "DoD impact", value: provider.dodImpactLevel },
+            ];
 
             return (
               <div key={providerKey} style={{ marginBottom: 14, padding: "14px 15px", borderRadius: 10, border: `1px solid ${pm.border}`, background: pm.bg }}>
@@ -1317,6 +1390,12 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
                     </div>
                   </div>
                 </div>
+                {parityReasoning && (
+                  <div style={{ marginBottom: 10, padding: "9px 10px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--panel)" }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Parity reasoning</div>
+                    <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.5, color: "var(--ink2)" }}>{parityReasoning}</p>
+                  </div>
+                )}
                 {provider.variant && (
                   <div style={{ marginBottom: 10 }}>
                     <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Regulated variant</div>
@@ -1345,6 +1424,14 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
                     )}
                   </div>
                 )}
+                <div style={{ marginBottom: 10 }}>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 7 }}>Schema depth</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(145px, 1fr))", gap: 9 }}>
+                    {depthItems.map(item => (
+                      <ProviderDepthField key={item.label} label={item.label} value={item.value} />
+                    ))}
+                  </div>
+                </div>
                 {provider.note && (
                   <div style={{ marginBottom: 10 }}>
                     <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Source notes</div>

@@ -48,16 +48,15 @@ This is the working roadmap for the next small pull requests. Keep factual data 
    - Operational status source links now live in `data/status.json`; future live-status or uptime snapshots should use scheduled ingestion, not runtime browser fetches.
    - AI lab watch source links now live in `data/ai_watch.json`; future model-release snapshots should use scheduled ingestion from documented official feeds, not runtime browser fetches.
 
-6. Plan the next schema-depth pass from the v3.13 work order.
-   - Treat this as a design/schema PR before any matrix data migration.
-   - Candidate optional provider fields: `parityDetail`, `constraints`, `previewTerms`, `costModel`, `region`, `eduUrl`, and `fedrampLevel`.
-   - Keep `formerNames` as already implemented provider metadata.
-   - Reuse the existing `status` enum for maturity unless a real product need proves a separate field is cleaner.
-   - Update `data/schema.json`, `scripts/verify.py`, `scripts/generate_xlsx.py`, `src/App.jsx`, and proposal validation together if new factual provider fields are added.
+6. Populate schema-depth fields through proposal review.
+   - Optional provider scaffolding now covers `parityDetail`, `constraints`, `costModel`, `pqcReadiness`, `fedrampLevel`, and `dodImpactLevel`.
+   - Keep the existing `region` string and `realmClass` enum until a separate provider-neutral region model is designed.
+   - Do not populate these fields directly in `data/matrix.json`; use official-source proposal files first.
+   - Consider `previewTerms` and education-specific URLs only if a concrete sourced use case appears.
 
-7. Add a provider-neutral PQC readiness plan before changing matrix data.
+7. Add provider-neutral PQC readiness facts through proposals.
    - Scope PQC to existing Security & Compliance / Identity decision rows, not a new top-level category.
-   - Candidate optional provider field: `pqcReadiness` with KEM, signature, TLS, private CA, status, milestone date, FIPS endpoint parity, and official source.
+   - Use the optional `pqcReadiness` field for KEM, signature, TLS, VPN, status, milestone date, FIPS endpoint parity, and official source.
    - Use official standards and provider documentation only: NIST FIPS 203/204/205, provider PQC docs, and documented CNSA 2.0 milestone dates.
    - Keep Azure and OCI values `Unknown` unless official Microsoft or Oracle sources support stronger claims.
    - Treat quantum-compute services as experimental timeline/context items, not decision-grade regulated capability rows.

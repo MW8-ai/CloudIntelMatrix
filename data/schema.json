@@ -278,6 +278,44 @@
         "complianceUrl": { "type": ["string", "null"], "format": "uri" },
         "govDocsUrl": { "type": ["string", "null"], "format": "uri" },
         "sourceNotes": { "type": "string", "minLength": 1 },
+        "parityDetail": { "type": "string", "minLength": 1 },
+        "constraints": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": true
+            }
+          ]
+        },
+        "costModel": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "shape": { "enum": ["consumption", "provisioned", "hybrid", "Unknown"] },
+            "egressSensitive": { "type": "boolean" },
+            "commitmentDiscountAvailable": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "pqcReadiness": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "kem": { "type": "string", "minLength": 1 },
+            "signature": { "type": "string", "minLength": 1 },
+            "tls": { "type": "string", "minLength": 1 },
+            "vpn": { "type": "string", "minLength": 1 },
+            "status": { "enum": ["GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"] },
+            "milestoneDate": { "type": "string", "minLength": 1 },
+            "fipsEndpointParity": { "enum": ["AtParity", "Lagging", "Unknown"] },
+            "source": { "type": ["string", "null"], "format": "uri" }
+          },
+          "additionalProperties": false
+        },
+        "fedrampLevel": { "enum": ["High", "Moderate", "Low", "Unknown"] },
+        "dodImpactLevel": { "type": "string", "minLength": 1 },
         "tierNotes": {
           "type": "object",
           "additionalProperties": { "type": "string" }
