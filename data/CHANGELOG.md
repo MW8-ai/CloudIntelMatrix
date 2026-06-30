@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-30 - AI lab watch sources
+- Added `data/ai_watch.json` with official model documentation, release, news, and safety-source links for OpenAI, Anthropic, Google Gemini, xAI, DeepSeek, and Stability AI.
+- Added validator, UI tab, client export, static CSV export, and XLSX sheet support for AI lab watch sources without fetching live model-news data at runtime.
+
 ## 2026-06-30 - Operational status sources
 - Added `data/status.json` with official operational status and incident-history source links for AWS, Azure, GCP, OCI, and Salesforce as an adjacent platform.
 - Added validator, UI tab, client export, static CSV export, and XLSX sheet support for operational status sources without fetching live uptime at runtime.

@@ -32,7 +32,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, 5 official operational status sources, and 51 state/DC AI transparency rows, in matrix data version `3.16.6`.
+**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, 5 official operational status sources, 6 official AI lab watch sources, and 51 state/DC AI transparency rows, in matrix data version `3.16.6`.
 
 ---
 
@@ -83,6 +83,7 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 | **Compliance** | Framework references plus the selected NIST SP 800-53 Rev. 5 planning lens |
 | **History** | Provider cloud journey milestones |
 | **Operational Status** | Official provider status pages and incident-history sources |
+| **AI Watch** | Official frontier and foundation-model release source index |
 | **AI Transparency** | State AI governance and transparency public-record view |
 | **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP ↔ OCI) |
 | **Gov / Parity** | Government availability and parity lag focus |
@@ -113,7 +114,7 @@ Core Infrastructure · Identity & Access · Networking · Storage · Databases �
 
 **Human in the loop:** Automation surfaces changes, humans validate and commit. No automated writes to data files.
 
-The update monitor surfaces product changes; additions and revisions to architecture-framework interpretation are reviewed manually against official provider guidance. Oracle's official OCI release notes are currently a manual-review source until a reliable documented feed or API is adopted.
+The update monitor surfaces product changes; additions and revisions to architecture-framework interpretation are reviewed manually against official provider guidance. Oracle's official OCI release notes and AI lab watch sources are currently manual-review sources until reliable documented feeds or APIs are adopted.
 
 ---
 

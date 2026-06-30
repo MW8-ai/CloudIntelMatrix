@@ -100,6 +100,19 @@ const STATUS_COLUMNS = [
   "lastVerified",
 ];
 
+const AI_WATCH_COLUMNS = [
+  "name",
+  "shortName",
+  "category",
+  "modelFamily",
+  "summary",
+  "newsUrl",
+  "docsUrl",
+  "releaseNotesUrl",
+  "safetyUrl",
+  "lastVerified",
+];
+
 function asText(value) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join("; ");
@@ -525,6 +538,21 @@ export function buildStatusRows(items) {
   }));
 }
 
+export function buildAiWatchRows(items) {
+  return items.map(item => ({
+    name: item.name,
+    shortName: item.shortName,
+    category: item.category,
+    modelFamily: item.modelFamily,
+    summary: item.summary,
+    newsUrl: item.newsUrl,
+    docsUrl: item.docsUrl,
+    releaseNotesUrl: item.releaseNotesUrl,
+    safetyUrl: item.safetyUrl,
+    lastVerified: item.lastVerified,
+  }));
+}
+
 export function makeExportData(viewId, label, columns, rows) {
   return {
     viewId,
@@ -557,6 +585,10 @@ export function transparencyExport(items) {
 
 export function statusExport(items) {
   return makeExportData("status", "Operational Status Sources", STATUS_COLUMNS, buildStatusRows(items));
+}
+
+export function aiWatchExport(items) {
+  return makeExportData("ai-watch", "AI Lab Watch", AI_WATCH_COLUMNS, buildAiWatchRows(items));
 }
 
 export function downloadCsv(exportData) {

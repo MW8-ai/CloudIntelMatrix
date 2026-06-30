@@ -29,6 +29,7 @@ VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/
 VALID_TRANSPARENCY_STATUS = {"Active", "Proposed", "Repealed", "None on record", "Unknown"}
 VALID_STATUS_SOURCE_CATEGORY = {"cloud-provider", "adjacent-platform"}
 VALID_STATUS_SOURCE_PROVIDERS = {"aws", "azure", "gcp", "oci", "salesforce"}
+VALID_AI_WATCH_CATEGORY = {"frontier-model-lab", "open-model-lab", "multimodal-model-lab"}
 STATUS_SOURCE_DOMAINS = {
     "health.aws.amazon.com",
     "docs.aws.amazon.com",
@@ -40,6 +41,19 @@ STATUS_SOURCE_DOMAINS = {
     "docs.oracle.com",
     "status.salesforce.com",
     "trust.salesforce.com",
+}
+AI_WATCH_DOMAINS = {
+    "openai.com",
+    "developers.openai.com",
+    "anthropic.com",
+    "docs.anthropic.com",
+    "blog.google",
+    "ai.google.dev",
+    "x.ai",
+    "docs.x.ai",
+    "api-docs.deepseek.com",
+    "stability.ai",
+    "platform.stability.ai",
 }
 EXPECTED_STATES = {
     "AL": "Alabama",
@@ -167,6 +181,17 @@ STATUS_SOURCE_REQUIRED = [
     "lastVerified",
 ]
 STATUS_SOURCE_ALLOWED = set(STATUS_SOURCE_REQUIRED + ["historyUrl"])
+AI_WATCH_REQUIRED = [
+    "id",
+    "name",
+    "shortName",
+    "category",
+    "modelFamily",
+    "docsUrl",
+    "summary",
+    "lastVerified",
+]
+AI_WATCH_ALLOWED = set(AI_WATCH_REQUIRED + ["newsUrl", "releaseNotesUrl", "safetyUrl"])
 PROPOSAL_PROVIDER_FIELDS = {
     "service",
     "status",
@@ -825,6 +850,53 @@ def validate_status_sources(status_data):
     return sources
 
 
+def validate_ai_watch(ai_watch_data):
+    require_fields(ai_watch_data, ["_meta", "sources"], "ai_watch.json")
+    if not isinstance(ai_watch_data, dict):
+        return []
+
+    meta = ai_watch_data.get("_meta", {})
+    require_fields(meta, ["description", "last_verified", "scopeNote"], "ai_watch.json._meta")
+    if isinstance(meta, dict):
+        validate_date(meta.get("last_verified"), "ai_watch.json._meta.last_verified")
+        for field in ["description", "scopeNote"]:
+            if not str(meta.get(field, "")).strip():
+                err(f"ai_watch.json._meta.{field} must not be empty")
+
+    sources = ai_watch_data.get("sources", [])
+    if not isinstance(sources, list) or not sources:
+        err("ai_watch.json.sources must be a non-empty array")
+        sources = []
+
+    seen_ids = set()
+    for source in sources:
+        source_id = source.get("id", "MISSING") if isinstance(source, dict) else "MISSING"
+        require_fields(source, AI_WATCH_REQUIRED, f"AI watch source '{source_id}'")
+        if not isinstance(source, dict):
+            continue
+        unexpected_fields = set(source) - AI_WATCH_ALLOWED
+        if unexpected_fields:
+            err(f"AI watch source '{source_id}' contains unsupported fields: {sorted(unexpected_fields)}")
+        if source_id in seen_ids:
+            err(f"Duplicate AI watch source id: {source_id}")
+        seen_ids.add(source_id)
+        if source.get("category") not in VALID_AI_WATCH_CATEGORY:
+            err(f"AI watch source '{source_id}' invalid category: {source.get('category')}")
+        for field in ["name", "shortName", "modelFamily", "summary"]:
+            if not str(source.get(field, "")).strip():
+                err(f"AI watch source '{source_id}'.{field} must not be empty")
+        validate_date(source.get("lastVerified"), f"AI watch source '{source_id}'.lastVerified")
+        for field in ["newsUrl", "docsUrl", "releaseNotesUrl", "safetyUrl"]:
+            if field in source:
+                validate_url(source.get(field), f"AI watch source '{source_id}'.{field}", False)
+                host = normalized_host(source.get(field))
+                if host not in AI_WATCH_DOMAINS:
+                    err(f"AI watch source '{source_id}'.{field} is not on an approved AI-watch domain: {source.get(field)}")
+
+    info(f"ai_watch.json: {len(sources)} official AI lab source(s)")
+    return sources
+
+
 def is_official_source_url(url):
     host = normalized_host(url)
     if host.endswith(".gov"):
@@ -1074,7 +1146,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, proposal_links):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, ai_watch_sources, proposal_links):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -1107,6 +1179,9 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
     for source in status_sources:
         for field in ["statusUrl", "historyUrl", "docsUrl"]:
             add_link(source.get(field), f"status/{source.get('id')}/{field}")
+    for source in ai_watch_sources:
+        for field in ["newsUrl", "docsUrl", "releaseNotesUrl", "safetyUrl"]:
+            add_link(source.get(field), f"aiWatch/{source.get('id')}/{field}")
     for source_url, label in proposal_links:
         add_link(source_url, label)
 
@@ -1157,15 +1232,18 @@ def main():
     upcoming = []
     history = []
     status_sources = []
+    ai_watch_sources = []
     if not args.schema_only:
+        ai_watch_data = load(DATA / "ai_watch.json")
         upcoming_data = load(DATA / "upcoming.json")
         history_data = load(DATA / "history.json")
         transparency_data = load(DATA / "transparency.json")
         status_data = load(DATA / "status.json")
         sources_data = load(DATA / "sources.json")
-        if upcoming_data is None or history_data is None or transparency_data is None or status_data is None or sources_data is None:
+        if ai_watch_data is None or upcoming_data is None or history_data is None or transparency_data is None or status_data is None or sources_data is None:
             print("\n".join(ERRORS))
             return 1
+        ai_watch_sources = validate_ai_watch(ai_watch_data)
         upcoming = validate_upcoming(upcoming_data)
         history = validate_history(history_data)
         transparency, transparency_meta = validate_transparency(transparency_data)
@@ -1177,7 +1255,7 @@ def main():
         transparency_meta = {}
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, proposal_links)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, ai_watch_sources, proposal_links)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")
