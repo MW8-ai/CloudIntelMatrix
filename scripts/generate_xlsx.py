@@ -28,6 +28,7 @@ mdata = json.loads((DATA / "matrix.json").read_text())
 udata = json.loads((DATA / "upcoming.json").read_text())
 hdata = json.loads((DATA / "history.json").read_text())
 tdata = json.loads((DATA / "transparency.json").read_text())
+sdata = json.loads((DATA / "status.json").read_text())
 
 META       = mdata["_meta"]
 CAPS       = mdata["capabilities"]
@@ -43,6 +44,7 @@ UPCOMING   = udata.get("upcoming", [])
 HISTORY    = hdata.get("history", [])
 TRANSPARENCY = tdata.get("mandates", [])
 TRANSPARENCY_META = tdata.get("_meta", {})
+STATUS_SOURCES = sdata.get("sources", [])
 CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
 
 PROV_LABELS = {"aws":"AWS","azure":"Azure","gcp":"GCP","oci":"OCI"}
@@ -577,6 +579,39 @@ def build_upcoming_sheet(ws):
         ws.column_dimensions[col].width = w
 
 # ── Build ──────────────────────────────────────────────────────────────────
+def build_status_sheet(ws):
+    ws.sheet_view.showGridLines = False
+    hdr(ws, "Operational Status Sources - Official Provider Pages", 8)
+    hdrs = ["Provider","Category","Name","Summary","Status URL","History URL","Docs URL","Verified"]
+    for ci, h in enumerate(hdrs, 1):
+        c = ws.cell(row=2, column=ci, value=h)
+        c.fill = f("1E3A5F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center","center"); c.border = TB
+    ws.row_dimensions[2].height = 16
+
+    for ri, item in enumerate(STATUS_SOURCES, 3):
+        bg = "F8FAFC" if item.get("category") == "cloud-provider" else "FFFBEB"
+        vals = [
+            item.get("providerName", ""),
+            item.get("category", ""),
+            item.get("name", ""),
+            item.get("summary", ""),
+            item.get("statusUrl", ""),
+            item.get("historyUrl", ""),
+            item.get("docsUrl", ""),
+            item.get("lastVerified", ""),
+        ]
+        for ci, value in enumerate(vals, 1):
+            c = ws.cell(row=ri, column=ci, value=value)
+            c.fill = f(bg); c.font = ft(size=8, color="2563EB" if ci in [5, 6, 7] and value else "111827")
+            c.alignment = al("left","center", wrap=True); c.border = TB
+            if ci in [5, 6, 7] and value:
+                c.hyperlink = value
+        ws.row_dimensions[ri].height = 34
+
+    for col, w in {"A":14,"B":18,"C":28,"D":64,"E":48,"F":48,"G":48,"H":12}.items():
+        ws.column_dimensions[col].width = w
+
 MATRIX_EXPORT_HEADERS = [
     "capability", "category", "tags", "aiClassification", "provider", "service",
     "formerNames", "status", "govAvailability", "parityLag", "govVariant", "docsUrl", "govDocsUrl",
@@ -598,6 +633,10 @@ HISTORY_EXPORT_HEADERS = [
 TRANSPARENCY_EXPORT_HEADERS = [
     "state", "stateName", "instrument", "title", "citation", "status",
     "summary", "url", "lastVerified",
+]
+STATUS_EXPORT_HEADERS = [
+    "providerName", "category", "name", "summary", "statusUrl", "historyUrl",
+    "docsUrl", "lastVerified",
 ]
 
 def cell_text(value):
@@ -742,6 +781,21 @@ def transparency_export_rows():
         for item in sorted(TRANSPARENCY, key=lambda entry: (entry.get("stateName", ""), entry.get("title", "")))
     ]
 
+def status_export_rows():
+    return [
+        {
+            "providerName": item.get("providerName", ""),
+            "category": item.get("category", ""),
+            "name": item.get("name", ""),
+            "summary": item.get("summary", ""),
+            "statusUrl": item.get("statusUrl", ""),
+            "historyUrl": item.get("historyUrl", ""),
+            "docsUrl": item.get("docsUrl", ""),
+            "lastVerified": item.get("lastVerified", ""),
+        }
+        for item in sorted(STATUS_SOURCES, key=lambda entry: (entry.get("category", ""), entry.get("providerName", "")))
+    ]
+
 def write_view_csv(view_id, headers, rows):
     out = OUTDIR / f"cloudintelmatrix-{view_id}-{EXPORT_DATE}.csv"
     stable_out = OUTDIR / f"cloudintelmatrix-{view_id}.csv"
@@ -767,6 +821,7 @@ def write_view_csvs():
     write_view_csv("controls", COMPLIANCE_EXPORT_HEADERS, compliance_export_rows())
     write_view_csv("history", HISTORY_EXPORT_HEADERS, history_export_rows())
     write_view_csv("transparency", TRANSPARENCY_EXPORT_HEADERS, transparency_export_rows())
+    write_view_csv("status", STATUS_EXPORT_HEADERS, status_export_rows())
 
 wb = Workbook()
 wb.remove(wb.active)
@@ -799,6 +854,9 @@ build_transparency_sheet(ws_transparency)
 
 ws_up = wb.create_sheet("Upcoming & Future")
 build_upcoming_sheet(ws_up)
+
+ws_status = wb.create_sheet("Status Sources")
+build_status_sheet(ws_status)
 
 out = OUTDIR / "Cloud_Intelligence_Matrix.xlsx"
 wb.save(out)

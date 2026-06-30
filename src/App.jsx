@@ -3,6 +3,7 @@ import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 import historyData  from "../data/history.json";
 import transparencyData from "../data/transparency.json";
+import statusData from "../data/status.json";
 import {
   controlExport,
   downloadCsv,
@@ -11,6 +12,7 @@ import {
   matrixExport,
   patternExport,
   printExport,
+  statusExport,
   transparencyExport,
 } from "./exportHelpers";
 import {
@@ -45,6 +47,8 @@ const HISTORY = historyData.history || [];
 const HISTORY_META = historyData._meta || {};
 const TRANSPARENCY = transparencyData.mandates || [];
 const TRANSPARENCY_META = transparencyData._meta || {};
+const STATUS_SOURCES = statusData.sources || [];
+const STATUS_META = statusData._meta || {};
 const PROVIDERS = META.providers;
 const CAPABILITY_MAP = Object.fromEntries(CAPABILITIES.map(cap => [cap.capability, cap]));
 const DESIGN_MODEL = buildDesignViewModel({ matrixData, historyData, transparencyData, upcomingData });
@@ -58,7 +62,7 @@ const DEFAULT_MATRIX_LENS = "all";
 const DEFAULT_MATRIX_AI_SCOPE = "All";
 const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
-const VALID_MODES = ["matrix", "patterns", "controls", "history", "transparency"];
+const VALID_MODES = ["matrix", "patterns", "controls", "history", "status", "transparency"];
 const MATRIX_LENSES = [
   { id: "all", label: "Capability", note: "All capability rows" },
   { id: "diff", label: "Equivalency", note: "Side-by-side provider service mapping" },
@@ -2034,6 +2038,73 @@ function TransparencyViewDesign({ items, meta }) {
   );
 }
 
+function StatusViewDesign({ sources, meta }) {
+  const categories = [
+    { id: "cloud-provider", label: "Cloud Providers" },
+    { id: "adjacent-platform", label: "Adjacent Platforms" },
+  ];
+  const categoryCounts = Object.fromEntries(categories.map(category => [
+    category.id,
+    sources.filter(source => source.category === category.id).length,
+  ]));
+
+  return (
+    <div>
+      <ViewHero
+        eyebrow="OPERATIONAL STATUS"
+        title="Official status pages and incident history"
+        body={meta.scopeNote}
+        meta={[
+          <StatTile key="sources" label="SOURCES" value={sources.length} />,
+          <StatTile key="clouds" label="CLOUDS" value={categoryCounts["cloud-provider"] || 0} />,
+          <VerifiedStamp key="verified" date={meta.last_verified} />,
+        ]}
+      />
+
+      {categories.map(category => {
+        const group = sources.filter(source => source.category === category.id);
+        if (!group.length) return null;
+        return (
+          <section key={category.id} style={{ marginBottom: 16 }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", letterSpacing: "0.1em", fontWeight: 900, textTransform: "uppercase", margin: "0 0 9px" }}>
+              {category.label}
+            </div>
+            <div className="design-framework-grid">
+              {group.map(source => {
+                const pm = PROVIDER_META[source.provider] || {};
+                const logo = LOGOS[source.providerName];
+                const accent = pm.dot || "#64748b";
+                return (
+                  <article key={source.id} className="design-secondary-card" style={{ borderTop: `3px solid ${accent}` }}>
+                    <div className="design-secondary-card-head">
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: 10, minWidth: 0 }}>
+                        <span aria-hidden="true" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 30, height: 30, borderRadius: 8, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${accent}`, backgroundImage: logo ? `url(${logo})` : "none", backgroundSize: 18, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0, color: accent, fontSize: 10, fontWeight: 900 }}>
+                          {!logo && source.providerName.slice(0, 2).toUpperCase()}
+                        </span>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 9, color: accent, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{source.providerName}</div>
+                          <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{source.name}</div>
+                        </div>
+                      </div>
+                      <VerifiedStamp date={source.lastVerified} />
+                    </div>
+                    <div style={{ fontSize: 11, color: "var(--ink2)", lineHeight: 1.6, marginBottom: 10 }}>{source.summary}</div>
+                    <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+                      <a href={source.statusUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Live status</a>
+                      {source.historyUrl && <a href={source.historyUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">History</a>}
+                      {source.docsUrl && <a href={source.docsUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Docs</a>}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
 // -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
@@ -2333,21 +2404,37 @@ export default function App() {
     return items;
   }, [searchQuery, selectedTransparencyStatus]);
 
+  const filteredStatusSources = useMemo(() => {
+    let items = STATUS_SOURCES;
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.name.toLowerCase().includes(q) ||
+        item.providerName.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q) ||
+        item.summary.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [searchQuery]);
+
   const exportData = useMemo(() => {
     if (mode === "patterns") return patternExport(filteredPatterns, activeProviders, CAPABILITY_MAP, FRAMEWORKS);
     if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies, filteredComplianceFrameworks);
     if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
     if (mode === "transparency") return transparencyExport(filteredTransparency);
+    if (mode === "status") return statusExport(filteredStatusSources);
     if (mode === "matrix" && selectedMatrixLens === "diff") return matrixExport("diff", "Service Equivalency", filteredMatrixCaps, activeProviders, selectedTier);
     if (mode === "matrix" && selectedMatrixLens === "gov") return matrixExport("gov", "Government Availability and Parity", filteredMatrixCaps, activeProviders, selectedTier);
     if (mode === "matrix" && selectedMatrixLens === "ai") return matrixExport("ai", "AI Focus", filteredMatrixCaps, activeProviders, selectedTier);
     return matrixExport("matrix", "Capability Matrix", filteredMatrixCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredTransparency, mode, selectedMatrixLens, selectedTier]);
+  }, [activeProviders, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredStatusSources, filteredTransparency, mode, selectedMatrixLens, selectedTier]);
 
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
     mode === "controls" ? filteredControlFamilies.length + filteredComplianceFrameworks.length :
     mode === "history" ? filteredHistory.length :
+    mode === "status" ? filteredStatusSources.length :
     mode === "transparency" ? filteredTransparency.length :
     mode === "matrix" ? filteredMatrixCaps.length :
     filteredCaps.length;
@@ -2357,6 +2444,7 @@ export default function App() {
     { id: "patterns",     label: "Architecture Patterns", iconKey: "blocks",        desc: "Architecture planning overlays" },
     { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
+    { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
     { id: "transparency", label: "AI Transparency",       iconKey: null,            desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
@@ -3179,6 +3267,7 @@ export default function App() {
           {mode === "patterns" && <PatternViewDesign patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensViewDesign lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
           {mode === "history" && <HistoryViewDesign items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
+          {mode === "status" && <StatusViewDesign sources={filteredStatusSources} meta={STATUS_META} />}
           {mode === "transparency" && <TransparencyViewDesign items={filteredTransparency} meta={TRANSPARENCY_META} />}
         </div>
 

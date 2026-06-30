@@ -27,6 +27,20 @@ VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
 VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
 VALID_TRANSPARENCY_STATUS = {"Active", "Proposed", "Repealed", "None on record", "Unknown"}
+VALID_STATUS_SOURCE_CATEGORY = {"cloud-provider", "adjacent-platform"}
+VALID_STATUS_SOURCE_PROVIDERS = {"aws", "azure", "gcp", "oci", "salesforce"}
+STATUS_SOURCE_DOMAINS = {
+    "health.aws.amazon.com",
+    "docs.aws.amazon.com",
+    "azure.status.microsoft",
+    "learn.microsoft.com",
+    "status.cloud.google.com",
+    "cloud.google.com",
+    "ocistatus.oraclecloud.com",
+    "docs.oracle.com",
+    "status.salesforce.com",
+    "trust.salesforce.com",
+}
 EXPECTED_STATES = {
     "AL": "Alabama",
     "AK": "Alaska",
@@ -141,6 +155,18 @@ TRANSPARENCY_REQUIRED = [
     "lastVerified",
 ]
 TRANSPARENCY_ALLOWED = set(TRANSPARENCY_REQUIRED)
+STATUS_SOURCE_REQUIRED = [
+    "id",
+    "name",
+    "provider",
+    "providerName",
+    "category",
+    "statusUrl",
+    "docsUrl",
+    "summary",
+    "lastVerified",
+]
+STATUS_SOURCE_ALLOWED = set(STATUS_SOURCE_REQUIRED + ["historyUrl"])
 PROPOSAL_PROVIDER_FIELDS = {
     "service",
     "status",
@@ -750,6 +776,55 @@ def normalized_host(url):
     return host
 
 
+def validate_status_sources(status_data):
+    require_fields(status_data, ["_meta", "sources"], "status.json")
+    if not isinstance(status_data, dict):
+        return []
+
+    meta = status_data.get("_meta", {})
+    require_fields(meta, ["description", "last_verified", "scopeNote"], "status.json._meta")
+    if isinstance(meta, dict):
+        validate_date(meta.get("last_verified"), "status.json._meta.last_verified")
+        for field in ["description", "scopeNote"]:
+            if not str(meta.get(field, "")).strip():
+                err(f"status.json._meta.{field} must not be empty")
+
+    sources = status_data.get("sources", [])
+    if not isinstance(sources, list) or not sources:
+        err("status.json.sources must be a non-empty array")
+        sources = []
+
+    seen_ids = set()
+    for source in sources:
+        source_id = source.get("id", "MISSING") if isinstance(source, dict) else "MISSING"
+        require_fields(source, STATUS_SOURCE_REQUIRED, f"status source '{source_id}'")
+        if not isinstance(source, dict):
+            continue
+        unexpected_fields = set(source) - STATUS_SOURCE_ALLOWED
+        if unexpected_fields:
+            err(f"status source '{source_id}' contains unsupported fields: {sorted(unexpected_fields)}")
+        if source_id in seen_ids:
+            err(f"Duplicate status source id: {source_id}")
+        seen_ids.add(source_id)
+        if source.get("provider") not in VALID_STATUS_SOURCE_PROVIDERS:
+            err(f"status source '{source_id}' invalid provider: {source.get('provider')}")
+        if source.get("category") not in VALID_STATUS_SOURCE_CATEGORY:
+            err(f"status source '{source_id}' invalid category: {source.get('category')}")
+        for field in ["name", "providerName", "summary"]:
+            if not str(source.get(field, "")).strip():
+                err(f"status source '{source_id}'.{field} must not be empty")
+        validate_date(source.get("lastVerified"), f"status source '{source_id}'.lastVerified")
+        for field in ["statusUrl", "docsUrl", "historyUrl"]:
+            if field in source:
+                validate_url(source.get(field), f"status source '{source_id}'.{field}", False)
+                host = normalized_host(source.get(field))
+                if host not in STATUS_SOURCE_DOMAINS:
+                    err(f"status source '{source_id}'.{field} is not on an approved status-source domain: {source.get(field)}")
+
+    info(f"status.json: {len(sources)} official status source(s)")
+    return sources
+
+
 def is_official_source_url(url):
     host = normalized_host(url)
     if host.endswith(".gov"):
@@ -999,7 +1074,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, proposal_links):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, proposal_links):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -1029,6 +1104,9 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
         add_link(mandate.get("url"), f"transparency/{mandate.get('state')}")
     federal_context = transparency_meta.get("federalContext", {}) if isinstance(transparency_meta, dict) else {}
     add_link(federal_context.get("url"), "transparency/federalContext")
+    for source in status_sources:
+        for field in ["statusUrl", "historyUrl", "docsUrl"]:
+            add_link(source.get(field), f"status/{source.get('id')}/{field}")
     for source_url, label in proposal_links:
         add_link(source_url, label)
 
@@ -1078,17 +1156,20 @@ def main():
 
     upcoming = []
     history = []
+    status_sources = []
     if not args.schema_only:
         upcoming_data = load(DATA / "upcoming.json")
         history_data = load(DATA / "history.json")
         transparency_data = load(DATA / "transparency.json")
+        status_data = load(DATA / "status.json")
         sources_data = load(DATA / "sources.json")
-        if upcoming_data is None or history_data is None or transparency_data is None or sources_data is None:
+        if upcoming_data is None or history_data is None or transparency_data is None or status_data is None or sources_data is None:
             print("\n".join(ERRORS))
             return 1
         upcoming = validate_upcoming(upcoming_data)
         history = validate_history(history_data)
         transparency, transparency_meta = validate_transparency(transparency_data)
+        status_sources = validate_status_sources(status_data)
         if isinstance(sources_data, dict):
             info("sources.json: loaded")
     else:
@@ -1096,7 +1177,7 @@ def main():
         transparency_meta = {}
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, proposal_links)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, proposal_links)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")

@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "description": "Official operational status and incident-history source index. This file records where to check current service health; it does not store live uptime or incident state.",
+    "last_verified": "2026-06-30",
+    "scopeNote": "Static reference only. CloudIntelMatrix links to official provider status pages and does not fetch, cache, rank, or summarize live operational state at runtime."
+  },
+  "sources": [
+    {
+      "id": "aws-health",
+      "name": "AWS Health Dashboard",
+      "provider": "aws",
+      "providerName": "AWS",
+      "category": "cloud-provider",
+      "statusUrl": "https://health.aws.amazon.com/health/status",
+      "historyUrl": "https://health.aws.amazon.com/health/status/history",
+      "docsUrl": "https://docs.aws.amazon.com/health/latest/ug/getting-started-phd.html",
+      "summary": "Official AWS service-health dashboard for current public service events and historical status review.",
+      "lastVerified": "2026-06-30"
+    },
+    {
+      "id": "azure-status",
+      "name": "Azure Status",
+      "provider": "azure",
+      "providerName": "Azure",
+      "category": "cloud-provider",
+      "statusUrl": "https://azure.status.microsoft/",
+      "historyUrl": "https://azure.status.microsoft/status/history/",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/service-health/azure-status-overview",
+      "summary": "Official Microsoft Azure global status page for regional service health and outage history.",
+      "lastVerified": "2026-06-30"
+    },
+    {
+      "id": "gcp-service-health",
+      "name": "Google Cloud Service Health",
+      "provider": "gcp",
+      "providerName": "GCP",
+      "category": "cloud-provider",
+      "statusUrl": "https://status.cloud.google.com/",
+      "historyUrl": "https://status.cloud.google.com/summary",
+      "docsUrl": "https://cloud.google.com/service-health/docs/overview",
+      "summary": "Official Google Cloud Service Health page for service incidents, products, regions, and incident history.",
+      "lastVerified": "2026-06-30"
+    },
+    {
+      "id": "oci-status",
+      "name": "Oracle Cloud Infrastructure Status",
+      "provider": "oci",
+      "providerName": "OCI",
+      "category": "cloud-provider",
+      "statusUrl": "https://ocistatus.oraclecloud.com/",
+      "historyUrl": "https://ocistatus.oraclecloud.com/",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/status-service.htm",
+      "summary": "Official Oracle Cloud Infrastructure status page for service health across commercial and government realms.",
+      "lastVerified": "2026-06-30"
+    },
+    {
+      "id": "salesforce-status",
+      "name": "Salesforce Status",
+      "provider": "salesforce",
+      "providerName": "Salesforce",
+      "category": "adjacent-platform",
+      "statusUrl": "https://status.salesforce.com/",
+      "historyUrl": "https://status.salesforce.com/incidents",
+      "docsUrl": "https://trust.salesforce.com/",
+      "summary": "Official Salesforce status and trust surface for platform availability outside the four primary cloud providers.",
+      "lastVerified": "2026-06-30"
+    }
+  ]
+}

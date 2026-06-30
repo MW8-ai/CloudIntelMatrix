@@ -89,6 +89,17 @@ const TRANSPARENCY_COLUMNS = [
   "lastVerified",
 ];
 
+const STATUS_COLUMNS = [
+  "providerName",
+  "category",
+  "name",
+  "summary",
+  "statusUrl",
+  "historyUrl",
+  "docsUrl",
+  "lastVerified",
+];
+
 function asText(value) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join("; ");
@@ -501,6 +512,19 @@ export function buildTransparencyRows(items) {
   }));
 }
 
+export function buildStatusRows(items) {
+  return items.map(item => ({
+    providerName: item.providerName,
+    category: item.category,
+    name: item.name,
+    summary: item.summary,
+    statusUrl: item.statusUrl,
+    historyUrl: item.historyUrl,
+    docsUrl: item.docsUrl,
+    lastVerified: item.lastVerified,
+  }));
+}
+
 export function makeExportData(viewId, label, columns, rows) {
   return {
     viewId,
@@ -529,6 +553,10 @@ export function historyExport(items, meta) {
 
 export function transparencyExport(items) {
   return makeExportData("transparency", "State AI Transparency", TRANSPARENCY_COLUMNS, buildTransparencyRows(items));
+}
+
+export function statusExport(items) {
+  return makeExportData("status", "Operational Status Sources", STATUS_COLUMNS, buildStatusRows(items));
 }
 
 export function downloadCsv(exportData) {
