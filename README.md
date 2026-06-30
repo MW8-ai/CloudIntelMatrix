@@ -49,6 +49,11 @@ Rows are decision aids, not claims that different provider products are identica
 | `region` | Optional provider-level region or realm label when official evidence supports one |
 | `realmClass` | Optional provider-level realm class: `commercial`, `us-gov`, `eu-sovereign`, or `other-sovereign` |
 | `parityLag` | None / Minor / Moderate / Significant / Unknown - separately verified commercial vs regulated comparison |
+| `parityDetail` | Optional provider-level parity rationale surfaced near `parityLag`; sourced through proposals before use |
+| `constraints` | Optional provider-specific constraint notes or structured metadata |
+| `costModel` | Optional provider-specific cost-shape metadata: consumption / provisioned / hybrid, egress sensitivity, and commitment discount availability |
+| `pqcReadiness` | Optional post-quantum cryptography readiness metadata, including status and FIPS endpoint parity when officially sourced |
+| `fedrampLevel` / `dodImpactLevel` | Optional authorization-level metadata when official source evidence supports it; not a workload compliance determination |
 | `architectureNotes` | Operational and architectural context |
 | `operationalConsiderations` | Real-world deployment realities |
 | `tierNotes` | Per-tier notes (Personal / SMB / Enterprise / Government) |
