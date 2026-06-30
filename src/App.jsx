@@ -2008,15 +2008,28 @@ function TransparencyViewDesign({ items, meta }) {
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
   if (!items.length) return null;
-  const visibleItems = open ? items : items.slice(0, 2);
-  const hiddenCount = Math.max(items.length - visibleItems.length, 0);
+  const providerGroups = PROVIDERS.map(providerKey => {
+    const label = providerLabelForKey(providerKey);
+    const providerItems = items.filter(item => item.provider?.toLowerCase() === providerKey);
+    const visibleItems = open ? providerItems : providerItems.slice(0, 2);
+    return {
+      providerKey,
+      label,
+      items: providerItems,
+      visibleItems,
+      hiddenCount: Math.max(providerItems.length - visibleItems.length, 0),
+    };
+  });
+  const visibleCount = providerGroups.reduce((sum, group) => sum + group.visibleItems.length, 0);
+  const hiddenCount = Math.max(items.length - visibleCount, 0);
+
   return (
     <div className="global-news-panel" style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
       <div style={{ padding: "8px 14px", background: "var(--panel-alt)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
           <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", color: "#b45309" }}>GLOBAL CLOUD PROVIDER NEWS</div>
           <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>
-            Announced, preview, and upcoming provider changes. Showing {visibleItems.length} of {items.length}.
+            Official announced, preview, deprecated, and upcoming changes by provider. Showing {visibleCount} of {items.length}.
           </div>
         </div>
         <button
@@ -2028,29 +2041,53 @@ function UpcomingBanner({ items }) {
           {open ? "SHOW LESS" : `SHOW ALL ${items.length}`}
         </button>
       </div>
-      {visibleItems.length > 0 && (
-        <div style={{ padding: "10px 14px", background: "var(--panel)" }}>
-          {visibleItems.map((item, index) => (
-            <div key={item.id} style={{ display: "flex", gap: 8, marginBottom: index === visibleItems.length - 1 ? 0 : 8, paddingBottom: index === visibleItems.length - 1 ? 0 : 8, borderBottom: index === visibleItems.length - 1 ? "none" : "1px solid var(--border)" }}>
-              <div style={{ fontSize: 8, padding: "2px 6px", borderRadius: 3, background: "#78350f", color: "#fbbf24", fontWeight: 700, flexShrink: 0, height: "fit-content", marginTop: 1 }}>
-                {item.status?.toUpperCase()}
-              </div>
-              <div>
-                <div style={{ fontSize: 10, color: PROVIDER_META[item.provider?.toLowerCase()]?.dot || "var(--text)", fontWeight: 600 }}>
-                  {item.provider} - {item.category}
-                  {item.expected_ga && <span style={{ color: "var(--muted)", fontWeight: 400 }}> - Expected: {item.expected_ga}</span>}
+      <div className="global-news-grid" style={{ padding: "10px 14px", background: "var(--panel)" }}>
+        {providerGroups.map(group => {
+          const pm = PROVIDER_META[group.providerKey] || {};
+          return (
+            <section key={group.providerKey} className="global-news-column" style={{ borderTop: `3px solid ${pm.dot || "var(--border)"}` }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+                  <span aria-hidden="true" style={{ display: "inline-block", width: 22, height: 22, borderRadius: 6, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot || "var(--border)"}`, backgroundImage: `url(${LOGOS[group.label]})`, backgroundSize: 14, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
+                  <span style={{ fontSize: 10, fontWeight: 900, color: pm.dot || "var(--text)", letterSpacing: "0.04em" }}>{group.label}</span>
                 </div>
-                <div style={{ fontSize: 10, color: "var(--text)", marginTop: 2 }}>{item.title}</div>
-                {open && <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>{item.detail}</div>}
-                {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", marginTop: 3, display: "block" }}>Official source</a>}
+                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>{group.items.length}</span>
               </div>
-            </div>
-          ))}
-          {!open && hiddenCount > 0 && (
-            <div style={{ marginTop: 8, fontSize: 9, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace" }}>
-              {hiddenCount} more global provider news item(s) hidden.
-            </div>
-          )}
+              <div style={{ display: "grid", gap: 8 }}>
+                {group.visibleItems.map(item => (
+                  <article key={item.id} className="global-news-item">
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 5 }}>
+                      <span style={{ fontSize: 7.5, padding: "2px 5px", borderRadius: 3, background: "#78350f", color: "#fbbf24", fontWeight: 800, letterSpacing: "0.04em" }}>
+                        {item.status?.toUpperCase()}
+                      </span>
+                      <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>{item.category}</span>
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 800, lineHeight: 1.35 }}>{item.title}</div>
+                    {item.expected_ga && (
+                      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--muted)", marginTop: 4 }}>Expected: {item.expected_ga}</div>
+                    )}
+                    {open && <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45, marginTop: 5 }}>{item.detail}</div>}
+                    {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", marginTop: 6, display: "inline-block", fontWeight: 700, textDecoration: "none" }}>Official source</a>}
+                  </article>
+                ))}
+                {!group.visibleItems.length && (
+                  <div style={{ padding: "10px 11px", border: "1px dashed var(--border)", borderRadius: 6, color: "var(--muted)", fontSize: 9, lineHeight: 1.45 }}>
+                    No tracked {group.label} provider news items.
+                  </div>
+                )}
+                {!open && group.hiddenCount > 0 && (
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--faint)", fontWeight: 800 }}>
+                    +{group.hiddenCount} more {group.label} item(s)
+                  </div>
+                )}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+      {!open && hiddenCount > 0 && (
+        <div style={{ padding: "0 14px 10px", fontSize: 9, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace" }}>
+          {hiddenCount} more global provider news item(s) hidden.
         </div>
       )}
     </div>
@@ -2620,6 +2657,25 @@ export default function App() {
           line-height: 1.25;
           text-decoration: none;
         }
+        .global-news-grid {
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 10px;
+        }
+        .global-news-column {
+          min-width: 0;
+          padding: 10px;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: var(--panel-alt);
+        }
+        .global-news-item {
+          min-width: 0;
+          padding: 9px 10px;
+          border: 1px solid var(--border);
+          border-radius: 7px;
+          background: var(--panel);
+        }
         .ai-focus-section-head {
           display: flex;
           align-items: center;
@@ -2718,6 +2774,7 @@ export default function App() {
           .primary-filter-grid.matrix-primary.no-density,
           .matrix-lens-grid,
           .design-evidence-columns,
+          .global-news-grid,
           .ai-focus-grid { grid-template-columns: 1fr; }
           .top-nav { gap: 6px; padding-bottom: 8px; }
           .top-nav-tab {
