@@ -1,0 +1,186 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Unapproved provider metadata proposals for the Virtual Machines row. Adds region and realm-class candidates only where official sources support the label.",
+    "generatedOn": "2026-06-30",
+    "approved": false,
+    "targetFields": [
+      "provider.region",
+      "provider.realmClass"
+    ],
+    "matrixVersion": "3.16.6",
+    "matrixLastVerified": "2026-06-24",
+    "sourceRule": "Only official primary sources are valid. Leave fields absent when the source does not support a specific region or realm class."
+  },
+  "workItems": [
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "region",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Amazon EC2",
+      "reason": "Add a provider-level region or realm label for the official AWS GovCloud EC2 source.",
+      "docsUrl": "https://docs.aws.amazon.com/ec2/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+      "sourceHints": [
+        "Use the AWS GovCloud EC2 page and AWS GovCloud region naming."
+      ]
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "realmClass",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Amazon EC2",
+      "reason": "Classify the AWS GovCloud EC2 evidence as the provider-neutral U.S. government realm class.",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "azure",
+      "field": "region",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Azure Virtual Machines",
+      "reason": "Add a provider-level region or realm label for Azure Government virtual machine evidence.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "azure",
+      "field": "realmClass",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Azure Virtual Machines",
+      "reason": "Classify the Azure Government virtual machine evidence as the provider-neutral U.S. government realm class.",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "gcp",
+      "field": "region",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Compute Engine",
+      "reason": "Add a provider-level label for the current GCP Assured Workloads evidence while leaving realmClass unresolved.",
+      "docsUrl": "https://cloud.google.com/compute/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "Assured Workloads is a control-package model; do not force us-gov/eu-sovereign without a product decision."
+      ]
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "gcp",
+      "field": "realmClass",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Compute Engine",
+      "reason": "Decision needed: model Assured Workloads as a realm class, a control package, or both.",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "oci",
+      "field": "region",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "OCI Compute",
+      "reason": "Add a provider-level region or realm label for the Oracle U.S. Government Cloud source.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "oci",
+      "field": "realmClass",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "OCI Compute",
+      "reason": "Classify Oracle U.S. Government Cloud evidence as the provider-neutral U.S. government realm class.",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm"
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "region",
+      "currentValue": null,
+      "proposedValue": "AWS GovCloud (US)",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+      "sourceQuote": "AWS GovCloud (US) Regions",
+      "rationale": "The AWS GovCloud EC2 source is scoped to AWS GovCloud (US), so the provider-level region label should be recorded as AWS GovCloud (US).",
+      "proposedOn": "2026-06-30"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "realmClass",
+      "currentValue": null,
+      "proposedValue": "us-gov",
+      "sourceUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+      "sourceQuote": "AWS GovCloud (US) Regions",
+      "rationale": "AWS GovCloud (US) is a U.S. government cloud environment, so the provider-neutral realm class is us-gov.",
+      "proposedOn": "2026-06-30"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "azure",
+      "field": "region",
+      "currentValue": null,
+      "proposedValue": "Azure Government",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceQuote": "Azure Government: A dedicated cloud",
+      "rationale": "Microsoft's official Azure Government roadmap identifies Azure Government as the dedicated cloud context for the mapped virtual machine evidence.",
+      "proposedOn": "2026-06-30"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "azure",
+      "field": "realmClass",
+      "currentValue": null,
+      "proposedValue": "us-gov",
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceQuote": "Azure Government: A dedicated cloud",
+      "rationale": "Azure Government is the U.S. government cloud context for this evidence, so the provider-neutral realm class is us-gov.",
+      "proposedOn": "2026-06-30"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "gcp",
+      "field": "region",
+      "currentValue": null,
+      "proposedValue": "Assured Workloads control packages",
+      "sourceUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceQuote": "Compute Engine",
+      "rationale": "Google lists Compute Engine in the official Assured Workloads supported-products source; record the provider-level label as Assured Workloads control packages while leaving realmClass unresolved.",
+      "proposedOn": "2026-06-30"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "oci",
+      "field": "region",
+      "currentValue": null,
+      "proposedValue": "Oracle U.S. Government Cloud",
+      "sourceUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceQuote": "Oracle US Government Cloud",
+      "rationale": "Oracle's official government cloud source identifies Oracle U.S. Government Cloud as the relevant environment for this evidence.",
+      "proposedOn": "2026-06-30"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "oci",
+      "field": "realmClass",
+      "currentValue": null,
+      "proposedValue": "us-gov",
+      "sourceUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceQuote": "Oracle US Government Cloud",
+      "rationale": "Oracle U.S. Government Cloud is a U.S. government cloud environment, so the provider-neutral realm class is us-gov.",
+      "proposedOn": "2026-06-30"
+    }
+  ]
+}
