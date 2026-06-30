@@ -1,6 +1,6 @@
 # CloudIntelMatrix TODO
 
-Last updated: 2026-06-29
+Last updated: 2026-06-30
 
 This is the working roadmap for the next small pull requests. Keep factual data changes proposal-only unless a human has approved applying proposals through `scripts/apply_proposals.py`.
 
@@ -45,6 +45,24 @@ This is the working roadmap for the next small pull requests. Keep factual data 
    - Keep Azure MRC update monitoring healthy.
    - Identify a reliable official OCI release feed or API before automating OCI updates.
    - Keep scheduled link-check output actionable and avoid recurring non-actionable pricing-page noise.
+
+6. Plan the next schema-depth pass from the v3.13 work order.
+   - Treat this as a design/schema PR before any matrix data migration.
+   - Candidate optional provider fields: `parityDetail`, `constraints`, `previewTerms`, `costModel`, `region`, `eduUrl`, and `fedrampLevel`.
+   - Keep `formerNames` as already implemented provider metadata.
+   - Reuse the existing `status` enum for maturity unless a real product need proves a separate field is cleaner.
+   - Update `data/schema.json`, `scripts/verify.py`, `scripts/generate_xlsx.py`, `src/App.jsx`, and proposal validation together if new factual provider fields are added.
+
+7. Add a provider-neutral PQC readiness plan before changing matrix data.
+   - Scope PQC to existing Security & Compliance / Identity decision rows, not a new top-level category.
+   - Candidate optional provider field: `pqcReadiness` with KEM, signature, TLS, private CA, status, milestone date, FIPS endpoint parity, and official source.
+   - Use official standards and provider documentation only: NIST FIPS 203/204/205, provider PQC docs, and documented CNSA 2.0 milestone dates.
+   - Keep Azure and OCI values `Unknown` unless official Microsoft or Oracle sources support stronger claims.
+   - Treat quantum-compute services as experimental timeline/context items, not decision-grade regulated capability rows.
+
+8. Clean up the remaining CodeQL workflow annotation.
+   - `codeql.yml` uses `github/codeql-action@v4`, but still uses `actions/checkout@v4`.
+   - Other workflows already use `actions/checkout@v6`; update CodeQL checkout in a tiny workflow-only PR to remove the Node 20 forced-runtime annotation.
 
 ## Highest-Value Unknown Areas
 
