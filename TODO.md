@@ -46,6 +46,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
    - Identify a reliable official OCI release feed or API before automating OCI updates.
    - Keep scheduled link-check output actionable and avoid recurring non-actionable pricing-page noise.
    - Operational status source links now live in `data/status.json`; future live-status or uptime snapshots should use scheduled ingestion, not runtime browser fetches.
+   - AI lab watch source links now live in `data/ai_watch.json`; future model-release snapshots should use scheduled ingestion from documented official feeds, not runtime browser fetches.
 
 6. Plan the next schema-depth pass from the v3.13 work order.
    - Treat this as a design/schema PR before any matrix data migration.
