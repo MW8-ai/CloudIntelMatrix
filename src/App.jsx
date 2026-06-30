@@ -70,13 +70,13 @@ const MATRIX_DENSITIES = ["Detailed", "Compact"];
 
 const THEME_TOKENS = {
   light: {
-    "--bg": "#f5f5f1",
+    "--bg": "#f6f8fb",
     "--header-bg": "#ffffff",
     "--panel": "#ffffff",
-    "--panel-alt": "#fbfbf9",
+    "--panel-alt": "#f9fbfd",
     "--text": "#1b1c20",
     "--muted": "#71747c",
-    "--border": "#e7e6e0",
+    "--border": "#dfe5ee",
     "--link": "#0b62b9",
     "--selected-bg": "#dceeff",
     "--selected-text": "#064f9f",
@@ -92,9 +92,9 @@ const THEME_TOKENS = {
     "--review-border": "#cbd5e1",
     "--ink2": "#4a4d57",
     "--faint": "#8896aa",
-    "--head": "#f0efeb",
-    "--rowalt": "#faf9f6",
-    "--border2": "#eeede8",
+    "--head": "#eef2f7",
+    "--rowalt": "#f8fafc",
+    "--border2": "#e8edf4",
     "--shadow": "rgba(22,22,20,.07)",
     "--cols": "minmax(240px, 1.15fr) repeat(4, minmax(170px, 1fr))",
   },
@@ -788,8 +788,8 @@ function truncateText(value, maxLength = 120) {
 
 function getProviderPreviewText(provider, tier) {
   return truncateText(
-    provider.note ||
     (tier ? provider.tierNotes?.[tier] : "") ||
+    provider.note ||
     provider.variant,
     128
   );
@@ -806,24 +806,68 @@ function getProviderQuickLinks(provider) {
 
 function MatrixCoverageStrip({ rows, activeProviders }) {
   const statuses = ["Full", "Partial", "Limited", "None", "Unknown"];
+  const evidenceStatuses = new Set(["Full", "Partial", "Limited"]);
+  const [expandedProvider, setExpandedProvider] = useState(null);
+  const providerSummaries = activeProviders.map(providerKey => {
+    const label = providerLabelForKey(providerKey);
+    const pm = PROVIDER_META[providerKey];
+    const counts = Object.fromEntries(statuses.map(status => [status, 0]));
+    const detailRows = rows.map(row => {
+      const provider = row.providers?.[label];
+      const status = provider?.gov || "Unknown";
+      counts[status] = (counts[status] || 0) + 1;
+      return {
+        cap: row.cap,
+        category: row.cat,
+        status,
+        parity: provider?.lag || "Unknown",
+        service: provider?.svc || "Not mapped",
+        variant: provider?.variant || "Region or realm not structured",
+        lastVerified: row.lastVerified || "Not recorded",
+        source: provider?.govdoc || provider?.doc || "",
+        note: provider?.note || "",
+      };
+    });
+    const total = rows.length || 1;
+    const documented = counts.Full + counts.Partial + counts.Limited;
+    const unresolved = counts.None + counts.Unknown;
+    return {
+      providerKey,
+      label,
+      pm,
+      counts,
+      detailRows,
+      evidenceRows: detailRows.filter(row => evidenceStatuses.has(row.status)),
+      gapRows: detailRows.filter(row => !evidenceStatuses.has(row.status)),
+      total,
+      documented,
+      unresolved,
+    };
+  });
+  const expandedSummary = providerSummaries.find(summary => summary.providerKey === expandedProvider);
+
+  function toggleExpandedProvider(providerKey) {
+    setExpandedProvider(current => current === providerKey ? null : providerKey);
+  }
 
   return (
     <div>
       <div className="design-coverage-strip">
-        {activeProviders.map(providerKey => {
-          const label = providerLabelForKey(providerKey);
-          const pm = PROVIDER_META[providerKey];
-          const counts = Object.fromEntries(statuses.map(status => [status, 0]));
-          rows.forEach(row => {
-            const status = row.providers?.[label]?.gov || "Unknown";
-            counts[status] = (counts[status] || 0) + 1;
-          });
-          const total = rows.length || 1;
-          const documented = counts.Full + counts.Partial + counts.Limited;
-          const unresolved = counts.None + counts.Unknown;
+        {providerSummaries.map(summary => {
+          const { providerKey, label, pm, counts, total, documented, unresolved } = summary;
+          const isExpanded = expandedProvider === providerKey;
 
           return (
-            <div key={providerKey} className="design-coverage-card">
+            <button
+              key={providerKey}
+              type="button"
+              className="design-coverage-card hb"
+              onClick={() => toggleExpandedProvider(providerKey)}
+              aria-expanded={isExpanded}
+              aria-controls={`evidence-detail-${providerKey}`}
+              title={`Show ${label} evidence rows`}
+              style={{ borderColor: isExpanded ? pm.dot : "var(--border)" }}
+            >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                   <span aria-hidden="true" style={{ display: "inline-block", width: 28, height: 28, borderRadius: 7, backgroundColor: "#fff", border: "1px solid var(--border)", boxShadow: `inset 0 -2px 0 ${pm.dot}`, backgroundImage: `url(${LOGOS[label]})`, backgroundSize: 17, backgroundPosition: "center", backgroundRepeat: "no-repeat", flexShrink: 0 }} />
@@ -831,7 +875,7 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                 </div>
                 <div style={{ textAlign: "right" }}>
                   <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 20, fontWeight: 700, color: "var(--text)", lineHeight: 1 }}>{documented}/{rows.length}</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 700, color: "var(--faint)", marginTop: 3, textTransform: "uppercase" }}>evidence found</div>
+                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 700, color: "var(--faint)", marginTop: 3, textTransform: "uppercase" }}>availability evidence</div>
                 </div>
               </div>
               <div style={{ height: 7, borderRadius: 4, overflow: "hidden", background: "var(--border2)", display: "flex" }}>
@@ -846,12 +890,89 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
               <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", lineHeight: 1.45, marginTop: 7 }}>
                 {counts.Full} full / {counts.Partial} partial / {counts.Limited} limited / {unresolved} none or unknown
               </div>
-            </div>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, color: isExpanded ? pm.dot : "var(--faint)", lineHeight: 1.45, marginTop: 7, fontWeight: 800 }}>
+                {isExpanded ? "Hide row detail" : "Show row detail"}
+              </div>
+            </button>
           );
         })}
       </div>
+      {expandedSummary && (
+        <div id={`evidence-detail-${expandedSummary.providerKey}`} className="design-coverage-detail" style={{ borderColor: expandedSummary.pm.border }}>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 10, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: expandedSummary.pm.dot, letterSpacing: "0.1em", fontWeight: 900, textTransform: "uppercase" }}>
+                {expandedSummary.label} evidence detail
+              </div>
+              <div style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.55, marginTop: 4 }}>
+                Found means the visible row has Full, Partial, or Limited regulated-availability evidence. None and Unknown stay in the gap list.
+              </div>
+            </div>
+            <button
+              type="button"
+              className="hb"
+              onClick={() => setExpandedProvider(null)}
+              style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", color: "var(--muted)", padding: "5px 9px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 800 }}
+            >
+              Close
+            </button>
+          </div>
+          <div className="design-evidence-columns">
+            {[
+              { title: `Evidence found (${expandedSummary.evidenceRows.length})`, rows: expandedSummary.evidenceRows },
+              { title: `Needs evidence or unavailable (${expandedSummary.gapRows.length})`, rows: expandedSummary.gapRows },
+            ].map(group => (
+              <div key={group.title} style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--faint)", letterSpacing: "0.08em", fontWeight: 900, textTransform: "uppercase", marginBottom: 8 }}>
+                  {group.title}
+                </div>
+                <div className="design-evidence-list">
+                  {group.rows.length === 0 && (
+                    <div style={{ padding: "10px 11px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--panel)", color: "var(--muted)", fontSize: 11 }}>
+                      No visible rows in this group.
+                    </div>
+                  )}
+                  {group.rows.map(row => {
+                    const statusStyle = GOV_AVAIL_STYLES[row.status] || GOV_AVAIL_STYLES.Unknown;
+                    return (
+                      <div key={`${expandedSummary.providerKey}-${group.title}-${row.cap}`} className="design-evidence-row">
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontSize: 11.5, color: "var(--text)", fontWeight: 800, lineHeight: 1.35 }}>{row.cap}</div>
+                            <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>{row.category}</div>
+                          </div>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "2px 6px", borderRadius: 5, background: statusStyle.bg, color: statusStyle.fg, border: `1px solid ${statusStyle.border}`, fontSize: 9, fontWeight: 800, flexShrink: 0 }}>
+                            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: "50%", background: statusStyle.dot }} />
+                            {row.status}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: 10, color: "var(--ink2)", lineHeight: 1.45, marginTop: 7 }}>{row.service}</div>
+                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 7, fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
+                          <div><strong style={{ color: "var(--text)" }}>Variant:</strong> {row.variant}</div>
+                          <div><strong style={{ color: "var(--text)" }}>Last checked:</strong> {row.lastVerified}</div>
+                        </div>
+                        {row.note && (
+                          <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45, marginTop: 7 }}>{truncateText(row.note, 150)}</div>
+                        )}
+                        {row.source && (
+                          <a href={row.source} target="_blank" rel="noopener noreferrer" className="design-source-link" style={{ marginTop: 8 }}>
+                            Official source
+                          </a>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 9, color: "var(--faint)", lineHeight: 1.55, marginTop: 10 }}>
+            Last checked is currently capability-level. Provider-specific dates and structured region or realm class are planned schema work.
+          </div>
+        </div>
+      )}
       <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", lineHeight: 1.6, marginBottom: 18 }}>
-        Evidence found counts only Full, Partial, and Limited regulated availability from official sources. None and Unknown remain visible so gaps are not hidden.
+        Availability evidence counts visible capability rows where official sources support Full, Partial, or Limited regulated availability. It is not a document count, and the denominator changes with filters.
       </div>
     </div>
   );
@@ -2357,11 +2478,43 @@ export default function App() {
           gap: 10px;
         }
         .design-coverage-card {
+          width: 100%;
           padding: 14px 15px;
           border: 1px solid var(--border);
           border-radius: 12px;
           background: var(--panel);
           box-shadow: 0 1px 2px var(--shadow);
+          color: inherit;
+          font-family: inherit;
+          text-align: left;
+          appearance: none;
+        }
+        .design-coverage-detail {
+          margin: 10px 0 10px;
+          padding: 13px 14px;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          background: var(--panel-alt);
+          box-shadow: 0 1px 2px var(--shadow);
+        }
+        .design-evidence-columns {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 12px;
+        }
+        .design-evidence-list {
+          display: grid;
+          gap: 7px;
+          max-height: 360px;
+          overflow: auto;
+          padding-right: 3px;
+        }
+        .design-evidence-row {
+          padding: 10px 11px;
+          border: 1px solid var(--border);
+          border-radius: 7px;
+          background: var(--panel);
+          min-width: 0;
         }
         .design-read-key-grid {
           display: grid;
@@ -2564,6 +2717,7 @@ export default function App() {
           .primary-filter-grid.matrix-primary,
           .primary-filter-grid.matrix-primary.no-density,
           .matrix-lens-grid,
+          .design-evidence-columns,
           .ai-focus-grid { grid-template-columns: 1fr; }
           .top-nav { gap: 6px; padding-bottom: 8px; }
           .top-nav-tab {
@@ -2638,10 +2792,10 @@ export default function App() {
             </div>
             <div>
               <div style={{ fontSize: 9, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.15em", color: "var(--muted)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase" }}>
-                Cloud Intelligence Matrix
+                Regulated cloud capability intelligence
               </div>
               <div style={{ fontSize: 26, fontWeight: 700, color: "var(--text)", lineHeight: 1.15 }}>
-                Regulated cloud capability intelligence
+                Cloud Provider Intelligence Matrix
               </div>
               <div style={{ fontSize: 13.5, color: "var(--ink2)", lineHeight: 1.55, marginTop: 6, maxWidth: 620 }}>
                 Which services are usable in each provider's government / sovereign cloud and how far commercial capabilities extend into regulated environments.

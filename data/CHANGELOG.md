@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-30 - Matrix evidence clarity
+- Clarified Matrix provider evidence counts, added expandable found/gap row detail, prioritized selected tier notes in Matrix previews, updated the product title copy, and moved light mode to a cooler neutral palette.
+
 ## 2026-06-29 - Matrix filter and news polish
 - Replaced Matrix coverage percentages with official-source evidence counts, moved Matrix export controls into the primary filter row, made the top navigation wrap on narrow screens, and renamed the upcoming panel as global cloud provider news with two visible items by default.
 
