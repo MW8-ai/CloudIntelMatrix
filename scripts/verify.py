@@ -22,6 +22,7 @@ CLASSIFICATION_TAGS = {"STANDARD", "AI_CAPABLE", "AI_NATIVE"}
 VALID_GOV = {"Full", "Partial", "Limited", "None", "Unknown"}
 VALID_PARITY = {"None", "Minor", "Moderate", "Significant", "Unknown"}
 VALID_STATUS = {"GA", "Preview", "Deprecated", "Retiring", "Unknown"}
+VALID_REALM_CLASS = {"commercial", "us-gov", "eu-sovereign", "other-sovereign"}
 VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
 VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
@@ -146,6 +147,9 @@ PROPOSAL_PROVIDER_FIELDS = {
     "govAvailability",
     "parityLag",
     "govVariant",
+    "region",
+    "realmClass",
+    "lastVerified",
     "formerNames",
     "docsUrl",
     "pricingUrl",
@@ -204,7 +208,7 @@ PROV_REQUIRED = [
     "complianceUrl",
     "tierNotes",
 ]
-PROV_ALLOWED = set(PROV_REQUIRED + ["formerNames", "govVariant", "govDocsUrl", "sourceNotes"])
+PROV_ALLOWED = set(PROV_REQUIRED + ["formerNames", "govVariant", "region", "realmClass", "lastVerified", "govDocsUrl", "sourceNotes"])
 
 ERRORS = []
 WARNINGS = []
@@ -423,6 +427,12 @@ def validate_matrix(mdata):
                 err(f"'{name}/{pkey}' invalid parityLag: {provider.get('parityLag')}")
             if any(provider.get(field) == "Unknown" for field in ["status", "govAvailability", "parityLag"]) and not notes_available:
                 err(f"'{name}/{pkey}' has Unknown facts without sourceNotes")
+            if "lastVerified" in provider:
+                validate_date(provider.get("lastVerified"), f"'{name}/{pkey}'.lastVerified")
+            if "region" in provider and not str(provider.get("region", "")).strip():
+                err(f"'{name}/{pkey}'.region must be a non-empty string when present")
+            if "realmClass" in provider and provider.get("realmClass") not in VALID_REALM_CLASS:
+                err(f"'{name}/{pkey}' invalid realmClass: {provider.get('realmClass')}")
 
             for field in ["docsUrl", "pricingUrl", "complianceUrl"]:
                 validate_url(provider.get(field), f"'{name}/{pkey}'.{field}", notes_available)
@@ -762,6 +772,12 @@ def proposal_value_valid(field, value, label):
         err(f"{label}.proposedValue invalid for govAvailability: {value}")
     elif field == "parityLag" and value not in VALID_PARITY:
         err(f"{label}.proposedValue invalid for parityLag: {value}")
+    elif field == "realmClass" and value not in VALID_REALM_CLASS:
+        err(f"{label}.proposedValue invalid for realmClass: {value}")
+    elif field == "lastVerified":
+        validate_date(value, f"{label}.proposedValue for lastVerified")
+    elif field == "region" and not str(value or "").strip():
+        err(f"{label}.proposedValue for region must not be empty")
     elif field in PROPOSAL_FACT_URL_FIELDS:
         validate_url(value, f"{label}.proposedValue", True)
     elif field == "govVariant" and value is not None and not str(value).strip():

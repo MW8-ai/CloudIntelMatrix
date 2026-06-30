@@ -823,7 +823,9 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
         parity: provider?.lag || "Unknown",
         service: provider?.svc || "Not mapped",
         variant: provider?.variant || "Region or realm not structured",
-        lastVerified: row.lastVerified || "Not recorded",
+        region: provider?.region || "",
+        realmClass: provider?.realmClass || "",
+        lastVerified: provider?.lastVerified || row.lastVerified || "Not recorded",
         source: provider?.govdoc || provider?.doc || "",
         note: provider?.note || "",
       };
@@ -951,6 +953,12 @@ function MatrixCoverageStrip({ rows, activeProviders }) {
                           <div><strong style={{ color: "var(--text)" }}>Variant:</strong> {row.variant}</div>
                           <div><strong style={{ color: "var(--text)" }}>Last checked:</strong> {row.lastVerified}</div>
                         </div>
+                        {(row.region || row.realmClass) && (
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 5, fontSize: 9, color: "var(--muted)", lineHeight: 1.45 }}>
+                            <div><strong style={{ color: "var(--text)" }}>Region:</strong> {row.region || "Not structured"}</div>
+                            <div><strong style={{ color: "var(--text)" }}>Realm:</strong> {row.realmClass || "Not structured"}</div>
+                          </div>
+                        )}
                         {row.note && (
                           <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45, marginTop: 7 }}>{truncateText(row.note, 150)}</div>
                         )}
@@ -1286,6 +1294,28 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
                   <div style={{ marginBottom: 10 }}>
                     <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Regulated variant</div>
                     <div style={{ fontSize: 12, color: "var(--ink2)" }}>{provider.variant}</div>
+                  </div>
+                )}
+                {(provider.region || provider.realmClass || provider.lastVerified) && (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9, marginBottom: 10 }}>
+                    {provider.region && (
+                      <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px" }}>
+                        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Region</div>
+                        <div style={{ fontSize: 11.5, color: "var(--ink2)", lineHeight: 1.4 }}>{provider.region}</div>
+                      </div>
+                    )}
+                    {provider.realmClass && (
+                      <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px" }}>
+                        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Realm class</div>
+                        <div style={{ fontSize: 11.5, color: "var(--ink2)", lineHeight: 1.4 }}>{provider.realmClass}</div>
+                      </div>
+                    )}
+                    {provider.lastVerified && (
+                      <div style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px" }}>
+                        <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Provider checked</div>
+                        <div style={{ fontSize: 11.5, color: "var(--ink2)", lineHeight: 1.4 }}>{provider.lastVerified}</div>
+                      </div>
+                    )}
                   </div>
                 )}
                 {provider.note && (
@@ -2327,7 +2357,7 @@ export default function App() {
     { id: "patterns",     label: "Architecture Patterns", iconKey: "blocks",        desc: "Architecture planning overlays" },
     { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
-    { id: "transparency", label: "Transparency",          iconKey: null,            desc: "State AI governance public record" },
+    { id: "transparency", label: "AI Transparency",       iconKey: null,            desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
   const providerControlModes = ["matrix", "patterns", "history"];

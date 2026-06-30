@@ -19,6 +19,9 @@ PROVIDER_FIELDS = {
     "govAvailability",
     "parityLag",
     "govVariant",
+    "region",
+    "realmClass",
+    "lastVerified",
     "formerNames",
     "docsUrl",
     "pricingUrl",
@@ -29,6 +32,7 @@ ENUMS = {
     "status": {"GA", "Preview", "Deprecated", "Retiring", "Unknown"},
     "govAvailability": {"Full", "Partial", "Limited", "None", "Unknown"},
     "parityLag": {"None", "Minor", "Moderate", "Significant", "Unknown"},
+    "realmClass": {"commercial", "us-gov", "eu-sovereign", "other-sovereign"},
 }
 URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
 COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
@@ -179,6 +183,13 @@ def validate_proposed_value(proposal, index):
         raise ProposalError(f"proposal[{index}].proposedValue for service must not be empty")
     if field in ENUMS and value not in ENUMS[field]:
         raise ProposalError(f"proposal[{index}].proposedValue invalid for {field}: {value}")
+    if field == "lastVerified":
+        try:
+            date.fromisoformat(value or "")
+        except ValueError as exc:
+            raise ProposalError(f"proposal[{index}].proposedValue for lastVerified must be YYYY-MM-DD") from exc
+    if field == "region" and not str(value or "").strip():
+        raise ProposalError(f"proposal[{index}].proposedValue for region must not be empty")
     if field in FACT_URL_FIELDS:
         validate_url(value, f"proposal[{index}].proposedValue")
     if field == "govVariant" and value is not None and not str(value).strip():
@@ -233,6 +244,8 @@ def apply_payload(matrix, payload, source_label):
                 provider.pop(field, None)
             else:
                 provider[field] = proposal.get("proposedValue")
+            if field != "lastVerified":
+                provider["lastVerified"] = proposal["proposedOn"]
             append_source_note(provider, proposal)
             touched_capabilities[(proposal["capability"], provider_key)] = proposal["proposedOn"]
             touched_records[(proposal["capability"], provider_key)] = proposal["proposedOn"]

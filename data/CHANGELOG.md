@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-06-30 - Provider metadata scaffold
+- Added optional provider-level `region`, `realmClass`, and `lastVerified` scaffolding across schema validation, proposals, design view-model mapping, UI detail display, CSV/XLSX exports, and documentation without changing matrix fact values.
+- Renamed the Transparency tab to AI Transparency for clearer scope.
+
 ## 2026-06-30 - Provider news columns
 - Reworked the global cloud provider news panel into AWS, Azure, GCP, and OCI columns using the existing official-source upcoming data, with two visible items per provider by default and expandable detail preserved.
 

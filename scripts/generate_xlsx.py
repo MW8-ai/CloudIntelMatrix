@@ -174,10 +174,10 @@ def build_detail_sheet(ws):
     """Full detail: one row per capability×provider with arch notes and operational considerations."""
     ws.sheet_view.showGridLines = False
     ws.freeze_panes = "A3"
-    hdr(ws, "Capability Detail — Architecture Notes · Operational Considerations · All Tier Notes", 13)
+    hdr(ws, "Capability Detail - Architecture Notes - Operational Considerations - All Tier Notes", 16)
 
     hdrs = ["Category","Capability","Provider","Service","Former Names","Gov Avail","Parity Lag","Gov Variant",
-            "Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
+            "Region","Realm Class","Provider Verified","Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("1E3A5F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -192,7 +192,7 @@ def build_detail_sheet(ws):
             vals = [
                 cap["category"], cap["capability"], PROV_LABELS[pkey],
                 prov.get("service",""), cell_text(prov.get("formerNames","")), prov.get("govAvailability",""), prov.get("parityLag",""),
-                prov.get("govVariant",""),
+                prov.get("govVariant",""), prov.get("region",""), prov.get("realmClass",""), prov.get("lastVerified",""),
                 prov.get("docsUrl",""), prov.get("pricingUrl",""), prov.get("complianceUrl",""),
                 cap.get("architectureNotes",""), cap.get("operationalConsiderations",""),
             ]
@@ -203,7 +203,7 @@ def build_detail_sheet(ws):
             ws.row_dimensions[row].height = 40
             row += 1
 
-    for col, w in {"A":16,"B":22,"C":8,"D":30,"E":32,"F":12,"G":14,"H":26,"I":44,"J":44,"K":44,"L":60,"M":60}.items():
+    for col, w in {"A":16,"B":22,"C":8,"D":30,"E":32,"F":12,"G":14,"H":26,"I":24,"J":16,"K":14,"L":44,"M":44,"N":44,"O":60,"P":60}.items():
         ws.column_dimensions[col].width = w
 
 def build_gov_sheet(ws):
@@ -580,7 +580,7 @@ def build_upcoming_sheet(ws):
 MATRIX_EXPORT_HEADERS = [
     "capability", "category", "tags", "aiClassification", "provider", "service",
     "formerNames", "status", "govAvailability", "parityLag", "govVariant", "docsUrl", "govDocsUrl",
-    "complianceUrl", "pricingUrl", "lastVerified", "sourceNotes",
+    "region", "realmClass", "providerLastVerified", "complianceUrl", "pricingUrl", "lastVerified", "sourceNotes",
 ]
 PATTERN_EXPORT_HEADERS = [
     "pattern", "summary", "whenToUse", "capability", "category", "provider",
@@ -627,6 +627,9 @@ def matrix_export_rows(caps):
                 "govAvailability": provider.get("govAvailability", ""),
                 "parityLag": provider.get("parityLag", ""),
                 "govVariant": provider.get("govVariant", ""),
+                "region": provider.get("region", ""),
+                "realmClass": provider.get("realmClass", ""),
+                "providerLastVerified": provider.get("lastVerified", ""),
                 "docsUrl": provider.get("docsUrl", ""),
                 "govDocsUrl": provider.get("govDocsUrl", ""),
                 "complianceUrl": provider.get("complianceUrl", ""),
