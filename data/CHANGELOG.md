@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-01 - AI tab icons
+- Added visible navigation icons for the AI Watch and AI Transparency tabs using existing local UI icon assets.
+
 ## 2026-06-30 - Provider depth scaffold
 - Added optional provider-level `parityDetail`, `constraints`, `costModel`, `pqcReadiness`, `fedrampLevel`, and `dodImpactLevel` scaffolding across schema validation, proposal validation, design view-model mapping, UI detail display, CSV/XLSX exports, and documentation without changing matrix fact values.
 - Preserved the existing provider `region` string and `realmClass` enum; no region-object migration or provider fact population was performed.

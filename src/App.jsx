@@ -2638,8 +2638,8 @@ export default function App() {
     { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
     { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
-    { id: "ai-watch",     label: "AI Watch",              iconKey: null,            desc: "Official model release source index" },
-    { id: "transparency", label: "AI Transparency",       iconKey: null,            desc: "State AI governance public record" },
+    { id: "ai-watch",     label: "AI Watch",              iconKey: "brain-circuit", desc: "Official model release source index" },
+    { id: "transparency", label: "AI Transparency",       iconKey: "landmark",      desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
   const providerControlModes = ["matrix", "patterns", "history"];
