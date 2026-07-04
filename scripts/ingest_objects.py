@@ -4,9 +4,12 @@
 Usage:
   python scripts/ingest_objects.py --field pqcReadiness --data verified_batch2_pqc.json --dry-run
   python scripts/ingest_objects.py --field fedramp --data fedramp_candidates.json --dry-run
+  python scripts/ingest_objects.py --field residency --data residency_row20.json --dry-run
 
 Input JSON:
   [{"capability": "<exact name>", "provider": "aws|azure|gcp|oci", "object": {...}}, ...]
+
+For residency, `object` is an array of offering objects.
 
 For field-specific bundles, the payload can also be under the field name:
   {"capability": "...", "provider": "aws", "fedramp": {...}}
@@ -25,6 +28,7 @@ PQC_PARITY = {"AtParity", "Lagging", "Unknown"}
 CONFIDENCE = {"High", "Medium", "Low"}
 FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
 FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
+RESIDENCY_STATUS = {"GA", "Announced", "Preview", "Launching"}
 VALIDATORS = {}
 
 
@@ -129,8 +133,35 @@ def validate_fedramp(value, where, errors):
         validate_fedramp_environment(value.get("government"), f"{where}: fedramp.government", errors, government=True)
 
 
+def validate_residency(value, where, errors):
+    if not isinstance(value, list) or not value:
+        add_error(errors, f"{where}: residency must be a non-empty array")
+        return
+    required = {"offering", "guarantee", "geography", "status", "source", "firstParty"}
+    for index, item in enumerate(value):
+        item_where = f"{where}: residency[{index}]"
+        if not isinstance(item, dict):
+            add_error(errors, f"{item_where}: must be an object")
+            continue
+        extra = set(item) - required
+        if extra:
+            add_error(errors, f"{item_where}: unsupported fields {sorted(extra)}")
+        missing = required - set(item)
+        if missing:
+            add_error(errors, f"{item_where}: missing fields {sorted(missing)}")
+        for field in ["offering", "guarantee", "geography"]:
+            validate_string(item.get(field), f"{item_where}.{field}", errors)
+        if item.get("status") not in RESIDENCY_STATUS:
+            add_error(errors, f"{item_where}: bad status {item.get('status')!r}")
+        if not str(item.get("source", "")).startswith("https://"):
+            add_error(errors, f"{item_where}: source must be an https URL")
+        if not isinstance(item.get("firstParty"), bool):
+            add_error(errors, f"{item_where}: firstParty must be boolean")
+
+
 VALIDATORS["pqcReadiness"] = validate_pqc
 VALIDATORS["fedramp"] = validate_fedramp
+VALIDATORS["residency"] = validate_residency
 
 
 def next_minor_version(version):
@@ -178,7 +209,11 @@ def main():
         obj = row.get("object")
         if obj is None:
             obj = row.get(args.field)
-        if not isinstance(obj, dict):
+        if args.field == "residency":
+            valid_payload = isinstance(obj, list)
+        else:
+            valid_payload = isinstance(obj, dict)
+        if not valid_payload:
             add_error(errors, f"{where}: no object/{args.field} payload found")
             continue
         VALIDATORS[args.field](obj, where, errors)

@@ -4,6 +4,12 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-04 - v3.20.0 - Final PQC and residency data pass
+- Applied 10 AWS/Azure `pqcReadiness` objects, completing the scoped 20-object PQC layer across AWS, Azure, GCP, and OCI.
+- Added optional `residency` schema, validation, ingestion, UI detail rendering, and CSV/XLSX export support.
+- Applied 10 residency offerings only to the Government / Sovereign Cloud Offerings row, with partner-operated offerings explicitly flagged.
+- Kept unsupported Microsoft blog-backed PQC roadmap candidates as `Unknown` until official service-specific documentation supports stronger values.
+
 ## 2026-07-04 - v3.18.0 - FedRAMP and PQC object application
 - Applied 120 nested provider-level FedRAMP objects across all capability/provider records using the reviewed FedRAMP input file.
 - Applied 10 GCP/OCI `pqcReadiness` objects from the reviewed Batch 2 input file.

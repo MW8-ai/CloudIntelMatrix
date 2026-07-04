@@ -98,6 +98,9 @@ const THEME_TOKENS = {
     "--review-bg": "#f1f5f9",
     "--review-text": "#475569",
     "--review-border": "#cbd5e1",
+    "--warn-bg": "#fff7ed",
+    "--warn-text": "#9a3412",
+    "--warn-border": "#fed7aa",
     "--ink2": "#4a4d57",
     "--faint": "#8896aa",
     "--head": "#eef2f7",
@@ -127,6 +130,9 @@ const THEME_TOKENS = {
     "--review-bg": "#111827",
     "--review-text": "#cbd5e1",
     "--review-border": "#475569",
+    "--warn-bg": "#3b1f0d",
+    "--warn-text": "#fdba74",
+    "--warn-border": "#9a3412",
     "--ink2": "#c3c7d0",
     "--faint": "#6f747f",
     "--head": "#222630",
@@ -869,6 +875,19 @@ function formatPqcReadiness(pqcReadiness = {}) {
   return parts.join("; ");
 }
 
+function formatResidencySummary(residency = []) {
+  if (!Array.isArray(residency) || residency.length === 0) return "";
+  return residency
+    .map(item => {
+      const flags = [];
+      if (hasDepthValue(item.status)) flags.push(item.status);
+      if (hasDepthValue(item.geography)) flags.push(item.geography);
+      if (item.firstParty === false) flags.push("Partner-operated");
+      return [item.offering, flags.filter(Boolean).join(" / ")].filter(Boolean).join(": ");
+    })
+    .join("; ");
+}
+
 function formatFedrampEnvironment(label, environment = {}) {
   const parts = [];
   if (hasDepthValue(environment.status)) parts.push(`${label}: ${environment.status}`);
@@ -1317,6 +1336,38 @@ function DesignMatrixView({ rows, activeProviders, selectedId, setSelectedId, ti
   );
 }
 
+function ResidencyOfferings({ offerings }) {
+  if (!Array.isArray(offerings) || offerings.length === 0) return null;
+
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 7 }}>Residency offerings</div>
+      <div style={{ display: "grid", gap: 7 }}>
+        {offerings.map((offering, index) => (
+          <div key={`${offering.offering || "offering"}-${index}`} style={{ background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px" }}>
+            <div style={{ display: "flex", gap: 6, justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", marginBottom: 5 }}>
+              <div style={{ color: "var(--text)", fontSize: 11.5, fontWeight: 800, lineHeight: 1.35 }}>{offering.offering}</div>
+              <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                {offering.status && (
+                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 800, color: "var(--selected-text)", border: "1px solid var(--selected-border)", background: "var(--selected-bg)", borderRadius: 5, padding: "2px 5px" }}>{offering.status}</span>
+                )}
+                {offering.firstParty === false && (
+                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, fontWeight: 800, color: "var(--warn-text)", border: "1px solid var(--warn-border)", background: "var(--warn-bg)", borderRadius: 5, padding: "2px 5px" }}>Partner-operated</span>
+                )}
+              </div>
+            </div>
+            {offering.geography && <div style={{ fontSize: 11, color: "var(--muted)", lineHeight: 1.45, marginBottom: 4 }}>{offering.geography}</div>}
+            {offering.guarantee && <div style={{ fontSize: 11.5, color: "var(--ink2)", lineHeight: 1.5 }}>{offering.guarantee}</div>}
+            {offering.source && (
+              <a href={offering.source} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", marginTop: 6, fontSize: 10.5, color: "var(--link)", textDecoration: "none", fontWeight: 700 }}>Official source</a>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
   if (!row) return null;
 
@@ -1385,6 +1436,7 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
               { label: "Constraints", value: formatDepthValue(provider.constraints) },
               { label: "Cost model", value: formatCostModel(provider.costModel) },
               { label: "PQC readiness", value: formatPqcReadiness(provider.pqcReadiness) },
+              { label: "Residency", value: formatResidencySummary(provider.residency) },
               { label: "FedRAMP", value: formatFedramp(provider.fedramp, provider.fedrampLevel) },
               { label: "DoD impact", value: provider.dodImpactLevel },
             ];
@@ -1429,6 +1481,7 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
                     <div style={{ fontSize: 12, color: "var(--ink2)" }}>{provider.variant}</div>
                   </div>
                 )}
+                <ResidencyOfferings offerings={provider.residency} />
                 {(provider.region || provider.realmClass || provider.lastVerified) && (
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9, marginBottom: 10 }}>
                     {provider.region && (

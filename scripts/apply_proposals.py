@@ -28,6 +28,7 @@ PROVIDER_FIELDS = {
     "costModel",
     "pqcReadiness",
     "fedramp",
+    "residency",
     "fedrampLevel",
     "dodImpactLevel",
     "docsUrl",
@@ -49,6 +50,7 @@ VALID_PQC_FIPS_PARITY = {"AtParity", "Lagging", "Unknown"}
 VALID_CONFIDENCE = {"High", "Medium", "Low"}
 VALID_FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
 VALID_FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
+VALID_RESIDENCY_STATUS = {"GA", "Announced", "Preview", "Launching"}
 URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
 COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
 FACT_URL_FIELDS = URL_FIELDS | COMPLIANCE_FRAMEWORK_FIELDS
@@ -223,6 +225,29 @@ def validate_fedramp(value, label):
         validate_fedramp_environment(value.get("government"), f"{label}.government", government=True)
 
 
+def validate_residency(value, label):
+    if not isinstance(value, list) or not value:
+        raise ProposalError(f"{label} must be a non-empty array")
+    required = {"offering", "guarantee", "geography", "status", "source", "firstParty"}
+    for index, item in enumerate(value):
+        item_label = f"{label}[{index}]"
+        if not isinstance(item, dict):
+            raise ProposalError(f"{item_label} must be an object")
+        unexpected = set(item) - required
+        if unexpected:
+            raise ProposalError(f"{item_label} contains unsupported fields: {sorted(unexpected)}")
+        missing = required - set(item)
+        if missing:
+            raise ProposalError(f"{item_label} missing fields: {sorted(missing)}")
+        for field in ["offering", "guarantee", "geography"]:
+            validate_non_empty_string(item.get(field), f"{item_label}.{field}")
+        if item.get("status") not in VALID_RESIDENCY_STATUS:
+            raise ProposalError(f"{item_label}.status invalid: {item.get('status')}")
+        validate_https_url(item.get("source"), f"{item_label}.source")
+        if not isinstance(item.get("firstParty"), bool):
+            raise ProposalError(f"{item_label}.firstParty must be boolean")
+
+
 def normalized_host(url):
     host = urlparse(str(url)).netloc.lower()
     if host.startswith("www."):
@@ -346,6 +371,8 @@ def validate_proposed_value(proposal, index):
         validate_pqc_readiness(value, f"proposal[{index}].proposedValue for pqcReadiness")
     if field == "fedramp":
         validate_fedramp(value, f"proposal[{index}].proposedValue for fedramp")
+    if field == "residency":
+        validate_residency(value, f"proposal[{index}].proposedValue for residency")
     if field in FACT_URL_FIELDS:
         validate_url(value, f"proposal[{index}].proposedValue")
     if field == "govVariant" and value is not None and not str(value).strip():

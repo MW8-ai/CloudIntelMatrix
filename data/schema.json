@@ -329,6 +329,11 @@
           },
           "additionalProperties": false
         },
+        "residency": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/residencyOffering" }
+        },
         "fedrampLevel": { "enum": ["High", "Moderate", "Low", "Unknown"] },
         "dodImpactLevel": { "type": "string", "minLength": 1 },
         "tierNotes": {
@@ -361,6 +366,19 @@
         "date": { "type": "string", "minLength": 1 },
         "confidence": { "enum": ["High", "Medium", "Low"] },
         "note": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "residencyOffering": {
+      "type": "object",
+      "required": ["offering", "guarantee", "geography", "status", "source", "firstParty"],
+      "properties": {
+        "offering": { "type": "string", "minLength": 1 },
+        "guarantee": { "type": "string", "minLength": 1 },
+        "geography": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["GA", "Announced", "Preview", "Launching"] },
+        "source": { "type": "string", "format": "uri" },
+        "firstParty": { "type": "boolean" }
       },
       "additionalProperties": false
     }

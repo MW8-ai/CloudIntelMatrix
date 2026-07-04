@@ -1,19 +1,19 @@
 # CloudIntelMatrix TODO
 
-Last updated: 2026-07-03
+Last updated: 2026-07-04
 
 This is the working roadmap for the next small pull requests. Keep factual data changes proposal-only unless a human has approved applying proposals through `scripts/apply_proposals.py`.
 
 ## Current State
 
-- Repo status at update time: FedRAMP objects and GCP/OCI PQC objects are applied; open PR/issue status should be checked in GitHub before planning new work.
+- Repo status at update time: FedRAMP objects, PQC objects, and Government / Sovereign Cloud Offerings residency objects are applied; open PR/issue status should be checked in GitHub before planning new work.
 - Latest GitHub Actions status at update time: Verify matrix data and GitHub Pages deploy succeeded on `main`.
-- Matrix data version: `3.18.0`.
+- Matrix data version: `3.20.0`.
 - Matrix last verified date: `2026-07-04`.
 - Coverage: 30 capability rows, 4 providers, 120 provider cells.
 - Remaining unknowns: 97 `parityLag` cells and 26 `govAvailability` cells.
 - Transparency coverage: 13 populated state/DC rows out of 51.
-- FedRAMP depth objects are applied across all 120 provider cells. GCP/OCI PQC readiness objects are applied across 10 provider cells; unsupported Oracle blog-backed roadmap candidates were recorded as `Unknown`.
+- FedRAMP depth objects are applied across all 120 provider cells. PQC readiness objects are applied across 20 provider cells. Residency objects are applied only to the Government / Sovereign Cloud Offerings row, with 10 offerings across AWS, Azure, GCP, and OCI.
 
 ## Near-Term PRs
 
@@ -56,10 +56,10 @@ This is the working roadmap for the next small pull requests. Keep factual data 
    - Do not populate these fields directly in `data/matrix.json`; use official-source proposal files first.
    - Consider `previewTerms` and education-specific URLs only if a concrete sourced use case appears.
 
-7. Add provider-neutral PQC readiness facts through proposals.
+7. Maintain provider-neutral PQC readiness facts through proposals.
    - Scope PQC to existing Security & Compliance / Identity decision rows, not a new top-level category.
    - Use the optional `pqcReadiness` field for KEM, signature, TLS, VPN, status, milestone date, FIPS endpoint parity, and official source.
-   - GCP/OCI PQC objects from `data/proposals/pqc-readiness-gcp-oci-2026-07-03.json` have been applied; blog-backed OCI roadmap candidates remain `Unknown` until an official docs.oracle.com source supports them.
+   - AWS/Azure/GCP/OCI PQC objects are applied across the five scoped Security & Compliance / Identity rows; blog-backed roadmap candidates remain `Unknown` until official provider documentation supports them.
    - Use official standards and provider documentation only: NIST FIPS 203/204/205, provider PQC docs, and documented CNSA 2.0 milestone dates.
    - Keep Azure and OCI values `Unknown` unless official Microsoft or Oracle sources support stronger claims.
    - Treat quantum-compute services as experimental timeline/context items, not decision-grade regulated capability rows.

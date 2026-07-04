@@ -29,6 +29,7 @@ VALID_PQC_FIPS_PARITY = {"AtParity", "Lagging", "Unknown"}
 VALID_CONFIDENCE = {"High", "Medium", "Low"}
 VALID_FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
 VALID_FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
+VALID_RESIDENCY_STATUS = {"GA", "Announced", "Preview", "Launching"}
 VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
 VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
@@ -213,6 +214,7 @@ PROPOSAL_PROVIDER_FIELDS = {
     "costModel",
     "pqcReadiness",
     "fedramp",
+    "residency",
     "fedrampLevel",
     "dodImpactLevel",
     "docsUrl",
@@ -279,6 +281,7 @@ PROVIDER_DEPTH_FIELDS = {
     "costModel",
     "pqcReadiness",
     "fedramp",
+    "residency",
     "fedrampLevel",
     "dodImpactLevel",
 }
@@ -486,6 +489,35 @@ def validate_fedramp(value, label):
             err(f"{label}.government.dodIL {dod_il} requires High or Moderate government status")
 
 
+def validate_residency(value, label):
+    if not isinstance(value, list) or not value:
+        err(f"{label} must be a non-empty array")
+        return
+    required = {"offering", "guarantee", "geography", "status", "source", "firstParty"}
+    allowed = required
+    for index, item in enumerate(value):
+        item_label = f"{label}[{index}]"
+        if not isinstance(item, dict):
+            err(f"{item_label} must be an object")
+            continue
+        unexpected = set(item) - allowed
+        if unexpected:
+            err(f"{item_label} contains unsupported fields: {sorted(unexpected)}")
+        missing = required - set(item)
+        if missing:
+            err(f"{item_label} missing fields: {sorted(missing)}")
+        for field in ["offering", "guarantee", "geography"]:
+            validate_non_empty_string(item.get(field), f"{item_label}.{field}")
+        if item.get("status") not in VALID_RESIDENCY_STATUS:
+            err(f"{item_label}.status invalid: {item.get('status')}")
+        source = item.get("source")
+        validate_url(source, f"{item_label}.source", False)
+        if urlparse(str(source)).scheme != "https":
+            err(f"{item_label}.source must use HTTPS")
+        if not isinstance(item.get("firstParty"), bool):
+            err(f"{item_label}.firstParty must be boolean")
+
+
 def validate_provider_depth_fields(provider, label, notes_available):
     if "parityDetail" in provider:
         validate_non_empty_string(provider.get("parityDetail"), f"{label}.parityDetail")
@@ -497,6 +529,8 @@ def validate_provider_depth_fields(provider, label, notes_available):
         validate_pqc_readiness(provider.get("pqcReadiness"), f"{label}.pqcReadiness", notes_available)
     if "fedramp" in provider:
         validate_fedramp(provider.get("fedramp"), f"{label}.fedramp")
+    if "residency" in provider:
+        validate_residency(provider.get("residency"), f"{label}.residency")
     if "fedrampLevel" in provider:
         if provider.get("fedrampLevel") not in {"High", "Moderate", "Low", "Unknown"}:
             err(f"{label}.fedrampLevel invalid: {provider.get('fedrampLevel')}")
@@ -1126,6 +1160,8 @@ def proposal_value_valid(field, value, label):
         validate_pqc_readiness(value, f"{label}.proposedValue for pqcReadiness", True)
     elif field == "fedramp":
         validate_fedramp(value, f"{label}.proposedValue for fedramp")
+    elif field == "residency":
+        validate_residency(value, f"{label}.proposedValue for residency")
     elif field == "fedrampLevel" and value not in {"High", "Moderate", "Low", "Unknown"}:
         err(f"{label}.proposedValue invalid for fedrampLevel: {value}")
     elif field in {"dodImpactLevel", "sourceNotes"}:
@@ -1366,6 +1402,9 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
             provider = cap.get("providers", {}).get(pkey, {})
             for field in ["docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"]:
                 add_link(provider.get(field), f"{cap.get('capability', '?')}/{pkey}/{field}")
+            for index, offering in enumerate(provider.get("residency", [])):
+                if isinstance(offering, dict):
+                    add_link(offering.get("source"), f"{cap.get('capability', '?')}/{pkey}/residency[{index}]")
     for item in upcoming:
         add_link(item.get("source"), f"upcoming/{item.get('id')}")
     for item in history:

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.18.0",
+    "version": "3.20.0",
     "schema": "capability-v1",
     "last_verified": "2026-07-04",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
@@ -879,7 +879,14 @@
               "confidence": "Low"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for IAM / IAM Identity Center."
+          }
         },
         "azure": {
           "service": "Microsoft Entra ID",
@@ -914,7 +921,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No accepted service-specific Microsoft Learn documentation found for Microsoft Entra post-quantum readiness."
+          }
         },
         "gcp": {
           "service": "Cloud IAM + Cloud Identity",
@@ -3052,7 +3066,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for VPC."
+          }
         },
         "azure": {
           "service": "Azure Virtual Network",
@@ -3086,7 +3107,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for Azure Virtual Network."
+          }
         },
         "gcp": {
           "service": "Virtual Private Cloud (VPC)",
@@ -3216,7 +3244,14 @@
               "confidence": "Low"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for CloudFront/WAF endpoints."
+          }
         },
         "azure": {
           "service": "Azure Front Door + Web Application Firewall",
@@ -3250,7 +3285,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for Front Door/WAF; platform TLS hybrid in preview, not service-scoped."
+          }
         },
         "gcp": {
           "service": "Cloud CDN + Cloud Armor",
@@ -3542,7 +3584,25 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "residency": [
+            {
+              "offering": "First-party Sovereign Cloud",
+              "guarantee": "Physically, logically, and operationally independent AWS cloud for European digital sovereignty requirements.",
+              "geography": "EU (Germany initially)",
+              "status": "Launching",
+              "source": "https://docs.aws.amazon.com/whitepapers/latest/overview-aws-european-sovereign-cloud/introduction.html",
+              "firstParty": true
+            },
+            {
+              "offering": "First-party Sovereign Edge",
+              "guarantee": "In-country or customer-site AWS infrastructure options for workloads with data residency and low-latency requirements.",
+              "geography": "Global (AWS Outposts, Local Zones, and Dedicated Local Zones)",
+              "status": "GA",
+              "source": "https://docs.aws.amazon.com/wellarchitected/latest/data-residency-hybrid-cloud-services-lens/drhcrel03-bp01.html",
+              "firstParty": true
+            }
+          ]
         },
         "azure": {
           "service": "Azure Government",
@@ -3577,7 +3637,25 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "residency": [
+            {
+              "offering": "First-party Data Boundary",
+              "guarantee": "Microsoft EU Data Boundary stores and processes customer data and pseudonymized personal data in the EU/EFTA for in-scope services.",
+              "geography": "EU/EFTA",
+              "status": "GA",
+              "source": "https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn",
+              "firstParty": true
+            },
+            {
+              "offering": "First-party Sovereign Wrapper",
+              "guarantee": "Microsoft Sovereign Cloud guidance and capabilities for sovereignty needs on public cloud regions.",
+              "geography": "Global (Microsoft Sovereign Cloud)",
+              "status": "GA",
+              "source": "https://learn.microsoft.com/en-us/azure/azure-sovereign-clouds/microsoft-sovereign-cloud",
+              "firstParty": true
+            }
+          ]
         },
         "gcp": {
           "service": "Assured Workloads for Google Cloud",
@@ -3612,7 +3690,33 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "residency": [
+            {
+              "offering": "Partner-operated Sovereign Cloud",
+              "guarantee": "Sovereign Controls by Partners provide partner-managed controls for operational sovereignty and local control requirements.",
+              "geography": "France (S3NS / Thales)",
+              "status": "Preview",
+              "source": "https://cloud.google.com/sovereign-controls-by-partners/docs/overview",
+              "firstParty": false
+            },
+            {
+              "offering": "Partner-operated Sovereign Cloud",
+              "guarantee": "Sovereign Controls by Partners provide partner-managed controls for operational sovereignty and local control requirements.",
+              "geography": "Germany (T-Systems)",
+              "status": "GA",
+              "source": "https://cloud.google.com/sovereign-controls-by-partners/docs/overview",
+              "firstParty": false
+            },
+            {
+              "offering": "First-party Air-Gapped Cloud",
+              "guarantee": "Google Distributed Cloud air-gapped environment for disconnected workloads, with documented IL6 compliance scope.",
+              "geography": "Global (Google Distributed Cloud)",
+              "status": "GA",
+              "source": "https://docs.cloud.google.com/docs/security/compliance/il6-gdc-compliance-scope",
+              "firstParty": true
+            }
+          ]
         },
         "oci": {
           "service": "Oracle U.S. Government Cloud",
@@ -3647,7 +3751,33 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "residency": [
+            {
+              "offering": "First-party Sovereign Cloud",
+              "guarantee": "Oracle EU Sovereign Cloud is operated by EU legal entities and is separate from Oracle commercial public cloud regions.",
+              "geography": "EU (Madrid and Frankfurt)",
+              "status": "GA",
+              "source": "https://docs.oracle.com/en/solutions/learn-about-eusc/index.html",
+              "firstParty": true
+            },
+            {
+              "offering": "Partner-operated Sovereign Cloud",
+              "guarantee": "Oracle Alloy lets partners operate cloud regions and manage the customer and commercial relationship.",
+              "geography": "Global (Oracle Alloy)",
+              "status": "GA",
+              "source": "https://docs.oracle.com/en-us/iaas/Content/dedicated/alloy/oracle-alloy-overview.htm",
+              "firstParty": false
+            },
+            {
+              "offering": "First-party Dedicated Edge",
+              "guarantee": "Oracle Dedicated Region deploys a full OCI region in a customer or designated data center.",
+              "geography": "Global (Oracle Dedicated Region)",
+              "status": "GA",
+              "source": "https://docs.oracle.com/iaas/Content/dedicated/dedicated-region/dedicated-region-overview.htm",
+              "firstParty": true
+            }
+          ]
         }
       }
     },
@@ -4900,7 +5030,21 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "kem": "ML-KEM hybrid key agreement GA on KMS, ACM, and Secrets Manager endpoints (non-FIPS endpoints, aws partition)",
+            "signature": "ML-DSA (FIPS 204) GA in AWS KMS signing; AWS Private CA supports PQC roots of trust",
+            "tls": "Hybrid post-quantum TLS on KMS/ACM/Secrets Manager service endpoints via s2n-tls and AWS-LC",
+            "vpn": "Unknown",
+            "status": "GA",
+            "fipsEndpointParity": "Lagging",
+            "govPqc": "PQC shipped on commercial non-FIPS endpoints first; FIPS-validated/GovCloud endpoints lag",
+            "source": "https://aws.amazon.com/security/post-quantum-cryptography/",
+            "sourceDate": "2026-06",
+            "firstParty": true,
+            "confidence": "High",
+            "note": "Underpinned by AWS-LC (FIPS 140-3 validated); FIPS endpoint lag is the gov-relevant parity gap."
+          }
         },
         "azure": {
           "service": "Azure Key Vault + Managed HSM",
@@ -4934,7 +5078,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No accepted service-specific Microsoft Learn documentation found for Azure Key Vault post-quantum readiness."
+          }
         },
         "gcp": {
           "service": "Cloud KMS + Secret Manager + Certificate Manager",
@@ -5074,7 +5225,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for PrivateLink, Route 53, or Direct Connect."
+          }
         },
         "azure": {
           "service": "Azure Private Link + Azure Private DNS + ExpressRoute",
@@ -5108,7 +5266,14 @@
               "confidence": "High"
             }
           },
-          "lastVerified": "2026-07-04"
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation for Private Link, Private DNS, or ExpressRoute."
+          }
         },
         "gcp": {
           "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
