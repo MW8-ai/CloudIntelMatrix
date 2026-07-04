@@ -46,7 +46,7 @@ TIER3_PQC_BLOG_PATHS = {
 }
 VALID_TRANSPARENCY_STATUS = {"Active", "Proposed", "Repealed", "None on record", "Unknown"}
 VALID_STATUS_SOURCE_CATEGORY = {"cloud-provider", "adjacent-platform"}
-VALID_STATUS_SOURCE_PROVIDERS = {"aws", "azure", "gcp", "oci", "salesforce"}
+VALID_STATUS_SOURCE_PROVIDERS = {"aws", "azure", "gcp", "oci", "salesforce", "cloudflare"}
 VALID_AI_WATCH_CATEGORY = {"frontier-model-lab", "open-model-lab", "multimodal-model-lab"}
 STATUS_SOURCE_DOMAINS = {
     "health.aws.amazon.com",
@@ -59,6 +59,8 @@ STATUS_SOURCE_DOMAINS = {
     "docs.oracle.com",
     "status.salesforce.com",
     "trust.salesforce.com",
+    "cloudflarestatus.com",
+    "developers.cloudflare.com",
 }
 AI_WATCH_DOMAINS = {
     "openai.com",
@@ -209,7 +211,7 @@ AI_WATCH_REQUIRED = [
     "summary",
     "lastVerified",
 ]
-AI_WATCH_ALLOWED = set(AI_WATCH_REQUIRED + ["newsUrl", "releaseNotesUrl", "safetyUrl"])
+AI_WATCH_ALLOWED = set(AI_WATCH_REQUIRED + ["models", "newsUrl", "releaseNotesUrl", "safetyUrl"])
 PROPOSAL_PROVIDER_FIELDS = {
     "service",
     "status",
@@ -1171,6 +1173,14 @@ def validate_ai_watch(ai_watch_data):
         for field in ["name", "shortName", "modelFamily", "summary"]:
             if not str(source.get(field, "")).strip():
                 err(f"AI watch source '{source_id}'.{field} must not be empty")
+        if "models" in source:
+            models = source.get("models")
+            if not isinstance(models, list):
+                err(f"AI watch source '{source_id}'.models must be an array")
+            else:
+                for index, model in enumerate(models):
+                    if not isinstance(model, str) or not model.strip():
+                        err(f"AI watch source '{source_id}'.models[{index}] must be a non-empty string")
         validate_date(source.get("lastVerified"), f"AI watch source '{source_id}'.lastVerified")
         for field in ["newsUrl", "docsUrl", "releaseNotesUrl", "safetyUrl"]:
             if field in source:

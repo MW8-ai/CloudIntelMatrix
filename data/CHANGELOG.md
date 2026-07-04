@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-04 - Status, AI Watch, and provider-news polish
+- Added Cloudflare to the operational status source index with official status, history, and support-doc links.
+- Added optional AI Watch tracked-model lists from official lab model documentation or release sources, with validator and CSV/XLSX export support.
+- Exposed provider-news announcement dates and full news detail in the dedicated Provider News view.
+
 ## 2026-07-04 - v3.21.0 - Source-tier policy and PQC roadmap restore
 - Added `data/SOURCE-POLICY.md` documenting Tier 1 compliance, Tier 2 shipped-feature, and Tier 3 roadmap source rules.
 - Encoded PQC source-tier checks in validation, ingestion, and proposal application so shipped PQC claims require Tier 2 product docs and Tier 3 roadmap claims are capped at Medium confidence.
