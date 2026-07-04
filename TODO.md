@@ -8,12 +8,12 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 
 - Repo status at update time: FedRAMP objects, PQC objects, and Government / Sovereign Cloud Offerings residency objects are applied; open PR/issue status should be checked in GitHub before planning new work.
 - Latest GitHub Actions status at update time: Verify matrix data and GitHub Pages deploy succeeded on `main`.
-- Matrix data version: `3.20.0`.
+- Matrix data version: `3.21.0`.
 - Matrix last verified date: `2026-07-04`.
 - Coverage: 30 capability rows, 4 providers, 120 provider cells.
 - Remaining unknowns: 97 `parityLag` cells and 26 `govAvailability` cells.
 - Transparency coverage: 13 populated state/DC rows out of 51.
-- FedRAMP depth objects are applied across all 120 provider cells. PQC readiness objects are applied across 20 provider cells. Residency objects are applied only to the Government / Sovereign Cloud Offerings row, with 10 offerings across AWS, Azure, GCP, and OCI.
+- FedRAMP depth objects are applied across all 120 provider cells. PQC readiness objects are applied across 20 provider cells with source-tier policy enforcement. Residency objects are applied only to the Government / Sovereign Cloud Offerings row, with 10 offerings across AWS, Azure, GCP, and OCI.
 
 ## Near-Term PRs
 
@@ -59,9 +59,9 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 7. Maintain provider-neutral PQC readiness facts through proposals.
    - Scope PQC to existing Security & Compliance / Identity decision rows, not a new top-level category.
    - Use the optional `pqcReadiness` field for KEM, signature, TLS, VPN, status, milestone date, FIPS endpoint parity, and official source.
-   - AWS/Azure/GCP/OCI PQC objects are applied across the five scoped Security & Compliance / Identity rows; blog-backed roadmap candidates remain `Unknown` until official provider documentation supports them.
+   - AWS/Azure/GCP/OCI PQC objects are applied across the five scoped Security & Compliance / Identity rows; roadmap claims may use only the official first-party blog sources enumerated in `data/SOURCE-POLICY.md` and are capped at Medium confidence when sourced that way.
    - Use official standards and provider documentation only: NIST FIPS 203/204/205, provider PQC docs, and documented CNSA 2.0 milestone dates.
-   - Keep Azure and OCI values `Unknown` unless official Microsoft or Oracle sources support stronger claims.
+   - Keep non-roadmap Azure and OCI values `Unknown` unless Tier 2 Microsoft or Oracle product documentation supports stronger claims.
    - Treat quantum-compute services as experimental timeline/context items, not decision-grade regulated capability rows.
 
 8. Clean up the remaining CodeQL workflow annotation.

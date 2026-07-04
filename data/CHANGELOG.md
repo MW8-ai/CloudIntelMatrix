@@ -4,6 +4,12 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-04 - v3.21.0 - Source-tier policy and PQC roadmap restore
+- Added `data/SOURCE-POLICY.md` documenting Tier 1 compliance, Tier 2 shipped-feature, and Tier 3 roadmap source rules.
+- Encoded PQC source-tier checks in validation, ingestion, and proposal application so shipped PQC claims require Tier 2 product docs and Tier 3 roadmap claims are capped at Medium confidence.
+- Restored 5 PQC roadmap objects for Azure and OCI from official first-party roadmap/program sources.
+- Left the OCI FedRAMP Relational Databases row as `Unknown` because blog sources remain unacceptable for Tier 1 compliance claims.
+
 ## 2026-07-04 - v3.20.0 - Final PQC and residency data pass
 - Applied 10 AWS/Azure `pqcReadiness` objects, completing the scoped 20-object PQC layer across AWS, Azure, GCP, and OCI.
 - Added optional `residency` schema, validation, ingestion, UI detail rendering, and CSV/XLSX export support.
