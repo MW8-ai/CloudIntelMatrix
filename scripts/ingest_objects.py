@@ -182,7 +182,7 @@ def main():
             add_error(errors, f"{where}: no object/{args.field} payload found")
             continue
         VALIDATORS[args.field](obj, where, errors)
-        staged.append((provider, obj))
+        staged.append((capability, provider, obj))
 
     if errors:
         print("VALIDATION FAILED, no changes written:")
@@ -190,16 +190,23 @@ def main():
             print(f"  - {error}")
         sys.exit(1)
 
+    verified_on = datetime.date.today().isoformat()
     matrix["_meta"]["version"] = next_minor_version(matrix.get("_meta", {}).get("version"))
-    matrix["_meta"]["last_verified"] = datetime.date.today().isoformat()
+    matrix["_meta"]["last_verified"] = verified_on
     if args.dry_run:
         print(f"DRY RUN ok: would write {len(staged)} {args.field} object(s)")
         print(f"Version would become {matrix['_meta']['version']}")
         print(f"last_verified would become {matrix['_meta']['last_verified']}")
         return
 
-    for provider, obj in staged:
+    touched_capabilities = set()
+    for capability, provider, obj in staged:
         provider[args.field] = obj
+        provider["lastVerified"] = verified_on
+        touched_capabilities.add(capability.get("capability"))
+    for capability in matrix.get("capabilities", []):
+        if capability.get("capability") in touched_capabilities:
+            capability["lastVerified"] = verified_on
 
     MATRIX.write_text(json.dumps(matrix, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Wrote {len(staged)} {args.field} object(s)")

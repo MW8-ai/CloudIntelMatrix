@@ -6,14 +6,14 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 
 ## Current State
 
-- Repo status at update time: FedRAMP/PQC object scaffold is in proposal-review work; open PR/issue status should be checked in GitHub before planning new work.
+- Repo status at update time: FedRAMP objects and GCP/OCI PQC objects are applied; open PR/issue status should be checked in GitHub before planning new work.
 - Latest GitHub Actions status at update time: Verify matrix data and GitHub Pages deploy succeeded on `main`.
-- Matrix data version: `3.16.6`.
-- Matrix last verified date: `2026-06-24`.
+- Matrix data version: `3.18.0`.
+- Matrix last verified date: `2026-07-04`.
 - Coverage: 30 capability rows, 4 providers, 120 provider cells.
 - Remaining unknowns: 97 `parityLag` cells and 26 `govAvailability` cells.
 - Transparency coverage: 13 populated state/DC rows out of 51.
-- FedRAMP and PQC depth objects are scaffolded in schema/tooling and queued in unapproved proposal files. They are not applied matrix facts until human-approved.
+- FedRAMP depth objects are applied across all 120 provider cells. GCP/OCI PQC readiness objects are applied across 10 provider cells; unsupported Oracle blog-backed roadmap candidates were recorded as `Unknown`.
 
 ## Near-Term PRs
 
@@ -51,7 +51,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 
 6. Populate schema-depth fields through proposal review.
    - Optional provider scaffolding now covers `parityDetail`, `constraints`, `costModel`, nested `pqcReadiness`, nested `fedramp`, legacy `fedrampLevel`, and legacy `dodImpactLevel`.
-   - Review `data/proposals/fedramp-objects-2026-07-03.json`; approve only entries whose `sourceUrl` and object fields match official primary sources.
+   - FedRAMP object proposals from `data/proposals/fedramp-objects-2026-07-03.json` have been approved/applied where source-safe; remaining work items document review backlog.
    - Keep the existing `region` string and `realmClass` enum until a separate provider-neutral region model is designed.
    - Do not populate these fields directly in `data/matrix.json`; use official-source proposal files first.
    - Consider `previewTerms` and education-specific URLs only if a concrete sourced use case appears.
@@ -59,7 +59,7 @@ This is the working roadmap for the next small pull requests. Keep factual data 
 7. Add provider-neutral PQC readiness facts through proposals.
    - Scope PQC to existing Security & Compliance / Identity decision rows, not a new top-level category.
    - Use the optional `pqcReadiness` field for KEM, signature, TLS, VPN, status, milestone date, FIPS endpoint parity, and official source.
-   - Review `data/proposals/pqc-readiness-gcp-oci-2026-07-03.json`; blog-backed OCI candidates remain work items until an official docs.oracle.com source supports them.
+   - GCP/OCI PQC objects from `data/proposals/pqc-readiness-gcp-oci-2026-07-03.json` have been applied; blog-backed OCI roadmap candidates remain `Unknown` until an official docs.oracle.com source supports them.
    - Use official standards and provider documentation only: NIST FIPS 203/204/205, provider PQC docs, and documented CNSA 2.0 milestone dates.
    - Keep Azure and OCI values `Unknown` unless official Microsoft or Oracle sources support stronger claims.
    - Treat quantum-compute services as experimental timeline/context items, not decision-grade regulated capability rows.

@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-04 - v3.18.0 - FedRAMP and PQC object application
+- Applied 120 nested provider-level FedRAMP objects across all capability/provider records using the reviewed FedRAMP input file.
+- Applied 10 GCP/OCI `pqcReadiness` objects from the reviewed Batch 2 input file.
+- Downgraded unsupported Oracle blog-backed FedRAMP/PQC candidates to `Unknown` instead of treating blog material as an official primary source.
+
 ## 2026-07-03 - FedRAMP and PQC object review scaffold
 - Added nested provider-level `fedramp` and expanded `pqcReadiness` schema validation, proposal-apply validation, ingestion tooling, UI detail rendering, and CSV/XLSX export columns.
 - Added unapproved FedRAMP and GCP/OCI PQC proposal-review files from the supplied bundle without changing `data/matrix.json` fact values.
