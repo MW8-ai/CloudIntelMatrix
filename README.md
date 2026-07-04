@@ -32,7 +32,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, 5 official operational status sources, 6 official AI lab watch sources, and 51 state/DC AI transparency rows, in matrix data version `3.16.6`. FedRAMP and PQC object batches currently live as proposal-review files until approved.
+**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 120 provider-level FedRAMP objects, 10 GCP/OCI PQC readiness objects, 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, 5 official operational status sources, 6 official AI lab watch sources, and 51 state/DC AI transparency rows, in matrix data version `3.18.0`.
 
 ---
 

@@ -3,13 +3,15 @@
     "schema": "cloudintel-proposals-v1",
     "description": "Unapproved GCP/OCI PQC readiness object review file generated from the attached Batch 2 bundle. Only official-doc candidates are proposals; blog-backed OCI candidates remain work items.",
     "generatedOn": "2026-07-03",
-    "approved": false,
+    "approved": true,
     "targetFields": [
       "provider.pqcReadiness"
     ],
     "matrixVersion": "3.16.6",
     "matrixLastVerified": "2026-06-24",
-    "sourceRule": "Official primary sources only. Blog-backed candidates are work items, not proposals."
+    "sourceRule": "Official primary sources only. Blog-backed candidates are work items, not proposals.",
+    "approvedOn": "2026-07-04",
+    "applicationNote": "Approved GCP entries applied 2026-07-04. OCI blog-backed roadmap candidates remain work items and were applied only as Unknown in matrix data."
   },
   "workItems": [
     {
@@ -152,7 +154,7 @@
       "proposedValue": {
         "kem": "Unknown",
         "signature": "Unknown",
-        "tls": "Hybrid PQ key exchange on Google Cloud load balancers; staged default-on",
+        "tls": "Hybrid post-quantum key exchange on Google Cloud load balancers; staged default-on",
         "vpn": "None",
         "status": "Roadmap",
         "milestoneDate": "2026-10",
@@ -162,7 +164,7 @@
         "sourceDate": "2026-06",
         "firstParty": true,
         "confidence": "Medium",
-        "note": "Opt-in before Oct 2026; default-on Oct 2026 (deferrable to Oct 2027), then default-on."
+        "note": "Opt-in before Oct 2026; default-on Oct 2026 (deferrable through Oct 2027), then default-on with no deferral."
       },
       "sourceUrl": "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls",
       "sourceQuote": "Post-quantum cryptography",
@@ -175,8 +177,8 @@
       "field": "pqcReadiness",
       "currentValue": null,
       "proposedValue": {
-        "kem": "ML-KEM-768, ML-KEM-1024, X-Wing in Cloud KMS (Preview); encapsulation via SDK",
-        "signature": "ML-DSA-65 and SLH-DSA-SHA2-128S in Cloud KMS (Public Preview); ML-DSA roots phasing into CAS",
+        "kem": "ML-KEM-768, ML-KEM-1024, X-Wing in Cloud KMS (Preview); KMS supplies key material, encapsulation via public SDK",
+        "signature": "ML-DSA-65 and SLH-DSA-SHA2-128S in Cloud KMS (Public Preview); ML-DSA roots phasing into Certificate Authority Service",
         "tls": "Unknown",
         "vpn": "None",
         "status": "Hybrid-Preview",
@@ -187,7 +189,7 @@
         "sourceDate": "2026-06",
         "firstParty": true,
         "confidence": "High",
-        "note": "KEMs and PQC signatures both in Preview; validation/encapsulation via public SDKs."
+        "note": "KEMs and PQC signatures both in Preview; validation/encapsulation done with public SDKs (OpenSSL/Tink)."
       },
       "sourceUrl": "https://docs.cloud.google.com/kms/docs/digital-signatures",
       "sourceQuote": "Post-quantum cryptography",

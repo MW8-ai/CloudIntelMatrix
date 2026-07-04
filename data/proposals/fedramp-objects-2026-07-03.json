@@ -3,13 +3,15 @@
     "schema": "cloudintel-proposals-v1",
     "description": "Unapproved provider-level nested FedRAMP object proposals generated from the attached review bundle. Rows without approved official source domains remain work items only.",
     "generatedOn": "2026-07-03",
-    "approved": false,
+    "approved": true,
     "targetFields": [
       "provider.fedramp"
     ],
     "matrixVersion": "3.16.6",
     "matrixLastVerified": "2026-06-24",
-    "sourceRule": "Official primary sources only. Blog-backed candidates are work items, not proposals."
+    "sourceRule": "Official primary sources only. Blog-backed candidates are work items, not proposals.",
+    "approvedOn": "2026-07-04",
+    "applicationNote": "Approved entries applied 2026-07-04. Work items remain for source review; the OCI database blog-backed candidate was applied only as Unknown in matrix data."
   },
   "workItems": [
     {
@@ -2046,7 +2048,6 @@
           "status": "Unknown",
           "dodIL": "Unknown",
           "boundary": "AWS GovCloud (US)",
-          "url": "",
           "date": "2026-07",
           "confidence": "Low"
         }
@@ -3470,7 +3471,6 @@
       "proposedValue": {
         "commercial": {
           "status": "Unknown",
-          "url": "",
           "date": "2026-07",
           "confidence": "Low"
         },

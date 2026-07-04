@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "3.16.6",
+    "version": "3.18.0",
     "schema": "capability-v1",
-    "last_verified": "2026-06-24",
+    "last_verified": "2026-07-04",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
     "providers": [
       "aws",
@@ -538,7 +538,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Virtual machine services provide configurable IaaS compute. Compare instance families, processor architecture, licensing, host isolation, image operations, placement controls, and extension into hybrid or regulated environments.",
       "operationalConsiderations": "Patching overhead scales with fleet size. Reserved/committed pricing requires capacity planning discipline. Sole-tenant/dedicated options incur premium.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Availability classifications identify documented product presence or limitations in regulated environments; instance families, extensions, isolation, migration paths, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -557,7 +557,24 @@
             "Commercial / SMB": "T3, M6, C6 family; On-Demand, Reserved, Spot",
             "Enterprise": "EC2 + Outposts; Dedicated Hosts; Savings Plans; Graviton4",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Virtual Machines",
@@ -575,7 +592,24 @@
             "Commercial / SMB": "Dv5, Ev5, Bsv2; Pay-as-you-go; Reserved Instances",
             "Enterprise": "Dedicated Host; Proximity Placement Groups; Hybrid Benefit (bring own license)",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Compute Engine",
@@ -593,7 +627,24 @@
             "Commercial / SMB": "N2, E2, T2D; Sustained use discounts; Custom machine types",
             "Enterprise": "C3, M3 memory-optimized; CUDs; Sole-tenant nodes; Custom shapes",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Compute",
@@ -611,7 +662,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use OCI Compute shapes with tenancy policy, dedicated capacity, image governance, and cost controls.",
             "Government": "Confirm required Compute shapes, images, endpoints, and controls in Oracle U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -626,7 +692,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event-driven compute differs by runtime packaging, trigger integrations, state-orchestration options, networking, scaling controls, and container portability. Evaluate those characteristics against the workload rather than assuming service equivalence.",
       "operationalConsiderations": "Cold start latency matters for latency-sensitive workloads. Debugging distributed serverless functions requires mature observability strategy. Cost can surprise at high invocation volume without concurrency controls.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Availability classifications identify documented runtime support or control-package scope; triggers, runtime versions, integrations, network controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -645,7 +711,22 @@
             "Commercial / SMB": "Lambda + API Gateway; Step Functions orchestration; evaluate Lambda Managed Instances for steady EC2-backed function workloads.",
             "Enterprise": "VPC, SnapStart, arm64; Provisioned Concurrency; EventBridge Pipes; evaluate Lambda Managed Instances where specialized compute or EC2 pricing models fit.",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "AWS GovCloud (US)",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Functions",
@@ -663,7 +744,24 @@
             "Commercial / SMB": "Functions + APIM; Durable Functions for stateful workflows",
             "Enterprise": "Premium/Dedicated plan; VNET integration; always-on; large SKUs",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud Run / Cloud Functions",
@@ -681,7 +779,24 @@
             "Commercial / SMB": "Cloud Run (HTTP & event-driven; scale to 0)",
             "Enterprise": "Cloud Run Enterprise; VPC-SC; CMEK; min instances; IAP",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Functions",
@@ -699,7 +814,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate OCI Functions runtime, VCN access, event triggers, scaling, and observability.",
             "Government": "Confirm functions runtime, trigger, image-registry, logging, and network dependencies in Oracle U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -715,7 +845,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Identity and access is a platform foundation. Compare workforce federation, workload identities, privileged administration, account or tenant hierarchy, policy inheritance, conditional access, and authorization boundaries across the mapped services.",
       "operationalConsiderations": "Misconfigured IAM is a common enterprise cloud security failure mode. Policy hierarchy, privileged access, federation, workload identity, and emergency access require provider-specific design and evidence. PIV/CAC integration must be validated for each selected provider and environment.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Identity capability and regulated-environment support must be assessed feature by feature, including federation and privileged access requirements; no parity conclusion is made here.",
       "providers": {
         "aws": {
@@ -734,7 +864,22 @@
             "Commercial / SMB": "IAM + Identity Center + Cognito; SCP via Organizations",
             "Enterprise": "Permission Boundaries + SCPs + Resource Control Policies; Verified Access (ZTNA)",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "AWS GovCloud (US)",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Microsoft Entra ID",
@@ -752,7 +897,24 @@
             "Commercial / SMB": "Entra ID P1 (MFA, Conditional Access, SSO, SSPR); B2C for customer identity",
             "Enterprise": "Entra ID P2 (PIM, Identity Protection, Entitlement Mgmt); External ID for B2B",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud IAM + Cloud Identity",
@@ -770,6 +932,30 @@
             "Commercial / SMB": "Cloud IAM + Cloud Identity + BeyondCorp (Context-Aware Access)",
             "Enterprise": "Cloud IAM + VPC-SC + Access Context Manager; Workforce Identity Federation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation. Google has deployed ML-KEM for data-in-transit at the network layer by default, but it is not scoped to this service in official docs."
           }
         },
         "oci": {
@@ -788,6 +974,28 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Design OCI compartments, identity domains, federation, dynamic groups, policies, and privileged administration together.",
             "Government": "Account for government-tenancy identity-domain limitations and confirm federation and privileged-access requirements."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
           }
         }
       }
@@ -804,7 +1012,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Object storage supports data lakes, backup, static assets, exchange, and archival. Compare lifecycle policy, immutability, replication, encryption controls, event integration, analytics adjacency, data-residency options, and egress behavior.",
       "operationalConsiderations": "Egress costs can become substantial at scale. Lifecycle policies are essential for cost control. Object Lock / WORM is important for compliance. Bucket-level public access should be denied by default in enterprise.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Availability classifications identify documented mapped-service support; immutability, replication, cryptographic controls, event integration, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -823,7 +1031,24 @@
             "Commercial / SMB": "Standard/IA/Glacier/Deep Archive; Intelligent-Tiering auto-moves",
             "Enterprise": "S3 + Replication + Object Lock; Access Points; Macie for PII; S3 Inventory",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Blob Storage",
@@ -841,7 +1066,24 @@
             "Commercial / SMB": "Hot/Cool/Cold/Archive; LRS/ZRS/GRS/RA-GRS redundancy",
             "Enterprise": "Blob + Immutable Storage + Lifecycle Mgmt; Blob index tags; Azure Defender",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud Storage",
@@ -859,7 +1101,24 @@
             "Commercial / SMB": "Standard/Nearline/Coldline/Archive; Multi-region; per-op pricing",
             "Enterprise": "Cloud Storage + Dual-region + CMEK; Object Versioning; Retention Locks",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Object Storage",
@@ -877,7 +1136,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use buckets, retention rules, lifecycle policy, replication choices, Vault keys, and audit logging as a governed data foundation.",
             "Government": "Confirm required Object Storage features, retention policy, encryption, and transfer dependencies in Oracle U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -893,7 +1167,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed Kubernetes reduces control-plane responsibility while retaining cluster design obligations. Compare identity and policy integration, networking, upgrade controls, managed node modes, fleet governance, and hybrid extension requirements.",
       "operationalConsiderations": "Kubernetes carries significant operational burden even in managed form. Dedicated platform engineering capability is recommended at enterprise scale. Networking complexity (CNI, service mesh, ingress) is a common friction point. Control plane costs vary significantly.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Availability classifications identify documented managed-cluster support or limitations; add-ons, node modes, hybrid options, networking controls, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -912,7 +1186,24 @@
             "Commercial / SMB": "EKS / ECS / App Runner; $0.10/hr cluster fee; Fargate or EC2 nodes",
             "Enterprise": "EKS Anywhere + EKS Distro; Hybrid; BottleRocket OS; Karpenter autoscaling",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Kubernetes Service (AKS)",
@@ -930,7 +1221,24 @@
             "Commercial / SMB": "AKS + Container Apps; KEDA + Dapr built-in",
             "Enterprise": "AKS + Arc-enabled Kubernetes; GitOps; Policy; hybrid/multi-cloud",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Google Kubernetes Engine (GKE)",
@@ -948,7 +1256,24 @@
             "Commercial / SMB": "GKE Standard / Autopilot; Release channels; Workload Identity",
             "Enterprise": "GKE Enterprise (Anthos); Multi-cloud; service mesh; Config Sync",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "Oracle Kubernetes Engine (OKE)",
@@ -966,7 +1291,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate OKE cluster mode, node pools, network design, admission policy, image security, upgrades, and operations.",
             "Government": "Confirm OKE node shapes, networking, registry, logging, and security dependencies in Oracle U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -982,7 +1322,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed relational database choices differ by engine compatibility, licensing, high-availability and failover models, replication, backup recovery, migration path, global distribution, and portability constraints.",
       "operationalConsiderations": "Multi-region HA adds cost and complexity. Read replicas don't provide write HA. RDS Custom (AWS) and Managed Instance (Azure) support lift-and-shift for Oracle/SQL Server with less re-architecture. Cloud Spanner has unique pricing model that requires capacity planning.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Availability classifications identify documented support for the mapped database products; engine versions, high availability, replication, migration paths, and commercial-to-regulated parity still require feature-level validation.",
       "providers": {
         "aws": {
@@ -1001,7 +1341,24 @@
             "Commercial / SMB": "RDS, Aurora, DynamoDB, ElastiCache; Aurora Serverless v2",
             "Enterprise": "Aurora Global DB; DynamoDB Global Tables; RDS Custom for Oracle/SQL Server",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure SQL / PostgreSQL Flexible",
@@ -1019,7 +1376,24 @@
             "Commercial / SMB": "Azure SQL + Cosmos DB + PostgreSQL Flexible + Redis Cache",
             "Enterprise": "Azure SQL Hyperscale; Cosmos DB multi-write; Managed Instance for SQL Server lift",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud SQL / Cloud Spanner",
@@ -1037,7 +1411,24 @@
             "Commercial / SMB": "Cloud SQL + Spanner + Firestore + Bigtable; AlloyDB PostgreSQL",
             "Enterprise": "Spanner 99.999% SLA global ACID; AlloyDB Omni; Bigtable HBase compat",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Database Services",
@@ -1055,7 +1446,21 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Choose among OCI managed database deployment models based on engine, Exadata or Autonomous needs, HA, migration, and licensing.",
             "Government": "Confirm the exact OCI database service variant, edition, region, encryption, and recovery requirements in government documentation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "confidence": "Low",
+              "note": "Blog-backed candidate was not applied; no approved official primary source establishes FedRAMP commercial scope for this mapped service."
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "confidence": "Low",
+              "note": "Blog-backed candidate was not applied; no approved official primary source establishes government FedRAMP or DoD scope for this mapped service."
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1071,7 +1476,7 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed foundation-model platforms differ by offered models, region availability, data-use commitments, grounding and retrieval integrations, evaluation tooling, customization options, safety controls, quotas, and regulated-workload support. Microsoft documents that Azure OpenAI resources can upgrade into Microsoft Foundry resources while preserving the existing endpoint, API key, state, and security configuration.",
       "operationalConsiderations": "Token costs scale rapidly with usage volume. Prompt engineering and retrieval-augmented generation (RAG) are operationally non-trivial. Data residency and model data retention policies differ significantly and require legal review for regulated workloads. Content filtering and guardrails are essential before enterprise deployment.",
-      "lastVerified": "2026-06-24",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official regulated-environment documentation establishes selected platform presence for AWS, Azure, and Google Cloud; mapped portfolio breadth, required models and features, OCI support, and all commercial-to-regulated parity still require direct validation.",
       "providers": {
         "aws": {
@@ -1090,7 +1495,24 @@
             "Commercial / SMB": "Claude, Llama, Mistral, Titan, Nova; Agents; Knowledge Bases; Guardrails; Flows",
             "Enterprise": "Provisioned Throughput; Model Eval; Watermark; Custom Model Import; Model Distillation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Microsoft Foundry Models / Azure OpenAI",
@@ -1112,7 +1534,24 @@
           "formerNames": [
             "Azure AI Studio",
             "Azure AI Foundry"
-          ]
+          ],
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Vertex AI GenAI / Gemini",
@@ -1130,7 +1569,24 @@
             "Commercial / SMB": "Gemini 1.5 Pro/Flash, Imagen, Veo; Model Garden 150+ models incl. Claude/Llama",
             "Enterprise": "RAG Engine, Agent Builder, Grounding; CMEK; VPC-SC; Provisioned Throughput",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL4",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Generative AI",
@@ -1148,7 +1604,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Review model catalog, dedicated AI clusters, endpoints, grounding, data handling, guardrails, quotas, and evaluation before production use.",
             "Government": "Do not assume OCI Generative AI availability for regulated workloads; obtain current Oracle evidence for the selected boundary and model."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1164,7 +1635,7 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Retrieval-augmented generation grounds model responses in governed enterprise data. Compare ingestion pipelines, supported vector stores, embedding choices, access-control propagation, citations, private networking, evaluation, and data lifecycle controls rather than assuming equivalent RAG behavior.",
       "operationalConsiderations": "Retrieval quality depends on content preparation, chunking, metadata, embeddings, ranking, and authorization trimming. Sensitive source material can leak through poor access design or prompt/tool behavior. Index refresh, query volume, storage, and embedding generation add ongoing cost.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official regulated-environment documentation establishes limited AWS knowledge-base support and Azure AI Search product presence. The mapped GCP RAG Engine and OCI Agents Knowledge Bases remain unasserted for regulated use; authorization behavior and all parity remain to be verified.",
       "providers": {
         "aws": {
@@ -1183,7 +1654,24 @@
             "Commercial / SMB": "Validate supported data sources, chunking, metadata filters, access model, refresh cadence, citations, and operational cost.",
             "Enterprise": "Govern knowledge-base ingestion, vector store selection, identity propagation, network boundaries, evaluation, monitoring, and retention.",
             "Government": "Confirm every Bedrock knowledge-base, embedding-model, vector-store, data-source, and networking dependency in the selected AWS GovCloud environment."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure AI Search (Vector Search)",
@@ -1201,7 +1689,24 @@
             "Commercial / SMB": "Validate vector index design, hybrid search, enrichment pipeline, identity filters, capacity, and retrieval quality.",
             "Enterprise": "Govern Azure AI Search indexing, private access, key management, authorization filtering, evaluation, observability, and capacity planning.",
             "Government": "Confirm vector search, indexing, model integration, private connectivity, and required data-handling controls in Azure Government."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Vertex AI RAG Engine",
@@ -1219,7 +1724,24 @@
             "Commercial / SMB": "Validate corpus ingestion, retrieval quality, metadata controls, model grounding, region, and cost model.",
             "Enterprise": "Govern corpora, embeddings, access boundaries, VPC controls, evaluation, data retention, and model integration.",
             "Government": "Confirm Vertex AI RAG Engine, embedding models, storage, and required control-package support before regulated use."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL4",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Generative AI Agents Knowledge Bases",
@@ -1237,7 +1759,22 @@
             "Commercial / SMB": "Validate knowledge-base source, vector-store choice, ingestion schedule, endpoint access, retrieval quality, and cost controls.",
             "Enterprise": "Govern data source permissions, vector stores, private access, model grounding, evaluation, monitoring, and retention.",
             "Government": "Do not assume OCI Generative AI Agents knowledge-base availability in government cloud; obtain current Oracle evidence for all dependencies."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1254,7 +1791,7 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed AI-agent services orchestrate model reasoning with tools, APIs, knowledge sources, memory, and workflow controls. Compare identity delegation, tool authorization, human approval, action tracing, evaluation, guardrails, interoperability, and runtime isolation before adoption.",
       "operationalConsiderations": "Agents expand the blast radius of model errors because they can invoke systems and act on data. Require scoped service identities, least-privilege tools, approval gates for consequential operations, audit trails, testing against prompt injection, and clear rollback procedures.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Agent tools, connectors, and MCP hosts are treated as orchestration dependencies rather than the serverless-compute platform itself. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row.",
       "providers": {
         "aws": {
@@ -1273,7 +1810,24 @@
             "Commercial / SMB": "Define tool allowlists, IAM roles, confirmation steps, tracing, prompt-injection tests, and cost limits.",
             "Enterprise": "Govern agent identity, action groups, memory and knowledge use, human approval, evaluation, audit logging, and incident response.",
             "Government": "Confirm Agents, foundation models, action-group dependencies, knowledge bases, IAM, and logging support in AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Microsoft Foundry Agent Service",
@@ -1291,7 +1845,25 @@
             "Commercial / SMB": "Validate connected tools, managed identity design, search grounding, tracing, approvals, and runtime cost.",
             "Enterprise": "Govern Foundry Agent Service, Agent Framework or hosted-agent code, identities, tools, private networking, evaluation, logging, content safety, and human escalation.",
             "Government": "Confirm Foundry Agent Service, models, search, identity, private access, and monitoring features in Azure Government."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL2",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+              "date": "2026-07",
+              "confidence": "Medium",
+              "note": "Foundry portal authorized High/IL2; Agent Service not separately IL4/5-listed (Feb 2026 audit scope)"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Vertex AI Agent Engine",
@@ -1309,7 +1881,24 @@
             "Commercial / SMB": "Validate runtime choice, tools, service accounts, sessions, tracing, model grounding, and consumption.",
             "Enterprise": "Govern deployed agents, identities, tool privileges, sessions and memory, evaluation, telemetry, and incident controls.",
             "Government": "Confirm Agent Engine, selected models, tool dependencies, data boundary, and control-package support before use."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL4",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Generative AI Agents",
@@ -1327,7 +1916,22 @@
             "Commercial / SMB": "Validate agents, tools, knowledge bases, endpoints, IAM, tracing, approvals, and operational ownership.",
             "Enterprise": "Govern tool permissions, agent endpoints, knowledge sources, model use, private access, audit evidence, and evaluation.",
             "Government": "Do not assume OCI Generative AI Agents availability in government cloud; obtain current Oracle evidence for the selected design."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1342,7 +1946,7 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "GPU and accelerator-backed compute supports model training, fine-tuning, high-throughput inference, graphics, and scientific workloads outside fully managed model APIs. Compare accelerator families, memory, interconnect, availability zones, scheduling, container stacks, bare-metal options, quotas, and reservation models.",
       "operationalConsiderations": "Accelerator supply, quota, and utilization dominate cost and delivery risk. Architecture should plan capacity acquisition, image and driver management, orchestration, telemetry, data locality, failover, and a fallback path when a desired accelerator is unavailable.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official regulated-environment documentation establishes selected accelerated compute presence for AWS and Azure. Required accelerator families, quota, drivers, images, GCP and OCI accelerator scope, and all commercial-to-regulated parity still require validation.",
       "providers": {
         "aws": {
@@ -1361,7 +1965,24 @@
             "Commercial / SMB": "Select instance family for workload demand, drivers, container support, scheduling, quota, and spending guardrails.",
             "Enterprise": "Plan reservations or capacity, AMI and driver lifecycle, cluster scheduling, inference resilience, telemetry, and utilization controls.",
             "Government": "Confirm specific accelerated instance families, Capacity Blocks eligibility, quotas, images, networking, and data controls in AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure GPU-Accelerated Virtual Machines",
@@ -1379,7 +2000,24 @@
             "Commercial / SMB": "Choose GPU family against model size, driver image, region availability, networking, quota, and spending limits.",
             "Enterprise": "Govern quota and capacity, approved images and drivers, orchestration, monitoring, resilience, and utilization.",
             "Government": "Confirm required GPU VM families, images, quota, networking, and operating constraints in Azure Government."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Compute Engine GPUs",
@@ -1397,7 +2035,24 @@
             "Commercial / SMB": "Validate machine and GPU combination, region and quota, drivers, containers, storage locality, and pricing.",
             "Enterprise": "Govern accelerator capacity, reservations, images, scheduling, inference availability, observability, and utilization.",
             "Government": "Confirm required GPU models, machine families, regions, quotas, data controls, and control-package scope."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI GPU Compute",
@@ -1415,7 +2070,22 @@
             "Commercial / SMB": "Select GPU shape against model demand, network and storage path, images, quota, availability, and cost controls.",
             "Enterprise": "Plan GPU capacity, bare-metal or VM choice, cluster networking, images and drivers, inference operations, and utilization evidence.",
             "Government": "Confirm specific OCI GPU shapes, quotas, region, drivers, data path, and controls with Oracle for government use."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1432,7 +2102,7 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "This row maps security-analytics approaches rather than identical single services: Microsoft Sentinel and Google Security Operations provide SIEM capabilities, while the AWS mapping combines findings aggregation with an analytics pattern. Compare ingestion, correlation, retention, case management, and investigation requirements.",
       "operationalConsiderations": "SIEM implementation requires dedicated security operations expertise. Log ingestion costs are a significant operational consideration at scale. Integration with identity systems and incident response workflows is essential. Cloud-native SIEMs reduce infrastructure overhead but increase vendor dependency.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "The mapped security-analytics approaches are not functional equivalents; availability and parity claims require confirmation for each component used in a regulated design.",
       "providers": {
         "aws": {
@@ -1451,7 +2121,24 @@
             "Enterprise": "Security Lake; Detective; AWS Config; CloudTrail; CloudHSM; FIPS 140-2/3 endpoints",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           },
-          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html: AWS documents Security Hub in AWS GovCloud and lists unavailable integrations, console features, plans, and related CSPM/Inspector differences. Because the mapped SIEM row includes Security Hub as a SIEM pattern, availability is proposed as Limited. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html: AWS documents multiple Security Hub differences in AWS GovCloud, including unsupported integrations, unavailable usage/cost pages, no Extended Plan, and related CSPM/Inspector differences. Core Security Hub remains available, so the proposed lag is Moderate."
+          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html: AWS documents Security Hub in AWS GovCloud and lists unavailable integrations, console features, plans, and related CSPM/Inspector differences. Because the mapped SIEM row includes Security Hub as a SIEM pattern, availability is proposed as Limited. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ashv2.html: AWS documents multiple Security Hub differences in AWS GovCloud, including unsupported integrations, unavailable usage/cost pages, no Extended Plan, and related CSPM/Inspector differences. Core Security Hub remains available, so the proposed lag is Moderate.",
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Microsoft Sentinel",
@@ -1468,7 +2155,24 @@
             "Commercial / SMB": "Sentinel + Defender for Cloud + Key Vault + Purview",
             "Enterprise": "Sentinel + Defender XDR; Confidential Computing; Dedicated HSM; FIPS 140-2/3; Entra PIM",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Google Chronicle SIEM",
@@ -1485,7 +2189,22 @@
             "Commercial / SMB": "SCC Standard + Cloud Armor + Secret Manager",
             "Enterprise": "SCC Premium + Assured Workloads + Chronicle SIEM + CMEK + VPC-SC; FIPS HSMs",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Logging Analytics + Cloud Guard (SIEM pattern)",
@@ -1503,7 +2222,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate ingestion coverage, retention, correlation, investigations, case workflow, Cloud Guard findings, and external SOC integrations.",
             "Government": "Confirm Log Analytics limitations, Cloud Guard integrations, audit retention, and SOC workflow in Oracle U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1518,7 +2252,7 @@
       "aiClassification": "AI_CAPABLE",
       "architectureNotes": "Analytics platforms differ in provisioning model, workload isolation, data-lake federation, BI and ML adjacency, query governance, sharing, encryption, and cost controls. Select against workload patterns and data-governance boundaries.",
       "operationalConsiderations": "Query costs in on-demand models can surprise without governance guardrails. Slot/reservation pricing requires capacity planning. Data egress for cross-cloud or on-prem data movement adds cost. Schema design for distributed analytics differs significantly from traditional RDBMS patterns.",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official regulated-environment documentation establishes selected AWS, Azure, and Google analytics-platform presence. Google documentation confirms BigQuery ML, Gemini in BigQuery, and generative AI functions, supporting the existing AI_CAPABLE classification for this analytics capability. Required query, sharing, governance, AI/ML-adjacent features, OCI Autonomous Data Warehouse support, and all commercial-to-regulated parity remain to be validated.",
       "providers": {
         "aws": {
@@ -1537,7 +2271,24 @@
             "Commercial / SMB": "Redshift + EMR + Glue + Kinesis + QuickSight; Lake Formation governance",
             "Enterprise": "Redshift Serverless + RA3; Lake Formation; Clean Rooms",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Synapse Analytics / Microsoft Fabric",
@@ -1555,7 +2306,25 @@
             "Commercial / SMB": "Synapse Analytics + Data Factory + Event Hubs + Power BI",
             "Enterprise": "Synapse + Purview (governance) + Microsoft Fabric; OneLake unified storage",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High",
+              "note": "IL5 via Synapse Analytics; Microsoft Fabric not in Azure Gov audit scope"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "BigQuery",
@@ -1573,7 +2342,24 @@
             "Commercial / SMB": "BigQuery + Dataflow (Beam) + Pub/Sub + Looker Studio",
             "Enterprise": "BigQuery Enterprise (Reservations, Editions, BI Engine); BigQuery ML; Gemini in BigQuery; Dataplex governance; Analytics Hub",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL4",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Autonomous Data Warehouse",
@@ -1591,7 +2377,24 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate Autonomous Data Warehouse workload isolation, lake integration, security, BI connectivity, AI adjacency, and consumption model.",
             "Government": "Confirm Autonomous Data Warehouse availability and every data-service dependency in the intended government environment."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Oracle US Defense Cloud",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1607,7 +2410,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "API management services publish, secure, govern, observe, and version APIs for consumers and integration partners. Compare gateway policies, developer access, authentication, private exposure, protocol support, analytics, monetization needs, and lifecycle governance.",
       "operationalConsiderations": "An API gateway becomes a critical control point. Define ownership of API contracts, identity and secret handling, throttling, schema validation, audit logs, change compatibility, private network access, and incident response.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "This row now compares API management services. Managed file transfer is represented separately because protocol-driven file exchange is a different architecture decision.",
       "providers": {
         "aws": {
@@ -1625,7 +2428,24 @@
             "Commercial / SMB": "Standardize authentication, throttling, versioning, logs, and backend integration policy.",
             "Enterprise": "Govern API products, private endpoints, identity boundaries, observability, contract change, and platform ownership.",
             "Government": "Confirm API Gateway endpoint types and required integrations in the selected AWS GovCloud environment."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure API Management",
@@ -1642,7 +2462,24 @@
             "Commercial / SMB": "Standardize products, policies, identities, versioning, monitoring, and backend access.",
             "Enterprise": "Govern gateways, developer portals, hybrid access, private networks, analytics, and API lifecycle ownership.",
             "Government": "Confirm API Management tier and features on the current Azure Government roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Apigee",
@@ -1659,7 +2496,24 @@
             "Commercial / SMB": "Standardize proxies, products, authentication, quotas, monitoring, and backend integrations.",
             "Enterprise": "Govern API lifecycle, private access, analytics, developer onboarding, policy, and organizational ownership.",
             "Government": "Verify Apigee and dependent services within the selected Assured Workloads control package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI API Gateway",
@@ -1677,7 +2531,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use OCI API Gateway with identity, private endpoints, policies, deployment stages, logs, and backend ownership defined.",
             "Government": "Confirm gateway features, authentication, private endpoints, certificates, logging, and downstream dependencies in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1694,7 +2563,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed file transfer covers protocol-driven exchange with partners, agencies, or legacy systems. The mapped services are not identical: AWS provides a managed transfer-family endpoint, Azure Blob supports SFTP-based object exchange, and Google Storage Transfer Service is oriented to scheduled data movement rather than hosted partner-facing SFTP.",
       "operationalConsiderations": "Identify required protocols, partner onboarding, identity model, malware scanning, retention, encryption, nonrepudiation, audit logging, file-size limits, retries, and operational ownership before choosing an exchange pattern.",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "This row deliberately exposes capability differences rather than implying a native managed-MFT equivalent on every provider. Official documentation establishes mapped transfer support in AWS GovCloud, Azure Government, Google Assured Workloads, and Oracle Integration U.S. Government Cloud, with each product boundary still requiring review.",
       "providers": {
         "aws": {
@@ -1713,7 +2582,24 @@
             "Commercial / SMB": "Define SFTP, FTPS, or AS2 partners, authentication, storage, processing, monitoring, and retention.",
             "Enterprise": "Govern partner onboarding, workflows, encryption, audit evidence, scale, resilience, and integration ownership.",
             "Government": "Confirm required Transfer Family protocols and workflow features in AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "SFTP support for Azure Blob Storage",
@@ -1731,7 +2617,24 @@
             "Commercial / SMB": "Define local-user or identity handling, containers, lifecycle controls, logging, and processing.",
             "Enterprise": "Govern partner access, storage isolation, workflow integration, evidence, resilience, and cost.",
             "Government": "Validate Blob SFTP support and all workflow dependencies on the Azure Government roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Storage Transfer Service (transfer orchestration, not hosted SFTP)",
@@ -1749,7 +2652,24 @@
             "Commercial / SMB": "Define source and sink access, scheduling, checksums, logging, and post-transfer processing.",
             "Enterprise": "Govern large-scale transfer orchestration, network paths, data boundaries, monitoring, and exception workflows.",
             "Government": "Verify Storage Transfer Service and destination products for the selected Assured Workloads package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "Oracle Integration File Server (SFTP)",
@@ -1767,7 +2687,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate Oracle Integration File Server capacity, partner identity, SFTP keys, retention, malware handling, and audit requirements.",
             "Government": "Validate File Server limits, SFTP key handling, integration dependencies, logging, and evidence requirements in Oracle Integration U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1782,7 +2717,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed delivery platforms should be compared by source integration, build execution, deployment targets, artifact controls, identity boundaries, software-supply-chain safeguards, audit evidence, and regulated-environment support.",
       "operationalConsiderations": "Software supply-chain security, artifact provenance, secret protection, scanning, and auditable deployments increasingly affect regulated reviews. Government workloads require explicitly verified build environments and evidence paths; do not infer STIG or impact-level support from commercial CI/CD functionality. CodeCommit deprecation remains a migration concern for existing AWS investments.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Delivery-service availability and supply-chain controls must be checked in the selected regulated environment; this row makes no cross-provider parity claim.",
       "providers": {
         "aws": {
@@ -1801,7 +2736,24 @@
             "Enterprise": "CodeCatalyst; CodeGuru Security; Inspector SBOM export; Binary Authorization",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           },
-          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html: AWS documents CodePipeline in AWS GovCloud and lists unavailable source, build, test, deploy, invoke, and cross-region action features. The mapped row includes CodePipeline, so availability is proposed as Limited. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html: AWS documents CodePipeline differences in AWS GovCloud, including unavailable custom actions, batch-build action support, several deploy and invoke actions, and cross-region actions. Core CI/CD remains available, so the proposed lag is Moderate."
+          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html: AWS documents CodePipeline in AWS GovCloud and lists unavailable source, build, test, deploy, invoke, and cross-region action features. The mapped row includes CodePipeline, so availability is proposed as Limited. parityLag verified 2026-06-23 from https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-acp.html: AWS documents CodePipeline differences in AWS GovCloud, including unavailable custom actions, batch-build action support, several deploy and invoke actions, and cross-region actions. Core CI/CD remains available, so the proposed lag is Moderate.",
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure DevOps + GitHub Enterprise",
@@ -1818,7 +2770,22 @@
             "Commercial / SMB": "Azure DevOps (Boards/Repos/Pipelines/Artifacts/Test Plans); GitHub Actions native",
             "Enterprise": "GitHub Advanced Security (secret scanning, SAST); Defender for DevOps; SBOM support",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Azure Government",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud Build + Cloud Deploy",
@@ -1836,7 +2803,22 @@
             "Enterprise": "Cloud Build Enterprise; Cloud Deploy multi-target; Binary Authorization; SBOM generation",
             "Government": "Verify the required service, region, controls, and feature support through the linked regulated-environment documentation before selection."
           },
-          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Cloud Build and Cloud Deploy as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial."
+          "sourceNotes": "govAvailability verified 2026-06-23 from https://docs.cloud.google.com/assured-workloads/docs/supported-products: Google lists Cloud Build and Cloud Deploy as Assured Workloads supported products for regulated control packages. Because this source establishes control-package support rather than commercial feature parity, availability is proposed as Partial.",
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI DevOps",
@@ -1854,7 +2836,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate OCI DevOps repositories or external SCM, build runners, artifact flow, deployment controls, approvals, scanning, and evidence.",
             "Government": "Confirm DevOps endpoints, build execution, artifacts, Vault access, targets, and audit evidence in Oracle U.S. Government Cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1870,7 +2867,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Infrastructure as code and policy as code establish repeatable cloud configuration through reviewed source, modules, state, policy checks, and controlled deployment. Terraform is a common multi-cloud workflow; provider-native tools and APIs still determine supported resources and regulated-environment behavior.",
       "operationalConsiderations": "Treat Terraform state, providers, modules, policy definitions, execution identities, approvals, drift detection, and audit logs as sensitive controlled assets. Pin versions, scan plans and modules, restrict state access, and separate application deployment privileges from platform governance.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official provider documentation establishes Terraform and native infrastructure-as-code workflows. This row does not assert that each managed target resource, module, runner, or policy feature is supported or equivalent in a government or regulated environment.",
       "providers": {
         "aws": {
@@ -1888,7 +2885,24 @@
             "Commercial / SMB": "Standardize Terraform modules or CloudFormation templates with plan review, state protection, and least-privilege execution.",
             "Enterprise": "Govern reusable modules, policy checks, organizational controls, drift evidence, private runners, and state encryption across accounts.",
             "Government": "Validate each target AWS GovCloud resource, execution path, module dependency, endpoint, state store, and evidence requirement."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Terraform on Azure / Bicep",
@@ -1905,7 +2919,24 @@
             "Commercial / SMB": "Standardize modules, remote state, managed identities, plan approvals, and Azure Policy checks.",
             "Enterprise": "Operate module registries, deployment identities, policy-as-code gates, landing-zone integration, private runners, and drift review.",
             "Government": "Validate Azure Government resource providers, API versions, policy definitions, deployment runners, state protection, and evidence paths."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Terraform on Google Cloud / Infrastructure Manager",
@@ -1922,7 +2953,22 @@
             "Commercial / SMB": "Standardize modules, deployment service accounts, state handling, organization policy, and plan review.",
             "Enterprise": "Govern module provenance, Infrastructure Manager or pipeline execution, organization policies, drift, evidence, and multi-project foundations.",
             "Government": "Validate allowed Assured Workloads products, organization policies, state locations, execution identities, and evidence requirements."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "Terraform on OCI / OCI Resource Manager",
@@ -1940,7 +2986,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use reviewed Terraform modules through OCI Resource Manager with protected state, execution identity, policy checks, approvals, and drift handling.",
             "Government": "Validate OCI Terraform provider resources, Resource Manager endpoints, state protection, target services, and evidence requirements in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -1957,7 +3018,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Virtual networks provide address spaces, routing boundaries, security segmentation, service access, and connectivity foundations for cloud workloads. Edge delivery and application protection are represented as a separate decision row.",
       "operationalConsiderations": "Centralize address planning and network policy ownership, avoid overlapping hybrid ranges, control routes and egress, test name resolution and connectivity failure modes, and review network data-transfer cost.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "Amazon VPC",
@@ -1974,7 +3035,24 @@
             "Commercial / SMB": "Add centralized routing and private endpoints as workload boundaries require.",
             "Enterprise": "Evaluate shared network hubs, private connectivity, traffic inspection, and egress governance.",
             "Government": "Confirm each required VPC and connectivity component in AWS GovCloud documentation before design approval."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Virtual Network",
@@ -1991,7 +3069,24 @@
             "Commercial / SMB": "Add private access and controlled ingress based on workload boundaries.",
             "Enterprise": "Evaluate hub-and-spoke or virtual WAN patterns, ExpressRoute, security inspection, and policy controls.",
             "Government": "Use the Azure Government availability roadmap for the specific network services in scope."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Virtual Private Cloud (VPC)",
@@ -2008,6 +3103,30 @@
             "Commercial / SMB": "Add managed load balancing and private access when workload boundaries require them.",
             "Enterprise": "Evaluate shared VPC, private connectivity, centralized security policy, and network cost controls.",
             "Government": "Confirm allowed network services in the applicable Assured Workloads control package."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "No service-specific PQC documentation. Google has deployed ML-KEM for data-in-transit at the network layer by default, but it is not scoped to this service in official docs."
           }
         },
         "oci": {
@@ -2026,6 +3145,28 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Design VCNs, subnets, route tables, NSGs, gateways, firewall controls, and hybrid connectivity under centralized governance.",
             "Government": "Confirm VCN connectivity, gateways, inspection, endpoints, logging, and routing requirements in Oracle U.S. Government Cloud."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
           }
         }
       }
@@ -2042,7 +3183,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Edge delivery and web application protection affect latency, origin exposure, cache behavior, DDoS response, and web-layer security policy. They are separate from virtual network design even when both participate in an internet-facing architecture.",
       "operationalConsiderations": "Define caching and invalidation, origin authentication, TLS and certificate ownership, WAF policy, bot and DDoS response, logging, data-location constraints, false-positive handling, and request or egress cost monitoring.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "Amazon CloudFront + AWS WAF",
@@ -2059,7 +3200,23 @@
             "Commercial / SMB": "Define distribution, origin access, TLS, caching, WAF rules, logs, and cost monitoring.",
             "Enterprise": "Govern edge policy, WAF rule lifecycle, origin protection, incident response, global traffic, evidence, and cost.",
             "Government": "Validate edge-delivery suitability and required protection controls for the regulated workload."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "AWS GovCloud (US)",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Front Door + Web Application Firewall",
@@ -2076,7 +3233,24 @@
             "Commercial / SMB": "Define routes, origins, caching, TLS, WAF policy, monitoring, and cost ownership.",
             "Enterprise": "Govern global entry points, protection policy, private origins, incident response, evidence, and tier selection.",
             "Government": "Confirm Front Door and WAF availability and constraints on the current roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud CDN + Cloud Armor",
@@ -2093,6 +3267,36 @@
             "Commercial / SMB": "Define load-balancer origins, cache behavior, certificates, Armor rules, telemetry, and spend.",
             "Enterprise": "Govern global edge exposure, security policy, DDoS response, evidence, resiliency, and cost controls.",
             "Government": "Verify Cloud CDN, Cloud Armor, and dependency support for the selected control package."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "kem": "Unknown",
+            "signature": "Unknown",
+            "tls": "Hybrid post-quantum key exchange on Google Cloud load balancers; staged default-on",
+            "vpn": "None",
+            "status": "Roadmap",
+            "milestoneDate": "2026-10",
+            "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls",
+            "sourceDate": "2026-06",
+            "firstParty": true,
+            "confidence": "Medium",
+            "note": "Opt-in before Oct 2026; default-on Oct 2026 (deferrable through Oct 2027), then default-on with no deferral."
           }
         },
         "oci": {
@@ -2111,6 +3315,28 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate WAF policy, bot and DDoS controls, origin protection, certificates, logging, and any separate delivery or caching requirement.",
             "Government": "Confirm supported WAF and delivery components, policy behavior, logs, and origin design for the target government environment."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
           }
         }
       }
@@ -2127,7 +3353,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed metrics, logging, tracing, alerting, and dashboards form the operational evidence layer for cloud workloads. A portable telemetry strategy can reduce migration friction while provider-native tools simplify service integration.",
       "operationalConsiderations": "Define log retention, sampling, alert ownership, and access controls early. Telemetry ingestion and retention can become material operating costs, especially when audit retention requirements apply.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "Amazon CloudWatch",
@@ -2145,7 +3371,24 @@
             "Commercial / SMB": "Standardize dashboards, alert routing, audit logs, and application telemetry.",
             "Enterprise": "Establish central observability ownership, retention policy, access governance, and cost controls.",
             "Government": "Review AWS GovCloud feature differences and retention obligations before implementation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Monitor",
@@ -2162,7 +3405,24 @@
             "Commercial / SMB": "Use common workspaces, alerts, application telemetry, and operational dashboards.",
             "Enterprise": "Govern retention, query access, export, and multicloud or hybrid telemetry patterns.",
             "Government": "Confirm each Azure Monitor component in the Azure Government availability roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud Monitoring and Cloud Logging",
@@ -2180,7 +3440,24 @@
             "Commercial / SMB": "Standardize log routing, alerts, service dashboards, and trace collection.",
             "Enterprise": "Govern sinks, retention, telemetry access, and cost controls across projects.",
             "Government": "Check Cloud Monitoring and Logging support for the selected Assured Workloads package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Monitoring + Logging",
@@ -2198,7 +3475,24 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Standardize OCI metrics, logs, alarms, dashboards, service connectors, retention, and OpenTelemetry integration.",
             "Government": "Confirm monitoring and logging components, retention, access controls, integrations, and evidence exports in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Oracle US Defense Cloud",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2213,7 +3507,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Government and sovereign offerings use provider-specific tenancy, boundary, eligibility, and control models. A comparable workload design must start from the required control regime and supported service inventory rather than assume commercial-cloud equivalence.",
       "operationalConsiderations": "Confirm account eligibility, identity boundaries, region selection, authorized services, support access constraints, and procurement requirements before selecting a regulated cloud deployment model.",
-      "lastVerified": "2026-06-14",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS GovCloud (US) / AWS European Sovereign Cloud",
@@ -2231,7 +3525,24 @@
             "Commercial / SMB": "Use standard AWS regions unless a regulated workload requires GovCloud eligibility and controls.",
             "Enterprise": "Map required services, identities, integrations, and operational boundaries before migration.",
             "Government": "Choose the regulated boundary first: AWS GovCloud (US) for eligible U.S. public-sector/compliance workloads or AWS European Sovereign Cloud for EU sovereignty requirements, then validate each service."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "None",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Government",
@@ -2249,7 +3560,24 @@
             "Commercial / SMB": "Use commercial Azure unless the workload requires Azure Government controls and eligibility.",
             "Enterprise": "Map dependencies to the current Azure Government availability roadmap before migration.",
             "Government": "Confirm services and impact-level requirements in Microsoft government documentation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "None",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Assured Workloads for Google Cloud",
@@ -2267,7 +3595,24 @@
             "Commercial / SMB": "Select control packages only where regulatory or sovereignty requirements warrant them.",
             "Enterprise": "Map each required service to the applicable Assured Workloads supported-product list.",
             "Government": "Validate control package, allowed services, data boundary, and support requirements."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "Oracle U.S. Government Cloud",
@@ -2285,7 +3630,24 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use OCI commercial regions or sovereign offerings according to data residency, contractual, support, and regulatory requirements.",
             "Government": "Start with Oracle U.S. Government Cloud service inventory and eligibility requirements, then verify each selected workload service."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "None",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Oracle US Defense Cloud",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2301,7 +3663,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Hybrid platforms extend management or provider infrastructure into customer-controlled locations. The options differ materially: managed hardware, connected management planes, and air-gapped deployments create different operating and compliance boundaries.",
       "operationalConsiderations": "Evaluate site readiness, network dependencies, patching ownership, disconnected operation, capacity planning, and data-boundary requirements before selecting an edge or on-premises extension.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS Outposts",
@@ -2318,7 +3680,24 @@
             "Commercial / SMB": "Assess site, connectivity, support, and minimum capacity requirements.",
             "Enterprise": "Plan hardware lifecycle, network resilience, local operations, and cloud service dependencies.",
             "Government": "Validate regulated-environment availability and service support for the intended facility."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/blogs/security/aws-achieves-fedramp-p-ato-for-15-services-in-the-aws-us-east-west-and-aws-govcloud-us-regions/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "Unknown",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/blogs/security/aws-achieves-fedramp-p-ato-for-15-services-in-the-aws-us-east-west-and-aws-govcloud-us-regions/",
+              "date": "2026-07",
+              "confidence": "Medium"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Arc",
@@ -2335,7 +3714,24 @@
             "Commercial / SMB": "Assess agent management, policy, monitoring, and connectivity requirements.",
             "Enterprise": "Standardize inventory, policy, security, observability, and change control across locations.",
             "Government": "Confirm the required Arc features and extensions against current Azure Government availability."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Google Distributed Cloud",
@@ -2352,7 +3748,23 @@
             "Commercial / SMB": "Assess site requirements, hardware model, connectivity, and supported services.",
             "Enterprise": "Plan fleet management, local operations, data placement, and disconnected-mode needs.",
             "Government": "Evaluate air-gapped requirements and the authorization scope for the intended workload."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL6",
+              "boundary": "Google Distributed Cloud Air-Gapped",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/il6-gdc-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Roving Edge Infrastructure",
@@ -2370,7 +3782,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate OCI edge hardware, disconnected operations, data transfer, device lifecycle, identity, patching, and return or destruction requirements.",
             "Government": "Confirm approved Roving Edge configuration, connected services, data transfer, and handling requirements in the government boundary."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2385,7 +3812,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Cost-governance services expose usage, budgets, allocation, optimization guidance, and reporting needed for accountable cloud operation. Their effectiveness depends on organizational scopes, tagging discipline, ownership, and timely review.",
       "operationalConsiderations": "Establish tagging and account hierarchy early, assign budget and anomaly-review ownership, and treat recommendations as inputs to engineering decisions rather than automatic actions.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS Billing and Cost Management",
@@ -2402,7 +3829,24 @@
             "Commercial / SMB": "Standardize account tags, budgets, cost allocation, and routine optimization review.",
             "Enterprise": "Establish FinOps ownership, multi-account reporting, commitment governance, anomaly response, and controlled evaluation of AI-assisted cost analysis features.",
             "Government": "Confirm billing and reporting workflows for GovCloud organizations and procurement needs."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "None",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "None",
+              "dodIL": "None",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Microsoft Cost Management",
@@ -2419,7 +3863,24 @@
             "Commercial / SMB": "Use consistent tags, cost analysis, budgets, and optimization review.",
             "Enterprise": "Govern billing scopes, allocation, exports, commitments, and anomaly-response ownership.",
             "Government": "Validate cost-management capabilities and procurement reporting requirements in Azure Government."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud Billing",
@@ -2437,7 +3898,22 @@
             "Commercial / SMB": "Adopt project labeling, budgets, reports, and regular optimization reviews.",
             "Enterprise": "Govern account exports, allocation, commitments, recommendations, and anomaly response.",
             "Government": "Confirm billing API and support-case scope for the selected Assured Workloads package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Budgets + Usage Reports",
@@ -2455,7 +3931,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use compartments, tags, budgets, cost analysis, usage reports, and FinOps review workflows to assign ownership and accountability.",
             "Government": "Confirm government tenancy billing scopes, budgets, usage reports, tagging, procurement reporting, and access controls."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2471,7 +3962,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Managed event services support decoupled integration through publish-subscribe, routing, and streaming patterns. Selection should be based on delivery semantics, ordering, retention, replay, throughput, and integration boundaries rather than service names alone.",
       "operationalConsiderations": "Document delivery guarantees and retry handling before implementation. Retention, dead-letter processing, replay, encryption, private connectivity, and audit access all affect operational and regulated workload design.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "Amazon EventBridge",
@@ -2488,7 +3979,24 @@
             "Commercial / SMB": "Establish event schemas, retries, dead-letter handling, and cost monitoring.",
             "Enterprise": "Govern event ownership, routing policies, replay needs, observability, and cross-account access.",
             "Government": "Confirm EventBridge support and required event targets in the selected AWS GovCloud architecture."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Event Grid",
@@ -2505,7 +4013,24 @@
             "Commercial / SMB": "Standardize event subscriptions, delivery handling, private access, and monitoring.",
             "Enterprise": "Govern event domains, access policy, delivery assurance, and downstream dependencies.",
             "Government": "Confirm Event Grid and downstream service availability in Azure Government documentation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Pub/Sub",
@@ -2522,7 +4047,24 @@
             "Commercial / SMB": "Standardize schemas, dead-letter topics, replay policy, and telemetry.",
             "Enterprise": "Govern project boundaries, encryption, dataflow integration, throughput, and cost controls.",
             "Government": "Check Pub/Sub and dependent service support in the applicable Assured Workloads package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Streaming + Events + Queue",
@@ -2540,7 +4082,24 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate ordering, delivery semantics, replay, partitions, dead-letter handling, private connectivity, encryption, and consumers.",
             "Government": "Confirm Streaming, Events, Queue, targets, retention, endpoints, and audit dependencies in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Oracle US Defense Cloud",
+              "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2556,7 +4115,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Posture-management services aggregate configuration findings, exposure signals, and security recommendations. This is distinct from SIEM: posture management focuses on resource state and control drift, while SIEM focuses on event collection and investigation workflows.",
       "operationalConsiderations": "Enabling a posture service is not equivalent to meeting a compliance requirement. Assign remediation ownership, define exception handling, connect findings to ticketing or response processes, and validate the standards or control mappings applicable to the workload.",
-      "lastVerified": "2026-05-26",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS Security Hub",
@@ -2573,7 +4132,22 @@
             "Commercial / SMB": "Assign findings ownership, alert routing, standards review, and remediation tracking.",
             "Enterprise": "Integrate posture findings with account governance, incident response, and exception workflows.",
             "Government": "Validate Security Hub and required integrations for the selected AWS GovCloud environment."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "AWS GovCloud (US)",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Microsoft Defender for Cloud",
@@ -2590,7 +4164,24 @@
             "Commercial / SMB": "Define plan selection, remediation workflows, identity ownership, and alert handling.",
             "Enterprise": "Integrate posture governance with policy, security operations, and exception management.",
             "Government": "Confirm required Defender for Cloud plans and features on the Azure Government roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Security Command Center",
@@ -2607,7 +4198,24 @@
             "Commercial / SMB": "Define finding triage, access policy, notification paths, and remediation ownership.",
             "Enterprise": "Integrate posture findings into organization policy, security operations, and exception workflows.",
             "Government": "Confirm Security Command Center support and finding sources in the required control package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Cloud Guard",
@@ -2625,7 +4233,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Design Cloud Guard targets, detector and responder recipes, ownership, exceptions, notifications, and evidence flow.",
             "Government": "Confirm Cloud Guard configuration, responders, targets, standards interpretation, and evidence handling in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2640,7 +4263,7 @@
       "aiClassification": "AI_NATIVE",
       "architectureNotes": "Managed machine-learning platforms support experiment execution, training jobs, model lifecycle workflows, and deployment operations. Selection depends on supported frameworks, accelerators, governance tooling, data integration, and deployment boundary requirements.",
       "operationalConsiderations": "Training compute can be expensive and data-intensive. Establish experiment tracking, model lineage, data access controls, evaluation criteria, cost controls, and approval workflows before operational deployment.",
-      "lastVerified": "2026-06-16",
+      "lastVerified": "2026-07-04",
       "sourceNotes": "Official regulated-environment documentation establishes mapped ML platform presence for all four providers with material AWS limitations and control-package-scoped Google support; training features, accelerator scope, deployment lifecycle, and all parity remain to be validated.",
       "providers": {
         "aws": {
@@ -2659,7 +4282,24 @@
             "Commercial / SMB": "Standardize training jobs, model registry practice, endpoint controls, and cost review.",
             "Enterprise": "Govern data access, lineage, evaluation, deployment approval, accelerator allocation, and monitoring.",
             "Government": "Confirm required SageMaker AI features and permitted model/data workflows in AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Machine Learning",
@@ -2677,7 +4317,24 @@
             "Commercial / SMB": "Use managed training, registries, deployment controls, and monitoring with assigned ownership.",
             "Enterprise": "Govern ML lifecycle, evaluation, data access, identities, compute allocation, and approval pathways.",
             "Government": "Confirm required Azure Machine Learning components in Azure Government before architecture sign-off."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Vertex AI",
@@ -2695,7 +4352,24 @@
             "Commercial / SMB": "Standardize training, registry, deployment, identity, and evaluation practices.",
             "Enterprise": "Govern model lifecycle, data controls, accelerator allocation, monitoring, and approval processes.",
             "Government": "Verify Vertex AI features and model/data constraints for the applicable control package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL4",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Data Science",
@@ -2713,7 +4387,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate OCI Data Science notebooks, jobs, model catalog and deployments, accelerators, lineage, networking, identity, and cost control.",
             "Government": "Confirm Data Science features, approved accelerators, model and data boundaries, network path, and evidence in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2729,7 +4418,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Migration tooling supports discovery, assessment, replication, cutover, and modernization planning for moving workloads into cloud environments. Product coverage differs for servers, databases, applications, storage, and offline transfer methods.",
       "operationalConsiderations": "Inventory dependencies and data classifications before migration. Rehearse cutover and rollback, measure network or transfer appliance constraints, validate identity and encryption boundaries, and budget for post-migration remediation.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS Application Migration Service",
@@ -2746,7 +4435,24 @@
             "Commercial / SMB": "Assess dependencies, test replication, rehearse cutover, and validate cost assumptions.",
             "Enterprise": "Govern discovery, wave planning, application dependencies, rollback, security review, and modernization follow-up.",
             "Government": "Confirm target-region and transfer-service support in AWS GovCloud for classified or regulated data."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Migrate",
@@ -2763,7 +4469,24 @@
             "Commercial / SMB": "Use assessment and test migration to validate sizing, dependencies, and downtime planning.",
             "Enterprise": "Govern migration waves, data movement, identity, landing zones, rollback, and remediation.",
             "Government": "Confirm Azure Migrate and all target dependencies in Azure Government documentation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Migrate to Virtual Machines",
@@ -2780,7 +4503,22 @@
             "Commercial / SMB": "Assess source dependencies, target sizing, testing, cutover, and cost impacts.",
             "Enterprise": "Govern migration waves, data boundaries, target landing zones, rollback, and modernization follow-up.",
             "Government": "Validate migration tools and target products within the selected Assured Workloads control package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "Oracle Cloud Migrations",
@@ -2798,7 +4536,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate discovery, replication, VMware or compute targets, dependencies, test cutover, rollback, identity, encryption, and post-migration work.",
             "Government": "Confirm Oracle Cloud Migrations support and every source, transfer, target, and recovery dependency for a government migration."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2815,7 +4568,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cloud adoption begins with resource hierarchy, guardrails, identity boundaries, centralized logging, network foundations, and account or subscription provisioning. These are architecture patterns composed from provider services rather than one-to-one products.",
       "operationalConsiderations": "Establish ownership for platform guardrails before onboarding application teams. Version policy changes, preserve audit evidence, separate platform and workload responsibilities, and test exception handling and break-glass access.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS Control Tower + AWS Organizations",
@@ -2832,7 +4585,22 @@
             "Commercial / SMB": "Standardize account vending, logging, guardrails, and cost ownership.",
             "Enterprise": "Operate a multi-account landing zone with governed OUs, preventive and detective controls, identity federation, and centralized evidence.",
             "Government": "Confirm Control Tower and every required integrated service in the target AWS GovCloud foundation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "AWS GovCloud (US)",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Landing Zones + Azure Policy",
@@ -2849,7 +4617,24 @@
             "Commercial / SMB": "Adopt management groups, policy baselines, logging, identity, and networking conventions.",
             "Enterprise": "Operate platform and application landing zones with delegated ownership, policy-as-code, and centralized controls.",
             "Government": "Check required landing-zone components against the current Azure Government product roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Enterprise Foundations Blueprint + Organization Policy",
@@ -2866,7 +4651,24 @@
             "Commercial / SMB": "Standardize folders, projects, organization policies, logging, and shared networking.",
             "Enterprise": "Deploy and govern the foundation blueprint with policy-as-code, centralized security projects, and private network paths.",
             "Government": "Validate each foundational product within the applicable Assured Workloads control package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Landing Zones + Resource Manager",
@@ -2884,7 +4686,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Use OCI Landing Zones with organization, compartments, identity, network, security, logging, budgets, policy, and Terraform governance.",
             "Government": "Confirm every landing-zone component, Resource Manager workflow, policy, endpoint, and audit dependency in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2900,7 +4717,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Recovery architecture requires protected copies, retention policy, immutability controls, restoration testing, and workload-specific RPO and RTO decisions. Provider backup services protect different resource sets and should be evaluated against the actual recovery plan.",
       "operationalConsiderations": "A successful backup job is not proof of recoverability. Isolate backup administration, protect vaults against destructive changes, test restores and regional recovery, document key dependencies, and budget for storage and recovery data movement.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS Backup",
@@ -2917,7 +4734,24 @@
             "Commercial / SMB": "Define backup policy, retention, vault access, restoration testing, and cost review.",
             "Enterprise": "Govern cross-account protection, vault isolation, immutable retention, recovery testing, and audit reporting.",
             "Government": "Verify required protected resource types and recovery features for AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Backup + Azure Site Recovery",
@@ -2934,7 +4768,24 @@
             "Commercial / SMB": "Set vault policies, backup ownership, restore tests, retention, and recovery objectives.",
             "Enterprise": "Govern Backup Center, immutability and authorization controls, site recovery, reporting, and regional exercises.",
             "Government": "Confirm Backup and Site Recovery dependencies in the current Azure Government roadmap."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Backup and DR Service",
@@ -2951,7 +4802,22 @@
             "Commercial / SMB": "Define backup plans, vault locations, recovery tests, reporting, and storage cost control.",
             "Enterprise": "Govern centralized protection, immutable and indelible vault retention, automation, reporting, and recovery exercises.",
             "Government": "Confirm Backup and DR Service and dependent products for the selected Assured Workloads package."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Assured Workloads",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "oci": {
           "service": "OCI Full Stack Disaster Recovery",
@@ -2969,7 +4835,22 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate protection groups, dependencies, storage and database backups, switchover plans, testing, isolation, RPO, and RTO.",
             "Government": "Confirm disaster-recovery orchestration and each protected resource, backup, region, key, and restoration dependency in government cloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04"
         }
       }
     },
@@ -2985,7 +4866,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Enterprise cryptographic foundations separate keys, application secrets, and certificate lifecycle responsibilities while centralizing authorization, rotation policy, logging, and hardware-protection requirements. The mapped portfolios contain multiple related services.",
       "operationalConsiderations": "Define key ownership, separation of duties, recovery and deletion controls, rotation, application secret access, certificate renewal, audit collection, HSM requirements, and break-glass operations before workloads depend on the platform.",
-      "lastVerified": "2026-06-15",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS KMS + Secrets Manager + AWS Certificate Manager",
@@ -3002,7 +4883,24 @@
             "Commercial / SMB": "Adopt centralized encryption keys, secret rotation, certificate renewal, and access logging.",
             "Enterprise": "Govern key administration, HSM needs, service separation, rotation, recovery controls, audit evidence, and application access.",
             "Government": "Verify KMS, Secrets Manager, ACM, endpoints, and cryptographic requirements in AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Key Vault + Managed HSM",
@@ -3019,7 +4917,24 @@
             "Commercial / SMB": "Standardize vault access, rotation, certificate handling, recovery, and logging.",
             "Enterprise": "Govern vault isolation, Managed HSM selection, privileged operations, recovery, private access, and audit evidence.",
             "Government": "Verify Key Vault and Managed HSM tiers and features in Azure Government documentation."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Cloud KMS + Secret Manager + Certificate Manager",
@@ -3036,6 +4951,38 @@
             "Commercial / SMB": "Standardize key rings, secret access, rotation, certificate lifecycle, and logging.",
             "Enterprise": "Govern centralized security projects, HSM requirements, separation of duties, recovery, private access, and evidence.",
             "Government": "Validate KMS, Secret Manager, and Certificate Manager within the selected control package."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "kem": "ML-KEM-768, ML-KEM-1024, X-Wing in Cloud KMS (Preview); KMS supplies key material, encapsulation via public SDK",
+            "signature": "ML-DSA-65 and SLH-DSA-SHA2-128S in Cloud KMS (Public Preview); ML-DSA roots phasing into Certificate Authority Service",
+            "tls": "Unknown",
+            "vpn": "None",
+            "status": "Hybrid-Preview",
+            "milestoneDate": "2025-10",
+            "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://docs.cloud.google.com/kms/docs/digital-signatures",
+            "sourceDate": "2026-06",
+            "firstParty": true,
+            "confidence": "High",
+            "note": "KEMs and PQC signatures both in Preview; validation/encapsulation done with public SDKs (OpenSSL/Tink)."
           }
         },
         "oci": {
@@ -3054,6 +5001,28 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Design OCI Vault keys and secrets plus certificate authorities and lifecycle with rotation, HSM, IAM, audit, and deletion protection.",
             "Government": "Confirm keys, secrets, certificates, HSM requirements, rotation, deletion controls, and endpoint scope in government cloud."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
           }
         }
       }
@@ -3071,7 +5040,7 @@
       "aiClassification": "STANDARD",
       "architectureNotes": "Private access to managed services, hybrid network extension, and predictable DNS resolution are foundational controls for enterprise workload boundaries. The mapped portfolios combine endpoint, name-resolution, and dedicated-connectivity choices rather than identical products.",
       "operationalConsiderations": "Centralize address planning and DNS ownership, define egress inspection and failover, test private resolution paths, control endpoint approvals, monitor bandwidth and connection cost, and confirm every service endpoint required by regulated workloads.",
-      "lastVerified": "2026-06-23",
+      "lastVerified": "2026-07-04",
       "providers": {
         "aws": {
           "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
@@ -3088,7 +5057,24 @@
             "Commercial / SMB": "Use private endpoints and governed DNS where service access or hybrid dependencies require them.",
             "Enterprise": "Operate centralized DNS, endpoint ownership, transit design, dedicated connectivity, inspection, resilience, and cost controls.",
             "Government": "Confirm each endpoint, DNS path, and dedicated connectivity component for AWS GovCloud."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Moderate",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "AWS GovCloud (US)",
+              "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "azure": {
           "service": "Azure Private Link + Azure Private DNS + ExpressRoute",
@@ -3105,7 +5091,24 @@
             "Commercial / SMB": "Standardize private endpoints, DNS zones, access approvals, monitoring, and hybrid routes.",
             "Enterprise": "Govern hub connectivity, ExpressRoute, private DNS, endpoint policy, inspection, failover, and cost allocation.",
             "Government": "Confirm Private Link, Private DNS, ExpressRoute, and dependent endpoints in Azure Government."
-          }
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Azure Government",
+              "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04"
         },
         "gcp": {
           "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
@@ -3122,6 +5125,30 @@
             "Commercial / SMB": "Standardize service attachments, DNS resolution, access approval, monitoring, and hybrid routes.",
             "Enterprise": "Govern Shared VPC connectivity, private services, DNS forwarding, Interconnect resilience, inspection, and cost ownership.",
             "Government": "Confirm all network products and endpoint targets under the selected control package."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "High",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            },
+            "government": {
+              "status": "High",
+              "dodIL": "IL5",
+              "boundary": "Assured Workloads",
+              "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+              "date": "2026-07",
+              "confidence": "High"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "TLS/Interconnect endpoints may inherit network-layer ML-KEM, but no service-specific PQC documentation was found."
           }
         },
         "oci": {
@@ -3140,6 +5167,28 @@
             "Commercial / SMB": "Use the documented OCI service with region, network, identity, and cost controls validated for the workload.",
             "Enterprise": "Validate OCI private endpoints, DNS views and resolvers, FastConnect, routing, service access, inspection, failover, and cost.",
             "Government": "Account for private-only DNS behavior and confirm every private endpoint, resolver, FastConnect, route, and service dependency."
+          },
+          "fedramp": {
+            "commercial": {
+              "status": "Unknown",
+              "date": "2026-07",
+              "confidence": "Low"
+            },
+            "government": {
+              "status": "Unknown",
+              "dodIL": "Unknown",
+              "boundary": "Oracle US Defense Cloud",
+              "date": "2026-07",
+              "confidence": "Low"
+            }
+          },
+          "lastVerified": "2026-07-04",
+          "pqcReadiness": {
+            "status": "Unknown",
+            "fipsEndpointParity": "Unknown",
+            "firstParty": true,
+            "confidence": "Low",
+            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
           }
         }
       }
