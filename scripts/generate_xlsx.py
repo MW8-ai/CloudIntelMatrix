@@ -583,7 +583,7 @@ def build_transparency_sheet(ws):
 def build_upcoming_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "Announced / Preview / Upcoming — Official Sources Only", 10)
-    hdrs = ["ID","Provider","Category","Type","Status","Title","Expected GA","Source","Detail","Verified"]
+    hdrs = ["ID","Provider","Category","Type","Status","Title","Announced","Expected GA","Source","Detail","Verified"]
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("78350F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -595,7 +595,7 @@ def build_upcoming_sheet(ws):
         bg = STATUS_BG.get(item.get("status",""),"F9FAFB")
         vals = [item.get("id",""),item.get("provider",""),item.get("category",""),
                 item.get("type",""),item.get("status",""),item.get("title",""),
-                item.get("expected_ga",""),item.get("source",""),item.get("detail",""),
+                item.get("announced",""),item.get("expected_ga",""),item.get("source",""),item.get("detail",""),
                 str(item.get("verified",""))]
         for ci, v in enumerate(vals, 1):
             c = ws.cell(row=ri, column=ci, value=v)
@@ -603,7 +603,7 @@ def build_upcoming_sheet(ws):
             c.alignment = al("left","center", wrap=True); c.border = TB
         ws.row_dimensions[ri].height = 34
 
-    for col, w in {"A":22,"B":8,"C":22,"D":18,"E":12,"F":38,"G":12,"H":50,"I":60,"J":10}.items():
+    for col, w in {"A":22,"B":8,"C":22,"D":18,"E":12,"F":38,"G":14,"H":12,"I":50,"J":60,"K":10}.items():
         ws.column_dimensions[col].width = w
 
 # ── Build ──────────────────────────────────────────────────────────────────
@@ -643,7 +643,7 @@ def build_status_sheet(ws):
 def build_ai_watch_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "AI Lab Watch - Official Model Release Sources", 10)
-    hdrs = ["Lab","Short Name","Category","Model Family","Summary","News URL","Docs URL","Release Notes URL","Safety URL","Verified"]
+    hdrs = ["Lab","Short Name","Category","Model Family","Tracked Models","Summary","News URL","Docs URL","Release Notes URL","Safety URL","Verified"]
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("0B3B66"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -661,6 +661,7 @@ def build_ai_watch_sheet(ws):
             item.get("shortName", ""),
             item.get("category", ""),
             item.get("modelFamily", ""),
+            "; ".join(item.get("models", [])),
             item.get("summary", ""),
             item.get("newsUrl", ""),
             item.get("docsUrl", ""),
@@ -670,13 +671,13 @@ def build_ai_watch_sheet(ws):
         ]
         for ci, value in enumerate(vals, 1):
             c = ws.cell(row=ri, column=ci, value=value)
-            c.fill = f(bg); c.font = ft(size=8, color="2563EB" if ci in [6, 7, 8, 9] and value else "111827")
+            c.fill = f(bg); c.font = ft(size=8, color="2563EB" if ci in [7, 8, 9, 10] and value else "111827")
             c.alignment = al("left","center", wrap=True); c.border = TB
-            if ci in [6, 7, 8, 9] and value:
+            if ci in [7, 8, 9, 10] and value:
                 c.hyperlink = value
         ws.row_dimensions[ri].height = 36
 
-    for col, w in {"A":18,"B":14,"C":22,"D":30,"E":60,"F":42,"G":48,"H":48,"I":42,"J":12}.items():
+    for col, w in {"A":18,"B":14,"C":22,"D":30,"E":44,"F":60,"G":42,"H":48,"I":48,"J":42,"K":12}.items():
         ws.column_dimensions[col].width = w
 
 MATRIX_EXPORT_HEADERS = [
@@ -713,7 +714,7 @@ STATUS_EXPORT_HEADERS = [
     "docsUrl", "lastVerified",
 ]
 AI_WATCH_EXPORT_HEADERS = [
-    "name", "shortName", "category", "modelFamily", "summary", "newsUrl",
+    "name", "shortName", "category", "modelFamily", "models", "summary", "newsUrl",
     "docsUrl", "releaseNotesUrl", "safetyUrl", "lastVerified",
 ]
 RESIDENCY_EXPORT_HEADERS = [
@@ -994,6 +995,7 @@ def ai_watch_export_rows():
             "shortName": item.get("shortName", ""),
             "category": item.get("category", ""),
             "modelFamily": item.get("modelFamily", ""),
+            "models": item.get("models", []),
             "summary": item.get("summary", ""),
             "newsUrl": item.get("newsUrl", ""),
             "docsUrl": item.get("docsUrl", ""),
