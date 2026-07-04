@@ -140,6 +140,7 @@ const AI_WATCH_COLUMNS = [
   "shortName",
   "category",
   "modelFamily",
+  "models",
   "summary",
   "newsUrl",
   "docsUrl",
@@ -155,6 +156,7 @@ const PROVIDER_NEWS_COLUMNS = [
   "category",
   "title",
   "detail",
+  "announced",
   "expectedGa",
   "source",
 ];
@@ -637,6 +639,7 @@ export function buildAiWatchRows(items) {
     shortName: item.shortName,
     category: item.category,
     modelFamily: item.modelFamily,
+    models: item.models || [],
     summary: item.summary,
     newsUrl: item.newsUrl,
     docsUrl: item.docsUrl,
@@ -654,6 +657,7 @@ export function buildProviderNewsRows(items) {
     category: item.category,
     title: item.title,
     detail: item.detail,
+    announced: item.announced,
     expectedGa: item.expected_ga,
     source: item.source,
   }));

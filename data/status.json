@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Official operational status and incident-history source index. This file records where to check current service health; it does not store live uptime or incident state.",
-    "last_verified": "2026-06-30",
+    "last_verified": "2026-07-04",
     "scopeNote": "Static reference only. CloudIntelMatrix links to official provider status pages and does not fetch, cache, rank, or summarize live operational state at runtime."
   },
   "sources": [
@@ -64,6 +64,18 @@
       "docsUrl": "https://trust.salesforce.com/",
       "summary": "Official Salesforce status and trust surface for platform availability outside the four primary cloud providers.",
       "lastVerified": "2026-06-30"
+    },
+    {
+      "id": "cloudflare-status",
+      "name": "Cloudflare Status",
+      "provider": "cloudflare",
+      "providerName": "Cloudflare",
+      "category": "adjacent-platform",
+      "statusUrl": "https://www.cloudflarestatus.com/",
+      "historyUrl": "https://www.cloudflarestatus.com/history",
+      "docsUrl": "https://developers.cloudflare.com/support/cloudflare-status/",
+      "summary": "Official Cloudflare status and incident-history surfaces for edge network, CDN, DNS, security, and developer-platform services.",
+      "lastVerified": "2026-07-04"
     }
   ]
 }

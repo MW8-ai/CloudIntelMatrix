@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Official AI lab release and model-documentation source index. This file tracks where to review frontier and foundation-model announcements; it does not rank models or store live release state.",
-    "last_verified": "2026-06-30",
+    "last_verified": "2026-07-04",
     "scopeNote": "Static reference only. CloudIntelMatrix links to official lab sources for model docs, release notes, and safety context without fetching, ranking, or summarizing live AI news at runtime."
   },
   "sources": [
@@ -11,12 +11,22 @@
       "shortName": "OpenAI",
       "category": "frontier-model-lab",
       "modelFamily": "GPT and reasoning models",
+      "models": [
+        "GPT-5.5",
+        "GPT-5.5 Pro",
+        "GPT-5.4",
+        "GPT-5.4 Pro",
+        "GPT-5.4 mini",
+        "GPT-5.4 nano",
+        "GPT Image 2",
+        "GPT-Realtime-2"
+      ],
       "newsUrl": "https://openai.com/news/product-releases/",
       "docsUrl": "https://developers.openai.com/api/docs/models",
       "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
       "safetyUrl": "https://openai.com/safety/",
       "summary": "Official OpenAI surfaces for model availability, product releases, API model documentation, and safety context.",
-      "lastVerified": "2026-06-30"
+      "lastVerified": "2026-07-04"
     },
     {
       "id": "anthropic",
@@ -24,11 +34,19 @@
       "shortName": "Claude",
       "category": "frontier-model-lab",
       "modelFamily": "Claude models",
+      "models": [
+        "Claude Fable 5",
+        "Claude Opus 4.8",
+        "Claude Sonnet 5",
+        "Claude Haiku 4.5",
+        "Claude Mythos 5",
+        "Claude Mythos Preview"
+      ],
       "newsUrl": "https://www.anthropic.com/news",
       "docsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
       "safetyUrl": "https://www.anthropic.com/responsible-scaling-policy",
       "summary": "Official Anthropic sources for Claude model documentation, product announcements, and responsible-scaling policy context.",
-      "lastVerified": "2026-06-30"
+      "lastVerified": "2026-07-04"
     },
     {
       "id": "google-gemini",
@@ -36,11 +54,19 @@
       "shortName": "Gemini",
       "category": "frontier-model-lab",
       "modelFamily": "Gemini models",
+      "models": [
+        "Gemini 3.5 Flash",
+        "Gemini 3.1 Flash-Lite",
+        "Gemini 3.1 Pro",
+        "Gemini 3 Flash",
+        "Gemini 2.5 Pro",
+        "Nano Banana 2"
+      ],
       "newsUrl": "https://blog.google/products-and-platforms/products/gemini/",
       "docsUrl": "https://ai.google.dev/gemini-api/docs/models",
       "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
       "summary": "Official Google Gemini sources for model docs, Gemini API changes, and product announcements.",
-      "lastVerified": "2026-06-30"
+      "lastVerified": "2026-07-04"
     },
     {
       "id": "xai",
@@ -48,12 +74,18 @@
       "shortName": "Grok",
       "category": "frontier-model-lab",
       "modelFamily": "Grok models",
+      "models": [
+        "Grok 4.3",
+        "Grok Build 0.1",
+        "Grok Imagine API",
+        "Grok Voice API"
+      ],
       "newsUrl": "https://x.ai/news",
       "docsUrl": "https://docs.x.ai/docs/models",
       "releaseNotesUrl": "https://docs.x.ai/developers/release-notes",
       "safetyUrl": "https://x.ai/safety",
       "summary": "Official xAI surfaces for Grok model documentation, developer release notes, news, and safety context.",
-      "lastVerified": "2026-06-30"
+      "lastVerified": "2026-07-04"
     },
     {
       "id": "deepseek",
@@ -61,10 +93,16 @@
       "shortName": "DeepSeek",
       "category": "open-model-lab",
       "modelFamily": "DeepSeek models",
+      "models": [
+        "deepseek-v4-flash",
+        "deepseek-v4-pro",
+        "deepseek-chat (deprecated 2026-07-24)",
+        "deepseek-reasoner (deprecated 2026-07-24)"
+      ],
       "docsUrl": "https://api-docs.deepseek.com/",
       "releaseNotesUrl": "https://api-docs.deepseek.com/updates/",
       "summary": "Official DeepSeek API documentation and update log for model and platform release review.",
-      "lastVerified": "2026-06-30"
+      "lastVerified": "2026-07-04"
     },
     {
       "id": "stability-ai",
@@ -72,11 +110,17 @@
       "shortName": "Stability",
       "category": "multimodal-model-lab",
       "modelFamily": "Stable image, audio, video, and 3D models",
+      "models": [
+        "Stable Audio 3.0",
+        "Stable Image Ultra",
+        "Stable Diffusion 3.5",
+        "Stable Video 4D 2.0"
+      ],
       "newsUrl": "https://stability.ai/news",
       "docsUrl": "https://platform.stability.ai/docs",
       "releaseNotesUrl": "https://platform.stability.ai/docs/release-notes",
       "summary": "Official Stability AI sources for generative media model announcements, platform docs, and release notes.",
-      "lastVerified": "2026-06-30"
+      "lastVerified": "2026-07-04"
     }
   ]
 }

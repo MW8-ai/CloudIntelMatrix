@@ -46,6 +46,7 @@ const {
   _meta: META,
 } = matrixData;
 const UPCOMING = upcomingData.upcoming || [];
+const UPCOMING_META = upcomingData._meta || {};
 const HISTORY = historyData.history || [];
 const HISTORY_META = historyData._meta || {};
 const TRANSPARENCY = transparencyData.mandates || [];
@@ -2517,6 +2518,13 @@ function AiWatchViewDesign({ sources, meta }) {
                     <span>{source.shortName}</span>
                     <strong>Official model docs are the source of truth for current model names.</strong>
                   </div>
+                  {Array.isArray(source.models) && source.models.length > 0 && (
+                    <div className="ai-watch-model-chip-row" aria-label={`${source.name} tracked model names`}>
+                      {source.models.map(model => (
+                        <span key={model} className="ai-watch-model-chip">{model}</span>
+                      ))}
+                    </div>
+                  )}
                   <div style={{ fontSize: 11, color: "var(--ink2)", lineHeight: 1.6, marginBottom: 10 }}>{source.summary}</div>
                   <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
                     {source.newsUrl && <a href={source.newsUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">News</a>}
@@ -2549,6 +2557,7 @@ function ProviderNewsViewDesign({ items }) {
         body="Tracked announced, preview, deprecated, and upcoming cloud-provider changes stay out of the matrix path but remain available for planning review."
         meta={[
           <StatTile key="items" label="ITEMS" value={items.length} />,
+          <VerifiedStamp key="reviewed" date={UPCOMING_META.last_reviewed} />,
           ...providerCounts.map(group => (
             <StatTile key={group.provider} label={group.label.toUpperCase()} value={group.count} tone={PROVIDER_META[group.provider].dot} />
           )),
@@ -2561,40 +2570,28 @@ function ProviderNewsViewDesign({ items }) {
 
 // -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
-  const [open, setOpen] = useState(false);
   if (!items.length) return null;
   const providerGroups = PROVIDERS.map(providerKey => {
     const label = providerLabelForKey(providerKey);
     const providerItems = items.filter(item => item.provider?.toLowerCase() === providerKey);
-    const visibleItems = open ? providerItems : providerItems.slice(0, 4);
     return {
       providerKey,
       label,
       items: providerItems,
-      visibleItems,
-      hiddenCount: Math.max(providerItems.length - visibleItems.length, 0),
+      visibleItems: providerItems,
     };
   });
-  const visibleCount = providerGroups.reduce((sum, group) => sum + group.visibleItems.length, 0);
-  const hiddenCount = Math.max(items.length - visibleCount, 0);
 
   return (
-    <div className={`global-news-panel ${open ? "open" : "compact"}`} style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
+    <div className="global-news-panel open" style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
       <div style={{ padding: "8px 14px", background: "var(--panel-alt)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
           <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", color: "#b45309" }}>GLOBAL CLOUD PROVIDER NEWS</div>
           <div style={{ fontSize: 9, color: "var(--muted)", marginTop: 2 }}>
-            Official announced, preview, deprecated, and upcoming changes by provider. Showing {visibleCount} of {items.length}.
+            Official announced, preview, deprecated, and upcoming changes by provider. Showing all {items.length} tracked item(s).
           </div>
         </div>
-        <button
-          type="button"
-          className="hb"
-          onClick={() => setOpen(v => !v)}
-          style={{ border: "1px solid #d97706", borderRadius: 5, background: "var(--panel)", color: "#b45309", padding: "5px 9px", fontSize: 9, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 800 }}
-        >
-          {open ? "SHOW LESS" : `SHOW ALL ${items.length}`}
-        </button>
+        <VerifiedStamp date={UPCOMING_META.last_reviewed} />
       </div>
       <div className="global-news-grid" style={{ padding: "10px 14px", background: "var(--panel)" }}>
         {providerGroups.map(group => {
@@ -2610,19 +2607,22 @@ function UpcomingBanner({ items }) {
               </div>
               <div style={{ display: "grid", gap: 8 }}>
                 {group.visibleItems.map(item => (
-                  <article key={item.id} className={`global-news-item ${open ? "" : "compact"}`}>
-                    <div className="global-news-status-row" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: open ? 5 : 3 }}>
+                  <article key={item.id} className="global-news-item">
+                    <div className="global-news-status-row" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 5 }}>
                       <span style={{ fontSize: 7.5, padding: "2px 5px", borderRadius: 3, background: "#78350f", color: "#fbbf24", fontWeight: 800, letterSpacing: "0.04em" }}>
                         {item.status?.toUpperCase()}
                       </span>
                       <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>{item.category}</span>
+                      {item.announced && (
+                        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>Announced {item.announced}</span>
+                      )}
                     </div>
-                    <div style={{ fontSize: open ? 10 : 9.5, color: "var(--text)", fontWeight: 800, lineHeight: 1.35 }}>{item.title}</div>
-                    {open && item.expected_ga && (
+                    <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 800, lineHeight: 1.35 }}>{item.title}</div>
+                    {item.expected_ga && (
                       <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--muted)", marginTop: 4 }}>Expected: {item.expected_ga}</div>
                     )}
-                    {open && <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45, marginTop: 5 }}>{item.detail}</div>}
-                    {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: open ? 9 : 8.5, color: "var(--link)", marginTop: open ? 6 : 4, display: "inline-block", fontWeight: 700, textDecoration: "none" }}>Official source</a>}
+                    <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45, marginTop: 5 }}>{item.detail}</div>
+                    {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", marginTop: 6, display: "inline-block", fontWeight: 700, textDecoration: "none" }}>Official source</a>}
                   </article>
                 ))}
                 {!group.visibleItems.length && (
@@ -2630,21 +2630,11 @@ function UpcomingBanner({ items }) {
                     No tracked {group.label} provider news items.
                   </div>
                 )}
-                {!open && group.hiddenCount > 0 && (
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--faint)", fontWeight: 800 }}>
-                    +{group.hiddenCount} more {group.label} item(s)
-                  </div>
-                )}
               </div>
             </section>
           );
         })}
       </div>
-      {!open && hiddenCount > 0 && (
-        <div style={{ padding: "0 14px 10px", fontSize: 9, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace" }}>
-          {hiddenCount} more global provider news item(s) hidden.
-        </div>
-      )}
     </div>
   );
 }
@@ -2986,7 +2976,7 @@ export default function App() {
     </div>
   );
   const categoryControlCard = (
-    <label className="filter-control-card" style={{ display: "grid", gap: 7 }}>
+    <label className="filter-control-card" style={{ display: "grid", gap: 5 }}>
       <div className="filter-control-head" style={{ marginBottom: 0 }}>
         <span className="filter-control-label">CATEGORY</span>
         <span className="filter-control-note">{selectedCategory || "All categories"}</span>
@@ -3157,7 +3147,7 @@ export default function App() {
         .filter-select {
           width: 100%;
           min-width: 0;
-          padding: 7px 9px;
+          padding: 5px 8px;
           border-radius: 4px;
           border: 1px solid var(--border);
           background: var(--panel);
@@ -3555,6 +3545,26 @@ export default function App() {
         .ai-watch-model-strip strong {
           color: var(--ink2);
           font-weight: 700;
+        }
+        .ai-watch-model-chip-row {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin: 0 0 10px;
+        }
+        .ai-watch-model-chip {
+          display: inline-flex;
+          align-items: center;
+          min-height: 22px;
+          padding: 3px 7px;
+          border: 1px solid var(--border);
+          border-radius: 5px;
+          background: var(--panel);
+          color: var(--text);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 8.5px;
+          font-weight: 800;
+          line-height: 1.2;
         }
         .transparency-map-card {
           margin-bottom: 14px;
