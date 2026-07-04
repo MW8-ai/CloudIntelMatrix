@@ -178,12 +178,14 @@ def build_detail_sheet(ws):
     """Full detail: one row per capability×provider with arch notes and operational considerations."""
     ws.sheet_view.showGridLines = False
     ws.freeze_panes = "A3"
-    hdr(ws, "Capability Detail - Architecture Notes - Operational Considerations - All Tier Notes", 16)
-
     hdrs = ["Category","Capability","Provider","Service","Former Names","Gov Avail","Parity Lag","Parity Detail","Gov Variant",
             "Region","Realm Class","Provider Verified","Constraints","Cost Shape","Egress Sensitive","Commitment Discount",
-            "PQC Status","PQC KEM","PQC Signature","PQC TLS","PQC VPN","PQC Milestone","PQC FIPS Parity","PQC Source",
+            "PQC Status","PQC KEM","PQC Signature","PQC TLS","PQC VPN","PQC Milestone","PQC FIPS Parity","PQC Gov","PQC Source",
+            "PQC Source Date","PQC First Party","PQC Confidence","PQC Note","FedRAMP Commercial Status","FedRAMP Commercial URL",
+            "FedRAMP Commercial Date","FedRAMP Commercial Confidence","FedRAMP Government Status","FedRAMP Government DoD IL",
+            "FedRAMP Government Boundary","FedRAMP Government URL","FedRAMP Government Date","FedRAMP Government Confidence",
             "FedRAMP Level","DoD Impact Level","Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
+    hdr(ws, "Capability Detail - Architecture Notes - Operational Considerations - All Tier Notes", len(hdrs))
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("1E3A5F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
@@ -196,6 +198,9 @@ def build_detail_sheet(ws):
             prov = cap.get("providers",{}).get(pkey,{})
             cost_model = prov.get("costModel", {})
             pqc = prov.get("pqcReadiness", {})
+            fedramp = prov.get("fedramp", {})
+            fedramp_commercial = field_value(fedramp, "commercial") if isinstance(field_value(fedramp, "commercial"), dict) else {}
+            fedramp_government = field_value(fedramp, "government") if isinstance(field_value(fedramp, "government"), dict) else {}
             bg = PROV_COLORS[pkey]["svc"]
             vals = [
                 cap["category"], cap["capability"], PROV_LABELS[pkey],
@@ -204,7 +209,12 @@ def build_detail_sheet(ws):
                 cell_text(prov.get("constraints","")), field_value(cost_model, "shape"), field_value(cost_model, "egressSensitive"),
                 field_value(cost_model, "commitmentDiscountAvailable"), field_value(pqc, "status"), field_value(pqc, "kem"),
                 field_value(pqc, "signature"), field_value(pqc, "tls"), field_value(pqc, "vpn"), field_value(pqc, "milestoneDate"),
-                field_value(pqc, "fipsEndpointParity"), field_value(pqc, "source"), prov.get("fedrampLevel",""), prov.get("dodImpactLevel",""),
+                field_value(pqc, "fipsEndpointParity"), field_value(pqc, "govPqc"), field_value(pqc, "source"), field_value(pqc, "sourceDate"),
+                field_value(pqc, "firstParty"), field_value(pqc, "confidence"), field_value(pqc, "note"),
+                field_value(fedramp_commercial, "status"), field_value(fedramp_commercial, "url"), field_value(fedramp_commercial, "date"),
+                field_value(fedramp_commercial, "confidence"), field_value(fedramp_government, "status"), field_value(fedramp_government, "dodIL"),
+                field_value(fedramp_government, "boundary"), field_value(fedramp_government, "url"), field_value(fedramp_government, "date"),
+                field_value(fedramp_government, "confidence"), prov.get("fedrampLevel",""), prov.get("dodImpactLevel",""),
                 prov.get("docsUrl",""), prov.get("pricingUrl",""), prov.get("complianceUrl",""),
                 cap.get("architectureNotes",""), cap.get("operationalConsiderations",""),
             ]
@@ -670,8 +680,11 @@ MATRIX_EXPORT_HEADERS = [
     "formerNames", "status", "govAvailability", "parityLag", "parityDetail", "govVariant", "region", "realmClass",
     "providerLastVerified", "constraints", "costShape", "egressSensitive", "commitmentDiscountAvailable",
     "pqcStatus", "pqcKem", "pqcSignature", "pqcTls", "pqcVpn", "pqcMilestoneDate", "pqcFipsEndpointParity",
-    "pqcSource", "fedrampLevel", "dodImpactLevel", "docsUrl", "govDocsUrl", "complianceUrl", "pricingUrl",
-    "lastVerified", "sourceNotes",
+    "pqcGovPqc", "pqcSource", "pqcSourceDate", "pqcFirstParty", "pqcConfidence", "pqcNote",
+    "fedrampCommercialStatus", "fedrampCommercialUrl", "fedrampCommercialDate", "fedrampCommercialConfidence",
+    "fedrampGovernmentStatus", "fedrampGovernmentDodIL", "fedrampGovernmentBoundary", "fedrampGovernmentUrl",
+    "fedrampGovernmentDate", "fedrampGovernmentConfidence", "fedrampLevel", "dodImpactLevel", "docsUrl",
+    "govDocsUrl", "complianceUrl", "pricingUrl", "lastVerified", "sourceNotes",
 ]
 PATTERN_EXPORT_HEADERS = [
     "pattern", "summary", "whenToUse", "capability", "category", "provider",
@@ -723,6 +736,9 @@ def matrix_export_rows(caps):
             provider = cap.get("providers", {}).get(pkey, {})
             cost_model = provider.get("costModel", {})
             pqc = provider.get("pqcReadiness", {})
+            fedramp = provider.get("fedramp", {})
+            fedramp_commercial = field_value(fedramp, "commercial") if isinstance(field_value(fedramp, "commercial"), dict) else {}
+            fedramp_government = field_value(fedramp, "government") if isinstance(field_value(fedramp, "government"), dict) else {}
             rows.append({
                 "capability": cap.get("capability", ""),
                 "category": cap.get("category", ""),
@@ -750,7 +766,22 @@ def matrix_export_rows(caps):
                 "pqcVpn": field_value(pqc, "vpn"),
                 "pqcMilestoneDate": field_value(pqc, "milestoneDate"),
                 "pqcFipsEndpointParity": field_value(pqc, "fipsEndpointParity"),
+                "pqcGovPqc": field_value(pqc, "govPqc"),
                 "pqcSource": field_value(pqc, "source"),
+                "pqcSourceDate": field_value(pqc, "sourceDate"),
+                "pqcFirstParty": field_value(pqc, "firstParty"),
+                "pqcConfidence": field_value(pqc, "confidence"),
+                "pqcNote": field_value(pqc, "note"),
+                "fedrampCommercialStatus": field_value(fedramp_commercial, "status"),
+                "fedrampCommercialUrl": field_value(fedramp_commercial, "url"),
+                "fedrampCommercialDate": field_value(fedramp_commercial, "date"),
+                "fedrampCommercialConfidence": field_value(fedramp_commercial, "confidence"),
+                "fedrampGovernmentStatus": field_value(fedramp_government, "status"),
+                "fedrampGovernmentDodIL": field_value(fedramp_government, "dodIL"),
+                "fedrampGovernmentBoundary": field_value(fedramp_government, "boundary"),
+                "fedrampGovernmentUrl": field_value(fedramp_government, "url"),
+                "fedrampGovernmentDate": field_value(fedramp_government, "date"),
+                "fedrampGovernmentConfidence": field_value(fedramp_government, "confidence"),
                 "fedrampLevel": provider.get("fedrampLevel", ""),
                 "dodImpactLevel": provider.get("dodImpactLevel", ""),
                 "docsUrl": provider.get("docsUrl", ""),

@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-03 - FedRAMP and PQC object review scaffold
+- Added nested provider-level `fedramp` and expanded `pqcReadiness` schema validation, proposal-apply validation, ingestion tooling, UI detail rendering, and CSV/XLSX export columns.
+- Added unapproved FedRAMP and GCP/OCI PQC proposal-review files from the supplied bundle without changing `data/matrix.json` fact values.
+- Kept blog-backed or source-missing candidates as work items only under the official-primary-source rule.
+
 ## 2026-07-01 - AI tab icons
 - Added visible navigation icons for the AI Watch and AI Transparency tabs using existing local UI icon assets.
 

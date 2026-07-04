@@ -860,8 +860,35 @@ function formatPqcReadiness(pqcReadiness = {}) {
   if (hasDepthValue(pqcReadiness.signature)) parts.push(`Signature: ${pqcReadiness.signature}`);
   if (hasDepthValue(pqcReadiness.tls)) parts.push(`TLS: ${pqcReadiness.tls}`);
   if (hasDepthValue(pqcReadiness.vpn)) parts.push(`VPN: ${pqcReadiness.vpn}`);
+  if (hasDepthValue(pqcReadiness.govPqc)) parts.push(`Gov PQC: ${pqcReadiness.govPqc}`);
   if (hasDepthValue(pqcReadiness.source)) parts.push(`Source: ${pqcReadiness.source}`);
+  if (hasDepthValue(pqcReadiness.sourceDate)) parts.push(`Source date: ${pqcReadiness.sourceDate}`);
+  if (typeof pqcReadiness.firstParty === "boolean") parts.push(`First party: ${formatDepthValue(pqcReadiness.firstParty)}`);
+  if (hasDepthValue(pqcReadiness.confidence)) parts.push(`Confidence: ${pqcReadiness.confidence}`);
+  if (hasDepthValue(pqcReadiness.note)) parts.push(`Note: ${pqcReadiness.note}`);
   return parts.join("; ");
+}
+
+function formatFedrampEnvironment(label, environment = {}) {
+  const parts = [];
+  if (hasDepthValue(environment.status)) parts.push(`${label}: ${environment.status}`);
+  if (hasDepthValue(environment.dodIL)) parts.push(`DoD ${environment.dodIL}`);
+  if (hasDepthValue(environment.boundary)) parts.push(environment.boundary);
+  if (hasDepthValue(environment.date)) parts.push(`Date: ${environment.date}`);
+  if (hasDepthValue(environment.confidence)) parts.push(`Confidence: ${environment.confidence}`);
+  if (hasDepthValue(environment.url)) parts.push(`Source: ${environment.url}`);
+  if (hasDepthValue(environment.note)) parts.push(`Note: ${environment.note}`);
+  return parts.join(", ");
+}
+
+function formatFedramp(fedramp = {}, fallbackLevel = "") {
+  const parts = [
+    formatFedrampEnvironment("Commercial", fedramp.commercial),
+    formatFedrampEnvironment("Government", fedramp.government),
+  ].filter(Boolean);
+  if (parts.length) return parts.join("; ");
+  if (hasDepthValue(fallbackLevel)) return fallbackLevel;
+  return "";
 }
 
 function getParityReasoning(provider) {
@@ -1358,7 +1385,7 @@ function DesignMatrixDetail({ row, activeProviders, tier, onClose }) {
               { label: "Constraints", value: formatDepthValue(provider.constraints) },
               { label: "Cost model", value: formatCostModel(provider.costModel) },
               { label: "PQC readiness", value: formatPqcReadiness(provider.pqcReadiness) },
-              { label: "FedRAMP", value: provider.fedrampLevel },
+              { label: "FedRAMP", value: formatFedramp(provider.fedramp, provider.fedrampLevel) },
               { label: "DoD impact", value: provider.dodImpactLevel },
             ];
 
