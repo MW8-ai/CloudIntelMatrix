@@ -148,6 +148,17 @@ const AI_WATCH_COLUMNS = [
   "lastVerified",
 ];
 
+const PROVIDER_NEWS_COLUMNS = [
+  "provider",
+  "status",
+  "type",
+  "category",
+  "title",
+  "detail",
+  "expectedGa",
+  "source",
+];
+
 function asText(value) {
   if (value === null || value === undefined) return "";
   if (Array.isArray(value)) return value.join("; ");
@@ -635,6 +646,19 @@ export function buildAiWatchRows(items) {
   }));
 }
 
+export function buildProviderNewsRows(items) {
+  return items.map(item => ({
+    provider: PROVIDER_LABELS[item.provider] || String(item.provider || "").toUpperCase(),
+    status: item.status,
+    type: item.type,
+    category: item.category,
+    title: item.title,
+    detail: item.detail,
+    expectedGa: item.expected_ga,
+    source: item.source,
+  }));
+}
+
 export function makeExportData(viewId, label, columns, rows) {
   return {
     viewId,
@@ -671,6 +695,10 @@ export function statusExport(items) {
 
 export function aiWatchExport(items) {
   return makeExportData("ai-watch", "AI Lab Watch", AI_WATCH_COLUMNS, buildAiWatchRows(items));
+}
+
+export function providerNewsExport(items) {
+  return makeExportData("provider-news", "Provider News", PROVIDER_NEWS_COLUMNS, buildProviderNewsRows(items));
 }
 
 export function downloadCsv(exportData) {
