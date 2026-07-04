@@ -1,0 +1,198 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Unapproved GCP/OCI PQC readiness object review file generated from the attached Batch 2 bundle. Only official-doc candidates are proposals; blog-backed OCI candidates remain work items.",
+    "generatedOn": "2026-07-03",
+    "approved": false,
+    "targetFields": [
+      "provider.pqcReadiness"
+    ],
+    "matrixVersion": "3.16.6",
+    "matrixLastVerified": "2026-06-24",
+    "sourceRule": "Official primary sources only. Blog-backed candidates are work items, not proposals."
+  },
+  "workItems": [
+    {
+      "capability": "Identity & Access Management",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Identity & Access",
+      "service": "Cloud IAM + Cloud Identity",
+      "reason": "No official service-specific source URL was provided; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/iam/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Virtual Private Cloud (VPC)",
+      "reason": "No official service-specific source URL was provided; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/vpc/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Cloud CDN + Cloud Armor",
+      "reason": "Review bundled PQC candidate object before applying.",
+      "docsUrl": "https://docs.cloud.google.com/cdn/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls"
+      ]
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Cloud KMS + Secret Manager + Certificate Manager",
+      "reason": "Review bundled PQC candidate object before applying.",
+      "docsUrl": "https://docs.cloud.google.com/kms/docs/key-management-service",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/kms/docs/digital-signatures"
+      ]
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
+      "reason": "No official service-specific source URL was provided; keep as review work only.",
+      "docsUrl": "https://docs.cloud.google.com/vpc/docs/private-service-connect",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "oci",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Identity & Access",
+      "service": "OCI IAM with Identity Domains",
+      "reason": "No official service-specific source URL was provided; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Identity/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "oci",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "OCI Virtual Cloud Network (VCN)",
+      "reason": "Bundled candidate is not proposal-ready because its source is outside approved primary-source domains.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://blogs.oracle.com/security/post-quantum-cryptography"
+      ]
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "oci",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "OCI Web Application Firewall",
+      "reason": "No official service-specific source URL was provided; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/WAF/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "oci",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "OCI Vault + Certificates",
+      "reason": "Bundled candidate is not proposal-ready because its source is outside approved primary-source domains.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/KeyManagement/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://blogs.oracle.com/security/post-quantum-cryptography"
+      ]
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "oci",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "OCI Private Endpoints + DNS + FastConnect",
+      "reason": "Bundled candidate is not proposal-ready because its source is outside approved primary-source domains.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/DNS/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://blogs.oracle.com/security/post-quantum-cryptography"
+      ]
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "proposedValue": {
+        "kem": "Unknown",
+        "signature": "Unknown",
+        "tls": "Hybrid PQ key exchange on Google Cloud load balancers; staged default-on",
+        "vpn": "None",
+        "status": "Roadmap",
+        "milestoneDate": "2026-10",
+        "fipsEndpointParity": "Unknown",
+        "govPqc": "Unknown",
+        "source": "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls",
+        "sourceDate": "2026-06",
+        "firstParty": true,
+        "confidence": "Medium",
+        "note": "Opt-in before Oct 2026; default-on Oct 2026 (deferrable to Oct 2027), then default-on."
+      },
+      "sourceUrl": "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls",
+      "sourceQuote": "Post-quantum cryptography",
+      "rationale": "Unapproved PQC object proposal generated from the attached verified Batch 2 bundle. Apply only after human review against the cited official source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "gcp",
+      "field": "pqcReadiness",
+      "currentValue": null,
+      "proposedValue": {
+        "kem": "ML-KEM-768, ML-KEM-1024, X-Wing in Cloud KMS (Preview); encapsulation via SDK",
+        "signature": "ML-DSA-65 and SLH-DSA-SHA2-128S in Cloud KMS (Public Preview); ML-DSA roots phasing into CAS",
+        "tls": "Unknown",
+        "vpn": "None",
+        "status": "Hybrid-Preview",
+        "milestoneDate": "2025-10",
+        "fipsEndpointParity": "Unknown",
+        "govPqc": "Unknown",
+        "source": "https://docs.cloud.google.com/kms/docs/digital-signatures",
+        "sourceDate": "2026-06",
+        "firstParty": true,
+        "confidence": "High",
+        "note": "KEMs and PQC signatures both in Preview; validation/encapsulation via public SDKs."
+      },
+      "sourceUrl": "https://docs.cloud.google.com/kms/docs/digital-signatures",
+      "sourceQuote": "Post-quantum cryptography",
+      "rationale": "Unapproved PQC object proposal generated from the attached verified Batch 2 bundle. Apply only after human review against the cited official source.",
+      "proposedOn": "2026-07-03"
+    }
+  ]
+}

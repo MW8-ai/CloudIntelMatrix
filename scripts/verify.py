@@ -26,6 +26,9 @@ VALID_REALM_CLASS = {"commercial", "us-gov", "eu-sovereign", "other-sovereign"}
 VALID_COST_SHAPE = {"consumption", "provisioned", "hybrid", "Unknown"}
 VALID_PQC_STATUS = {"GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"}
 VALID_PQC_FIPS_PARITY = {"AtParity", "Lagging", "Unknown"}
+VALID_CONFIDENCE = {"High", "Medium", "Low"}
+VALID_FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
+VALID_FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
 VALID_USTATUS = {"preview", "announced", "ga", "limited", "deprecated"}
 VALID_UTYPE = {"expansion", "new_region", "new_feature", "feature_ga", "new_instance", "deprecation_notice"}
 VALID_HISTORY_PHASE = {"Commercial cloud", "Personal / Free", "Government state/federal"}
@@ -209,6 +212,7 @@ PROPOSAL_PROVIDER_FIELDS = {
     "constraints",
     "costModel",
     "pqcReadiness",
+    "fedramp",
     "fedrampLevel",
     "dodImpactLevel",
     "docsUrl",
@@ -274,6 +278,7 @@ PROVIDER_DEPTH_FIELDS = {
     "constraints",
     "costModel",
     "pqcReadiness",
+    "fedramp",
     "fedrampLevel",
     "dodImpactLevel",
 }
@@ -385,21 +390,100 @@ def validate_pqc_readiness(value, label, notes_available):
     if not isinstance(value, dict) or not value:
         err(f"{label} must be a non-empty object")
         return
-    allowed = {"kem", "signature", "tls", "vpn", "status", "milestoneDate", "fipsEndpointParity", "source"}
+    allowed = {
+        "kem",
+        "signature",
+        "tls",
+        "vpn",
+        "status",
+        "milestoneDate",
+        "fipsEndpointParity",
+        "govPqc",
+        "source",
+        "sourceDate",
+        "firstParty",
+        "confidence",
+        "note",
+    }
+    required = {"status", "fipsEndpointParity", "confidence"}
     unexpected = set(value) - allowed
     if unexpected:
         err(f"{label} contains unsupported fields: {sorted(unexpected)}")
-    for field in ["kem", "signature", "tls", "vpn", "milestoneDate"]:
+    missing = required - set(value)
+    if missing:
+        err(f"{label} missing fields: {sorted(missing)}")
+    for field in ["kem", "signature", "tls", "vpn", "govPqc", "sourceDate", "note"]:
         if field in value:
             validate_non_empty_string(value.get(field), f"{label}.{field}")
+    if "milestoneDate" in value and value.get("milestoneDate") is not None:
+        validate_non_empty_string(value.get("milestoneDate"), f"{label}.milestoneDate")
     if "status" in value and value.get("status") not in VALID_PQC_STATUS:
         err(f"{label}.status invalid: {value.get('status')}")
     if "fipsEndpointParity" in value and value.get("fipsEndpointParity") not in VALID_PQC_FIPS_PARITY:
         err(f"{label}.fipsEndpointParity invalid: {value.get('fipsEndpointParity')}")
+    if "confidence" in value and value.get("confidence") not in VALID_CONFIDENCE:
+        err(f"{label}.confidence invalid: {value.get('confidence')}")
+    if "firstParty" in value and not isinstance(value.get("firstParty"), bool):
+        err(f"{label}.firstParty must be boolean")
     if "source" in value:
-        validate_url(value.get("source"), f"{label}.source", True)
-    if not (notes_available or value.get("source")):
-        err(f"{label} needs sourceNotes or pqcReadiness.source because it asserts provider-specific PQC readiness")
+        if value.get("source"):
+            validate_url(value.get("source"), f"{label}.source", True)
+        elif value.get("status") != "Unknown":
+            err(f"{label}.source must be a URL when status is not Unknown")
+    if value.get("status") != "Unknown":
+        if not value.get("source"):
+            err(f"{label} needs pqcReadiness.source because status is not Unknown")
+        if not value.get("sourceDate"):
+            err(f"{label} needs pqcReadiness.sourceDate because status is not Unknown")
+    if value.get("firstParty") is False and not value.get("note"):
+        err(f"{label}.note must name the partner when firstParty is false")
+
+
+def validate_fedramp_environment(value, label):
+    if not isinstance(value, dict):
+        err(f"{label} must be an object")
+        return
+    allowed = {"status", "url", "date", "confidence", "dodIL", "boundary", "note"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        err(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    status = value.get("status")
+    if status not in VALID_FEDRAMP_STATUS:
+        err(f"{label}.status invalid: {status}")
+    if value.get("confidence") not in VALID_CONFIDENCE:
+        err(f"{label}.confidence invalid: {value.get('confidence')}")
+    if value.get("url"):
+        validate_url(value.get("url"), f"{label}.url", True)
+    if status in {"High", "Moderate", "Low"}:
+        if not value.get("url"):
+            err(f"{label}.url is required when status is {status}")
+        if not value.get("date"):
+            err(f"{label}.date is required when status is {status}")
+    for field in ["date", "boundary", "note"]:
+        if field in value and value.get(field) is not None:
+            validate_non_empty_string(value.get(field), f"{label}.{field}")
+
+
+def validate_fedramp(value, label):
+    if not isinstance(value, dict) or not value:
+        err(f"{label} must be a non-empty object")
+        return
+    allowed = {"commercial", "government"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        err(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    for environment in ["commercial", "government"]:
+        if environment not in value:
+            err(f"{label}.{environment} missing")
+        else:
+            validate_fedramp_environment(value.get(environment), f"{label}.{environment}")
+    government = value.get("government", {})
+    if isinstance(government, dict):
+        dod_il = government.get("dodIL")
+        if dod_il not in VALID_FEDRAMP_IL:
+            err(f"{label}.government.dodIL invalid: {dod_il}")
+        if dod_il in {"IL4", "IL5", "IL6"} and government.get("status") not in {"High", "Moderate"}:
+            err(f"{label}.government.dodIL {dod_il} requires High or Moderate government status")
 
 
 def validate_provider_depth_fields(provider, label, notes_available):
@@ -411,6 +495,8 @@ def validate_provider_depth_fields(provider, label, notes_available):
         validate_cost_model(provider.get("costModel"), f"{label}.costModel", notes_available)
     if "pqcReadiness" in provider:
         validate_pqc_readiness(provider.get("pqcReadiness"), f"{label}.pqcReadiness", notes_available)
+    if "fedramp" in provider:
+        validate_fedramp(provider.get("fedramp"), f"{label}.fedramp")
     if "fedrampLevel" in provider:
         if provider.get("fedrampLevel") not in {"High", "Moderate", "Low", "Unknown"}:
             err(f"{label}.fedrampLevel invalid: {provider.get('fedrampLevel')}")
@@ -1038,6 +1124,8 @@ def proposal_value_valid(field, value, label):
         validate_cost_model(value, f"{label}.proposedValue for costModel", True)
     elif field == "pqcReadiness":
         validate_pqc_readiness(value, f"{label}.proposedValue for pqcReadiness", True)
+    elif field == "fedramp":
+        validate_fedramp(value, f"{label}.proposedValue for fedramp")
     elif field == "fedrampLevel" and value not in {"High", "Moderate", "Low", "Unknown"}:
         err(f"{label}.proposedValue invalid for fedrampLevel: {value}")
     elif field in {"dodImpactLevel", "sourceNotes"}:

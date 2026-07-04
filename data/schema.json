@@ -302,15 +302,30 @@
         "pqcReadiness": {
           "type": "object",
           "minProperties": 1,
+          "required": ["status", "fipsEndpointParity", "confidence"],
           "properties": {
             "kem": { "type": "string", "minLength": 1 },
             "signature": { "type": "string", "minLength": 1 },
             "tls": { "type": "string", "minLength": 1 },
             "vpn": { "type": "string", "minLength": 1 },
             "status": { "enum": ["GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"] },
-            "milestoneDate": { "type": "string", "minLength": 1 },
+            "milestoneDate": { "type": ["string", "null"], "minLength": 1 },
             "fipsEndpointParity": { "enum": ["AtParity", "Lagging", "Unknown"] },
-            "source": { "type": ["string", "null"], "format": "uri" }
+            "govPqc": { "type": "string", "minLength": 1 },
+            "source": { "type": ["string", "null"], "format": "uri" },
+            "sourceDate": { "type": "string", "minLength": 1 },
+            "firstParty": { "type": "boolean" },
+            "confidence": { "enum": ["High", "Medium", "Low"] },
+            "note": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "fedramp": {
+          "type": "object",
+          "required": ["commercial", "government"],
+          "properties": {
+            "commercial": { "$ref": "#/$defs/fedrampEnvironment" },
+            "government": { "$ref": "#/$defs/fedrampGovernmentEnvironment" }
           },
           "additionalProperties": false
         },
@@ -320,6 +335,32 @@
           "type": "object",
           "additionalProperties": { "type": "string" }
         }
+      },
+      "additionalProperties": false
+    },
+    "fedrampEnvironment": {
+      "type": "object",
+      "required": ["status", "confidence"],
+      "properties": {
+        "status": { "enum": ["High", "Moderate", "Low", "None", "Unknown"] },
+        "url": { "type": "string" },
+        "date": { "type": "string", "minLength": 1 },
+        "confidence": { "enum": ["High", "Medium", "Low"] },
+        "note": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "fedrampGovernmentEnvironment": {
+      "type": "object",
+      "required": ["status", "dodIL", "confidence"],
+      "properties": {
+        "status": { "enum": ["High", "Moderate", "Low", "None", "Unknown"] },
+        "dodIL": { "enum": ["IL2", "IL4", "IL5", "IL6", "None", "Unknown"] },
+        "boundary": { "type": "string", "minLength": 1 },
+        "url": { "type": "string" },
+        "date": { "type": "string", "minLength": 1 },
+        "confidence": { "enum": ["High", "Medium", "Low"] },
+        "note": { "type": "string", "minLength": 1 }
       },
       "additionalProperties": false
     }

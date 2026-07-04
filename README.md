@@ -32,7 +32,7 @@ This guide maps comparison decisions against current provider-authored architect
 
 Rows are decision aids, not claims that different provider products are identical. Compound portfolios and missing direct equivalents are identified in the row notes; regulated-environment availability and feature parity stay `Unknown` unless public official evidence supports a firmer value.
 
-**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, 5 official operational status sources, 6 official AI lab watch sources, and 51 state/DC AI transparency rows, in matrix data version `3.16.6`.
+**Current coverage:** 30 architecture decision rows across 14 categories and four providers, plus 4 curated architecture-pattern overlays, 11 compliance framework references, 11 selected NIST SP 800-53 Rev. 5 control-family mappings, 12 cloud-history milestones, 5 official operational status sources, 6 official AI lab watch sources, and 51 state/DC AI transparency rows, in matrix data version `3.16.6`. FedRAMP and PQC object batches currently live as proposal-review files until approved.
 
 ---
 
@@ -52,8 +52,9 @@ Rows are decision aids, not claims that different provider products are identica
 | `parityDetail` | Optional provider-level parity rationale surfaced near `parityLag`; sourced through proposals before use |
 | `constraints` | Optional provider-specific constraint notes or structured metadata |
 | `costModel` | Optional provider-specific cost-shape metadata: consumption / provisioned / hybrid, egress sensitivity, and commitment discount availability |
-| `pqcReadiness` | Optional post-quantum cryptography readiness metadata, including status and FIPS endpoint parity when officially sourced |
-| `fedrampLevel` / `dodImpactLevel` | Optional authorization-level metadata when official source evidence supports it; not a workload compliance determination |
+| `pqcReadiness` | Optional post-quantum cryptography readiness metadata, including status, FIPS endpoint parity, government PQC notes, source date, first-party indicator, confidence, and official source when sourced through proposals |
+| `fedramp` | Optional nested commercial and government FedRAMP metadata with authorization level, DoD impact level, boundary, date, confidence, and official source when sourced through proposals |
+| `fedrampLevel` / `dodImpactLevel` | Legacy flat authorization-level metadata retained for compatibility; prefer `fedramp` for new proposal-reviewed values |
 | `architectureNotes` | Operational and architectural context |
 | `operationalConsiderations` | Real-world deployment realities |
 | `tierNotes` | Per-tier notes (Personal / SMB / Enterprise / Government) |

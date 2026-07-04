@@ -73,6 +73,7 @@ function mapProvider(providerKey, provider = {}) {
     constraints: empty(provider.constraints),
     costModel: provider.costModel || {},
     pqcReadiness: provider.pqcReadiness || {},
+    fedramp: provider.fedramp || {},
     fedrampLevel: empty(provider.fedrampLevel),
     dodImpactLevel: empty(provider.dodImpactLevel),
     doc: empty(provider.docsUrl),

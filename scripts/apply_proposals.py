@@ -18,22 +18,37 @@ PROVIDER_FIELDS = {
     "status",
     "govAvailability",
     "parityLag",
+    "parityDetail",
     "govVariant",
     "region",
     "realmClass",
     "lastVerified",
     "formerNames",
+    "constraints",
+    "costModel",
+    "pqcReadiness",
+    "fedramp",
+    "fedrampLevel",
+    "dodImpactLevel",
     "docsUrl",
     "pricingUrl",
     "complianceUrl",
     "govDocsUrl",
+    "sourceNotes",
 }
 ENUMS = {
     "status": {"GA", "Preview", "Deprecated", "Retiring", "Unknown"},
     "govAvailability": {"Full", "Partial", "Limited", "None", "Unknown"},
     "parityLag": {"None", "Minor", "Moderate", "Significant", "Unknown"},
     "realmClass": {"commercial", "us-gov", "eu-sovereign", "other-sovereign"},
+    "fedrampLevel": {"High", "Moderate", "Low", "Unknown"},
 }
+VALID_COST_SHAPE = {"consumption", "provisioned", "hybrid", "Unknown"}
+VALID_PQC_STATUS = {"GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"}
+VALID_PQC_FIPS_PARITY = {"AtParity", "Lagging", "Unknown"}
+VALID_CONFIDENCE = {"High", "Medium", "Low"}
+VALID_FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
+VALID_FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
 URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
 COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
 FACT_URL_FIELDS = URL_FIELDS | COMPLIANCE_FRAMEWORK_FIELDS
@@ -75,6 +90,137 @@ def validate_url(value, label):
     parsed = urlparse(str(value))
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise ProposalError(f"{label} must be a public HTTP(S) URL")
+
+
+def validate_https_url(value, label):
+    validate_url(value, label)
+    if urlparse(str(value)).scheme != "https":
+        raise ProposalError(f"{label} must use HTTPS")
+
+
+def validate_non_empty_string(value, label):
+    if not isinstance(value, str) or not value.strip():
+        raise ProposalError(f"{label} must be a non-empty string")
+
+
+def validate_constraints(value, label):
+    if isinstance(value, str):
+        validate_non_empty_string(value, label)
+    elif isinstance(value, dict):
+        if not value:
+            raise ProposalError(f"{label} must not be an empty object")
+    else:
+        raise ProposalError(f"{label} must be a non-empty string or object")
+
+
+def validate_cost_model(value, label):
+    if not isinstance(value, dict) or not value:
+        raise ProposalError(f"{label} must be a non-empty object")
+    allowed = {"shape", "egressSensitive", "commitmentDiscountAvailable"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        raise ProposalError(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    if "shape" in value and value.get("shape") not in VALID_COST_SHAPE:
+        raise ProposalError(f"{label}.shape invalid: {value.get('shape')}")
+    for field in ["egressSensitive", "commitmentDiscountAvailable"]:
+        if field in value and not isinstance(value.get(field), bool):
+            raise ProposalError(f"{label}.{field} must be boolean")
+
+
+def validate_pqc_readiness(value, label):
+    if not isinstance(value, dict) or not value:
+        raise ProposalError(f"{label} must be a non-empty object")
+    allowed = {
+        "kem",
+        "signature",
+        "tls",
+        "vpn",
+        "status",
+        "milestoneDate",
+        "fipsEndpointParity",
+        "govPqc",
+        "source",
+        "sourceDate",
+        "firstParty",
+        "confidence",
+        "note",
+    }
+    required = {"status", "fipsEndpointParity", "confidence"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        raise ProposalError(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    missing = required - set(value)
+    if missing:
+        raise ProposalError(f"{label} missing fields: {sorted(missing)}")
+    for field in ["kem", "signature", "tls", "vpn", "govPqc", "sourceDate", "note"]:
+        if field in value:
+            validate_non_empty_string(value.get(field), f"{label}.{field}")
+    if "milestoneDate" in value and value.get("milestoneDate") is not None:
+        validate_non_empty_string(value.get("milestoneDate"), f"{label}.milestoneDate")
+    if value.get("status") not in VALID_PQC_STATUS:
+        raise ProposalError(f"{label}.status invalid: {value.get('status')}")
+    if value.get("fipsEndpointParity") not in VALID_PQC_FIPS_PARITY:
+        raise ProposalError(f"{label}.fipsEndpointParity invalid: {value.get('fipsEndpointParity')}")
+    if value.get("confidence") not in VALID_CONFIDENCE:
+        raise ProposalError(f"{label}.confidence invalid: {value.get('confidence')}")
+    if "firstParty" in value and not isinstance(value.get("firstParty"), bool):
+        raise ProposalError(f"{label}.firstParty must be boolean")
+    if value.get("source"):
+        validate_https_url(value.get("source"), f"{label}.source")
+    if value.get("status") != "Unknown":
+        if not value.get("source"):
+            raise ProposalError(f"{label}.source is required when status is not Unknown")
+        if not value.get("sourceDate"):
+            raise ProposalError(f"{label}.sourceDate is required when status is not Unknown")
+    if value.get("firstParty") is False and not value.get("note"):
+        raise ProposalError(f"{label}.note must name the partner when firstParty is false")
+
+
+def validate_fedramp_environment(value, label, government=False):
+    if not isinstance(value, dict):
+        raise ProposalError(f"{label} must be an object")
+    allowed = {"status", "url", "date", "confidence", "note"}
+    if government:
+        allowed |= {"dodIL", "boundary"}
+    unexpected = set(value) - allowed
+    if unexpected:
+        raise ProposalError(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    status = value.get("status")
+    if status not in VALID_FEDRAMP_STATUS:
+        raise ProposalError(f"{label}.status invalid: {status}")
+    if value.get("confidence") not in VALID_CONFIDENCE:
+        raise ProposalError(f"{label}.confidence invalid: {value.get('confidence')}")
+    if value.get("url"):
+        validate_https_url(value.get("url"), f"{label}.url")
+    if status in {"High", "Moderate", "Low"}:
+        if not value.get("url"):
+            raise ProposalError(f"{label}.url is required when status is {status}")
+        if not value.get("date"):
+            raise ProposalError(f"{label}.date is required when status is {status}")
+    for field in ["date", "boundary", "note"]:
+        if field in value and value.get(field) is not None:
+            validate_non_empty_string(value.get(field), f"{label}.{field}")
+    if government:
+        dod_il = value.get("dodIL")
+        if dod_il not in VALID_FEDRAMP_IL:
+            raise ProposalError(f"{label}.dodIL invalid: {dod_il}")
+        if dod_il in {"IL4", "IL5", "IL6"} and status not in {"High", "Moderate"}:
+            raise ProposalError(f"{label}.dodIL {dod_il} requires High or Moderate government status")
+
+
+def validate_fedramp(value, label):
+    if not isinstance(value, dict) or not value:
+        raise ProposalError(f"{label} must be a non-empty object")
+    unexpected = set(value) - {"commercial", "government"}
+    if unexpected:
+        raise ProposalError(f"{label} contains unsupported fields: {sorted(unexpected)}")
+    for environment in ["commercial", "government"]:
+        if environment not in value:
+            raise ProposalError(f"{label}.{environment} missing")
+    if "commercial" in value:
+        validate_fedramp_environment(value.get("commercial"), f"{label}.commercial")
+    if "government" in value:
+        validate_fedramp_environment(value.get("government"), f"{label}.government", government=True)
 
 
 def normalized_host(url):
@@ -190,10 +336,22 @@ def validate_proposed_value(proposal, index):
             raise ProposalError(f"proposal[{index}].proposedValue for lastVerified must be YYYY-MM-DD") from exc
     if field == "region" and not str(value or "").strip():
         raise ProposalError(f"proposal[{index}].proposedValue for region must not be empty")
+    if field == "parityDetail":
+        validate_non_empty_string(value, f"proposal[{index}].proposedValue for parityDetail")
+    if field == "constraints":
+        validate_constraints(value, f"proposal[{index}].proposedValue for constraints")
+    if field == "costModel":
+        validate_cost_model(value, f"proposal[{index}].proposedValue for costModel")
+    if field == "pqcReadiness":
+        validate_pqc_readiness(value, f"proposal[{index}].proposedValue for pqcReadiness")
+    if field == "fedramp":
+        validate_fedramp(value, f"proposal[{index}].proposedValue for fedramp")
     if field in FACT_URL_FIELDS:
         validate_url(value, f"proposal[{index}].proposedValue")
     if field == "govVariant" and value is not None and not str(value).strip():
         raise ProposalError(f"proposal[{index}].proposedValue for govVariant must be non-empty or null")
+    if field in {"dodImpactLevel", "sourceNotes"}:
+        validate_non_empty_string(value, f"proposal[{index}].proposedValue for {field}")
     if field == "formerNames":
         if not isinstance(value, list) or not value:
             raise ProposalError(f"proposal[{index}].proposedValue for formerNames must be a non-empty array")

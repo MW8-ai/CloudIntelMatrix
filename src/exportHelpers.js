@@ -32,7 +32,22 @@ const MATRIX_COLUMNS = [
   "pqcVpn",
   "pqcMilestoneDate",
   "pqcFipsEndpointParity",
+  "pqcGovPqc",
   "pqcSource",
+  "pqcSourceDate",
+  "pqcFirstParty",
+  "pqcConfidence",
+  "pqcNote",
+  "fedrampCommercialStatus",
+  "fedrampCommercialUrl",
+  "fedrampCommercialDate",
+  "fedrampCommercialConfidence",
+  "fedrampGovernmentStatus",
+  "fedrampGovernmentDodIL",
+  "fedrampGovernmentBoundary",
+  "fedrampGovernmentUrl",
+  "fedrampGovernmentDate",
+  "fedrampGovernmentConfidence",
   "fedrampLevel",
   "dodImpactLevel",
   "docsUrl",
@@ -423,6 +438,9 @@ export function buildMatrixRows(caps, activeProviders, selectedTier = null) {
       const provider = cap.providers?.[providerKey] || {};
       const costModel = provider.costModel || {};
       const pqcReadiness = provider.pqcReadiness || {};
+      const fedramp = provider.fedramp || {};
+      const fedrampCommercial = fieldValue(fedramp, "commercial") || {};
+      const fedrampGovernment = fieldValue(fedramp, "government") || {};
       const tierNote = selectedTier && provider.tierNotes?.[selectedTier]
         ? `Tier guidance (${selectedTier}): ${provider.tierNotes[selectedTier]}`
         : "";
@@ -453,7 +471,22 @@ export function buildMatrixRows(caps, activeProviders, selectedTier = null) {
         pqcVpn: fieldValue(pqcReadiness, "vpn"),
         pqcMilestoneDate: fieldValue(pqcReadiness, "milestoneDate"),
         pqcFipsEndpointParity: fieldValue(pqcReadiness, "fipsEndpointParity"),
+        pqcGovPqc: fieldValue(pqcReadiness, "govPqc"),
         pqcSource: fieldValue(pqcReadiness, "source"),
+        pqcSourceDate: fieldValue(pqcReadiness, "sourceDate"),
+        pqcFirstParty: fieldValue(pqcReadiness, "firstParty"),
+        pqcConfidence: fieldValue(pqcReadiness, "confidence"),
+        pqcNote: fieldValue(pqcReadiness, "note"),
+        fedrampCommercialStatus: fieldValue(fedrampCommercial, "status"),
+        fedrampCommercialUrl: fieldValue(fedrampCommercial, "url"),
+        fedrampCommercialDate: fieldValue(fedrampCommercial, "date"),
+        fedrampCommercialConfidence: fieldValue(fedrampCommercial, "confidence"),
+        fedrampGovernmentStatus: fieldValue(fedrampGovernment, "status"),
+        fedrampGovernmentDodIL: fieldValue(fedrampGovernment, "dodIL"),
+        fedrampGovernmentBoundary: fieldValue(fedrampGovernment, "boundary"),
+        fedrampGovernmentUrl: fieldValue(fedrampGovernment, "url"),
+        fedrampGovernmentDate: fieldValue(fedrampGovernment, "date"),
+        fedrampGovernmentConfidence: fieldValue(fedrampGovernment, "confidence"),
         fedrampLevel: provider.fedrampLevel,
         dodImpactLevel: provider.dodImpactLevel,
         docsUrl: provider.docsUrl,

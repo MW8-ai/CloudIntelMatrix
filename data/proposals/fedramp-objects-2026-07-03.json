@@ -1,0 +1,3752 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Unapproved provider-level nested FedRAMP object proposals generated from the attached review bundle. Rows without approved official source domains remain work items only.",
+    "generatedOn": "2026-07-03",
+    "approved": false,
+    "targetFields": [
+      "provider.fedramp"
+    ],
+    "matrixVersion": "3.16.6",
+    "matrixLastVerified": "2026-06-24",
+    "sourceRule": "Official primary sources only. Blog-backed candidates are work items, not proposals."
+  },
+  "workItems": [
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Amazon EC2",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/ec2/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-ec2.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "AWS Lambda",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.aws.amazon.com/lambda/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-lambda.html",
+      "sourceHints": []
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Identity & Access",
+      "service": "AWS IAM + IAM Identity Center",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.aws.amazon.com/iam/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-iam.html",
+      "sourceHints": []
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "Amazon S3",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/s3/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-s3.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Amazon EKS",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/eks/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-eks.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Databases",
+      "service": "Amazon RDS / Aurora",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/rds/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-rds.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Amazon Bedrock",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bedrock.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/"
+      ]
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Knowledge Bases for Amazon Bedrock",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/kb-how-retrieval.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/"
+      ]
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Agents for Amazon Bedrock",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/general/latest/gr/bedrock.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/"
+      ]
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Amazon EC2 Accelerated Computing",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/ec2/latest/instancetypes/ac.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/ec2/latest/instancetypes/ec2-instance-regions.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "AWS Security Hub + Amazon OpenSearch (SIEM pattern)",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/securityhub/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-security-hub.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Data & Analytics",
+      "service": "Amazon Redshift",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/redshift/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-redshift.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Amazon API Gateway",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "AWS Transfer Family",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-tf.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "AWS CodePipeline / CodeBuild",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/codepipeline/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cp.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "Terraform AWS Provider / AWS CloudFormation",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choose-iac-tool/terraform.html",
+      "govDocsUrl": null,
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Amazon VPC",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-services.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Amazon CloudFront + AWS WAF",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Monitoring & Operations",
+      "service": "Amazon CloudWatch",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/cloudwatch/",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-cwl.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Government / Sovereign Cloud",
+      "service": "AWS GovCloud (US) / AWS European Sovereign Cloud",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/whatis.html",
+      "govDocsUrl": "https://aws.amazon.com/blogs/aws/opening-the-aws-european-sovereign-cloud/",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "AWS Outposts",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/outposts/",
+      "govDocsUrl": "https://aws.amazon.com/govcloud-us/",
+      "sourceHints": [
+        "https://aws.amazon.com/blogs/security/aws-achieves-fedramp-p-ato-for-15-services-in-the-aws-us-east-west-and-aws-govcloud-us-regions/"
+      ]
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Cost Governance",
+      "service": "AWS Billing and Cost Management",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/what-is-costmanagement.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Amazon EventBridge",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "AWS Security Hub",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-services.html",
+      "sourceHints": []
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Amazon SageMaker AI",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-sagemaker.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "AWS Application Migration Service",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/mgn/latest/ug/what-is-application-migration-service.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "AWS Control Tower + AWS Organizations",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.aws.amazon.com/controltower/latest/userguide/what-is-control-tower.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-controltower.html",
+      "sourceHints": []
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "AWS Backup",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-bkp.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "AWS KMS + Secrets Manager + AWS Certificate Manager",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-services.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "AWS PrivateLink + Route 53 Resolver + Direct Connect",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud-vpc-endpoints.html",
+      "sourceHints": [
+        "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+        "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/"
+      ]
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Azure Virtual Machines",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Azure Functions",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-functions/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Identity & Access",
+      "service": "Microsoft Entra ID",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/entra/identity/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "Azure Blob Storage",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/storage/blobs/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Azure Kubernetes Service (AKS)",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/aks/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Databases",
+      "service": "Azure SQL / PostgreSQL Flexible",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-sql/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Microsoft Foundry Models / Azure OpenAI",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/what-is-foundry",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5"
+      ]
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Azure AI Search (Vector Search)",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/search/vector-search-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Microsoft Foundry Agent Service",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/agents/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5"
+      ]
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Azure GPU-Accelerated Virtual Machines",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Microsoft Sentinel",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/sentinel/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Data & Analytics",
+      "service": "Azure Synapse Analytics / Microsoft Fabric",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/synapse-analytics/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Azure API Management",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/api-management/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "SFTP support for Azure Blob Storage",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/storage/blobs/secure-file-transfer-protocol-support",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "Azure DevOps + GitHub Enterprise",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/devops/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "sourceHints": []
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "Terraform on Azure / Bicep",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/developer/terraform/overview",
+      "govDocsUrl": null,
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Azure Virtual Network",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Azure Front Door + Web Application Firewall",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/frontdoor/front-door-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Monitoring & Operations",
+      "service": "Azure Monitor",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-monitor/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Government / Sovereign Cloud",
+      "service": "Azure Government",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "Azure Arc",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-arc/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Cost Governance",
+      "service": "Microsoft Cost Management",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/cost-management-billing/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Azure Event Grid",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/event-grid/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Microsoft Defender for Cloud",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-cloud-introduction",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Azure Machine Learning",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/machine-learning/overview-what-is-azure-machine-learning",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "Azure Migrate",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/migrate/migrate-services-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Azure Landing Zones + Azure Policy",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/landing-zone/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/architecture/landing-zones/landing-zone-deploy",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "Azure Backup + Azure Site Recovery",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/backup/backup-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Azure Key Vault + Managed HSM",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/key-vault/general/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Azure Private Link + Azure Private DNS + ExpressRoute",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/private-link/private-link-overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope"
+      ]
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Compute Engine",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/compute/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Cloud Run / Cloud Functions",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/run/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Identity & Access",
+      "service": "Cloud IAM + Cloud Identity",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/iam/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "Cloud Storage",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/storage/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Google Kubernetes Engine (GKE)",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/kubernetes-engine/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Databases",
+      "service": "Cloud SQL / Cloud Spanner",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/sql/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Vertex AI GenAI / Gemini",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/vertex-ai/generative-ai/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov"
+      ]
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Vertex AI RAG Engine",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/rag-api",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov"
+      ]
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Vertex AI Agent Engine",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov"
+      ]
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Compute Engine GPUs",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/compute/docs/gpus",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Google Chronicle SIEM",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/chronicle/docs",
+      "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+      "sourceHints": []
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Data & Analytics",
+      "service": "BigQuery",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/bigquery/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov"
+      ]
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Apigee",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/apigee/docs/api-platform/get-started/what-apigee",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Storage Transfer Service (transfer orchestration, not hosted SFTP)",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/storage-transfer/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "Cloud Build + Cloud Deploy",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/build/docs",
+      "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+      "sourceHints": []
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "Terraform on Google Cloud / Infrastructure Manager",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/docs/terraform",
+      "govDocsUrl": null,
+      "sourceHints": []
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Virtual Private Cloud (VPC)",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/vpc/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Cloud CDN + Cloud Armor",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.cloud.google.com/cdn/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Monitoring & Operations",
+      "service": "Cloud Monitoring and Cloud Logging",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/monitoring/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Government / Sovereign Cloud",
+      "service": "Assured Workloads for Google Cloud",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/assured-workloads/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "Google Distributed Cloud",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/distributed-cloud/docs",
+      "govDocsUrl": "https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/il6-gdc-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Cost Governance",
+      "service": "Cloud Billing",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/billing/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Pub/Sub",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/pubsub/docs/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Security Command Center",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/security-command-center/docs/concepts-security-command-center-overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "Vertex AI",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://cloud.google.com/vertex-ai/docs/start/introduction-unified-platform",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov"
+      ]
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "Migrate to Virtual Machines",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://cloud.google.com/migrate/virtual-machines/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Enterprise Foundations Blueprint + Organization Policy",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/architecture/blueprints/security-foundations",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "Backup and DR Service",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.cloud.google.com/backup-disaster-recovery/docs/concepts/backup-dr",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": []
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "Cloud KMS + Secret Manager + Certificate Manager",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/kms/docs/key-management-service",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "Private Service Connect + Cloud DNS + Cloud Interconnect",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.cloud.google.com/vpc/docs/private-service-connect",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "sourceHints": [
+        "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope"
+      ]
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "OCI Compute",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "OCI Functions",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Functions/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Identity & Access",
+      "service": "OCI IAM with Identity Domains",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Identity/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "OCI Object Storage",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Object/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Core Infrastructure",
+      "service": "Oracle Kubernetes Engine (OKE)",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Databases",
+      "service": "OCI Database Services",
+      "reason": "Bundled candidate is not proposal-ready because its source is outside approved primary-source domains.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://blogs.oracle.com/mysql/mysql-heatwave-live-in-oci-government-realms"
+      ]
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "OCI Generative AI",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "OCI Generative AI Agents Knowledge Bases",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/list-knowledge-bases.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "OCI Generative AI Agents",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/overview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "OCI GPU Compute",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "OCI Logging Analytics + Cloud Guard (SIEM pattern)",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Logging/Concepts/loggingoverview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Data & Analytics",
+      "service": "OCI Autonomous Data Warehouse",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm"
+      ]
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "OCI API Gateway",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/APIGateway/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "Oracle Integration File Server (SFTP)",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/file-server/",
+      "govDocsUrl": "https://docs.oracle.com/en/cloud/paas/application-integration/oracle-integration-gov/using-oracle-integration-3-us-government-cloud.pdf",
+      "sourceHints": []
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "OCI DevOps",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/devops/using/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Developer Platform",
+      "service": "Terraform on OCI / OCI Resource Manager",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/ResourceManager/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "OCI Virtual Cloud Network (VCN)",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "OCI Web Application Firewall",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/WAF/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Monitoring & Operations",
+      "service": "OCI Monitoring + Logging",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Monitoring/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm"
+      ]
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Government / Sovereign Cloud",
+      "service": "Oracle U.S. Government Cloud",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm"
+      ]
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "OCI Roving Edge Infrastructure",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/roving-edge-infrastructure/rvr/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Cost Governance",
+      "service": "OCI Budgets + Usage Reports",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Billing/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Integration & Messaging",
+      "service": "OCI Streaming + Events + Queue",
+      "reason": "Review bundled FedRAMP candidate object against official per-service scope before applying.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Streaming/Concepts/streamingoverview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": [
+        "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm"
+      ]
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "OCI Cloud Guard",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-guard/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "AI / ML",
+      "service": "OCI Data Science",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/data-science/using/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Hybrid / Edge",
+      "service": "Oracle Cloud Migrations",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-migration/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "OCI Landing Zones + Resource Manager",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-adoption-framework/oci-landing-zones-overview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Storage",
+      "service": "OCI Full Stack Disaster Recovery",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/disaster-recovery/index.html",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Security & Compliance",
+      "service": "OCI Vault + Certificates",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/KeyManagement/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "category": "Networking",
+      "service": "OCI Private Endpoints + DNS + FastConnect",
+      "reason": "No official source URL was provided for this candidate object; keep as review work only.",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/DNS/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "sourceHints": []
+    }
+  ],
+  "proposals": [
+    {
+      "capability": "Virtual Machines",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/amazon-bedrock-models/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "Unknown",
+          "dodIL": "Unknown",
+          "boundary": "AWS GovCloud (US)",
+          "url": "",
+          "date": "2026-07",
+          "confidence": "Low"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "None",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/blogs/security/aws-achieves-fedramp-p-ato-for-15-services-in-the-aws-us-east-west-and-aws-govcloud-us-regions/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "Unknown",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/blogs/security/aws-achieves-fedramp-p-ato-for-15-services-in-the-aws-us-east-west-and-aws-govcloud-us-regions/",
+          "date": "2026-07",
+          "confidence": "Medium"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/blogs/security/aws-achieves-fedramp-p-ato-for-15-services-in-the-aws-us-east-west-and-aws-govcloud-us-regions/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "aws",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Moderate",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/FedRAMP/",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "AWS GovCloud (US)",
+          "url": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://aws.amazon.com/compliance/services-in-scope/DoD_CC_SRG/",
+      "sourceQuote": "FedRAMP services in scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL2",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+          "date": "2026-07",
+          "confidence": "Medium",
+          "note": "Foundry portal authorized High/IL2; Agent Service not separately IL4/5-listed (Feb 2026 audit scope)"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-impact-level-5",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High",
+          "note": "IL5 via Synapse Analytics; Microsoft Fabric not in Azure Gov audit scope"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "None",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "azure",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Azure Government",
+          "url": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://learn.microsoft.com/en-us/azure/azure-government/compliance/azure-services-in-fedramp-auditscope",
+      "sourceQuote": "Azure services in FedRAMP audit scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Virtual Machines",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Serverless Functions",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Identity & Access Management",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Object Storage",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Managed Kubernetes",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Relational Databases (Managed)",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Generative AI / Foundation Models",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL4",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL4",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL4",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL4",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "API Management & Integration Gateway",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Managed File Transfer",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Virtual Networking",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "Unknown",
+          "url": "",
+          "date": "2026-07",
+          "confidence": "Low"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL6",
+          "boundary": "Google Distributed Cloud Air-Gapped",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/il6-gdc-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/il6-gdc-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Security & Compliance Posture Management",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "ML Platform & Model Training",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL4",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/deploy-gemini-gov",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Landing Zone & Resource Governance",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Key, Secret & Certificate Management",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Private Connectivity & DNS",
+      "provider": "gcp",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Assured Workloads",
+          "url": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.cloud.google.com/docs/security/compliance/fedramp-dod-compliance-scope",
+      "sourceQuote": "FedRAMP and DoD compliance scope",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Oracle US Defense Cloud",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+      "sourceQuote": "Oracle US Government Cloud",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Observability & Monitoring",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Oracle US Defense Cloud",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+      "sourceQuote": "Oracle US Government Cloud",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Government / Sovereign Cloud Offerings",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "None",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Oracle US Defense Cloud",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+      "sourceQuote": "Oracle US Government Cloud",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "provider": "oci",
+      "field": "fedramp",
+      "currentValue": null,
+      "proposedValue": {
+        "commercial": {
+          "status": "High",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        },
+        "government": {
+          "status": "High",
+          "dodIL": "IL5",
+          "boundary": "Oracle US Defense Cloud",
+          "url": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+          "date": "2026-07",
+          "confidence": "High"
+        }
+      },
+      "sourceUrl": "https://docs.oracle.com/iaas/releasenotes/changes/2bf47d07-d409-4b17-881a-6bfe79c75dbe/index.htm",
+      "sourceQuote": "Oracle US Government Cloud",
+      "rationale": "Unapproved object proposal generated from the attached FedRAMP review bundle. Apply only after human review against the cited official per-service source.",
+      "proposedOn": "2026-07-03"
+    }
+  ]
+}
