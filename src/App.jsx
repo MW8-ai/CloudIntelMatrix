@@ -14,6 +14,7 @@ import {
   matrixExport,
   patternExport,
   printExport,
+  providerNewsExport,
   statusExport,
   transparencyExport,
 } from "./exportHelpers";
@@ -59,14 +60,14 @@ const DESIGN_MODEL = buildDesignViewModel({ matrixData, historyData, transparenc
 const DESIGN_ROW_MAP = Object.fromEntries(DESIGN_MODEL.CIM_DATA.map(row => [row.cap, row]));
 
 const THEME_STORAGE_KEY = "cloudintel-theme";
-const DEFAULT_MODE = "matrix";
+const DEFAULT_MODE = "overview";
 const DEFAULT_TIER = "Enterprise";
 const DEFAULT_LAYER = "All";
 const DEFAULT_MATRIX_LENS = "all";
 const DEFAULT_MATRIX_AI_SCOPE = "All";
 const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
-const VALID_MODES = ["matrix", "patterns", "controls", "history", "status", "ai-watch", "transparency"];
+const VALID_MODES = ["overview", "matrix", "patterns", "controls", "history", "provider-news", "status", "ai-watch", "transparency"];
 const MATRIX_LENSES = [
   { id: "all", label: "Capability", note: "All capability rows" },
   { id: "diff", label: "Equivalency", note: "Side-by-side provider service mapping" },
@@ -164,7 +165,7 @@ function getUrlSearchParams() {
 
 function getInitialMode() {
   const value = getUrlSearchParams().get("view");
-  if (["diff", "gov", "ai"].includes(value)) return DEFAULT_MODE;
+  if (["diff", "gov", "ai"].includes(value)) return "matrix";
   return VALID_MODES.includes(value) ? value : DEFAULT_MODE;
 }
 
@@ -933,6 +934,18 @@ function ProviderDepthField({ label, value }) {
   );
 }
 
+function matrixEvidenceSummary(rows, activeProviders) {
+  if (!rows.length) return "Evidence: no visible matrix rows";
+  return activeProviders.map(providerKey => {
+    const label = providerLabelForKey(providerKey);
+    const documented = rows.reduce((count, row) => {
+      const status = row.providers?.[label]?.gov || "Unknown";
+      return ["Full", "Partial", "Limited"].includes(status) ? count + 1 : count;
+    }, 0);
+    return `${label} ${documented}/${rows.length} documented`;
+  }).join(" | ");
+}
+
 function MatrixCoverageStrip({ rows, activeProviders, onDismiss }) {
   const statuses = ["Full", "Partial", "Limited", "None", "Unknown"];
   const evidenceStatuses = new Set(["Full", "Partial", "Limited"]);
@@ -1124,12 +1137,12 @@ function MatrixCoverageStrip({ rows, activeProviders, onDismiss }) {
   );
 }
 
-function MatrixReadKey({ onDismiss }) {
+function MatrixReadKey({ onDismiss, plain = false }) {
   const govLevels = ["Full", "Partial", "Limited", "None", "Unknown"];
   const parityLevels = ["None", "Minor", "Moderate", "Significant", "Unknown"];
 
   return (
-    <section style={{ margin: "0 0 14px", padding: "13px 15px", border: "1px solid var(--border)", borderRadius: 10, background: "var(--panel)", boxShadow: "0 1px 2px var(--shadow)" }}>
+    <section style={{ margin: plain ? 0 : "0 0 14px", padding: plain ? 0 : "13px 15px", border: plain ? "none" : "1px solid var(--border)", borderRadius: plain ? 0 : 10, background: plain ? "transparent" : "var(--panel)", boxShadow: plain ? "none" : "0 1px 2px var(--shadow)" }}>
       <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 10 }}>
         <div>
           <div style={{ fontSize: 10, color: "var(--muted)", fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.1em", fontWeight: 700, textTransform: "uppercase" }}>How to read this matrix</div>
@@ -1565,6 +1578,60 @@ function StatTile({ label, value, tone = "var(--link)" }) {
       <div style={{ fontSize: 15, color: tone, fontWeight: 900, lineHeight: 1 }}>{value}</div>
       <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.08em", fontWeight: 800, marginTop: 5 }}>{label}</div>
     </div>
+  );
+}
+
+function CollapsibleInfoBar({ title, summary, open, onToggle, children }) {
+  return (
+    <section className={`collapsible-info ${open ? "open" : ""}`}>
+      <button
+        type="button"
+        className="hb collapsible-info-toggle"
+        onClick={onToggle}
+        aria-expanded={open}
+      >
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+          <span aria-hidden="true" style={{ color: "var(--link)", fontSize: 11, lineHeight: 1 }}>{open ? "v" : ">"}</span>
+          <span style={{ color: "var(--text)", fontWeight: 900 }}>{title}</span>
+        </span>
+        <span className="collapsible-info-summary">{summary}</span>
+      </button>
+      {open && <div className="collapsible-info-body">{children}</div>}
+    </section>
+  );
+}
+
+function OverviewViewDesign({ cards, meta }) {
+  return (
+    <>
+      <ViewHero
+        eyebrow="Overview"
+        title="A quick map of the intelligence surface"
+        body="Start with the matrix for service decisions, then branch into patterns, controls, provider news, operational status, AI releases, and transparency records."
+        meta={[
+          <StatTile key="capabilities" label="CAPABILITIES" value={CAPABILITIES.length} />,
+          <StatTile key="providers" label="PROVIDERS" value={PROVIDERS.length} />,
+          <StatTile key="version" label="VERSION" value={meta.version} />,
+        ]}
+      />
+      <div className="overview-grid">
+        {cards.map(card => (
+          <button
+            type="button"
+            key={card.id}
+            className="hb overview-card"
+            onClick={card.onClick}
+          >
+            <div className="overview-card-head">
+              <span aria-hidden="true" className="overview-card-icon" style={{ WebkitMaskImage: `url(${ICONS[card.iconKey]})`, maskImage: `url(${ICONS[card.iconKey]})` }} />
+              <span>{card.label}</span>
+            </div>
+            <div className="overview-card-body">{card.description}</div>
+            <div className="overview-card-stat">{card.stat}</div>
+          </button>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -2360,6 +2427,31 @@ function AiWatchViewDesign({ sources, meta }) {
   );
 }
 
+function ProviderNewsViewDesign({ items }) {
+  const providerCounts = PROVIDERS.map(provider => ({
+    provider,
+    label: providerLabelForKey(provider),
+    count: items.filter(item => item.provider?.toLowerCase() === provider).length,
+  }));
+
+  return (
+    <>
+      <ViewHero
+        eyebrow="Provider News"
+        title="Official provider announcements and tracked changes"
+        body="Tracked announced, preview, deprecated, and upcoming cloud-provider changes stay out of the matrix path but remain available for planning review."
+        meta={[
+          <StatTile key="items" label="ITEMS" value={items.length} />,
+          ...providerCounts.map(group => (
+            <StatTile key={group.provider} label={group.label.toUpperCase()} value={group.count} tone={PROVIDER_META[group.provider].dot} />
+          )),
+        ]}
+      />
+      <UpcomingBanner items={items} />
+    </>
+  );
+}
+
 // -- UPCOMING BANNER ---------------------------------------------------------
 function UpcomingBanner({ items }) {
   const [open, setOpen] = useState(false);
@@ -2460,8 +2552,10 @@ export default function App() {
   const [selectedMatrixLens, setSelectedMatrixLens] = useState(getInitialMatrixLens);
   const [selectedMatrixAiScope, setSelectedMatrixAiScope] = useState(getInitialMatrixAiScope);
   const [matrixDensity, setMatrixDensity] = useState(getInitialMatrixDensity);
-  const [showMatrixReadKey, setShowMatrixReadKey] = useState(true);
+  const [showMatrixReadKey, setShowMatrixReadKey] = useState(false);
   const [showMatrixEvidencePanel, setShowMatrixEvidencePanel] = useState(false);
+  const [showControlsContext, setShowControlsContext] = useState(false);
+  const [showTransparencyContext, setShowTransparencyContext] = useState(false);
   const [searchQuery, setSearchQuery] = useState(getInitialSearchQuery);
   const [expandedId, setExpandedId] = useState(null);
   const [selectedTier, setSelectedTier] = useState(getInitialTier);
@@ -2640,6 +2734,21 @@ export default function App() {
     return items;
   }, [activeProviders, searchQuery]);
 
+  const filteredProviderNews = useMemo(() => {
+    let items = UPCOMING.filter(item => activeProviders.includes(item.provider?.toLowerCase()));
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.title.toLowerCase().includes(q) ||
+        item.detail.toLowerCase().includes(q) ||
+        item.category.toLowerCase().includes(q) ||
+        item.status.toLowerCase().includes(q) ||
+        item.provider.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [activeProviders, searchQuery]);
+
   const filteredTransparency = useMemo(() => {
     let items = TRANSPARENCY;
     if (selectedTransparencyStatus !== "All") {
@@ -2693,6 +2802,7 @@ export default function App() {
     if (mode === "patterns") return patternExport(filteredPatterns, activeProviders, CAPABILITY_MAP, FRAMEWORKS);
     if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies, filteredComplianceFrameworks);
     if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
+    if (mode === "provider-news") return providerNewsExport(filteredProviderNews);
     if (mode === "transparency") return transparencyExport(filteredTransparency);
     if (mode === "status") return statusExport(filteredStatusSources);
     if (mode === "ai-watch") return aiWatchExport(filteredAiWatchSources);
@@ -2700,12 +2810,13 @@ export default function App() {
     if (mode === "matrix" && selectedMatrixLens === "gov") return matrixExport("gov", "Government Availability and Parity", filteredMatrixCaps, activeProviders, selectedTier);
     if (mode === "matrix" && selectedMatrixLens === "ai") return matrixExport("ai", "AI Focus", filteredMatrixCaps, activeProviders, selectedTier);
     return matrixExport("matrix", "Capability Matrix", filteredMatrixCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredAiWatchSources, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredStatusSources, filteredTransparency, mode, selectedMatrixLens, selectedTier]);
+  }, [activeProviders, filteredAiWatchSources, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredProviderNews, filteredStatusSources, filteredTransparency, mode, selectedMatrixLens, selectedTier]);
 
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
     mode === "controls" ? filteredControlFamilies.length + filteredComplianceFrameworks.length :
     mode === "history" ? filteredHistory.length :
+    mode === "provider-news" ? filteredProviderNews.length :
     mode === "status" ? filteredStatusSources.length :
     mode === "ai-watch" ? filteredAiWatchSources.length :
     mode === "transparency" ? filteredTransparency.length :
@@ -2714,17 +2825,22 @@ export default function App() {
 
   const modes = [
     { id: "matrix",       label: "Capability Matrix",     iconKey: "layers",        desc: "All capabilities by layer and tier" },
+    { id: "overview",     label: "Overview",              iconKey: "blocks",        desc: "Map of each intelligence view" },
     { id: "patterns",     label: "Architecture Patterns", iconKey: "blocks",        desc: "Architecture planning overlays" },
     { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
+    { id: "provider-news", label: "Provider News",         iconKey: "activity",      desc: "Official provider announcements and upcoming changes" },
     { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
     { id: "ai-watch",     label: "AI Watch",              iconKey: "brain-circuit", desc: "Official model release source index" },
     { id: "transparency", label: "AI Transparency",       iconKey: "landmark",      desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
-  const providerControlModes = ["matrix", "patterns", "history"];
+  const providerControlModes = ["matrix", "patterns", "history", "provider-news"];
   const showProviderControls = providerControlModes.includes(mode);
-  const contentMinWidthPx = providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780;
+  const showCategoryFilterControls = ["patterns", "controls"].includes(mode);
+  const showTransparencyFilterControls = mode === "transparency";
+  const showSecondaryFilterControls = showCategoryFilterControls || showTransparencyFilterControls;
+  const contentMinWidthPx = mode === "overview" ? 0 : (providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780);
   const showMatrixDensityControl = selectedMatrixLens !== "diff" && selectedMatrixLens !== "ai";
   const providerControlCard = (
     <div className="filter-control-card">
@@ -2800,6 +2916,72 @@ export default function App() {
       </div>
     </div>
   );
+  const overviewCards = [
+    {
+      id: "matrix",
+      label: "Capability Matrix",
+      iconKey: "layers",
+      description: "Compare AWS, Azure, GCP, and OCI capability mappings with government availability and parity signals.",
+      stat: `${CAPABILITIES.length} capabilities x ${PROVIDERS.length} providers`,
+      onClick: () => setMode("matrix"),
+    },
+    {
+      id: "patterns",
+      label: "Architecture Patterns",
+      iconKey: "blocks",
+      description: "Planning overlays that group capability rows into common enterprise and regulated architecture starts.",
+      stat: `${PATTERNS.length} patterns`,
+      onClick: () => setMode("patterns"),
+    },
+    {
+      id: "controls",
+      label: "Compliance & Controls",
+      iconKey: "shield-check",
+      description: "Framework references and NIST SP 800-53 Rev. 5 family mappings tied back to capability rows.",
+      stat: `${COMPLIANCE_FRAMEWORKS.length} frameworks | ${CONTROL_LENS.families.length} families`,
+      onClick: () => setMode("controls"),
+    },
+    {
+      id: "history",
+      label: "Cloud Timeline",
+      iconKey: "activity",
+      description: "Milestones in each provider's commercial, free-tier, and government cloud journey.",
+      stat: `${HISTORY.length} milestones`,
+      onClick: () => setMode("history"),
+    },
+    {
+      id: "provider-news",
+      label: "Provider News",
+      iconKey: "activity",
+      description: "Official announced, preview, deprecated, and upcoming provider changes in four columns.",
+      stat: `${UPCOMING.length} tracked items`,
+      onClick: () => setMode("provider-news"),
+    },
+    {
+      id: "status",
+      label: "Operational Status",
+      iconKey: "activity",
+      description: "Official status pages and incident-history sources for cloud and adjacent platforms.",
+      stat: `${STATUS_SOURCES.length} sources`,
+      onClick: () => setMode("status"),
+    },
+    {
+      id: "ai-watch",
+      label: "AI Watch",
+      iconKey: "brain-circuit",
+      description: "Official release and documentation sources for frontier, open, and multimodal model labs.",
+      stat: `${AI_WATCH_SOURCES.length} sources`,
+      onClick: () => setMode("ai-watch"),
+    },
+    {
+      id: "transparency",
+      label: "AI Transparency",
+      iconKey: "landmark",
+      description: "State and DC public records for AI governance and transparency status.",
+      stat: `${TRANSPARENCY.length} state/DC rows`,
+      onClick: () => setMode("transparency"),
+    },
+  ];
 
   return (
     <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
@@ -2878,6 +3060,143 @@ export default function App() {
         }
         .filter-bar {
           position: sticky;
+        }
+        .matrix-filter-stack {
+          display: grid;
+          gap: 8px;
+        }
+        .matrix-control-row {
+          display: grid;
+          gap: 8px;
+          align-items: stretch;
+        }
+        .matrix-control-row-primary {
+          grid-template-columns: minmax(220px, .9fr) minmax(270px, 1.1fr) minmax(260px, .9fr) minmax(230px, .82fr);
+        }
+        .matrix-control-row-secondary {
+          grid-template-columns: minmax(360px, 1.35fr) minmax(230px, .8fr) minmax(250px, .85fr) minmax(150px, .5fr) minmax(180px, .58fr);
+        }
+        .matrix-search-control,
+        .matrix-control-group,
+        .matrix-control-row .filter-control-card,
+        .matrix-control-row .export-toolbar {
+          min-width: 0;
+          padding: 7px 8px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel-alt);
+        }
+        .matrix-search-control {
+          display: grid;
+          gap: 5px;
+        }
+        .matrix-control-row .filter-control-head {
+          margin-bottom: 5px;
+        }
+        .matrix-control-row .filter-chip-row {
+          gap: 5px;
+        }
+        .matrix-control-row .compact-export-toolbar {
+          align-items: center !important;
+          gap: 6px !important;
+        }
+        .matrix-control-row .compact-export-toolbar > div:first-child {
+          flex: 1 1 auto;
+        }
+        .matrix-support-bars {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 8px;
+          margin-bottom: 10px;
+        }
+        .collapsible-info {
+          min-width: 0;
+          border: 1px solid var(--border);
+          border-radius: 7px;
+          background: var(--panel);
+          box-shadow: 0 1px 2px var(--shadow);
+          overflow: hidden;
+        }
+        .collapsible-info-toggle {
+          width: 100%;
+          display: grid;
+          grid-template-columns: minmax(190px, max-content) minmax(0, 1fr);
+          gap: 10px;
+          align-items: center;
+          padding: 8px 10px;
+          border: 0;
+          background: var(--panel);
+          color: inherit;
+          text-align: left;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 9px;
+        }
+        .collapsible-info-summary {
+          min-width: 0;
+          color: var(--muted);
+          font-family: 'IBM Plex Sans', system-ui, sans-serif;
+          font-size: 10px;
+          line-height: 1.45;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .collapsible-info-body {
+          padding: 10px;
+          border-top: 1px solid var(--border);
+          background: var(--panel-alt);
+        }
+        .overview-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+          gap: 10px;
+        }
+        .overview-card {
+          display: grid;
+          gap: 10px;
+          align-content: start;
+          min-height: 150px;
+          padding: 14px;
+          border: 1px solid var(--border);
+          border-radius: 7px;
+          background: var(--panel);
+          color: inherit;
+          text-align: left;
+          font-family: inherit;
+          box-shadow: 0 1px 2px var(--shadow);
+        }
+        .overview-card-head {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: var(--text);
+          font-size: 13px;
+          font-weight: 900;
+        }
+        .overview-card-icon {
+          width: 16px;
+          height: 16px;
+          background: var(--link);
+          -webkit-mask-size: contain;
+          mask-size: contain;
+          -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+          -webkit-mask-position: center;
+          mask-position: center;
+          flex-shrink: 0;
+        }
+        .overview-card-body {
+          color: var(--ink2);
+          font-size: 11px;
+          line-height: 1.55;
+        }
+        .overview-card-stat {
+          margin-top: auto;
+          color: var(--link);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 9px;
+          font-weight: 900;
+          letter-spacing: 0.06em;
         }
         .compact-export-toolbar {
           min-width: 0;
@@ -3193,6 +3512,10 @@ export default function App() {
           .primary-filter-grid.provider-only,
           .primary-filter-grid.matrix-primary,
           .primary-filter-grid.matrix-primary.no-density,
+          .matrix-control-row-primary,
+          .matrix-control-row-secondary,
+          .matrix-support-bars,
+          .collapsible-info-toggle,
           .matrix-lens-grid,
           .design-evidence-columns,
           .global-news-grid,
@@ -3318,8 +3641,10 @@ export default function App() {
       </div>
 
       {/* ── FILTER BAR ── */}
-      <div className="filter-bar" style={{ top: 0, zIndex: 40, padding: "10px 24px 12px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
-        <div style={{ display: "grid", gap: 10, marginBottom: 10 }}>
+      {mode !== "overview" && (
+      <div className="filter-bar" style={{ top: 0, zIndex: 40, padding: "8px 24px 10px", borderBottom: "1px solid var(--border)", background: "var(--panel)" }}>
+        <div style={{ display: "grid", gap: 10, marginBottom: mode === "matrix" ? 0 : 10 }}>
+          {mode !== "matrix" && (
           <div style={{ width: "100%" }}>
             <input
               value={searchQuery}
@@ -3332,6 +3657,7 @@ export default function App() {
               }}
             />
           </div>
+          )}
 
           {showProviderControls && mode !== "matrix" && (
             <div className="primary-filter-grid provider-only">
@@ -3341,38 +3667,55 @@ export default function App() {
         </div>
 
         {mode === "matrix" && (
-          <div style={{ display: "grid", gap: 10, marginBottom: 12 }}>
-            <div className="filter-control-card">
-              <div className="filter-control-head">
-                <span className="filter-control-label">MATRIX VIEW</span>
-                <span className="filter-control-note">{activeMatrixLens.note}</span>
+          <div className="matrix-filter-stack">
+            <div className="matrix-control-row matrix-control-row-primary">
+              <label className="matrix-search-control">
+                <span className="filter-control-label">SEARCH</span>
+                <input
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Search capability, service, provider, tag..."
+                  style={{
+                    width: "100%", padding: "7px 10px", borderRadius: 4,
+                    border: "1px solid var(--border)", background: "var(--panel-alt)",
+                    color: "var(--text)", fontSize: 10, fontFamily: "inherit",
+                  }}
+                />
+              </label>
+              <div className="matrix-control-group">
+                <div className="filter-control-head">
+                  <span className="filter-control-label">VIEW</span>
+                  <span className="filter-control-note">{activeMatrixLens.note}</span>
+                </div>
+                <div className="filter-chip-row">
+                  {MATRIX_LENSES.map(lens => {
+                    const active = selectedMatrixLens === lens.id;
+                    return (
+                      <button key={lens.id} className="hb" onClick={() => { setSelectedMatrixLens(lens.id); setExpandedId(null); }} title={lens.note} style={{
+                        padding: "4px 8px", borderRadius: 4, fontSize: 9, fontFamily: "inherit", fontWeight: 800,
+                        border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
+                        background: active ? "var(--selected-bg)" : "var(--panel)",
+                        color: active ? "var(--selected-text)" : "var(--muted)",
+                      }}>
+                        {lens.label} ({matrixLensCounts[lens.id]})
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-              <div className="filter-chip-row">
-                {MATRIX_LENSES.map(lens => {
-                  const active = selectedMatrixLens === lens.id;
-                  return (
-                    <button key={lens.id} className="hb" onClick={() => { setSelectedMatrixLens(lens.id); setExpandedId(null); }} title={lens.note} style={{
-                      padding: "4px 10px", borderRadius: 4, fontSize: 9, fontFamily: "inherit", fontWeight: 800,
-                      border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
-                      background: active ? "var(--selected-bg)" : "var(--panel)",
-                      color: active ? "var(--selected-text)" : "var(--muted)",
-                    }}>
-                      {lens.label} ({matrixLensCounts[lens.id]})
-                    </button>
-                  );
-                })}
-              </div>
+              {providerControlCard}
+              {tierLensControlCard}
             </div>
 
-            <div className="matrix-lens-grid">
-              <div className="filter-control-card">
+            <div className="matrix-control-row matrix-control-row-secondary">
+              <div className="matrix-control-group matrix-layer-control">
                 <div className="filter-control-head">
                   <span className="filter-control-label">LAYER</span>
                   <span className="filter-control-note">{selectedLayer === DEFAULT_LAYER ? "All architecture layers" : selectedLayer}</span>
                 </div>
                 <div className="filter-chip-row">
                   <button className="hb" onClick={() => setSelectedLayer(DEFAULT_LAYER)} style={{
-                    padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                    padding: "3px 8px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
                     border: `1px solid ${selectedLayer === DEFAULT_LAYER ? "var(--link)" : "var(--border)"}`,
                     background: selectedLayer === DEFAULT_LAYER ? "var(--selected-bg)" : "var(--panel)",
                     color: selectedLayer === DEFAULT_LAYER ? "var(--selected-text)" : "var(--muted)",
@@ -3383,7 +3726,7 @@ export default function App() {
                     const layerStyle = DESIGN_LAYER_STYLES[layer.label] || DESIGN_LAYER_STYLES["Operating Model"];
                     return (
                       <button key={layer.id} className="hb" onClick={() => setSelectedLayer(active ? DEFAULT_LAYER : layer.label)} style={{
-                        display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 8px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
                         border: `1px solid ${active ? layerStyle.color : "var(--border)"}`,
                         background: active ? layerStyle.bg : "var(--panel)",
                         color: active ? layerStyle.color : "var(--muted)",
@@ -3395,39 +3738,31 @@ export default function App() {
                   })}
                 </div>
               </div>
-
-              <div className="matrix-lens-stack">
-                <div className="filter-control-card">
-                  <div className="filter-control-head">
-                    <span className="filter-control-label">AI FOCUS</span>
-                    <span className="filter-control-note">{selectedMatrixAiScope === DEFAULT_MATRIX_AI_SCOPE ? "All AI classes" : selectedMatrixAiScope}</span>
-                  </div>
-                  <div className="filter-chip-row">
-                    {MATRIX_AI_FILTERS.map(scope => {
-                      const active = selectedMatrixAiScope === scope;
-                      const label =
-                        scope === "AI_NATIVE" ? "AI-native" :
-                        scope === "AI_CAPABLE" ? "AI-capable" :
-                        scope === "STANDARD" ? "Standard" :
-                        "All";
-                      const count = scope === DEFAULT_MATRIX_AI_SCOPE ? filteredCaps.length : filteredCaps.filter(c => c.aiClassification === scope).length;
-                      return (
-                        <button key={scope} className="hb" onClick={() => setSelectedMatrixAiScope(scope)} style={{
-                          padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
-                          border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
-                          background: active ? "var(--selected-bg)" : "var(--panel)",
-                          color: active ? "var(--selected-text)" : "var(--muted)",
-                        }}>{label} ({count})</button>
-                      );
-                    })}
-                  </div>
+              <div className="matrix-control-group">
+                <div className="filter-control-head">
+                  <span className="filter-control-label">AI</span>
+                  <span className="filter-control-note">{selectedMatrixAiScope === DEFAULT_MATRIX_AI_SCOPE ? "All AI classes" : selectedMatrixAiScope}</span>
+                </div>
+                <div className="filter-chip-row">
+                  {MATRIX_AI_FILTERS.map(scope => {
+                    const active = selectedMatrixAiScope === scope;
+                    const label =
+                      scope === "AI_NATIVE" ? "AI-native" :
+                      scope === "AI_CAPABLE" ? "AI-capable" :
+                      scope === "STANDARD" ? "Standard" :
+                      "All";
+                    const count = scope === DEFAULT_MATRIX_AI_SCOPE ? filteredCaps.length : filteredCaps.filter(c => c.aiClassification === scope).length;
+                    return (
+                      <button key={scope} className="hb" onClick={() => setSelectedMatrixAiScope(scope)} style={{
+                        padding: "3px 8px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
+                        border: `1px solid ${active ? "var(--link)" : "var(--border)"}`,
+                        background: active ? "var(--selected-bg)" : "var(--panel)",
+                        color: active ? "var(--selected-text)" : "var(--muted)",
+                      }}>{label} ({count})</button>
+                    );
+                  })}
                 </div>
               </div>
-            </div>
-
-            <div className={`primary-filter-grid matrix-primary ${showMatrixDensityControl ? "" : "no-density"}`}>
-              {providerControlCard}
-              {tierLensControlCard}
               {categoryControlCard}
               {showMatrixDensityControl && densityControlCard}
               <ExportToolbar exportData={exportData} compact />
@@ -3435,10 +3770,10 @@ export default function App() {
           </div>
         )}
 
-        {mode !== "matrix" && (
+        {mode !== "matrix" && showSecondaryFilterControls && (
           <div className={`filter-groups ${mode === "controls" || mode === "transparency" ? "with-context" : ""}`}>
             <div>
-              {mode === "transparency" ? (
+              {showTransparencyFilterControls ? (
                 <>
                   <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
@@ -3460,7 +3795,7 @@ export default function App() {
                     })}
                   </div>
                 </>
-              ) : (
+              ) : showCategoryFilterControls ? (
                 <>
                   <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>CAPABILITY CATEGORY</span>
@@ -3491,41 +3826,56 @@ export default function App() {
                     })}
                   </div>
                 </>
-              )}
+              ) : null}
             </div>
 
             {mode === "controls" && (
               <div className="filter-context">
-                <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>COMPLIANCE LENS</div>
-                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.</div>
+                <CollapsibleInfoBar
+                  title="Compliance lens"
+                  summary="Search filters frameworks and control families; category filters apply to linked NIST capabilities."
+                  open={showControlsContext}
+                  onToggle={() => setShowControlsContext(current => !current)}
+                >
+                  <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.55 }}>
+                    Search filters frameworks and control families. Category filters apply to linked NIST capabilities only. Tier guidance is not applied in this view.
+                  </div>
+                </CollapsibleInfoBar>
               </div>
             )}
 
             {mode === "transparency" && (
               <div className="filter-context">
-                <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700, marginBottom: 7 }}>VIEW CONTEXT</div>
-                <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 700, marginBottom: 4 }}>STATE AI TRANSPARENCY</div>
-                <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.55 }}>Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.</div>
+                <CollapsibleInfoBar
+                  title="State AI transparency"
+                  summary="Rows are official-source public records. Unknown means the state has not been populated yet."
+                  open={showTransparencyContext}
+                  onToggle={() => setShowTransparencyContext(current => !current)}
+                >
+                  <div style={{ fontSize: 10, color: "var(--muted)", lineHeight: 1.55 }}>
+                    Rows are official-source public records. Unknown means the state has not been populated in this launch scaffold.
+                  </div>
+                </CollapsibleInfoBar>
               </div>
             )}
           </div>
         )}
       </div>
+      )}
 
       {/* ── CONTENT ── */}
       <div style={{ padding: "14px 24px 40px", overflowX: "auto" }}>
         <div style={{ minWidth: `min(${contentMinWidthPx}px, 100%)` }}>
-          <UpcomingBanner items={UPCOMING} />
-
           {/* Search result count */}
-          {searchQuery.trim().length >= 2 && (
+          {mode !== "overview" && searchQuery.trim().length >= 2 && (
             <div style={{ marginBottom: 10, fontSize: 9, color: "var(--muted)" }}>
               {resultCount} result(s) for "{searchQuery}"
             </div>
           )}
 
-          {mode !== "matrix" && <ExportToolbar exportData={exportData} />}
+          {mode === "overview" && <OverviewViewDesign cards={overviewCards} meta={META} />}
+
+          {mode !== "matrix" && mode !== "overview" && <ExportToolbar exportData={exportData} />}
 
           {mode === "matrix" && selectedMatrixLens === "diff" && (
             <DiffViewDesign caps={filteredMatrixCaps} activeProviders={activeProviders} />
@@ -3542,35 +3892,28 @@ export default function App() {
 
           {mode === "matrix" && selectedMatrixLens !== "diff" && selectedMatrixLens !== "ai" && (
             <>
-              {showMatrixReadKey && <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} />}
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
-                {!showMatrixReadKey && (
-                  <button
-                    type="button"
-                    className="hb"
-                    onClick={() => setShowMatrixReadKey(true)}
-                    style={{ border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel)", color: "var(--muted)", padding: "5px 9px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}
-                  >
-                    Show reading guide
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className="hb"
-                  onClick={() => setShowMatrixEvidencePanel(current => !current)}
-                  aria-expanded={showMatrixEvidencePanel}
-                  style={{ border: "1px solid var(--border)", borderRadius: 6, background: showMatrixEvidencePanel ? "var(--selected-bg)" : "var(--panel)", color: showMatrixEvidencePanel ? "var(--selected-text)" : "var(--muted)", padding: "5px 9px", fontSize: 10, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}
+              <div className="matrix-support-bars">
+                <CollapsibleInfoBar
+                  title="How to read this matrix"
+                  summary="Gov availability and parity are separate signals. Unknown means public official evidence has not established a stronger claim."
+                  open={showMatrixReadKey}
+                  onToggle={() => setShowMatrixReadKey(current => !current)}
                 >
-                  {showMatrixEvidencePanel ? "Hide matrix evidence" : "About matrix evidence"}
-                </button>
+                  <MatrixReadKey onDismiss={() => setShowMatrixReadKey(false)} plain />
+                </CollapsibleInfoBar>
+                <CollapsibleInfoBar
+                  title="About matrix evidence"
+                  summary={matrixEvidenceSummary(filteredDesignRows, activeProviders)}
+                  open={showMatrixEvidencePanel}
+                  onToggle={() => setShowMatrixEvidencePanel(current => !current)}
+                >
+                  <MatrixCoverageStrip
+                    rows={filteredDesignRows}
+                    activeProviders={activeProviders}
+                    onDismiss={() => setShowMatrixEvidencePanel(false)}
+                  />
+                </CollapsibleInfoBar>
               </div>
-              {showMatrixEvidencePanel && (
-                <MatrixCoverageStrip
-                  rows={filteredDesignRows}
-                  activeProviders={activeProviders}
-                  onDismiss={() => setShowMatrixEvidencePanel(false)}
-                />
-              )}
               <DesignMatrixView
                 rows={filteredDesignRows}
                 activeProviders={activeProviders}
@@ -3585,12 +3928,14 @@ export default function App() {
           {mode === "patterns" && <PatternViewDesign patterns={filteredPatterns} activeProviders={activeProviders} />}
           {mode === "controls" && <ControlLensViewDesign lens={CONTROL_LENS} families={filteredControlFamilies} frameworks={filteredComplianceFrameworks} />}
           {mode === "history" && <HistoryViewDesign items={filteredHistory} meta={HISTORY_META} activeProviders={activeProviders} />}
+          {mode === "provider-news" && <ProviderNewsViewDesign items={filteredProviderNews} />}
           {mode === "status" && <StatusViewDesign sources={filteredStatusSources} meta={STATUS_META} />}
           {mode === "ai-watch" && <AiWatchViewDesign sources={filteredAiWatchSources} meta={AI_WATCH_META} />}
           {mode === "transparency" && <TransparencyViewDesign items={filteredTransparency} meta={TRANSPARENCY_META} />}
         </div>
 
         {/* Tag legend */}
+        {mode !== "overview" && (
         <div style={{ marginTop: 24, padding: "12px 16px", borderRadius: 6, border: "1px solid var(--border)", background: "var(--panel)" }}>
           <div style={{ fontSize: 9, letterSpacing: "0.1em", color: "var(--muted)", marginBottom: 8, fontWeight: 700 }}>TAG LEGEND</div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -3631,6 +3976,7 @@ export default function App() {
             <a href="https://github.com/MW8-ai/CloudIntelMatrix/issues/new/choose" target="_blank" rel="noopener noreferrer" style={{ color: "var(--link)" }}>↗ Report correction</a>
           </div>
         </div>
+        )}
         {mode === "matrix" && selectedMatrixLens !== "diff" && expandedId && (
           <DesignMatrixDetail
             row={filteredDesignRows.find(row => row.cap === expandedId) || null}
