@@ -20,15 +20,27 @@ import datetime
 import json
 import pathlib
 import sys
+import urllib.parse
 
 MATRIX = pathlib.Path("data/matrix.json")
 PROVIDERS = {"aws", "azure", "gcp", "oci"}
-PQC_STATUS = {"GA", "Hybrid-Preview", "Roadmap", "None", "Unknown"}
+PQC_STATUS = {"GA", "Preview", "Hybrid-Preview", "Roadmap", "None", "Unknown"}
 PQC_PARITY = {"AtParity", "Lagging", "Unknown"}
 CONFIDENCE = {"High", "Medium", "Low"}
 FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
 FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
 RESIDENCY_STATUS = {"GA", "Announced", "Preview", "Launching"}
+TIER2_PQC_DOC_HOSTS = {"docs.aws.amazon.com", "learn.microsoft.com", "docs.cloud.google.com", "docs.oracle.com"}
+TIER2_PQC_DOC_PATHS = {
+    ("aws.amazon.com", "/security/"),
+    ("aws.amazon.com", "/compliance/"),
+    ("cloud.google.com", "/docs/"),
+}
+TIER3_PQC_BLOG_HOSTS = {"blogs.oracle.com", "techcommunity.microsoft.com"}
+TIER3_PQC_BLOG_PATHS = {
+    ("aws.amazon.com", "/blogs/"),
+    ("cloud.google.com", "/blog/"),
+}
 VALIDATORS = {}
 
 
@@ -39,6 +51,52 @@ def add_error(errors, message):
 def validate_string(value, where, errors):
     if not isinstance(value, str) or not value.strip():
         add_error(errors, f"{where}: must be a non-empty string")
+
+
+def host_matches(host, expected):
+    return host == expected or host.endswith(f".{expected}")
+
+
+def pqc_source_is_tier2(source):
+    parsed = urllib.parse.urlparse(str(source))
+    host = parsed.netloc.lower()
+    path = parsed.path.lower()
+    if any(host_matches(host, expected) for expected in TIER2_PQC_DOC_HOSTS):
+        return True
+    return any(
+        host_matches(host, expected_host) and path.startswith(expected_path)
+        for expected_host, expected_path in TIER2_PQC_DOC_PATHS
+    )
+
+
+def pqc_source_is_tier3(source):
+    parsed = urllib.parse.urlparse(str(source))
+    host = parsed.netloc.lower()
+    path = parsed.path.lower()
+    if any(host_matches(host, expected) for expected in TIER3_PQC_BLOG_HOSTS):
+        return True
+    if host_matches(host, "microsoft.com") and "/security/blog/" in path:
+        return True
+    return any(
+        host_matches(host, expected_host) and path.startswith(expected_path)
+        for expected_host, expected_path in TIER3_PQC_BLOG_PATHS
+    )
+
+
+def validate_pqc_source_tier(value, where, errors):
+    status = value.get("status")
+    source = value.get("source")
+    if status in {"Unknown", "None"} or not source:
+        return
+    is_tier2 = pqc_source_is_tier2(source)
+    is_tier3 = pqc_source_is_tier3(source)
+    if status in {"GA", "Preview", "Hybrid-Preview"} and not is_tier2:
+        add_error(errors, f"{where}: pqcReadiness.source must be Tier 2 product documentation for status {status}")
+    if status == "Roadmap":
+        if not (is_tier2 or is_tier3):
+            add_error(errors, f"{where}: Roadmap requires a Tier 2 docs or Tier 3 official first-party blog source")
+        if is_tier3 and value.get("confidence") == "High":
+            add_error(errors, f"{where}: Tier 3 roadmap sources are capped at Medium confidence")
 
 
 def validate_pqc(value, where, errors):
@@ -85,6 +143,7 @@ def validate_pqc(value, where, errors):
             add_error(errors, f"{where}: pqcReadiness.status {value.get('status')} requires an https source")
         if not value.get("sourceDate"):
             add_error(errors, f"{where}: pqcReadiness.status {value.get('status')} requires sourceDate")
+    validate_pqc_source_tier(value, where, errors)
     if value.get("firstParty") is False and not value.get("note"):
         add_error(errors, f"{where}: partner pqcReadiness entries must name the partner in note")
 

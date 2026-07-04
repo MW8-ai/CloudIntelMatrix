@@ -45,12 +45,23 @@ ENUMS = {
     "fedrampLevel": {"High", "Moderate", "Low", "Unknown"},
 }
 VALID_COST_SHAPE = {"consumption", "provisioned", "hybrid", "Unknown"}
-VALID_PQC_STATUS = {"GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"}
+VALID_PQC_STATUS = {"GA", "Preview", "Hybrid-Preview", "Roadmap", "Unknown", "None"}
 VALID_PQC_FIPS_PARITY = {"AtParity", "Lagging", "Unknown"}
 VALID_CONFIDENCE = {"High", "Medium", "Low"}
 VALID_FEDRAMP_STATUS = {"High", "Moderate", "Low", "None", "Unknown"}
 VALID_FEDRAMP_IL = {"IL2", "IL4", "IL5", "IL6", "None", "Unknown"}
 VALID_RESIDENCY_STATUS = {"GA", "Announced", "Preview", "Launching"}
+TIER2_PQC_DOC_HOSTS = {"docs.aws.amazon.com", "learn.microsoft.com", "docs.cloud.google.com", "docs.oracle.com"}
+TIER2_PQC_DOC_PATHS = {
+    ("aws.amazon.com", "/security/"),
+    ("aws.amazon.com", "/compliance/"),
+    ("cloud.google.com", "/docs/"),
+}
+TIER3_PQC_BLOG_HOSTS = {"blogs.oracle.com", "techcommunity.microsoft.com"}
+TIER3_PQC_BLOG_PATHS = {
+    ("aws.amazon.com", "/blogs/"),
+    ("cloud.google.com", "/blog/"),
+}
 URL_FIELDS = {"docsUrl", "pricingUrl", "complianceUrl", "govDocsUrl"}
 COMPLIANCE_FRAMEWORK_FIELDS = {"url"}
 FACT_URL_FIELDS = URL_FIELDS | COMPLIANCE_FRAMEWORK_FIELDS
@@ -58,10 +69,13 @@ OFFICIAL_SOURCE_DOMAINS = {
     "aws.amazon.com",
     "docs.aws.amazon.com",
     "learn.microsoft.com",
+    "microsoft.com",
     "azure.microsoft.com",
     "cloud.google.com",
     "docs.cloud.google.com",
     "docs.oracle.com",
+    "blogs.oracle.com",
+    "techcommunity.microsoft.com",
     "csrc.nist.gov",
     "nist.gov",
     "nccoe.nist.gov",
@@ -98,6 +112,52 @@ def validate_https_url(value, label):
     validate_url(value, label)
     if urlparse(str(value)).scheme != "https":
         raise ProposalError(f"{label} must use HTTPS")
+
+
+def host_matches(host, expected):
+    return host == expected or host.endswith(f".{expected}")
+
+
+def pqc_source_is_tier2(source):
+    parsed = urlparse(str(source))
+    host = parsed.netloc.lower()
+    path = parsed.path.lower()
+    if any(host_matches(host, expected) for expected in TIER2_PQC_DOC_HOSTS):
+        return True
+    return any(
+        host_matches(host, expected_host) and path.startswith(expected_path)
+        for expected_host, expected_path in TIER2_PQC_DOC_PATHS
+    )
+
+
+def pqc_source_is_tier3(source):
+    parsed = urlparse(str(source))
+    host = parsed.netloc.lower()
+    path = parsed.path.lower()
+    if any(host_matches(host, expected) for expected in TIER3_PQC_BLOG_HOSTS):
+        return True
+    if host_matches(host, "microsoft.com") and "/security/blog/" in path:
+        return True
+    return any(
+        host_matches(host, expected_host) and path.startswith(expected_path)
+        for expected_host, expected_path in TIER3_PQC_BLOG_PATHS
+    )
+
+
+def validate_pqc_source_tier(value, label):
+    status = value.get("status")
+    source = value.get("source")
+    if status in {"Unknown", "None"} or not source:
+        return
+    is_tier2 = pqc_source_is_tier2(source)
+    is_tier3 = pqc_source_is_tier3(source)
+    if status in {"GA", "Preview", "Hybrid-Preview"} and not is_tier2:
+        raise ProposalError(f"{label}.source must be Tier 2 product documentation for status {status}")
+    if status == "Roadmap":
+        if not (is_tier2 or is_tier3):
+            raise ProposalError(f"{label}.source must be Tier 2 docs or Tier 3 official first-party blog documentation for Roadmap")
+        if is_tier3 and value.get("confidence") == "High":
+            raise ProposalError(f"{label}.confidence is capped at Medium for Tier 3 roadmap sources")
 
 
 def validate_non_empty_string(value, label):
@@ -174,6 +234,7 @@ def validate_pqc_readiness(value, label):
             raise ProposalError(f"{label}.source is required when status is not Unknown")
         if not value.get("sourceDate"):
             raise ProposalError(f"{label}.sourceDate is required when status is not Unknown")
+    validate_pqc_source_tier(value, label)
     if value.get("firstParty") is False and not value.get("note"):
         raise ProposalError(f"{label}.note must name the partner when firstParty is false")
 

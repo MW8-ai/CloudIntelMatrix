@@ -308,7 +308,7 @@
             "signature": { "type": "string", "minLength": 1 },
             "tls": { "type": "string", "minLength": 1 },
             "vpn": { "type": "string", "minLength": 1 },
-            "status": { "enum": ["GA", "Hybrid-Preview", "Roadmap", "Unknown", "None"] },
+            "status": { "enum": ["GA", "Preview", "Hybrid-Preview", "Roadmap", "Unknown", "None"] },
             "milestoneDate": { "type": ["string", "null"], "minLength": 1 },
             "fipsEndpointParity": { "enum": ["AtParity", "Lagging", "Unknown"] },
             "govPqc": { "type": "string", "minLength": 1 },

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "version": "3.20.0",
+    "version": "3.21.0",
     "schema": "capability-v1",
     "last_verified": "2026-07-04",
     "description": "Enterprise and government cloud capability intelligence matrix for AWS, Azure, Google Cloud, and Oracle Cloud Infrastructure (OCI). Provider-agnostic. Fact-first. Official sources only.",
@@ -923,11 +923,19 @@
           },
           "lastVerified": "2026-07-04",
           "pqcReadiness": {
-            "status": "Unknown",
+            "kem": "Unknown",
+            "signature": "Unknown",
+            "tls": "Unknown",
+            "vpn": "Unknown",
+            "status": "Roadmap",
+            "milestoneDate": "2029",
             "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://www.microsoft.com/en-us/security/blog/2025/08/20/quantum-safe-security-progress-towards-next-generation-cryptography/",
+            "sourceDate": "2025-08",
             "firstParty": true,
-            "confidence": "Low",
-            "note": "No accepted service-specific Microsoft Learn documentation found for Microsoft Entra post-quantum readiness."
+            "confidence": "Medium",
+            "note": "Microsoft Entra authentication explicitly named as a prioritized quantum-safe component in the official QSP; no service-level GA yet."
           }
         },
         "gcp": {
@@ -3190,11 +3198,19 @@
           },
           "lastVerified": "2026-07-04",
           "pqcReadiness": {
-            "status": "Unknown",
+            "kem": "Unknown",
+            "signature": "Unknown",
+            "tls": "Hybrid PQC key establishment for TLS 1.3 (program-level)",
+            "vpn": "Hybrid PQC key establishment for IKEv2 and SSH (program-level)",
+            "status": "Roadmap",
+            "milestoneDate": "2025-11",
             "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://blogs.oracle.com/security/post-quantum-cryptography",
+            "sourceDate": "2025-11",
             "firstParty": true,
-            "confidence": "Low",
-            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
+            "confidence": "Medium",
+            "note": "Protocol-level program (TLS1.3/SSH/IKEv2); not a service-GA feature."
           }
         }
       }
@@ -5080,11 +5096,19 @@
           },
           "lastVerified": "2026-07-04",
           "pqcReadiness": {
-            "status": "Unknown",
+            "kem": "ML-KEM in SymCrypt (core crypto library across Azure); Key Vault service-level PQC keys not confirmed GA",
+            "signature": "ML-DSA and SLH-DSA in SymCrypt; ADCS ML-DSA certificate issuance GA (Windows Server 2025, 2026-05)",
+            "tls": "TLS post-quantum hybrid key exchange in preview via SymCrypt-OpenSSL and Schannel",
+            "vpn": "Unknown",
+            "status": "Roadmap",
+            "milestoneDate": "2029",
             "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://www.microsoft.com/en-us/security/blog/2025/08/20/quantum-safe-security-progress-towards-next-generation-cryptography/",
+            "sourceDate": "2025-08",
             "firstParty": true,
-            "confidence": "Low",
-            "note": "No accepted service-specific Microsoft Learn documentation found for Azure Key Vault post-quantum readiness."
+            "confidence": "Medium",
+            "note": "Quantum Safe Program names key and secret management as prioritized; core services targeted quantum-safe before 2029; service-level Key Vault PQC not yet GA."
           }
         },
         "gcp": {
@@ -5169,11 +5193,19 @@
           },
           "lastVerified": "2026-07-04",
           "pqcReadiness": {
-            "status": "Unknown",
+            "kem": "ML-KEM implemented in Oracle cryptography providers (program-level)",
+            "signature": "ML-DSA implemented in Oracle cryptography providers (program-level)",
+            "tls": "Unknown",
+            "vpn": "None",
+            "status": "Roadmap",
+            "milestoneDate": "2025-11",
             "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://blogs.oracle.com/security/post-quantum-cryptography",
+            "sourceDate": "2025-11",
             "firstParty": true,
-            "confidence": "Low",
-            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
+            "confidence": "Medium",
+            "note": "Crypto-provider-level; OCI Vault/Certificates service mapping not yet confirmed."
           }
         }
       }
@@ -5349,11 +5381,19 @@
           },
           "lastVerified": "2026-07-04",
           "pqcReadiness": {
-            "status": "Unknown",
+            "kem": "Unknown",
+            "signature": "Unknown",
+            "tls": "Hybrid PQC key establishment for TLS 1.3 (program-level)",
+            "vpn": "Hybrid PQC key establishment for IKEv2 and SSH (program-level)",
+            "status": "Roadmap",
+            "milestoneDate": "2025-11",
             "fipsEndpointParity": "Unknown",
+            "govPqc": "Unknown",
+            "source": "https://blogs.oracle.com/security/post-quantum-cryptography",
+            "sourceDate": "2025-11",
             "firstParty": true,
-            "confidence": "Low",
-            "note": "Covered only by Oracle general protocol-level PQC material outside approved primary-source domains; no service-specific docs.oracle.com PQC documentation found."
+            "confidence": "Medium",
+            "note": "Protocol-level program (TLS1.3/SSH/IKEv2); not a service-GA feature."
           }
         }
       }
