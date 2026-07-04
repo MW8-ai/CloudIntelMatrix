@@ -348,6 +348,16 @@ const TRANSPARENCY_STATUS_STYLES = {
   Unknown: { bg: "#33415522", fg: "#64748b", border: "#64748b55" },
 };
 
+const STATE_TILE_POSITIONS = {
+  WA: [1, 1], MT: [1, 3], ND: [1, 4], MN: [1, 5], WI: [1, 6], MI: [1, 7], NY: [1, 10], VT: [1, 11], ME: [1, 12],
+  OR: [2, 1], ID: [2, 2], WY: [2, 3], SD: [2, 4], IA: [2, 5], IL: [2, 6], IN: [2, 7], OH: [2, 8], PA: [2, 9], NJ: [2, 10], NH: [2, 11], MA: [2, 12],
+  CA: [3, 1], NV: [3, 2], UT: [3, 3], NE: [3, 4], MO: [3, 5], KY: [3, 6], WV: [3, 7], VA: [3, 8], MD: [3, 9], DE: [3, 10], CT: [3, 11], RI: [3, 12],
+  AZ: [4, 2], CO: [4, 3], KS: [4, 4], AR: [4, 5], TN: [4, 6], NC: [4, 8], DC: [4, 9],
+  NM: [5, 3], OK: [5, 4], LA: [5, 5], MS: [5, 6], AL: [5, 7], SC: [5, 8], GA: [5, 9],
+  TX: [6, 4], FL: [6, 10],
+  AK: [7, 1], HI: [7, 2],
+};
+
 function GlossaryBadge({ label, description, styleDef, shape = "pill" }) {
   const [open, setOpen] = useState(false);
   const title = glossaryTitle(label, description);
@@ -2226,12 +2236,98 @@ function HistoryViewDesign({ items, meta }) {
   );
 }
 
+function TransparencyMap({ items, visibleItems, officialRecords, coveragePct }) {
+  const itemByState = Object.fromEntries(items.map(item => [item.state, item]));
+  const visibleStates = new Set(visibleItems.map(item => item.state));
+
+  return (
+    <section className="transparency-map-card">
+      <div className="transparency-map-head">
+        <div>
+          <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>AI TRANSPARENCY MAP</div>
+          <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.3 }}>Official state and DC public records</div>
+          <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 4 }}>
+            {officialRecords} of {items.length} state/DC rows have official-source documents linked.
+          </div>
+        </div>
+        <div className="transparency-coverage-meter">
+          <strong>{coveragePct}%</strong>
+          <span>official records</span>
+        </div>
+      </div>
+
+      <div className="transparency-map-scroll" aria-label="United States AI transparency source map">
+        <div className="transparency-map-grid">
+          {Object.entries(STATE_TILE_POSITIONS).map(([state, [row, column]]) => {
+            const item = itemByState[state];
+            if (!item) return null;
+            const style = TRANSPARENCY_STATUS_STYLES[item.status] || TRANSPARENCY_STATUS_STYLES.Unknown;
+            const muted = visibleItems.length > 0 && !visibleStates.has(state);
+            const label = `${item.stateName}: ${item.status}${item.url ? ". Official source available." : ". No official source linked."}`;
+            const tileStyle = {
+              gridRow: row,
+              gridColumn: column,
+              borderColor: style.border,
+              background: style.bg,
+              color: style.fg,
+              opacity: muted ? 0.34 : 1,
+            };
+            const content = (
+              <>
+                <strong>{state}</strong>
+                <span>{item.status === "Unknown" ? "No doc" : item.status}</span>
+              </>
+            );
+            return item.url ? (
+              <a
+                key={state}
+                className="transparency-state-tile"
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={label}
+                aria-label={label}
+                style={tileStyle}
+              >
+                {content}
+              </a>
+            ) : (
+              <span
+                key={state}
+                className="transparency-state-tile disabled"
+                title={label}
+                aria-label={label}
+                style={tileStyle}
+              >
+                {content}
+              </span>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="transparency-map-legend">
+        {TRANSPARENCY_STATUS_ORDER.filter(status => status !== "All").map(status => {
+          const style = TRANSPARENCY_STATUS_STYLES[status] || TRANSPARENCY_STATUS_STYLES.Unknown;
+          return (
+            <span key={status} style={{ borderColor: style.border, background: style.bg, color: style.fg }}>
+              {status}
+            </span>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 function TransparencyViewDesign({ items, meta }) {
   const federalContext = meta.federalContext || {};
   const counts = TRANSPARENCY_STATUS_ORDER
     .filter(status => status !== "All")
     .map(status => ({ status, count: items.filter(item => item.status === status).length }))
     .filter(item => item.count);
+  const officialRecords = TRANSPARENCY.filter(item => item.url).length;
+  const coveragePct = Math.round((officialRecords / Math.max(TRANSPARENCY.length, 1)) * 100);
 
   return (
     <div>
@@ -2241,6 +2337,7 @@ function TransparencyViewDesign({ items, meta }) {
         body={meta.scopeNote}
         meta={[
           <StatTile key="rows" label="ROWS" value={items.length} tone="#b45309" />,
+          <StatTile key="records" label="OFFICIAL RECORDS" value={`${coveragePct}%`} tone="#16a34a" />,
           <StatTile key="statuses" label="STATUSES" value={counts.length} />,
           <VerifiedStamp key="verified" date={meta.last_verified} />,
         ]}
@@ -2256,6 +2353,13 @@ function TransparencyViewDesign({ items, meta }) {
           <VerifiedStamp date={federalContext.lastVerified || meta.last_verified} />
         </div>
       </section>
+
+      <TransparencyMap
+        items={TRANSPARENCY}
+        visibleItems={items}
+        officialRecords={officialRecords}
+        coveragePct={coveragePct}
+      />
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
         {counts.map(({ status, count }) => (
@@ -2403,13 +2507,16 @@ function AiWatchViewDesign({ sources, meta }) {
                         {source.shortName.slice(0, 2).toUpperCase()}
                       </span>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 9, color: category.tone, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{source.shortName}</div>
-                        <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{source.name}</div>
+                        <div style={{ fontSize: 9, color: category.tone, fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{source.name}</div>
+                        <div style={{ fontSize: 14, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{source.modelFamily}</div>
                       </div>
                     </div>
                     <VerifiedStamp date={source.lastVerified} />
                   </div>
-                  <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em", marginBottom: 6 }}>{source.modelFamily}</div>
+                  <div className="ai-watch-model-strip">
+                    <span>{source.shortName}</span>
+                    <strong>Official model docs are the source of truth for current model names.</strong>
+                  </div>
                   <div style={{ fontSize: 11, color: "var(--ink2)", lineHeight: 1.6, marginBottom: 10 }}>{source.summary}</div>
                   <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
                     {source.newsUrl && <a href={source.newsUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">News</a>}
@@ -2459,7 +2566,7 @@ function UpcomingBanner({ items }) {
   const providerGroups = PROVIDERS.map(providerKey => {
     const label = providerLabelForKey(providerKey);
     const providerItems = items.filter(item => item.provider?.toLowerCase() === providerKey);
-    const visibleItems = open ? providerItems : providerItems.slice(0, 2);
+    const visibleItems = open ? providerItems : providerItems.slice(0, 4);
     return {
       providerKey,
       label,
@@ -2472,7 +2579,7 @@ function UpcomingBanner({ items }) {
   const hiddenCount = Math.max(items.length - visibleCount, 0);
 
   return (
-    <div className="global-news-panel" style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
+    <div className={`global-news-panel ${open ? "open" : "compact"}`} style={{ marginBottom: 14, borderRadius: 6, border: "1px solid #b45309", background: "var(--panel)", overflow: "hidden" }}>
       <div style={{ padding: "8px 14px", background: "var(--panel-alt)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
         <div>
           <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: "0.1em", color: "#b45309" }}>GLOBAL CLOUD PROVIDER NEWS</div>
@@ -2503,19 +2610,19 @@ function UpcomingBanner({ items }) {
               </div>
               <div style={{ display: "grid", gap: 8 }}>
                 {group.visibleItems.map(item => (
-                  <article key={item.id} className="global-news-item">
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: 5 }}>
+                  <article key={item.id} className={`global-news-item ${open ? "" : "compact"}`}>
+                    <div className="global-news-status-row" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", marginBottom: open ? 5 : 3 }}>
                       <span style={{ fontSize: 7.5, padding: "2px 5px", borderRadius: 3, background: "#78350f", color: "#fbbf24", fontWeight: 800, letterSpacing: "0.04em" }}>
                         {item.status?.toUpperCase()}
                       </span>
                       <span style={{ fontSize: 8, color: "var(--muted)", fontWeight: 800 }}>{item.category}</span>
                     </div>
-                    <div style={{ fontSize: 10, color: "var(--text)", fontWeight: 800, lineHeight: 1.35 }}>{item.title}</div>
-                    {item.expected_ga && (
+                    <div style={{ fontSize: open ? 10 : 9.5, color: "var(--text)", fontWeight: 800, lineHeight: 1.35 }}>{item.title}</div>
+                    {open && item.expected_ga && (
                       <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8, color: "var(--muted)", marginTop: 4 }}>Expected: {item.expected_ga}</div>
                     )}
                     {open && <div style={{ fontSize: 9, color: "var(--muted)", lineHeight: 1.45, marginTop: 5 }}>{item.detail}</div>}
-                    {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: 9, color: "var(--link)", marginTop: 6, display: "inline-block", fontWeight: 700, textDecoration: "none" }}>Official source</a>}
+                    {item.source && <a href={item.source} target="_blank" rel="noopener noreferrer" style={{ fontSize: open ? 9 : 8.5, color: "var(--link)", marginTop: open ? 6 : 4, display: "inline-block", fontWeight: 700, textDecoration: "none" }}>Official source</a>}
                   </article>
                 ))}
                 {!group.visibleItems.length && (
@@ -2824,8 +2931,8 @@ export default function App() {
     filteredCaps.length;
 
   const modes = [
-    { id: "matrix",       label: "Capability Matrix",     iconKey: "layers",        desc: "All capabilities by layer and tier" },
     { id: "overview",     label: "Overview",              iconKey: "blocks",        desc: "Map of each intelligence view" },
+    { id: "matrix",       label: "Capability Matrix",     iconKey: "layers",        desc: "All capabilities by layer and tier" },
     { id: "patterns",     label: "Architecture Patterns", iconKey: "blocks",        desc: "Architecture planning overlays" },
     { id: "controls",     label: "Compliance & Controls", iconKey: "shield-check",  desc: "Framework references plus NIST 800-53 planning lens" },
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
@@ -3108,9 +3215,11 @@ export default function App() {
           grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
           gap: 8px;
           margin-bottom: 10px;
+          align-items: start;
         }
         .collapsible-info {
           min-width: 0;
+          align-self: start;
           border: 1px solid var(--border);
           border-radius: 7px;
           background: var(--panel);
@@ -3415,6 +3524,138 @@ export default function App() {
           border: 1px solid var(--border);
           border-radius: 7px;
           background: var(--panel);
+        }
+        .global-news-item.compact {
+          padding: 6px 7px;
+          border-radius: 5px;
+        }
+        .global-news-panel.compact .global-news-column {
+          padding: 8px;
+        }
+        .ai-watch-model-strip {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin: -2px 0 9px;
+          padding: 7px 8px;
+          border: 1px solid var(--border);
+          border-radius: 5px;
+          background: var(--panel-alt);
+          color: var(--muted);
+          font-size: 9px;
+          line-height: 1.4;
+        }
+        .ai-watch-model-strip span {
+          color: var(--link);
+          font-family: 'IBM Plex Mono', monospace;
+          font-weight: 900;
+          letter-spacing: 0.06em;
+        }
+        .ai-watch-model-strip strong {
+          color: var(--ink2);
+          font-weight: 700;
+        }
+        .transparency-map-card {
+          margin-bottom: 14px;
+          padding: 13px 14px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel);
+          box-shadow: 0 1px 2px var(--shadow);
+        }
+        .transparency-map-head {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 14px;
+          margin-bottom: 12px;
+          flex-wrap: wrap;
+        }
+        .transparency-coverage-meter {
+          min-width: 118px;
+          padding: 9px 10px;
+          border: 1px solid #15803d55;
+          border-radius: 6px;
+          background: #14532d12;
+          text-align: center;
+        }
+        .transparency-coverage-meter strong {
+          display: block;
+          color: #16a34a;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 22px;
+          line-height: 1;
+        }
+        .transparency-coverage-meter span {
+          display: block;
+          margin-top: 4px;
+          color: var(--muted);
+          font-size: 8px;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+        .transparency-map-scroll {
+          overflow-x: auto;
+          padding-bottom: 4px;
+        }
+        .transparency-map-grid {
+          display: grid;
+          grid-template-columns: repeat(12, 48px);
+          grid-template-rows: repeat(7, 42px);
+          gap: 5px;
+          min-width: 631px;
+          align-items: stretch;
+        }
+        .transparency-state-tile {
+          display: grid;
+          place-items: center;
+          align-content: center;
+          gap: 2px;
+          min-width: 0;
+          border: 1px solid;
+          border-radius: 6px;
+          text-decoration: none;
+          transition: transform .12s, opacity .12s;
+        }
+        .transparency-state-tile:not(.disabled):hover {
+          transform: translateY(-1px);
+          opacity: .88;
+        }
+        .transparency-state-tile strong {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 10px;
+          font-weight: 900;
+          line-height: 1;
+        }
+        .transparency-state-tile span {
+          max-width: 100%;
+          padding: 0 2px;
+          font-size: 7px;
+          font-weight: 800;
+          line-height: 1.15;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .transparency-state-tile.disabled {
+          cursor: default;
+        }
+        .transparency-map-legend {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin-top: 10px;
+        }
+        .transparency-map-legend span {
+          padding: 3px 7px;
+          border: 1px solid;
+          border-radius: 4px;
+          font-size: 8px;
+          font-family: 'IBM Plex Mono', monospace;
+          font-weight: 900;
         }
         .ai-focus-section-head {
           display: flex;
