@@ -181,7 +181,8 @@ def build_detail_sheet(ws):
     hdrs = ["Category","Capability","Provider","Service","Former Names","Gov Avail","Parity Lag","Parity Detail","Gov Variant",
             "Region","Realm Class","Provider Verified","Constraints","Cost Shape","Egress Sensitive","Commitment Discount",
             "PQC Status","PQC KEM","PQC Signature","PQC TLS","PQC VPN","PQC Milestone","PQC FIPS Parity","PQC Gov","PQC Source",
-            "PQC Source Date","PQC First Party","PQC Confidence","PQC Note","FedRAMP Commercial Status","FedRAMP Commercial URL",
+            "PQC Source Date","PQC First Party","PQC Confidence","PQC Note","Residency Offerings","Residency Geographies",
+            "Residency Statuses","Residency Partner Operated","Residency Sources","FedRAMP Commercial Status","FedRAMP Commercial URL",
             "FedRAMP Commercial Date","FedRAMP Commercial Confidence","FedRAMP Government Status","FedRAMP Government DoD IL",
             "FedRAMP Government Boundary","FedRAMP Government URL","FedRAMP Government Date","FedRAMP Government Confidence",
             "FedRAMP Level","DoD Impact Level","Docs","Pricing","Compliance","Architecture Notes","Operational Considerations"]
@@ -198,6 +199,7 @@ def build_detail_sheet(ws):
             prov = cap.get("providers",{}).get(pkey,{})
             cost_model = prov.get("costModel", {})
             pqc = prov.get("pqcReadiness", {})
+            residency = prov.get("residency", [])
             fedramp = prov.get("fedramp", {})
             fedramp_commercial = field_value(fedramp, "commercial") if isinstance(field_value(fedramp, "commercial"), dict) else {}
             fedramp_government = field_value(fedramp, "government") if isinstance(field_value(fedramp, "government"), dict) else {}
@@ -211,6 +213,8 @@ def build_detail_sheet(ws):
                 field_value(pqc, "signature"), field_value(pqc, "tls"), field_value(pqc, "vpn"), field_value(pqc, "milestoneDate"),
                 field_value(pqc, "fipsEndpointParity"), field_value(pqc, "govPqc"), field_value(pqc, "source"), field_value(pqc, "sourceDate"),
                 field_value(pqc, "firstParty"), field_value(pqc, "confidence"), field_value(pqc, "note"),
+                residency_field(residency, "offering"), residency_field(residency, "geography"), residency_field(residency, "status"),
+                residency_partner_operated(residency), residency_field(residency, "source"),
                 field_value(fedramp_commercial, "status"), field_value(fedramp_commercial, "url"), field_value(fedramp_commercial, "date"),
                 field_value(fedramp_commercial, "confidence"), field_value(fedramp_government, "status"), field_value(fedramp_government, "dodIL"),
                 field_value(fedramp_government, "boundary"), field_value(fedramp_government, "url"), field_value(fedramp_government, "date"),
@@ -681,6 +685,7 @@ MATRIX_EXPORT_HEADERS = [
     "providerLastVerified", "constraints", "costShape", "egressSensitive", "commitmentDiscountAvailable",
     "pqcStatus", "pqcKem", "pqcSignature", "pqcTls", "pqcVpn", "pqcMilestoneDate", "pqcFipsEndpointParity",
     "pqcGovPqc", "pqcSource", "pqcSourceDate", "pqcFirstParty", "pqcConfidence", "pqcNote",
+    "residencyOfferings", "residencyGeographies", "residencyStatuses", "residencyPartnerOperated", "residencySources",
     "fedrampCommercialStatus", "fedrampCommercialUrl", "fedrampCommercialDate", "fedrampCommercialConfidence",
     "fedrampGovernmentStatus", "fedrampGovernmentDodIL", "fedrampGovernmentBoundary", "fedrampGovernmentUrl",
     "fedrampGovernmentDate", "fedrampGovernmentConfidence", "fedrampLevel", "dodImpactLevel", "docsUrl",
@@ -711,6 +716,10 @@ AI_WATCH_EXPORT_HEADERS = [
     "name", "shortName", "category", "modelFamily", "summary", "newsUrl",
     "docsUrl", "releaseNotesUrl", "safetyUrl", "lastVerified",
 ]
+RESIDENCY_EXPORT_HEADERS = [
+    "capability", "provider", "offering", "guarantee", "geography", "status",
+    "firstParty", "operatingModel", "source", "providerVerified", "matrixVersion",
+]
 
 def cell_text(value):
     if value is None:
@@ -726,6 +735,23 @@ def field_value(value, field):
         return value.get(field, "")
     return ""
 
+def residency_items(value):
+    return value if isinstance(value, list) else []
+
+def residency_field(value, field):
+    return "; ".join(
+        str(item.get(field, ""))
+        for item in residency_items(value)
+        if item.get(field, "") not in [None, ""]
+    )
+
+def residency_partner_operated(value):
+    return "; ".join(
+        str(item.get("offering", ""))
+        for item in residency_items(value)
+        if item.get("firstParty") is False and item.get("offering")
+    )
+
 def export_notes(*parts):
     return " ".join(cell_text(part).strip() for part in parts if cell_text(part).strip())
 
@@ -736,6 +762,7 @@ def matrix_export_rows(caps):
             provider = cap.get("providers", {}).get(pkey, {})
             cost_model = provider.get("costModel", {})
             pqc = provider.get("pqcReadiness", {})
+            residency = provider.get("residency", [])
             fedramp = provider.get("fedramp", {})
             fedramp_commercial = field_value(fedramp, "commercial") if isinstance(field_value(fedramp, "commercial"), dict) else {}
             fedramp_government = field_value(fedramp, "government") if isinstance(field_value(fedramp, "government"), dict) else {}
@@ -772,6 +799,11 @@ def matrix_export_rows(caps):
                 "pqcFirstParty": field_value(pqc, "firstParty"),
                 "pqcConfidence": field_value(pqc, "confidence"),
                 "pqcNote": field_value(pqc, "note"),
+                "residencyOfferings": residency_field(residency, "offering"),
+                "residencyGeographies": residency_field(residency, "geography"),
+                "residencyStatuses": residency_field(residency, "status"),
+                "residencyPartnerOperated": residency_partner_operated(residency),
+                "residencySources": residency_field(residency, "source"),
                 "fedrampCommercialStatus": field_value(fedramp_commercial, "status"),
                 "fedrampCommercialUrl": field_value(fedramp_commercial, "url"),
                 "fedrampCommercialDate": field_value(fedramp_commercial, "date"),
@@ -792,6 +824,50 @@ def matrix_export_rows(caps):
                 "sourceNotes": export_notes(cap.get("sourceNotes", ""), provider.get("sourceNotes", "")),
             })
     return rows
+
+def residency_export_rows():
+    rows = []
+    for cap in CAPS:
+        for pkey in PROVIDERS:
+            provider = cap.get("providers", {}).get(pkey, {})
+            for item in residency_items(provider.get("residency", [])):
+                rows.append({
+                    "capability": cap.get("capability", ""),
+                    "provider": PROV_LABELS.get(pkey, pkey.upper()),
+                    "offering": item.get("offering", ""),
+                    "guarantee": item.get("guarantee", ""),
+                    "geography": item.get("geography", ""),
+                    "status": item.get("status", ""),
+                    "firstParty": item.get("firstParty", ""),
+                    "operatingModel": "First-party" if item.get("firstParty") is True else "Partner-operated",
+                    "source": item.get("source", ""),
+                    "providerVerified": provider.get("lastVerified", ""),
+                    "matrixVersion": META.get("version", ""),
+                })
+    return rows
+
+def build_residency_sheet(ws):
+    ws.sheet_view.showGridLines = False
+    rows = residency_export_rows()
+    hdr(ws, "Residency and sovereignty offerings", len(RESIDENCY_EXPORT_HEADERS))
+    for ci, header in enumerate(RESIDENCY_EXPORT_HEADERS, 1):
+        c = ws.cell(row=2, column=ci, value=header)
+        c.fill = f("1E3A5F"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center"); c.border = TB
+    for ri, row_data in enumerate(rows, 3):
+        provider_name = row_data.get("provider", "")
+        pkey = next((key for key, label in PROV_LABELS.items() if label == provider_name), "aws")
+        bg = PROV_COLORS[pkey]["svc"]
+        for ci, header in enumerate(RESIDENCY_EXPORT_HEADERS, 1):
+            value = row_data.get(header, "")
+            c = ws.cell(row=ri, column=ci, value=value)
+            c.fill = f(bg); c.font = ft(size=8, color="2563EB" if header == "source" and value else "111827")
+            c.alignment = al("left", "center", wrap=True); c.border = TB
+            if header == "source" and value:
+                c.hyperlink = value
+        ws.row_dimensions[ri].height = 36
+    for col, width in {"A":32,"B":10,"C":30,"D":58,"E":34,"F":14,"G":12,"H":18,"I":54,"J":14,"K":12}.items():
+        ws.column_dimensions[col].width = width
 
 def pattern_export_rows():
     rows = []
@@ -955,6 +1031,7 @@ def write_view_csvs():
     write_view_csv("transparency", TRANSPARENCY_EXPORT_HEADERS, transparency_export_rows())
     write_view_csv("status", STATUS_EXPORT_HEADERS, status_export_rows())
     write_view_csv("ai-watch", AI_WATCH_EXPORT_HEADERS, ai_watch_export_rows())
+    write_view_csv("residency", RESIDENCY_EXPORT_HEADERS, residency_export_rows())
 
 wb = Workbook()
 wb.remove(wb.active)
@@ -972,6 +1049,9 @@ build_detail_sheet(ws_detail)
 
 ws_gov = wb.create_sheet("Gov & Parity")
 build_gov_sheet(ws_gov)
+
+ws_residency = wb.create_sheet("Residency")
+build_residency_sheet(ws_residency)
 
 ws_patterns = wb.create_sheet("Architecture Patterns")
 build_patterns_sheet(ws_patterns)

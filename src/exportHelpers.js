@@ -38,6 +38,11 @@ const MATRIX_COLUMNS = [
   "pqcFirstParty",
   "pqcConfidence",
   "pqcNote",
+  "residencyOfferings",
+  "residencyGeographies",
+  "residencyStatuses",
+  "residencyPartnerOperated",
+  "residencySources",
   "fedrampCommercialStatus",
   "fedrampCommercialUrl",
   "fedrampCommercialDate",
@@ -438,6 +443,7 @@ export function buildMatrixRows(caps, activeProviders, selectedTier = null) {
       const provider = cap.providers?.[providerKey] || {};
       const costModel = provider.costModel || {};
       const pqcReadiness = provider.pqcReadiness || {};
+      const residency = Array.isArray(provider.residency) ? provider.residency : [];
       const fedramp = provider.fedramp || {};
       const fedrampCommercial = fieldValue(fedramp, "commercial") || {};
       const fedrampGovernment = fieldValue(fedramp, "government") || {};
@@ -477,6 +483,11 @@ export function buildMatrixRows(caps, activeProviders, selectedTier = null) {
         pqcFirstParty: fieldValue(pqcReadiness, "firstParty"),
         pqcConfidence: fieldValue(pqcReadiness, "confidence"),
         pqcNote: fieldValue(pqcReadiness, "note"),
+        residencyOfferings: residency.map(item => item.offering).filter(Boolean),
+        residencyGeographies: residency.map(item => item.geography).filter(Boolean),
+        residencyStatuses: residency.map(item => item.status).filter(Boolean),
+        residencyPartnerOperated: residency.filter(item => item.firstParty === false).map(item => item.offering).filter(Boolean),
+        residencySources: residency.map(item => item.source).filter(Boolean),
         fedrampCommercialStatus: fieldValue(fedrampCommercial, "status"),
         fedrampCommercialUrl: fieldValue(fedrampCommercial, "url"),
         fedrampCommercialDate: fieldValue(fedrampCommercial, "date"),
