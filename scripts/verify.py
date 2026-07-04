@@ -211,7 +211,15 @@ AI_WATCH_REQUIRED = [
     "summary",
     "lastVerified",
 ]
-AI_WATCH_ALLOWED = set(AI_WATCH_REQUIRED + ["models", "newsUrl", "releaseNotesUrl", "safetyUrl"])
+AI_WATCH_ALLOWED = set(AI_WATCH_REQUIRED + ["models", "modelDetails", "newsUrl", "releaseNotesUrl", "safetyUrl"])
+AI_WATCH_MODEL_DETAIL_REQUIRED = [
+    "name",
+    "bestFor",
+    "docUrl",
+    "sourceNote",
+    "lastVerified",
+]
+AI_WATCH_MODEL_DETAIL_ALLOWED = set(AI_WATCH_MODEL_DETAIL_REQUIRED + ["releaseDate", "releaseNotesUrl"])
 PROPOSAL_PROVIDER_FIELDS = {
     "service",
     "status",
@@ -1181,6 +1189,39 @@ def validate_ai_watch(ai_watch_data):
                 for index, model in enumerate(models):
                     if not isinstance(model, str) or not model.strip():
                         err(f"AI watch source '{source_id}'.models[{index}] must be a non-empty string")
+        if "modelDetails" in source:
+            details = source.get("modelDetails")
+            if not isinstance(details, list):
+                err(f"AI watch source '{source_id}'.modelDetails must be an array")
+                details = []
+            seen_model_details = set()
+            model_names = set(source.get("models", [])) if isinstance(source.get("models"), list) else set()
+            for index, detail in enumerate(details):
+                label = f"AI watch source '{source_id}'.modelDetails[{index}]"
+                require_fields(detail, AI_WATCH_MODEL_DETAIL_REQUIRED, label)
+                if not isinstance(detail, dict):
+                    continue
+                unexpected_detail_fields = set(detail) - AI_WATCH_MODEL_DETAIL_ALLOWED
+                if unexpected_detail_fields:
+                    err(f"{label} contains unsupported fields: {sorted(unexpected_detail_fields)}")
+                detail_name = str(detail.get("name", "")).strip()
+                if detail_name in seen_model_details:
+                    err(f"Duplicate AI watch model detail for source '{source_id}': {detail_name}")
+                seen_model_details.add(detail_name)
+                if model_names and detail_name not in model_names:
+                    err(f"{label}.name is not listed in source models: {detail_name}")
+                for field in ["name", "bestFor", "sourceNote"]:
+                    if not str(detail.get(field, "")).strip():
+                        err(f"{label}.{field} must not be empty")
+                validate_date(detail.get("lastVerified"), f"{label}.lastVerified")
+                if "releaseDate" in detail:
+                    validate_date(detail.get("releaseDate"), f"{label}.releaseDate")
+                for field in ["docUrl", "releaseNotesUrl"]:
+                    if field in detail:
+                        validate_url(detail.get(field), f"{label}.{field}", False)
+                        host = normalized_host(detail.get(field))
+                        if host not in AI_WATCH_DOMAINS:
+                            err(f"{label}.{field} is not on an approved AI-watch domain: {detail.get(field)}")
         validate_date(source.get("lastVerified"), f"AI watch source '{source_id}'.lastVerified")
         for field in ["newsUrl", "docsUrl", "releaseNotesUrl", "safetyUrl"]:
             if field in source:
@@ -1497,6 +1538,9 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
     for source in ai_watch_sources:
         for field in ["newsUrl", "docsUrl", "releaseNotesUrl", "safetyUrl"]:
             add_link(source.get(field), f"aiWatch/{source.get('id')}/{field}")
+        for index, detail in enumerate(source.get("modelDetails", []) if isinstance(source.get("modelDetails"), list) else []):
+            add_link(detail.get("docUrl"), f"aiWatch/{source.get('id')}/modelDetails/{index}/docUrl")
+            add_link(detail.get("releaseNotesUrl"), f"aiWatch/{source.get('id')}/modelDetails/{index}/releaseNotesUrl")
     for source_url, label in proposal_links:
         add_link(source_url, label)
 
