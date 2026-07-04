@@ -2500,7 +2500,9 @@ function AiWatchViewDesign({ sources, meta }) {
               {category.label}
             </div>
             <div className="design-framework-grid">
-              {group.map(source => (
+              {group.map(source => {
+                const modelDetails = Array.isArray(source.modelDetails) ? source.modelDetails : [];
+                return (
                 <article key={source.id} className="design-secondary-card" style={{ borderTop: `3px solid ${category.tone}` }}>
                   <div className="design-secondary-card-head">
                     <div style={{ display: "flex", alignItems: "flex-start", gap: 10, minWidth: 0 }}>
@@ -2518,7 +2520,25 @@ function AiWatchViewDesign({ sources, meta }) {
                     <span>{source.shortName}</span>
                     <strong>Official model docs are the source of truth for current model names.</strong>
                   </div>
-                  {Array.isArray(source.models) && source.models.length > 0 && (
+                  {modelDetails.length > 0 ? (
+                    <div className="ai-watch-model-detail-list" aria-label={`${source.name} tracked model details`}>
+                      {modelDetails.map(detail => (
+                        <div key={detail.name} className="ai-watch-model-detail">
+                          <div className="ai-watch-model-detail-head">
+                            <strong>{detail.name}</strong>
+                            {detail.releaseDate && <span>Released {detail.releaseDate}</span>}
+                          </div>
+                          <div className="ai-watch-model-best">{detail.bestFor}</div>
+                          {detail.sourceNote && <div className="ai-watch-model-source-note">{detail.sourceNote}</div>}
+                          <div className="ai-watch-model-links">
+                            <a href={detail.docUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Official doc</a>
+                            {detail.releaseNotesUrl && <a href={detail.releaseNotesUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Release/update</a>}
+                            <VerifiedStamp date={detail.lastVerified} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : Array.isArray(source.models) && source.models.length > 0 && (
                     <div className="ai-watch-model-chip-row" aria-label={`${source.name} tracked model names`}>
                       {source.models.map(model => (
                         <span key={model} className="ai-watch-model-chip">{model}</span>
@@ -2533,7 +2553,8 @@ function AiWatchViewDesign({ sources, meta }) {
                     {source.safetyUrl && <a href={source.safetyUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Safety</a>}
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           </section>
         );
@@ -3565,6 +3586,57 @@ export default function App() {
           font-size: 8.5px;
           font-weight: 800;
           line-height: 1.2;
+        }
+        .ai-watch-model-detail-list {
+          display: grid;
+          gap: 8px;
+          margin: 0 0 11px;
+        }
+        .ai-watch-model-detail {
+          min-width: 0;
+          padding: 9px 10px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--panel);
+        }
+        .ai-watch-model-detail-head {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-bottom: 5px;
+        }
+        .ai-watch-model-detail-head strong {
+          color: var(--text);
+          font-size: 11px;
+          font-weight: 900;
+          line-height: 1.25;
+        }
+        .ai-watch-model-detail-head span {
+          color: var(--muted);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 8px;
+          font-weight: 800;
+        }
+        .ai-watch-model-best {
+          color: var(--ink2);
+          font-size: 10px;
+          font-weight: 800;
+          line-height: 1.45;
+        }
+        .ai-watch-model-source-note {
+          margin-top: 5px;
+          color: var(--muted);
+          font-size: 9px;
+          line-height: 1.45;
+        }
+        .ai-watch-model-links {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin-top: 7px;
         }
         .transparency-map-card {
           margin-bottom: 14px;

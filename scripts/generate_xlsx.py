@@ -640,44 +640,84 @@ def build_status_sheet(ws):
     for col, w in {"A":14,"B":18,"C":28,"D":64,"E":48,"F":48,"G":48,"H":12}.items():
         ws.column_dimensions[col].width = w
 
+def ai_watch_model_rows():
+    rows = []
+    for item in sorted(AI_WATCH_SOURCES, key=lambda entry: (entry.get("category", ""), entry.get("name", ""))):
+        details = item.get("modelDetails", [])
+        if not isinstance(details, list) or not details:
+            details = [{
+                "name": "; ".join(item.get("models", [])),
+                "bestFor": item.get("summary", ""),
+                "sourceNote": "",
+                "releaseDate": "",
+                "docUrl": item.get("docsUrl", ""),
+                "releaseNotesUrl": item.get("releaseNotesUrl", ""),
+                "lastVerified": item.get("lastVerified", ""),
+            }]
+        for detail in details:
+            if not isinstance(detail, dict):
+                continue
+            rows.append({
+                "lab": item.get("name", ""),
+                "shortName": item.get("shortName", ""),
+                "category": item.get("category", ""),
+                "modelFamily": item.get("modelFamily", ""),
+                "modelName": detail.get("name", ""),
+                "bestFor": detail.get("bestFor", ""),
+                "sourceNote": detail.get("sourceNote", ""),
+                "releaseDate": detail.get("releaseDate", ""),
+                "modelDocUrl": detail.get("docUrl", ""),
+                "modelReleaseNotesUrl": detail.get("releaseNotesUrl", ""),
+                "modelLastVerified": detail.get("lastVerified", ""),
+                "labNewsUrl": item.get("newsUrl", ""),
+                "labDocsUrl": item.get("docsUrl", ""),
+                "safetyUrl": item.get("safetyUrl", ""),
+                "labLastVerified": item.get("lastVerified", ""),
+            })
+    return rows
+
 def build_ai_watch_sheet(ws):
     ws.sheet_view.showGridLines = False
-    hdr(ws, "AI Lab Watch - Official Model Release Sources", 10)
-    hdrs = ["Lab","Short Name","Category","Model Family","Tracked Models","Summary","News URL","Docs URL","Release Notes URL","Safety URL","Verified"]
+    hdr(ws, "AI Lab Watch - Official Model Selection Notes", 15)
+    hdrs = ["Lab","Short Name","Category","Model Family","Model","Best For","Source Note","Release Date","Model Docs URL","Model Release Notes URL","Model Verified","Lab News URL","Lab Docs URL","Safety URL","Lab Verified"]
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
         c.fill = f("0B3B66"); c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
         c.alignment = al("center","center"); c.border = TB
     ws.row_dimensions[2].height = 16
 
-    for ri, item in enumerate(AI_WATCH_SOURCES, 3):
+    for ri, item in enumerate(ai_watch_model_rows(), 3):
         bg = {
             "frontier-model-lab": "EFF6FF",
             "open-model-lab": "ECFDF5",
             "multimodal-model-lab": "FFFBEB",
         }.get(item.get("category"), "F8FAFC")
         vals = [
-            item.get("name", ""),
+            item.get("lab", ""),
             item.get("shortName", ""),
             item.get("category", ""),
             item.get("modelFamily", ""),
-            "; ".join(item.get("models", [])),
-            item.get("summary", ""),
-            item.get("newsUrl", ""),
-            item.get("docsUrl", ""),
-            item.get("releaseNotesUrl", ""),
+            item.get("modelName", ""),
+            item.get("bestFor", ""),
+            item.get("sourceNote", ""),
+            item.get("releaseDate", ""),
+            item.get("modelDocUrl", ""),
+            item.get("modelReleaseNotesUrl", ""),
+            item.get("modelLastVerified", ""),
+            item.get("labNewsUrl", ""),
+            item.get("labDocsUrl", ""),
             item.get("safetyUrl", ""),
-            item.get("lastVerified", ""),
+            item.get("labLastVerified", ""),
         ]
         for ci, value in enumerate(vals, 1):
             c = ws.cell(row=ri, column=ci, value=value)
-            c.fill = f(bg); c.font = ft(size=8, color="2563EB" if ci in [7, 8, 9, 10] and value else "111827")
+            c.fill = f(bg); c.font = ft(size=8, color="2563EB" if ci in [9, 10, 12, 13, 14] and value else "111827")
             c.alignment = al("left","center", wrap=True); c.border = TB
-            if ci in [7, 8, 9, 10] and value:
+            if ci in [9, 10, 12, 13, 14] and value:
                 c.hyperlink = value
         ws.row_dimensions[ri].height = 36
 
-    for col, w in {"A":18,"B":14,"C":22,"D":30,"E":44,"F":60,"G":42,"H":48,"I":48,"J":42,"K":12}.items():
+    for col, w in {"A":18,"B":14,"C":22,"D":28,"E":24,"F":52,"G":70,"H":13,"I":46,"J":46,"K":12,"L":42,"M":46,"N":42,"O":12}.items():
         ws.column_dimensions[col].width = w
 
 MATRIX_EXPORT_HEADERS = [
@@ -714,8 +754,9 @@ STATUS_EXPORT_HEADERS = [
     "docsUrl", "lastVerified",
 ]
 AI_WATCH_EXPORT_HEADERS = [
-    "name", "shortName", "category", "modelFamily", "models", "summary", "newsUrl",
-    "docsUrl", "releaseNotesUrl", "safetyUrl", "lastVerified",
+    "lab", "shortName", "category", "modelFamily", "modelName", "bestFor",
+    "sourceNote", "releaseDate", "modelDocUrl", "modelReleaseNotesUrl",
+    "modelLastVerified", "labNewsUrl", "labDocsUrl", "safetyUrl", "labLastVerified",
 ]
 RESIDENCY_EXPORT_HEADERS = [
     "capability", "provider", "offering", "guarantee", "geography", "status",
@@ -989,22 +1030,7 @@ def status_export_rows():
     ]
 
 def ai_watch_export_rows():
-    return [
-        {
-            "name": item.get("name", ""),
-            "shortName": item.get("shortName", ""),
-            "category": item.get("category", ""),
-            "modelFamily": item.get("modelFamily", ""),
-            "models": item.get("models", []),
-            "summary": item.get("summary", ""),
-            "newsUrl": item.get("newsUrl", ""),
-            "docsUrl": item.get("docsUrl", ""),
-            "releaseNotesUrl": item.get("releaseNotesUrl", ""),
-            "safetyUrl": item.get("safetyUrl", ""),
-            "lastVerified": item.get("lastVerified", ""),
-        }
-        for item in sorted(AI_WATCH_SOURCES, key=lambda entry: (entry.get("category", ""), entry.get("name", "")))
-    ]
+    return ai_watch_model_rows()
 
 def write_view_csv(view_id, headers, rows):
     out = OUTDIR / f"cloudintelmatrix-{view_id}-{EXPORT_DATE}.csv"

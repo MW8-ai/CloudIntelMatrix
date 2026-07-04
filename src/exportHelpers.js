@@ -136,17 +136,21 @@ const STATUS_COLUMNS = [
 ];
 
 const AI_WATCH_COLUMNS = [
-  "name",
+  "lab",
   "shortName",
   "category",
   "modelFamily",
-  "models",
-  "summary",
-  "newsUrl",
-  "docsUrl",
-  "releaseNotesUrl",
+  "modelName",
+  "bestFor",
+  "sourceNote",
+  "releaseDate",
+  "modelDocUrl",
+  "modelReleaseNotesUrl",
+  "modelLastVerified",
+  "labNewsUrl",
+  "labDocsUrl",
   "safetyUrl",
-  "lastVerified",
+  "labLastVerified",
 ];
 
 const PROVIDER_NEWS_COLUMNS = [
@@ -634,19 +638,36 @@ export function buildStatusRows(items) {
 }
 
 export function buildAiWatchRows(items) {
-  return items.map(item => ({
-    name: item.name,
-    shortName: item.shortName,
-    category: item.category,
-    modelFamily: item.modelFamily,
-    models: item.models || [],
-    summary: item.summary,
-    newsUrl: item.newsUrl,
-    docsUrl: item.docsUrl,
-    releaseNotesUrl: item.releaseNotesUrl,
-    safetyUrl: item.safetyUrl,
-    lastVerified: item.lastVerified,
-  }));
+  return items.flatMap(item => {
+    const details = Array.isArray(item.modelDetails) && item.modelDetails.length
+      ? item.modelDetails
+      : [{
+          name: (item.models || []).join("; "),
+          bestFor: item.summary,
+          sourceNote: "",
+          releaseDate: "",
+          docUrl: item.docsUrl,
+          releaseNotesUrl: item.releaseNotesUrl,
+          lastVerified: item.lastVerified,
+        }];
+    return details.map(detail => ({
+      lab: item.name,
+      shortName: item.shortName,
+      category: item.category,
+      modelFamily: item.modelFamily,
+      modelName: detail.name,
+      bestFor: detail.bestFor,
+      sourceNote: detail.sourceNote,
+      releaseDate: detail.releaseDate,
+      modelDocUrl: detail.docUrl,
+      modelReleaseNotesUrl: detail.releaseNotesUrl,
+      modelLastVerified: detail.lastVerified,
+      labNewsUrl: item.newsUrl,
+      labDocsUrl: item.docsUrl,
+      safetyUrl: item.safetyUrl,
+      labLastVerified: item.lastVerified,
+    }));
+  });
 }
 
 export function buildProviderNewsRows(items) {

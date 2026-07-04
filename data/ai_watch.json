@@ -21,6 +21,72 @@
         "GPT Image 2",
         "GPT-Realtime-2"
       ],
+      "modelDetails": [
+        {
+          "name": "GPT-5.5",
+          "bestFor": "Flagship frontier work requiring complex reasoning, coding, professional output, tools, and long context.",
+          "docUrl": "https://developers.openai.com/api/docs/models",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI positions GPT-5.5 as its flagship model for complex reasoning and coding, and describes it as a new class of intelligence for coding and professional work.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT-5.5 Pro",
+          "bestFor": "Higher-precision GPT-5.5 work where response quality matters more than cost or latency.",
+          "docUrl": "https://developers.openai.com/api/docs/models/all",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI describes GPT-5.5 Pro as a version of GPT-5.5 that produces smarter and more precise responses.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT-5.4",
+          "bestFor": "More affordable coding and professional-work tasks that still need frontier-class capability.",
+          "docUrl": "https://developers.openai.com/api/docs/models",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI describes GPT-5.4 as a more affordable model for coding and professional work.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT-5.4 Pro",
+          "bestFor": "Higher-precision GPT-5.4 workloads where answer quality is prioritized over cost.",
+          "docUrl": "https://developers.openai.com/api/docs/models/all",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI describes GPT-5.4 Pro as a version of GPT-5.4 that produces smarter and more precise responses.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT-5.4 mini",
+          "bestFor": "Lower-latency and lower-cost coding, computer-use, and subagent workloads.",
+          "docUrl": "https://developers.openai.com/api/docs/models",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI calls GPT-5.4 mini its strongest mini model yet for coding, computer use, and subagents.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT-5.4 nano",
+          "bestFor": "Simple high-volume tasks where low cost and low latency matter most.",
+          "docUrl": "https://developers.openai.com/api/docs/models/all",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI describes GPT-5.4 nano as its cheapest GPT-5.4-class model for simple high-volume tasks.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT Image 2",
+          "bestFor": "Image generation and editing workflows.",
+          "docUrl": "https://developers.openai.com/api/docs/models/all",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI lists GPT Image 2 under image generation and editing and describes it as a state-of-the-art image generation model.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "GPT-Realtime-2",
+          "bestFor": "Realtime voice interaction workflows that need reasoning.",
+          "docUrl": "https://developers.openai.com/api/docs/models/all",
+          "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
+          "sourceNote": "OpenAI lists GPT-Realtime-2 under realtime, speech, and audio workflows and describes it as a reasoning model for realtime voice interactions.",
+          "lastVerified": "2026-07-04"
+        }
+      ],
       "newsUrl": "https://openai.com/news/product-releases/",
       "docsUrl": "https://developers.openai.com/api/docs/models",
       "releaseNotesUrl": "https://developers.openai.com/api/docs/models/all",
@@ -42,6 +108,59 @@
         "Claude Mythos 5",
         "Claude Mythos Preview"
       ],
+      "modelDetails": [
+        {
+          "name": "Claude Fable 5",
+          "bestFor": "Highest-capability general Claude work and long-running agent tasks.",
+          "docUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+          "releaseNotesUrl": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+          "releaseDate": "2026-06-09",
+          "sourceNote": "Anthropic describes Claude Fable 5 as its most capable widely released model and lists it for next-generation intelligence on long-running agents.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Claude Opus 4.8",
+          "bestFor": "Complex agentic coding and enterprise work.",
+          "docUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+          "releaseNotesUrl": "https://www.anthropic.com/news/claude-opus-4-8",
+          "sourceNote": "Anthropic's model overview describes Claude Opus 4.8 as suited for complex agentic coding and enterprise work.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Claude Sonnet 5",
+          "bestFor": "Balanced speed and intelligence for coding, agents, and professional work.",
+          "docUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+          "releaseNotesUrl": "https://www.anthropic.com/news/claude-sonnet-5",
+          "releaseDate": "2026-06-30",
+          "sourceNote": "Anthropic's model overview describes Claude Sonnet 5 as the best combination of speed and intelligence; the release note positions it for coding, agents, and professional work at scale.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Claude Haiku 4.5",
+          "bestFor": "Fast near-frontier responses, responsive subagent work, and cost-sensitive Claude workflows.",
+          "docUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+          "releaseNotesUrl": "https://www.anthropic.com/news/claude-haiku-4-5",
+          "sourceNote": "Anthropic's model overview describes Claude Haiku 4.5 as the fastest model with near-frontier intelligence.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Claude Mythos 5",
+          "bestFor": "Approved defensive cybersecurity workflows where Anthropic grants limited access.",
+          "docUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+          "releaseNotesUrl": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+          "releaseDate": "2026-06-09",
+          "sourceNote": "Anthropic says Claude Mythos 5 is offered for defensive cybersecurity workflows through Project Glasswing and is not generally available.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Claude Mythos Preview",
+          "bestFor": "Invitation-only defensive cybersecurity evaluation and Project Glasswing workflows.",
+          "docUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
+          "releaseNotesUrl": "https://www.anthropic.com/news/claude-fable-5-mythos-5",
+          "sourceNote": "Anthropic identifies Claude Mythos Preview as part of Project Glasswing with invitation-only access.",
+          "lastVerified": "2026-07-04"
+        }
+      ],
       "newsUrl": "https://www.anthropic.com/news",
       "docsUrl": "https://docs.anthropic.com/en/docs/about-claude/models/overview",
       "safetyUrl": "https://www.anthropic.com/responsible-scaling-policy",
@@ -62,6 +181,56 @@
         "Gemini 2.5 Pro",
         "Nano Banana 2"
       ],
+      "modelDetails": [
+        {
+          "name": "Gemini 3.5 Flash",
+          "bestFor": "Sustained frontier performance on agentic and coding tasks.",
+          "docUrl": "https://ai.google.dev/gemini-api/docs/models",
+          "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+          "sourceNote": "Google's Gemini API docs list Gemini 3.5 Flash as stable and describe it as the most intelligent model for sustained frontier performance on agentic and coding tasks.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Gemini 3.1 Flash-Lite",
+          "bestFor": "Cost-sensitive workloads that need frontier-class performance at smaller-model economics.",
+          "docUrl": "https://ai.google.dev/gemini-api/docs/models",
+          "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+          "sourceNote": "Google's Gemini API docs describe Gemini 3.1 Flash-Lite as stable and frontier-class at a fraction of the cost.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Gemini 3.1 Pro",
+          "bestFor": "Advanced intelligence, complex problem solving, agentic work, and vibe coding in preview.",
+          "docUrl": "https://ai.google.dev/gemini-api/docs/models",
+          "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+          "sourceNote": "Google's Gemini API docs list Gemini 3.1 Pro as preview and describe advanced intelligence, complex problem-solving, and powerful agentic and vibe coding capabilities.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Gemini 3 Flash",
+          "bestFor": "Preview Flash workloads needing frontier-class performance at lower cost.",
+          "docUrl": "https://ai.google.dev/gemini-api/docs/models",
+          "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+          "sourceNote": "Google's Gemini API docs list Gemini 3 Flash as preview and describe frontier-class performance at a fraction of the cost.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Gemini 2.5 Pro",
+          "bestFor": "Complex tasks requiring deep reasoning and coding capability.",
+          "docUrl": "https://ai.google.dev/gemini-api/docs/models",
+          "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+          "sourceNote": "Google's Gemini API docs describe Gemini 2.5 Pro as its most advanced model for complex tasks, with deep reasoning and coding capabilities.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Nano Banana 2",
+          "bestFor": "High-efficiency image generation and editing optimized for speed and high-volume use.",
+          "docUrl": "https://ai.google.dev/gemini-api/docs/models",
+          "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
+          "sourceNote": "Google's Gemini API docs list Nano Banana 2 as stable and describe powerful, high-efficiency image generation and editing optimized for speed and high-volume use cases.",
+          "lastVerified": "2026-07-04"
+        }
+      ],
       "newsUrl": "https://blog.google/products-and-platforms/products/gemini/",
       "docsUrl": "https://ai.google.dev/gemini-api/docs/models",
       "releaseNotesUrl": "https://ai.google.dev/gemini-api/docs/changelog",
@@ -80,6 +249,40 @@
         "Grok Imagine API",
         "Grok Voice API"
       ],
+      "modelDetails": [
+        {
+          "name": "Grok 4.3",
+          "bestFor": "General xAI chat and agentic work; xAI says to use it for everything except dedicated audio, image, and video APIs.",
+          "docUrl": "https://docs.x.ai/docs/models",
+          "releaseNotesUrl": "https://docs.x.ai/developers/release-notes",
+          "sourceNote": "xAI describes Grok 4.3 as supporting agentic tool calling and recommends it for general use outside dedicated media APIs.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Grok Build 0.1",
+          "bestFor": "Fast coding workflows trained for agentic coding.",
+          "docUrl": "https://docs.x.ai/docs/models",
+          "releaseNotesUrl": "https://docs.x.ai/developers/release-notes",
+          "sourceNote": "xAI describes Grok Build 0.1 as a fast coding model trained specifically for agentic coding workflows.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Grok Imagine API",
+          "bestFor": "Image and video generation and editing.",
+          "docUrl": "https://docs.x.ai/docs/models",
+          "releaseNotesUrl": "https://docs.x.ai/developers/release-notes",
+          "sourceNote": "xAI describes Imagine API as turning ideas into image and video generation, with generation and editing modes.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Grok Voice API",
+          "bestFor": "Realtime conversations, speech-to-text, and text-to-speech workloads.",
+          "docUrl": "https://docs.x.ai/docs/models",
+          "releaseNotesUrl": "https://docs.x.ai/developers/release-notes",
+          "sourceNote": "xAI lists Voice API for real-time conversations, speech-to-text, and text-to-speech.",
+          "lastVerified": "2026-07-04"
+        }
+      ],
       "newsUrl": "https://x.ai/news",
       "docsUrl": "https://docs.x.ai/docs/models",
       "releaseNotesUrl": "https://docs.x.ai/developers/release-notes",
@@ -96,8 +299,42 @@
       "models": [
         "deepseek-v4-flash",
         "deepseek-v4-pro",
-        "deepseek-chat (deprecated 2026-07-24)",
-        "deepseek-reasoner (deprecated 2026-07-24)"
+        "deepseek-chat",
+        "deepseek-reasoner"
+      ],
+      "modelDetails": [
+        {
+          "name": "deepseek-v4-flash",
+          "bestFor": "Lower-cost DeepSeek API workloads needing both thinking and non-thinking modes, JSON output, tool calls, and long context.",
+          "docUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+          "releaseNotesUrl": "https://api-docs.deepseek.com/updates/",
+          "sourceNote": "DeepSeek's model table lists v4-flash with thinking and non-thinking modes, 1M context, JSON output, tool calls, and lower listed token pricing than v4-pro.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "deepseek-v4-pro",
+          "bestFor": "DeepSeek API workloads that prefer the Pro variant while retaining thinking and non-thinking modes, JSON output, tool calls, and long context.",
+          "docUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+          "releaseNotesUrl": "https://api-docs.deepseek.com/updates/",
+          "sourceNote": "DeepSeek's model table lists v4-pro with thinking and non-thinking modes, 1M context, JSON output, and tool calls.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "deepseek-chat",
+          "bestFor": "Legacy non-thinking compatibility only; plan migration before the documented deprecation date.",
+          "docUrl": "https://api-docs.deepseek.com/",
+          "releaseNotesUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+          "sourceNote": "DeepSeek says deepseek-chat is deprecated on 2026-07-24 and maps to the non-thinking mode of deepseek-v4-flash for compatibility.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "deepseek-reasoner",
+          "bestFor": "Legacy thinking-mode compatibility only; plan migration before the documented deprecation date.",
+          "docUrl": "https://api-docs.deepseek.com/",
+          "releaseNotesUrl": "https://api-docs.deepseek.com/quick_start/pricing",
+          "sourceNote": "DeepSeek says deepseek-reasoner is deprecated on 2026-07-24 and maps to the thinking mode of deepseek-v4-flash for compatibility.",
+          "lastVerified": "2026-07-04"
+        }
       ],
       "docsUrl": "https://api-docs.deepseek.com/",
       "releaseNotesUrl": "https://api-docs.deepseek.com/updates/",
@@ -115,6 +352,41 @@
         "Stable Image Ultra",
         "Stable Diffusion 3.5",
         "Stable Video 4D 2.0"
+      ],
+      "modelDetails": [
+        {
+          "name": "Stable Audio 3.0",
+          "bestFor": "Generative music and audio workflows, including longer variable-length generation and portable full-song composition.",
+          "docUrl": "https://stability.ai/news-updates/meet-stable-audio-3-the-model-family-built-for-artistic-experimentation-with-open-weight-models",
+          "releaseNotesUrl": "https://stability.ai/news-updates/meet-stable-audio-3-the-model-family-built-for-artistic-experimentation-with-open-weight-models",
+          "releaseDate": "2026-05-20",
+          "sourceNote": "Stability AI describes Stable Audio 3.0 as a fully licensed open-weight music model family with variable-length generation up to six minutes and full song composition on portable devices.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Stable Image Ultra",
+          "bestFor": "Photorealistic, high-quality text-to-image generation for large-scale visual output.",
+          "docUrl": "https://stability.ai/news-updates/stability-ais-top-3-text-to-image-models-now-available-in-amazon-bedrock",
+          "releaseNotesUrl": "https://stability.ai/news-updates/stability-ais-top-3-text-to-image-models-now-available-in-amazon-bedrock",
+          "sourceNote": "Stability AI describes Stable Image Ultra as one of its most advanced text-to-image models, suited to photorealistic, large-scale output.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Stable Diffusion 3.5",
+          "bestFor": "Customizable image-generation workflows that need open model variants and consumer-hardware deployment options.",
+          "docUrl": "https://stability.ai/news-updates/introducing-stable-diffusion-3-5",
+          "releaseNotesUrl": "https://stability.ai/news-updates/introducing-stable-diffusion-3-5",
+          "sourceNote": "Stability AI describes Stable Diffusion 3.5 as an open release with multiple variants that are highly customizable for their size and can run on consumer hardware.",
+          "lastVerified": "2026-07-04"
+        },
+        {
+          "name": "Stable Video 4D 2.0",
+          "bestFor": "Single-video-to-4D and novel-view synthesis workflows.",
+          "docUrl": "https://stability.ai/news-updates/stable-video-4d-20-new-upgrades-for-high-fidelity-novel-views-and-4d-generation-from-a-single-video",
+          "releaseNotesUrl": "https://stability.ai/news-updates/stable-video-4d-20-new-upgrades-for-high-fidelity-novel-views-and-4d-generation-from-a-single-video",
+          "sourceNote": "Stability AI says Stable Video 4D 2.0 upgrades SV4D for higher-quality real-world video outputs and state-of-the-art 4D generation and novel-view synthesis.",
+          "lastVerified": "2026-07-04"
+        }
       ],
       "newsUrl": "https://stability.ai/news",
       "docsUrl": "https://platform.stability.ai/docs",
