@@ -34,6 +34,7 @@ import {
   groupRowsByLayer,
 } from "./viewModels.mjs";
 import { LOGOS, ICONS } from "./assets/cimAssets.js";
+import TransparencyGeoMap from "./TransparencyGeoMap.jsx";
 
 const {
   capabilities: CAPABILITIES,
@@ -68,7 +69,9 @@ const DEFAULT_MATRIX_LENS = "all";
 const DEFAULT_MATRIX_AI_SCOPE = "All";
 const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
+const DEFAULT_TRANSPARENCY_MAP_VIEW = "grid";
 const VALID_MODES = ["overview", "matrix", "patterns", "controls", "history", "provider-news", "status", "ai-watch", "transparency"];
+const TRANSPARENCY_MAP_VIEWS = ["grid", "geo"];
 const MATRIX_LENSES = [
   { id: "all", label: "Capability", note: "All capability rows" },
   { id: "diff", label: "Equivalency", note: "Side-by-side provider service mapping" },
@@ -165,7 +168,9 @@ function getUrlSearchParams() {
 }
 
 function getInitialMode() {
-  const value = getUrlSearchParams().get("view");
+  const params = getUrlSearchParams();
+  const value = params.get("view");
+  if (!value && params.get("tmap") === "geo") return "transparency";
   if (["diff", "gov", "ai"].includes(value)) return "matrix";
   return VALID_MODES.includes(value) ? value : DEFAULT_MODE;
 }
@@ -222,7 +227,12 @@ function getInitialTransparencyStatus() {
   return TRANSPARENCY_STATUS_ORDER.includes(value) ? value : DEFAULT_TRANSPARENCY_STATUS;
 }
 
-function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus }) {
+function getInitialTransparencyMapView() {
+  const value = getUrlSearchParams().get("tmap");
+  return TRANSPARENCY_MAP_VIEWS.includes(value) ? value : DEFAULT_TRANSPARENCY_MAP_VIEW;
+}
+
+function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus, selectedTransparencyMapView }) {
   if (typeof window === "undefined") return;
   const params = new URLSearchParams();
   if (mode !== DEFAULT_MODE) params.set("view", mode);
@@ -239,6 +249,7 @@ function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory
   if (selectedTier === null) params.set("tier", "all");
   else if (selectedTier !== DEFAULT_TIER) params.set("tier", selectedTier);
   if (selectedTransparencyStatus !== DEFAULT_TRANSPARENCY_STATUS) params.set("state", selectedTransparencyStatus);
+  if (mode === "transparency" && selectedTransparencyMapView === "geo") params.set("tmap", "geo");
 
   const query = params.toString();
   const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
@@ -2237,7 +2248,7 @@ function HistoryViewDesign({ items, meta }) {
   );
 }
 
-function TransparencyMap({ items, visibleItems, officialRecords, coveragePct }) {
+function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, mapView, onMapViewChange }) {
   const itemByState = Object.fromEntries(items.map(item => [item.state, item]));
   const visibleStates = new Set(visibleItems.map(item => item.state));
 
@@ -2245,67 +2256,106 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct }) 
     <section className="transparency-map-card">
       <div className="transparency-map-head">
         <div>
-          <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>AI TRANSPARENCY MAP</div>
+          <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>AI STATE ADOPTION MAP</div>
           <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.3 }}>Official state and DC public records</div>
           <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 4 }}>
             {officialRecords} of {items.length} state/DC rows have official-source documents linked.
           </div>
         </div>
-        <div className="transparency-coverage-meter">
-          <strong>{coveragePct}%</strong>
-          <span>official records</span>
+        <div className="transparency-map-actions">
+          <div className="tmap-toggle" role="tablist" aria-label="AI state adoption map view">
+            {[
+              { id: "grid", label: "Tile grid" },
+              { id: "geo", label: "Geographic" },
+            ].map(view => {
+              const active = mapView === view.id;
+              return (
+                <button
+                  key={view.id}
+                  type="button"
+                  className={`hb ${active ? "on" : ""}`}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => onMapViewChange(view.id)}
+                  onKeyDown={event => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      onMapViewChange(view.id);
+                    }
+                  }}
+                >
+                  {view.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="transparency-coverage-meter">
+            <strong>{coveragePct}%</strong>
+            <span>official records</span>
+          </div>
         </div>
       </div>
 
-      <div className="transparency-map-scroll" aria-label="United States AI transparency source map">
-        <div className="transparency-map-grid">
-          {Object.entries(STATE_TILE_POSITIONS).map(([state, [row, column]]) => {
-            const item = itemByState[state];
-            if (!item) return null;
-            const style = TRANSPARENCY_STATUS_STYLES[item.status] || TRANSPARENCY_STATUS_STYLES.Unknown;
-            const muted = visibleItems.length > 0 && !visibleStates.has(state);
-            const label = `${item.stateName}: ${item.status}${item.url ? ". Official source available." : ". No official source linked."}`;
-            const tileStyle = {
-              gridRow: row,
-              gridColumn: column,
-              borderColor: style.border,
-              background: style.bg,
-              color: style.fg,
-              opacity: muted ? 0.34 : 1,
-            };
-            const content = (
-              <>
-                <strong>{state}</strong>
-                <span>{item.status === "Unknown" ? "No doc" : item.status}</span>
-              </>
-            );
-            return item.url ? (
-              <a
-                key={state}
-                className="transparency-state-tile"
-                href={item.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={label}
-                aria-label={label}
-                style={tileStyle}
-              >
-                {content}
-              </a>
-            ) : (
-              <span
-                key={state}
-                className="transparency-state-tile disabled"
-                title={label}
-                aria-label={label}
-                style={tileStyle}
-              >
-                {content}
-              </span>
-            );
-          })}
+      {mapView === "geo" ? (
+        <TransparencyGeoMap
+          items={items}
+          visibleItems={visibleItems}
+          statusStyles={TRANSPARENCY_STATUS_STYLES}
+          unknownStyle={TRANSPARENCY_STATUS_STYLES.Unknown}
+        />
+      ) : (
+        <div className="transparency-map-scroll" aria-label="United States AI state adoption source map">
+          <div className="transparency-map-grid">
+            {Object.entries(STATE_TILE_POSITIONS).map(([state, [row, column]]) => {
+              const item = itemByState[state];
+              if (!item) return null;
+              const style = TRANSPARENCY_STATUS_STYLES[item.status] || TRANSPARENCY_STATUS_STYLES.Unknown;
+              const muted = visibleItems.length > 0 && !visibleStates.has(state);
+              const label = `${item.stateName}: ${item.status}${item.url ? ". Official source available." : ". No official source linked."}`;
+              const isHome = state === "IN";
+              const tileStyle = {
+                gridRow: row,
+                gridColumn: column,
+                borderColor: isHome ? "#b45309" : style.border,
+                background: style.bg,
+                color: style.fg,
+                opacity: muted ? 0.34 : 1,
+                boxShadow: isHome ? "0 0 0 2px #b4530944" : undefined,
+              };
+              const content = (
+                <>
+                  <strong>{state}</strong>
+                  <span>{item.status === "Unknown" ? "No doc" : item.status}</span>
+                </>
+              );
+              return item.url ? (
+                <a
+                  key={state}
+                  className="transparency-state-tile"
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={label}
+                  aria-label={label}
+                  style={tileStyle}
+                >
+                  {content}
+                </a>
+              ) : (
+                <span
+                  key={state}
+                  className="transparency-state-tile disabled"
+                  title={label}
+                  aria-label={label}
+                  style={tileStyle}
+                >
+                  {content}
+                </span>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="transparency-map-legend">
         {TRANSPARENCY_STATUS_ORDER.filter(status => status !== "All").map(status => {
@@ -2321,7 +2371,7 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct }) 
   );
 }
 
-function TransparencyViewDesign({ items, meta }) {
+function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
   const federalContext = meta.federalContext || {};
   const counts = TRANSPARENCY_STATUS_ORDER
     .filter(status => status !== "All")
@@ -2333,8 +2383,8 @@ function TransparencyViewDesign({ items, meta }) {
   return (
     <div>
       <ViewHero
-        eyebrow="STATE AI TRANSPARENCY"
-        title="Point-in-time public AI governance record"
+        eyebrow="AI STATE ADOPTION WATCH"
+        title="Point-in-time state AI public-record adoption map"
         body={meta.scopeNote}
         meta={[
           <StatTile key="rows" label="ROWS" value={items.length} tone="#b45309" />,
@@ -2360,6 +2410,8 @@ function TransparencyViewDesign({ items, meta }) {
         visibleItems={items}
         officialRecords={officialRecords}
         coveragePct={coveragePct}
+        mapView={mapView}
+        onMapViewChange={onMapViewChange}
       />
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
@@ -2678,6 +2730,7 @@ export default function App() {
   const [expandedId, setExpandedId] = useState(null);
   const [selectedTier, setSelectedTier] = useState(getInitialTier);
   const [selectedTransparencyStatus, setSelectedTransparencyStatus] = useState(getInitialTransparencyStatus);
+  const [selectedTransparencyMapView, setSelectedTransparencyMapView] = useState(getInitialTransparencyMapView);
   const themeVars = THEME_TOKENS[theme];
 
   useEffect(() => {
@@ -2689,8 +2742,8 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus });
-  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedMatrixLens, selectedTier, selectedTransparencyStatus]);
+    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus, selectedTransparencyMapView });
+  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedMatrixLens, selectedTier, selectedTransparencyMapView, selectedTransparencyStatus]);
 
   const toggleProvider = p =>
     setActiveProviders(prev => {
@@ -2950,7 +3003,7 @@ export default function App() {
     { id: "provider-news", label: "Provider News",         iconKey: "activity",      desc: "Official provider announcements and upcoming changes" },
     { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
     { id: "ai-watch",     label: "AI Watch",              iconKey: "brain-circuit", desc: "Official model release source index" },
-    { id: "transparency", label: "AI Transparency",       iconKey: "landmark",      desc: "State AI governance public record" },
+    { id: "transparency", label: "AI State Adoption Watch", iconKey: "landmark",    desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
   const providerControlModes = ["matrix", "patterns", "history", "provider-news"];
@@ -3093,9 +3146,9 @@ export default function App() {
     },
     {
       id: "transparency",
-      label: "AI Transparency",
+      label: "AI State Adoption Watch",
       iconKey: "landmark",
-      description: "State and DC public records for AI governance and transparency status.",
+      description: "State and DC public records for AI governance adoption status.",
       stat: `${TRANSPARENCY.length} state/DC rows`,
       onClick: () => setMode("transparency"),
     },
@@ -3654,6 +3707,42 @@ export default function App() {
           margin-bottom: 12px;
           flex-wrap: wrap;
         }
+        .transparency-map-actions {
+          display: flex;
+          align-items: flex-start;
+          justify-content: flex-end;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+        .tmap-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 3px;
+          border: 1px solid var(--border);
+          border-radius: 7px;
+          background: var(--panel-alt);
+        }
+        .tmap-toggle button {
+          padding: 5px 9px;
+          border: 1px solid transparent;
+          border-radius: 5px;
+          background: transparent;
+          color: var(--muted);
+          font-family: inherit;
+          font-size: 9px;
+          font-weight: 900;
+          cursor: pointer;
+        }
+        .tmap-toggle button.on {
+          border-color: var(--selected-border);
+          background: var(--selected-bg);
+          color: var(--selected-text);
+        }
+        .tmap-toggle button:focus-visible {
+          outline: 2px solid var(--link);
+          outline-offset: 2px;
+        }
         .transparency-coverage-meter {
           min-width: 118px;
           padding: 9px 10px;
@@ -3681,6 +3770,13 @@ export default function App() {
         .transparency-map-scroll {
           overflow-x: auto;
           padding-bottom: 4px;
+        }
+        .transparency-geo-wrap {
+          overflow-x: auto;
+          padding-bottom: 4px;
+        }
+        .transparency-geo-wrap svg {
+          min-width: 680px;
         }
         .transparency-map-grid {
           display: grid;
@@ -4099,7 +4195,7 @@ export default function App() {
               {showTransparencyFilterControls ? (
                 <>
                   <div style={{ display: "flex", gap: 10, alignItems: "baseline", marginBottom: 7, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE AI STATUS</span>
+                    <span style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.1em", fontWeight: 700 }}>STATE ADOPTION STATUS</span>
                     <span style={{ fontSize: 9, color: "var(--text)", fontWeight: 600 }}>
                       Active: {selectedTransparencyStatus}
                     </span>
@@ -4170,7 +4266,7 @@ export default function App() {
             {mode === "transparency" && (
               <div className="filter-context">
                 <CollapsibleInfoBar
-                  title="State AI transparency"
+                  title="AI state adoption"
                   summary="Rows are official-source public records. Unknown means the state has not been populated yet."
                   open={showTransparencyContext}
                   onToggle={() => setShowTransparencyContext(current => !current)}
@@ -4254,7 +4350,14 @@ export default function App() {
           {mode === "provider-news" && <ProviderNewsViewDesign items={filteredProviderNews} />}
           {mode === "status" && <StatusViewDesign sources={filteredStatusSources} meta={STATUS_META} />}
           {mode === "ai-watch" && <AiWatchViewDesign sources={filteredAiWatchSources} meta={AI_WATCH_META} />}
-          {mode === "transparency" && <TransparencyViewDesign items={filteredTransparency} meta={TRANSPARENCY_META} />}
+          {mode === "transparency" && (
+            <TransparencyViewDesign
+              items={filteredTransparency}
+              meta={TRANSPARENCY_META}
+              mapView={selectedTransparencyMapView}
+              onMapViewChange={setSelectedTransparencyMapView}
+            />
+          )}
         </div>
 
         {/* Tag legend */}

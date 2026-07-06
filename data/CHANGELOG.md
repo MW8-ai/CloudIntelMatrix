@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-06 - AI state adoption map toggle
+- Renamed the state transparency view to AI State Adoption Watch in the UI and added a tile-grid/geographic map toggle using `?tmap=geo` URL state.
+- Added the zero-dependency geographic transparency map component while preserving status colors, official-source links, filter dimming, and the Indiana highlight.
+
 ## 2026-07-04 - AI Watch model detail guide
 - Added model-level AI Watch detail records with official docs or release/update links, short official-source-derived use guidance, source notes, and per-model verification dates.
 - Updated the AI Watch UI and CSV/XLSX exports to present model rows rather than only lab-level model-name chips.
