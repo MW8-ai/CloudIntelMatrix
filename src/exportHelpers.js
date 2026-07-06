@@ -711,7 +711,7 @@ export function historyExport(items, meta) {
 }
 
 export function transparencyExport(items) {
-  return makeExportData("transparency", "State AI Transparency", TRANSPARENCY_COLUMNS, buildTransparencyRows(items));
+  return makeExportData("transparency", "AI State Adoption Watch", TRANSPARENCY_COLUMNS, buildTransparencyRows(items));
 }
 
 export function statusExport(items) {
