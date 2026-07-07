@@ -4,18 +4,21 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-07 - Foundational and frontier releases rename
+- Renamed the former model-release watch UI, docs, client export label, and workbook heading to Foundational & Frontier Releases while preserving the existing `ai-watch` route for backward compatibility.
+
 ## 2026-07-06 - AI state adoption map toggle
 - Renamed the state transparency view to AI State Adoption Watch in the UI and added a tile-grid/geographic map toggle using `?tmap=geo` URL state.
 - Added the zero-dependency geographic transparency map component while preserving status colors, official-source links, filter dimming, and the Indiana highlight.
 
-## 2026-07-04 - AI Watch model detail guide
-- Added model-level AI Watch detail records with official docs or release/update links, short official-source-derived use guidance, source notes, and per-model verification dates.
-- Updated the AI Watch UI and CSV/XLSX exports to present model rows rather than only lab-level model-name chips.
-- Added validation for AI Watch model detail shape, dates, official source domains, and link checks.
+## 2026-07-04 - Foundational and frontier release model detail guide
+- Added model-level Foundational & Frontier Releases detail records with official docs or release/update links, short official-source-derived use guidance, source notes, and per-model verification dates.
+- Updated the Foundational & Frontier Releases UI and CSV/XLSX exports to present model rows rather than only lab-level model-name chips.
+- Added validation for Foundational & Frontier Releases model detail shape, dates, official source domains, and link checks.
 
-## 2026-07-04 - Status, AI Watch, and provider-news polish
+## 2026-07-04 - Status, foundational/frontier releases, and provider-news polish
 - Added Cloudflare to the operational status source index with official status, history, and support-doc links.
-- Added optional AI Watch tracked-model lists from official lab model documentation or release sources, with validator and CSV/XLSX export support.
+- Added optional tracked-model lists from official lab model documentation or release sources, with validator and CSV/XLSX export support.
 - Exposed provider-news announcement dates and full news detail in the dedicated Provider News view.
 
 ## 2026-07-04 - v3.21.0 - Source-tier policy and PQC roadmap restore
@@ -41,7 +44,7 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 - Kept blog-backed or source-missing candidates as work items only under the official-primary-source rule.
 
 ## 2026-07-01 - AI tab icons
-- Added visible navigation icons for the AI Watch and AI Transparency tabs using existing local UI icon assets.
+- Added visible navigation icons for the model-release and AI Transparency tabs using existing local UI icon assets.
 
 ## 2026-06-30 - Provider depth scaffold
 - Added optional provider-level `parityDetail`, `constraints`, `costModel`, `pqcReadiness`, `fedrampLevel`, and `dodImpactLevel` scaffolding across schema validation, proposal validation, design view-model mapping, UI detail display, CSV/XLSX exports, and documentation without changing matrix fact values.
@@ -50,9 +53,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 ## 2026-06-30 - Matrix evidence legibility
 - Reframed Matrix evidence counts as an optional methodology panel, split `None` from `Unknown`, and presented `Unknown` values as neutral not-officially-documented / not-established states instead of gaps.
 
-## 2026-06-30 - AI lab watch sources
+## 2026-06-30 - Foundational and frontier release sources
 - Added `data/ai_watch.json` with official model documentation, release, news, and safety-source links for OpenAI, Anthropic, Google Gemini, xAI, DeepSeek, and Stability AI.
-- Added validator, UI tab, client export, static CSV export, and XLSX sheet support for AI lab watch sources without fetching live model-news data at runtime.
+- Added validator, UI tab, client export, static CSV export, and XLSX sheet support for foundational and frontier release sources without fetching live model-news data at runtime.
 
 ## 2026-06-30 - Operational status sources
 - Added `data/status.json` with official operational status and incident-history source links for AWS, Azure, GCP, OCI, and Salesforce as an adjacent platform.

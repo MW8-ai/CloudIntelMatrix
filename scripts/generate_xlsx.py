@@ -678,7 +678,7 @@ def ai_watch_model_rows():
 
 def build_ai_watch_sheet(ws):
     ws.sheet_view.showGridLines = False
-    hdr(ws, "AI Lab Watch - Official Model Selection Notes", 15)
+    hdr(ws, "Foundational & Frontier Releases - Official Model Selection Notes", 15)
     hdrs = ["Lab","Short Name","Category","Model Family","Model","Best For","Source Note","Release Date","Model Docs URL","Model Release Notes URL","Model Verified","Lab News URL","Lab Docs URL","Safety URL","Lab Verified"]
     for ci, h in enumerate(hdrs, 1):
         c = ws.cell(row=2, column=ci, value=h)
@@ -1099,7 +1099,7 @@ build_upcoming_sheet(ws_up)
 ws_status = wb.create_sheet("Status Sources")
 build_status_sheet(ws_status)
 
-ws_ai_watch = wb.create_sheet("AI Watch")
+ws_ai_watch = wb.create_sheet("Model Releases")
 build_ai_watch_sheet(ws_ai_watch)
 
 out = OUTDIR / "Cloud_Intelligence_Matrix.xlsx"
