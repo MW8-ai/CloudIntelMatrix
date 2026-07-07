@@ -2533,8 +2533,8 @@ function AiWatchViewDesign({ sources, meta }) {
   return (
     <div>
       <ViewHero
-        eyebrow="AI LAB WATCH"
-        title="Official frontier and foundation-model release sources"
+        eyebrow="OFFICIAL MODEL RELEASE SOURCES"
+        title="Foundational & Frontier Releases"
         body={meta.scopeNote}
         meta={[
           <StatTile key="sources" label="SOURCES" value={sources.length} tone="#0b62b9" />,
@@ -3002,7 +3002,7 @@ export default function App() {
     { id: "history",      label: "Cloud Timeline",        iconKey: "activity",      desc: "Provider cloud journey milestones" },
     { id: "provider-news", label: "Provider News",         iconKey: "activity",      desc: "Official provider announcements and upcoming changes" },
     { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
-    { id: "ai-watch",     label: "AI Watch",              iconKey: "brain-circuit", desc: "Official model release source index" },
+    { id: "ai-watch",     label: "Foundational & Frontier Releases", iconKey: "brain-circuit", desc: "Official foundational and frontier model release source index" },
     { id: "transparency", label: "AI State Adoption Watch", iconKey: "landmark",    desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
@@ -3138,7 +3138,7 @@ export default function App() {
     },
     {
       id: "ai-watch",
-      label: "AI Watch",
+      label: "Foundational & Frontier Releases",
       iconKey: "brain-circuit",
       description: "Official release and documentation sources for frontier, open, and multimodal model labs.",
       stat: `${AI_WATCH_SOURCES.length} sources`,

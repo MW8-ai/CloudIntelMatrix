@@ -719,7 +719,7 @@ export function statusExport(items) {
 }
 
 export function aiWatchExport(items) {
-  return makeExportData("ai-watch", "AI Lab Watch", AI_WATCH_COLUMNS, buildAiWatchRows(items));
+  return makeExportData("ai-watch", "Foundational & Frontier Releases", AI_WATCH_COLUMNS, buildAiWatchRows(items));
 }
 
 export function providerNewsExport(items) {
