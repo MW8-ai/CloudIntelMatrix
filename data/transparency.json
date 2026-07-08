@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Point-in-time state AI governance and transparency record. Populated entries must cite official state sources; Unknown rows are launch scaffolding for future official-source review.",
-    "last_verified": "2026-06-29",
+    "last_verified": "2026-07-08",
     "scopeNote": "Planning and reference aid only. Entries summarize official state public records located for this project; they do not determine legal applicability, compliance status, or whether an agency has fully disclosed every AI use.",
     "federalContext": {
       "title": "Ensuring a National Policy Framework for Artificial Intelligence",
@@ -16,13 +16,13 @@
     {
       "state": "AL",
       "stateName": "Alabama",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order and task force report",
+      "title": "Executive Order 738 and GenAI Task Force Final Report",
+      "citation": "Governor of Alabama, Executive Order 738 and GenAI Task Force final report release",
+      "status": "Active",
+      "summary": "Alabama created a state Task Force on Generative AI through Executive Order 738, and the Governor's Office later released the task force final report covering responsible GenAI use, data ownership, procurement, and executive-branch inventory considerations.",
+      "url": "https://governor.alabama.gov/newsroom/2025/03/governor-ivey-releases-genai-task-force-final-report/",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "AK",
@@ -38,13 +38,13 @@
     {
       "state": "AZ",
       "stateName": "Arizona",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statewide policy",
+      "title": "P2000: Generative AI Policy",
+      "citation": "Arizona Strategic Enterprise Technology Office, P2000 Generative AI Policy",
+      "status": "Active",
+      "summary": "Arizona publishes a statewide Generative AI policy for state government use, paired with a use procedure that addresses acceptable use, human oversight, privacy, and data-governance expectations for state employees.",
+      "url": "https://aset.az.gov/node/774",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "AR",
@@ -71,13 +71,13 @@
     {
       "state": "CO",
       "stateName": "Colorado",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State law",
+      "title": "SB24-205: Consumer Protections for Artificial Intelligence",
+      "citation": "Colorado General Assembly, SB24-205 session law",
+      "status": "Active",
+      "summary": "Colorado enacted SB24-205, establishing duties for developers and deployers of high-risk artificial intelligence systems and requiring reasonable care to protect consumers from algorithmic discrimination.",
+      "url": "https://leg.colorado.gov/laws/session-laws/SB24-205/198/download",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "CT",
@@ -225,13 +225,13 @@
     {
       "state": "ME",
       "stateName": "Maine",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State policy",
+      "title": "Generative Artificial Intelligence Policy",
+      "citation": "Maine Office of Information Technology, Generative Artificial Intelligence Policy",
+      "status": "Active",
+      "summary": "MaineIT publishes a Generative Artificial Intelligence policy for state users, documenting acceptable-use expectations and controls for state use of GenAI tools after earlier cybersecurity directives paused unsanctioned use.",
+      "url": "https://www.maine.gov/oit/sites/maine.gov.oit/files/inline-files/GenAIPolicy.pdf",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "MD",
@@ -335,13 +335,13 @@
     {
       "state": "NH",
       "stateName": "New Hampshire",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State policy",
+      "title": "Use of Artificial Intelligence Technologies Policy",
+      "citation": "New Hampshire Department of Information Technology, SoNH Use of Artificial Intelligence Technologies Policy",
+      "status": "Active",
+      "summary": "New Hampshire publishes a state policy for use of artificial intelligence technologies, guided by its AI ethics code and covering responsible use, human oversight, data quality, and agency accountability expectations.",
+      "url": "https://mm.nh.gov/files/uploads/doit/documents/sonh-use-of-artificial-intelligence-technologies-policy.pdf",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "NJ",
@@ -379,13 +379,13 @@
     {
       "state": "NC",
       "stateName": "North Carolina",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order and strategic roadmap",
+      "title": "Statewide AI Strategic Roadmap",
+      "citation": "North Carolina Department of Information Technology, Statewide AI Strategic Roadmap",
+      "status": "Active",
+      "summary": "North Carolina publishes a statewide AI strategic roadmap following Executive Order 24, with planning for governance, AI-enabled service delivery, education, workforce development, cybersecurity, and the state AI Accelerator.",
+      "url": "https://it.nc.gov/documents/statewide-ai-strategic-roadmap/open",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "ND",
@@ -401,24 +401,24 @@
     {
       "state": "OH",
       "stateName": "Ohio",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Education model policy",
+      "title": "AI in Ohio's Education Model Policy",
+      "citation": "Ohio Department of Education and Workforce, AI in Ohio's Education Model Policy",
+      "status": "Active",
+      "summary": "Ohio publishes an official AI model policy and guidance for education use. This row records the education-sector public record only and does not assert an enterprise-wide state executive-branch AI policy.",
+      "url": "https://education.ohio.gov/Topics/AI-in-Ohio-s-Education/Model-Policy",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "OK",
       "stateName": "Oklahoma",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Task force and executive appointment",
+      "title": "AI Task Force and Chief AI and Technology Officer",
+      "citation": "State of Oklahoma, AI task force and Chief AI and Technology Officer announcements",
+      "status": "Active",
+      "summary": "Oklahoma announced an AI task force through the Governor's Office and later announced a state Chief AI and Technology Officer through OMES, establishing public records for state AI coordination and leadership.",
+      "url": "https://oklahoma.gov/omes/newsroom/2025/tai-phan-announced-as-state-chief-ai-and-technology-officer.html",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "OR",
@@ -522,13 +522,13 @@
     {
       "state": "VA",
       "stateName": "Virginia",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Governance program",
+      "title": "Commonwealth of Virginia Artificial Intelligence Governance",
+      "citation": "Virginia Information Technologies Agency, Artificial Intelligence Governance",
+      "status": "Active",
+      "summary": "Virginia publishes an AI governance program through VITA, including an enterprise AI registry and review process tied to Executive Order 30 and a Commonwealth AI strategy task force report.",
+      "url": "https://www.vita.virginia.gov/policy--governance/governance/artificial-intelligence/",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "WA",
@@ -555,13 +555,13 @@
     {
       "state": "WI",
       "stateName": "Wisconsin",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order 211: Governor's Task Force on Workforce and Artificial Intelligence",
+      "citation": "Governor of Wisconsin, Executive Order 211",
+      "status": "Active",
+      "summary": "Wisconsin created the Governor's Task Force on Workforce and Artificial Intelligence to study AI's near-term and long-term impacts on Wisconsin workers, employers, and workforce-development needs.",
+      "url": "https://evers.wi.gov/Documents/EO/EO211-AITaskForce.pdf",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "WY",
