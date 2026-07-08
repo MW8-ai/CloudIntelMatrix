@@ -80,6 +80,16 @@ const MATRIX_LENSES = [
 ];
 const MATRIX_AI_FILTERS = ["All", "AI_NATIVE", "AI_CAPABLE", "STANDARD"];
 const MATRIX_DENSITIES = ["Detailed", "Compact"];
+const OVERVIEW_CARD_VISUALS = {
+  matrix: { accent: "#2f7fd8", iconBg: "#d8ebff", visual: "city" },
+  patterns: { accent: "#00a79d", iconBg: "#ccf5ee", visual: "horizon" },
+  controls: { accent: "#35a86b", iconBg: "#d9f5e5", visual: "contours" },
+  history: { accent: "#7367d9", iconBg: "#e2e0ff", visual: "rings" },
+  "provider-news": { accent: "#d45f50", iconBg: "#fde1dd", visual: "papers" },
+  status: { accent: "#0096a8", iconBg: "#d5f5f8", visual: "signal" },
+  "ai-watch": { accent: "#4f7ee8", iconBg: "#dde8ff", visual: "circuit" },
+  transparency: { accent: "#00a78d", iconBg: "#d5f6ef", visual: "map" },
+};
 
 const THEME_TOKENS = {
   light: {
@@ -1598,9 +1608,26 @@ function ViewHero({ eyebrow, title, body, meta }) {
 
 function StatTile({ label, value, tone = "var(--link)" }) {
   return (
-    <div style={{ minWidth: 88, padding: "8px 10px", border: "1px solid var(--border)", borderRadius: 6, background: "var(--panel-alt)", textAlign: "center" }}>
-      <div style={{ fontSize: 15, color: tone, fontWeight: 900, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: 8, color: "var(--muted)", letterSpacing: "0.08em", fontWeight: 800, marginTop: 5 }}>{label}</div>
+    <div className="stat-tile" style={{ "--stat-tone": tone }}>
+      <div className="stat-tile-value">{value}</div>
+      <div className="stat-tile-label">{label}</div>
+    </div>
+  );
+}
+
+function formatOverviewDate(date) {
+  if (!date) return "";
+  const parsed = new Date(`${date}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return date;
+  return parsed.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+function OverviewVisual({ variant }) {
+  return (
+    <div className={`overview-card-visual ${variant || "city"}`} aria-hidden="true">
+      <span className="overview-visual-grid" />
+      <span className="overview-visual-mark one" />
+      <span className="overview-visual-mark two" />
     </div>
   );
 }
@@ -1628,30 +1655,37 @@ function CollapsibleInfoBar({ title, summary, open, onToggle, children }) {
 function OverviewViewDesign({ cards, meta }) {
   return (
     <>
-      <ViewHero
-        eyebrow="Overview"
-        title="A quick map of the intelligence surface"
-        body="Start with the matrix for service decisions, then branch into patterns, controls, provider news, operational status, AI releases, and transparency records."
-        meta={[
-          <StatTile key="capabilities" label="CAPABILITIES" value={CAPABILITIES.length} />,
-          <StatTile key="providers" label="PROVIDERS" value={PROVIDERS.length} />,
-          <StatTile key="version" label="VERSION" value={meta.version} />,
-        ]}
-      />
+      <section className="overview-intro-card">
+        <div className="overview-intro-copy">
+          <div className="view-eyebrow">Overview</div>
+          <h2>A quick map of the intelligence surface</h2>
+          <p>Start with the matrix for service decisions, then branch into patterns, controls, provider news, operational status, AI releases, and transparency records.</p>
+        </div>
+        <div className="overview-intro-stats" aria-label="Overview dataset summary">
+          <StatTile key="capabilities" label="CAPABILITIES" value={CAPABILITIES.length} />
+          <StatTile key="providers" label="PROVIDERS" value={PROVIDERS.length} />
+          <StatTile key="version" label="VERSION" value={meta.version} />
+        </div>
+      </section>
       <div className="overview-grid">
         {cards.map(card => (
-          <button
-            type="button"
-            key={card.id}
-            className="hb overview-card"
-            onClick={card.onClick}
-          >
-            <div className="overview-card-head">
-              <span aria-hidden="true" className="overview-card-icon" style={{ WebkitMaskImage: `url(${ICONS[card.iconKey]})`, maskImage: `url(${ICONS[card.iconKey]})` }} />
-              <span>{card.label}</span>
+          <button type="button" key={card.id} className="hb overview-card" onClick={card.onClick} style={{ "--card-accent": card.accent, "--card-icon-bg": card.iconBg }}>
+            <OverviewVisual variant={card.visual} />
+            <div className="overview-card-content">
+              <div className="overview-card-head">
+                <span aria-hidden="true" className="overview-card-icon-tile">
+                  <span className="overview-card-icon" style={{ WebkitMaskImage: `url(${ICONS[card.iconKey]})`, maskImage: `url(${ICONS[card.iconKey]})` }} />
+                </span>
+                <span>{card.label}</span>
+              </div>
+              <div className="overview-card-body">{card.description}</div>
+              <div className="overview-card-meta">
+                <span className="overview-card-stat">{card.stat}</span>
+                {card.updated && <span className="overview-card-updated">Updated {card.updated}</span>}
+              </div>
             </div>
-            <div className="overview-card-body">{card.description}</div>
-            <div className="overview-card-stat">{card.stat}</div>
+            <span aria-hidden="true" className="overview-card-corner" />
+            <span aria-hidden="true" className="overview-card-open">Open</span>
           </button>
         ))}
       </div>
@@ -3106,6 +3140,7 @@ export default function App() {
       iconKey: "layers",
       description: "Compare AWS, Azure, GCP, and OCI capability mappings with government availability and parity signals.",
       stat: `${CAPABILITIES.length} capabilities x ${PROVIDERS.length} providers`,
+      updated: formatOverviewDate(META.last_verified),
       onClick: () => setMode("matrix"),
     },
     {
@@ -3114,6 +3149,7 @@ export default function App() {
       iconKey: "blocks",
       description: "Planning overlays that group capability rows into common enterprise and regulated architecture starts.",
       stat: `${PATTERNS.length} patterns`,
+      updated: formatOverviewDate(META.last_verified),
       onClick: () => setMode("patterns"),
     },
     {
@@ -3122,6 +3158,7 @@ export default function App() {
       iconKey: "shield-check",
       description: "Framework references and NIST SP 800-53 Rev. 5 family mappings tied back to capability rows.",
       stat: `${COMPLIANCE_FRAMEWORKS.length} frameworks | ${CONTROL_LENS.families.length} families`,
+      updated: formatOverviewDate(META.last_verified),
       onClick: () => setMode("controls"),
     },
     {
@@ -3130,6 +3167,7 @@ export default function App() {
       iconKey: "activity",
       description: "Milestones in each provider's commercial, free-tier, and government cloud journey.",
       stat: `${HISTORY.length} milestones`,
+      updated: formatOverviewDate(HISTORY_META.lastVerified),
       onClick: () => setMode("history"),
     },
     {
@@ -3138,6 +3176,7 @@ export default function App() {
       iconKey: "activity",
       description: "Official announced, preview, deprecated, and upcoming provider changes in four columns.",
       stat: `${UPCOMING.length} tracked items`,
+      updated: formatOverviewDate(UPCOMING_META.last_reviewed),
       onClick: () => setMode("provider-news"),
     },
     {
@@ -3146,6 +3185,7 @@ export default function App() {
       iconKey: "activity",
       description: "Official status pages and incident-history sources for cloud and adjacent platforms.",
       stat: `${STATUS_SOURCES.length} sources`,
+      updated: formatOverviewDate(STATUS_META.last_verified),
       onClick: () => setMode("status"),
     },
     {
@@ -3154,6 +3194,7 @@ export default function App() {
       iconKey: "brain-circuit",
       description: "Official release and documentation sources for frontier, open, and multimodal model labs.",
       stat: `${AI_WATCH_SOURCES.length} sources`,
+      updated: formatOverviewDate(AI_WATCH_META.last_verified),
       onClick: () => setMode("ai-watch"),
     },
     {
@@ -3162,9 +3203,10 @@ export default function App() {
       iconKey: "landmark",
       description: "State public records for AI governance adoption status, with DC tracked separately.",
       stat: `${TRANSPARENCY.filter(isTransparencyState).length} states + DC`,
+      updated: formatOverviewDate(TRANSPARENCY_META.last_verified),
       onClick: () => setMode("transparency"),
     },
-  ];
+  ].map(card => ({ ...OVERVIEW_CARD_VISUALS[card.id], ...card }));
 
   return (
     <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
@@ -3184,6 +3226,113 @@ export default function App() {
           border-bottom: 1px solid var(--border);
           flex-wrap: wrap;
           overflow-x: visible;
+        }
+        .brand-mark {
+          position: relative;
+          width: 52px;
+          height: 52px;
+          border-radius: 14px;
+          background: linear-gradient(145deg, #121827, #172033 58%, #233250);
+          box-shadow: 0 8px 22px rgba(31, 91, 170, 0.18), inset 0 0 0 1px rgba(255,255,255,0.12);
+          flex-shrink: 0;
+          display: grid;
+          grid-template-columns: repeat(2, 8px);
+          grid-template-rows: repeat(2, 8px);
+          place-content: center;
+          gap: 3px;
+          margin-top: 2px;
+        }
+        .brand-mark span {
+          border-radius: 2px;
+          background: rgba(255,255,255,0.42);
+        }
+        .brand-mark span:nth-child(2) { background: rgba(120,174,252,0.58); }
+        .brand-mark span:nth-child(4) { background: #78aefc; }
+        .brand-mark::before {
+          content: "";
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          border: 2px solid #78aefc;
+          border-radius: 50%;
+          top: 10px;
+          right: 9px;
+        }
+        .brand-mark::after {
+          content: "";
+          position: absolute;
+          width: 9px;
+          height: 2px;
+          border-radius: 999px;
+          background: #78aefc;
+          top: 24px;
+          right: 18px;
+          transform: rotate(135deg);
+        }
+        .stat-tile {
+          min-width: 92px;
+          padding: 12px 16px;
+          border: 1px solid var(--border);
+          border-radius: 10px;
+          background: var(--panel);
+          text-align: center;
+          box-shadow: 0 1px 2px var(--shadow);
+        }
+        .stat-tile-value {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 19px;
+          color: var(--stat-tone);
+          font-weight: 900;
+          line-height: 1;
+        }
+        .stat-tile-label {
+          font-size: 8px;
+          color: var(--muted);
+          letter-spacing: 0.1em;
+          font-weight: 900;
+          margin-top: 6px;
+        }
+        .view-eyebrow {
+          font-size: 9px;
+          font-family: 'IBM Plex Mono', monospace;
+          letter-spacing: 0.12em;
+          color: var(--link);
+          margin-bottom: 8px;
+          font-weight: 900;
+          text-transform: uppercase;
+        }
+        .overview-intro-card {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          padding: 20px 24px;
+          margin-bottom: 20px;
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          background: linear-gradient(135deg, color-mix(in srgb, var(--link) 8%, transparent), transparent 48%), var(--panel);
+          box-shadow: 0 1px 2px var(--shadow);
+        }
+        .overview-intro-copy h2 {
+          margin: 0 0 7px;
+          color: var(--text);
+          font-size: 21px;
+          line-height: 1.2;
+          letter-spacing: 0;
+        }
+        .overview-intro-copy p {
+          margin: 0;
+          color: var(--ink2);
+          max-width: 650px;
+          font-size: 13px;
+          line-height: 1.55;
+        }
+        .overview-intro-stats {
+          display: flex;
+          gap: 10px;
+          flex-wrap: wrap;
+          justify-content: flex-end;
+          flex-shrink: 0;
         }
         .primary-filter-grid {
           display: grid;
@@ -3333,35 +3482,115 @@ export default function App() {
         }
         .overview-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-          gap: 10px;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 18px 20px;
         }
         .overview-card {
-          display: grid;
-          gap: 10px;
-          align-content: start;
-          min-height: 150px;
-          padding: 14px;
+          position: relative;
+          display: flex;
+          min-height: 236px;
+          overflow: hidden;
           border: 1px solid var(--border);
-          border-radius: 7px;
+          border-radius: 16px;
           background: var(--panel);
           color: inherit;
           text-align: left;
           font-family: inherit;
-          box-shadow: 0 1px 2px var(--shadow);
+          box-shadow: 0 1px 2px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .overview-card:hover {
+          border-color: var(--card-accent);
+          transform: translateY(-2px);
+          box-shadow: 0 12px 28px var(--shadow);
+          opacity: 1;
+        }
+        .overview-card-content {
+          position: relative;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          flex: 1;
+          padding: 24px 26px 22px;
+        }
+        .overview-card-visual {
+          position: relative;
+          width: 34%;
+          min-width: 150px;
+          flex-shrink: 0;
+          overflow: hidden;
+          background: var(--card-accent);
+        }
+        .overview-card-visual::before,
+        .overview-card-visual::after,
+        .overview-visual-grid,
+        .overview-visual-mark {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+        .overview-card-visual.city {
+          background: linear-gradient(90deg, rgba(13,17,23,0.35), rgba(255,255,255,0.05)), repeating-linear-gradient(90deg, rgba(255,255,255,0.22) 0 7px, rgba(255,255,255,0.04) 7px 18px), linear-gradient(150deg, #2e405d, #c7ccd3);
+          filter: grayscale(0.15);
+        }
+        .overview-card-visual.city .overview-visual-grid {
+          top: auto;
+          height: 65%;
+          background: linear-gradient(to top, rgba(9,19,36,0.65), transparent 82%), repeating-linear-gradient(90deg, transparent 0 16px, rgba(255,255,255,0.38) 16px 17px), repeating-linear-gradient(0deg, transparent 0 17px, rgba(255,255,255,0.22) 17px 18px);
+        }
+        .overview-card-visual.horizon {
+          background: linear-gradient(90deg, rgba(61,35,6,0.25), rgba(255,255,255,0.06)), linear-gradient(165deg, #f9b84c, #cf7d26 52%, #73531c);
+        }
+        .overview-card-visual.horizon::after {
+          top: 54%;
+          background: linear-gradient(155deg, transparent 0 42%, rgba(42,38,24,0.42) 42% 62%, transparent 62%), linear-gradient(0deg, rgba(48,42,24,0.62), transparent 64%);
+        }
+        .overview-card-visual.contours {
+          background: repeating-linear-gradient(160deg, rgba(35,85,76,0.16) 0 7px, transparent 7px 22px), linear-gradient(140deg, #e8fbf2, #7fb5a2 58%, #2f776e);
+        }
+        .overview-card-visual.contours::after {
+          background: linear-gradient(0deg, rgba(31,88,75,0.5), transparent 55%);
+        }
+        .overview-card-visual.rings {
+          background: repeating-conic-gradient(from 120deg, rgba(255,255,255,0.22) 0deg 9deg, transparent 9deg 18deg), linear-gradient(135deg, #c8c1ec, #6359b6);
+        }
+        .overview-card-visual.papers {
+          background: linear-gradient(135deg, transparent 18%, rgba(255,255,255,0.48) 18% 24%, transparent 24% 50%, rgba(255,255,255,0.3) 50% 55%, transparent 55%), linear-gradient(150deg, #f7b070, #c95548 70%);
+        }
+        .overview-card-visual.signal {
+          background: repeating-linear-gradient(18deg, rgba(255,255,255,0.17) 0 2px, transparent 2px 18px), linear-gradient(145deg, #102134, #006b74 68%, #00a6b8);
+        }
+        .overview-card-visual.circuit {
+          background: linear-gradient(90deg, rgba(5,15,38,0.35), transparent), repeating-linear-gradient(90deg, transparent 0 24px, rgba(255,255,255,0.22) 24px 26px), repeating-linear-gradient(0deg, transparent 0 28px, rgba(255,255,255,0.14) 28px 30px), linear-gradient(145deg, #273861, #6f90f6);
+        }
+        .overview-card-visual.map {
+          background: linear-gradient(125deg, rgba(255,255,255,0.35), transparent 45%), repeating-linear-gradient(140deg, rgba(13,102,84,0.18) 0 8px, transparent 8px 24px), linear-gradient(145deg, #dff7ed, #5dbda5 70%);
         }
         .overview-card-head {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 12px;
           color: var(--text);
-          font-size: 13px;
+          font-size: 18px;
           font-weight: 900;
+          line-height: 1.25;
+          margin-bottom: 14px;
+        }
+        .overview-card-icon-tile {
+          width: 34px;
+          height: 34px;
+          border-radius: 10px;
+          background: var(--card-icon-bg);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
         }
         .overview-card-icon {
-          width: 16px;
-          height: 16px;
-          background: var(--link);
+          width: 18px;
+          height: 18px;
+          background: var(--card-accent);
           -webkit-mask-size: contain;
           mask-size: contain;
           -webkit-mask-repeat: no-repeat;
@@ -3372,16 +3601,65 @@ export default function App() {
         }
         .overview-card-body {
           color: var(--ink2);
-          font-size: 11px;
-          line-height: 1.55;
+          font-size: 13.5px;
+          line-height: 1.58;
+          margin-bottom: 18px;
+          max-width: 36rem;
+        }
+        .overview-card-meta {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-top: auto;
+          padding-right: 28px;
+        }
+        .overview-card-stat,
+        .overview-card-updated {
+          display: inline-flex;
+          align-items: center;
+          min-height: 24px;
+          padding: 4px 10px;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: var(--panel-alt);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 10px;
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: 0;
         }
         .overview-card-stat {
-          margin-top: auto;
-          color: var(--link);
-          font-family: 'IBM Plex Mono', monospace;
-          font-size: 9px;
+          color: var(--card-accent);
+        }
+        .overview-card-updated {
+          color: var(--muted);
+        }
+        .overview-card-corner {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          width: 54px;
+          height: 54px;
+          background: var(--card-accent);
+          clip-path: polygon(100% 0, 100% 100%, 0 100%);
+          transition: width 0.12s ease, height 0.12s ease;
+        }
+        .overview-card:hover .overview-card-corner {
+          width: 62px;
+          height: 62px;
+        }
+        .overview-card-open {
+          position: absolute;
+          right: 9px;
+          bottom: 10px;
+          color: #fff;
+          transform: rotate(-45deg);
+          transform-origin: center;
+          font-size: 10px;
           font-weight: 900;
-          letter-spacing: 0.06em;
+          pointer-events: none;
+          letter-spacing: 0.01em;
         }
         .compact-export-toolbar {
           min-width: 0;
@@ -3980,6 +4258,15 @@ export default function App() {
           .design-evidence-columns,
           .global-news-grid,
           .ai-focus-grid { grid-template-columns: 1fr; }
+          .overview-grid { grid-template-columns: 1fr; }
+          .overview-intro-card {
+            align-items: flex-start;
+            flex-direction: column;
+          }
+          .overview-intro-stats {
+            justify-content: flex-start;
+            width: 100%;
+          }
           .top-nav { gap: 6px; padding-bottom: 8px; }
           .top-nav-tab {
             flex: 1 1 calc(50% - 3px);
@@ -4000,6 +4287,40 @@ export default function App() {
           .filter-bar { position: static !important; }
         }
         @media (max-width: 620px) {
+          .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+          }
+          .overview-intro-card {
+            padding: 16px;
+            border-radius: 12px;
+          }
+          .overview-intro-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+          }
+          .stat-tile {
+            min-width: 0;
+            padding: 10px 8px;
+          }
+          .stat-tile-value { font-size: 16px; }
+          .overview-card {
+            min-height: 0;
+            flex-direction: column;
+          }
+          .overview-card-visual {
+            width: 100%;
+            min-width: 0;
+            height: 136px;
+          }
+          .overview-card-content {
+            padding: 20px 20px 22px;
+          }
+          .overview-card-head {
+            font-size: 16px;
+          }
           .design-timeline-row { grid-template-columns: 58px minmax(0, 1fr); gap: 10px; }
           .ai-focus-provider-row {
             grid-template-columns: 28px minmax(0, 1fr);
@@ -4048,8 +4369,11 @@ export default function App() {
       <div style={{ borderBottom: "1px solid var(--border)", padding: "20px 28px 0", background: "var(--header-bg)" }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 20, flexWrap: "wrap" }}>
           <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-            <div aria-hidden="true" style={{ width: 26, height: 26, borderRadius: 6, background: "var(--text)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 4 }}>
-              <div style={{ width: 11, height: 11, borderRadius: 2, border: "2px solid var(--bg)" }} />
+            <div aria-hidden="true" className="brand-mark">
+              <span />
+              <span />
+              <span />
+              <span />
             </div>
             <div>
               <div style={{ fontSize: 9, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "0.15em", color: "var(--muted)", marginBottom: 6, fontWeight: 600, textTransform: "uppercase" }}>

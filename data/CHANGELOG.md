@@ -4,6 +4,9 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-08 - Overview landing visual refresh
+- Restyled the Overview landing page with a stronger intro panel, colorful visual cards, per-view metadata chips, and a larger matrix-scan header mark while preserving existing navigation and routes.
+
 ## 2026-07-08 - State AI transparency official-source batch
 - Populated Alabama, Arizona, Colorado, Illinois, Maine, North Carolina, New Hampshire, Ohio, Oklahoma, Virginia, and Wisconsin transparency rows from official state government sources.
 - Bumped the transparency dataset to `1.2.0` with 24 populated official-source records across the 50-state plus DC scaffold.
