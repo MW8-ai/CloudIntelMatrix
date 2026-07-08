@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-07 - State AI transparency label polish
+- Renamed the state transparency UI label from AI State Adoption Watch to State AI Transparency to avoid confusion with the former AI Watch model-release tab.
+- Increased the global browser scrollbar width so page overflow remains more discoverable.
+
 ## 2026-07-07 - AI state adoption map UX polish
 - Corrected transparency map metrics to count 50 states and treat District of Columbia separately without changing the source data.
 - Tuned tile and geographic map sizing, restored focusable native scroll behavior, removed geographic callout boxes and state-specific highlighting, and aligned Kentucky under Indiana in the tile grid.

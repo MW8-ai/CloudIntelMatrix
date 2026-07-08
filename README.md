@@ -93,7 +93,7 @@ The regulated-foundation pass in `3.6.0` applies this rubric to control-boundary
 | **History** | Provider cloud journey milestones |
 | **Operational Status** | Official provider status pages and incident-history sources |
 | **Foundational & Frontier Releases** | Official frontier and foundation-model release source index |
-| **AI State Adoption Watch** | State AI governance and transparency public-record view |
+| **State AI Transparency** | State AI governance and transparency public-record view |
 | **Equivalency** | Side-by-side service mapping (AWS ↔ Azure ↔ GCP ↔ OCI) |
 | **Gov / Parity** | Government availability and parity lag focus |
 | **AI Focus** | AI_NATIVE and AI_CAPABLE capabilities only |

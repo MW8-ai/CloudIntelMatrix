@@ -2258,14 +2258,14 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
     <section className="transparency-map-card">
       <div className="transparency-map-head">
         <div>
-          <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>AI STATE ADOPTION MAP</div>
+          <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>STATE AI TRANSPARENCY MAP</div>
           <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.3 }}>Official state public records</div>
           <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 4 }}>
             {officialRecords} of {items.length} states have official-source documents linked. District of Columbia is tracked separately.
           </div>
         </div>
         <div className="transparency-map-actions">
-          <div className="tmap-toggle" role="tablist" aria-label="AI state adoption map view">
+          <div className="tmap-toggle" role="tablist" aria-label="State AI transparency map view">
             {[
               { id: "grid", label: "Tile grid" },
               { id: "geo", label: "Geographic" },
@@ -2306,7 +2306,7 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
           unknownStyle={TRANSPARENCY_STATUS_STYLES.Unknown}
         />
       ) : (
-        <div className="transparency-map-scroll" tabIndex={0} aria-label="United States AI state adoption source map">
+        <div className="transparency-map-scroll" tabIndex={0} aria-label="United States state AI transparency source map">
           <div className="transparency-map-grid">
             {Object.entries(STATE_TILE_POSITIONS).map(([state, [row, column]]) => {
               const item = itemByState[state];
@@ -2405,7 +2405,7 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
   return (
     <div>
       <ViewHero
-        eyebrow="AI STATE ADOPTION WATCH"
+        eyebrow="STATE AI TRANSPARENCY"
         title="Point-in-time state AI public-record adoption map"
         body={meta.scopeNote}
         meta={[
@@ -3015,7 +3015,7 @@ export default function App() {
     { id: "provider-news", label: "Provider News",         iconKey: "activity",      desc: "Official provider announcements and upcoming changes" },
     { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
     { id: "ai-watch",     label: "Foundational & Frontier Releases", iconKey: "brain-circuit", desc: "Official foundational and frontier model release source index" },
-    { id: "transparency", label: "AI State Adoption Watch", iconKey: "landmark",    desc: "State AI governance public record" },
+    { id: "transparency", label: "State AI Transparency", iconKey: "landmark",    desc: "State AI governance public record" },
   ];
   const providerGridModes = ["matrix", "patterns"];
   const providerControlModes = ["matrix", "patterns", "history", "provider-news"];
@@ -3158,7 +3158,7 @@ export default function App() {
     },
     {
       id: "transparency",
-      label: "AI State Adoption Watch",
+      label: "State AI Transparency",
       iconKey: "landmark",
       description: "State public records for AI governance adoption status, with DC tracked separately.",
       stat: `${TRANSPARENCY.filter(isTransparencyState).length} states + DC`,
@@ -3171,8 +3171,8 @@ export default function App() {
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; background: var(--panel-alt); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; background: var(--panel-alt); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
         .hb { transition: all 0.12s; cursor: pointer; }
         .hb:hover { opacity: 0.78; }
         a:hover { opacity: 0.8; }
@@ -4309,7 +4309,7 @@ export default function App() {
             {mode === "transparency" && (
               <div className="filter-context">
                 <CollapsibleInfoBar
-                  title="AI state adoption"
+                  title="State AI transparency"
                   summary="Rows are official-source public records. Unknown means the state has not been populated yet."
                   open={showTransparencyContext}
                   onToggle={() => setShowTransparencyContext(current => !current)}
