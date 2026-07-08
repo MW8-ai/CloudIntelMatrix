@@ -1,4 +1,4 @@
-// TransparencyGeoMap - geographic view for the AI State Adoption Watch map
+// TransparencyGeoMap - geographic view for the State AI Transparency map
 // Zero-dependency: real state shapes from the public-domain US Census cartographic
 // boundary files (us-atlas states-albers-10m, pre-projected AlbersUSA incl. AK/HI insets).
 // Same interaction contract as the tile grid: status fill, official-source links,
@@ -63,7 +63,7 @@ function TransparencyGeoMap({ items, visibleItems, statusStyles, unknownStyle })
   };
 
   return (
-    <div className="transparency-geo-wrap" tabIndex={0} aria-label="United States AI state adoption source map, geographic view">
+    <div className="transparency-geo-wrap" tabIndex={0} aria-label="United States state AI transparency source map, geographic view">
       <svg viewBox={GEO_VIEWBOX} role="img" style={{ width: "100%", height: "auto", display: "block" }}>
         {STATE_GEO.map(geo => <Shape key={geo.abbr} geo={geo} />)}
       </svg>
