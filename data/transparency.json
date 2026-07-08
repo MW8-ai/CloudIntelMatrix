@@ -159,13 +159,13 @@
     {
       "state": "IL",
       "stateName": "Illinois",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "State law",
+      "title": "Public Act 104-0538: Artificial Intelligence Safety Measures Act",
+      "citation": "Illinois General Assembly, SB0315 / Public Act 104-0538",
+      "status": "Active",
+      "summary": "Illinois enacted the Artificial Intelligence Safety Measures Act as Public Act 104-0538. The law creates duties for large frontier developers, including frontier AI frameworks, transparency reports, safety-incident reporting, annual independent third-party audits, and whistleblower protections. It is effective January 1, 2027.",
+      "url": "https://www.ilga.gov/Legislation/BillStatus?DocNum=315&DocTypeID=SB&GA=104&GAID=18&SessionID=114",
+      "lastVerified": "2026-07-08"
     },
     {
       "state": "IN",
