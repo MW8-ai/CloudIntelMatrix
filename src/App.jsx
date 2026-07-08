@@ -351,6 +351,8 @@ const COMPLIANCE_STATUS_STYLES = {
 };
 
 const TRANSPARENCY_STATUS_ORDER = ["All", "Active", "Proposed", "Repealed", "None on record", "Unknown"];
+const DISTRICT_OF_COLUMBIA_CODE = "DC";
+const isTransparencyState = item => item?.state !== DISTRICT_OF_COLUMBIA_CODE;
 
 const TRANSPARENCY_STATUS_STYLES = {
   Active: { bg: "#14532d22", fg: "#16a34a", border: "#15803d55" },
@@ -363,8 +365,8 @@ const TRANSPARENCY_STATUS_STYLES = {
 const STATE_TILE_POSITIONS = {
   WA: [1, 1], MT: [1, 3], ND: [1, 4], MN: [1, 5], WI: [1, 6], MI: [1, 7], NY: [1, 10], VT: [1, 11], ME: [1, 12],
   OR: [2, 1], ID: [2, 2], WY: [2, 3], SD: [2, 4], IA: [2, 5], IL: [2, 6], IN: [2, 7], OH: [2, 8], PA: [2, 9], NJ: [2, 10], NH: [2, 11], MA: [2, 12],
-  CA: [3, 1], NV: [3, 2], UT: [3, 3], NE: [3, 4], MO: [3, 5], KY: [3, 6], WV: [3, 7], VA: [3, 8], MD: [3, 9], DE: [3, 10], CT: [3, 11], RI: [3, 12],
-  AZ: [4, 2], CO: [4, 3], KS: [4, 4], AR: [4, 5], TN: [4, 6], NC: [4, 8], DC: [4, 9],
+  CA: [3, 1], NV: [3, 2], UT: [3, 3], NE: [3, 4], MO: [3, 5], KY: [3, 7], WV: [3, 8], VA: [3, 9], MD: [3, 10], DE: [3, 11], CT: [3, 12],
+  AZ: [4, 2], CO: [4, 3], KS: [4, 4], AR: [4, 5], TN: [4, 6], NC: [4, 8], DC: [4, 9], RI: [4, 12],
   NM: [5, 3], OK: [5, 4], LA: [5, 5], MS: [5, 6], AL: [5, 7], SC: [5, 8], GA: [5, 9],
   TX: [6, 4], FL: [6, 10],
   AK: [7, 1], HI: [7, 2],
@@ -2257,9 +2259,9 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
       <div className="transparency-map-head">
         <div>
           <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>AI STATE ADOPTION MAP</div>
-          <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.3 }}>Official state and DC public records</div>
+          <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.3 }}>Official state public records</div>
           <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 4 }}>
-            {officialRecords} of {items.length} state/DC rows have official-source documents linked.
+            {officialRecords} of {items.length} states have official-source documents linked. District of Columbia is tracked separately.
           </div>
         </div>
         <div className="transparency-map-actions">
@@ -2304,7 +2306,7 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
           unknownStyle={TRANSPARENCY_STATUS_STYLES.Unknown}
         />
       ) : (
-        <div className="transparency-map-scroll" aria-label="United States AI state adoption source map">
+        <div className="transparency-map-scroll" tabIndex={0} aria-label="United States AI state adoption source map">
           <div className="transparency-map-grid">
             {Object.entries(STATE_TILE_POSITIONS).map(([state, [row, column]]) => {
               const item = itemByState[state];
@@ -2312,15 +2314,13 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
               const style = TRANSPARENCY_STATUS_STYLES[item.status] || TRANSPARENCY_STATUS_STYLES.Unknown;
               const muted = visibleItems.length > 0 && !visibleStates.has(state);
               const label = `${item.stateName}: ${item.status}${item.url ? ". Official source available." : ". No official source linked."}`;
-              const isHome = state === "IN";
               const tileStyle = {
                 gridRow: row,
                 gridColumn: column,
-                borderColor: isHome ? "#b45309" : style.border,
+                borderColor: style.border,
                 background: style.bg,
                 color: style.fg,
                 opacity: muted ? 0.34 : 1,
-                boxShadow: isHome ? "0 0 0 2px #b4530944" : undefined,
               };
               const content = (
                 <>
@@ -2373,12 +2373,34 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
 
 function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
   const federalContext = meta.federalContext || {};
+  const allStateItems = TRANSPARENCY.filter(isTransparencyState);
+  const visibleStateItems = items.filter(isTransparencyState);
+  const visibleDistrictItems = items.filter(item => !isTransparencyState(item));
   const counts = TRANSPARENCY_STATUS_ORDER
     .filter(status => status !== "All")
-    .map(status => ({ status, count: items.filter(item => item.status === status).length }))
+    .map(status => ({ status, count: visibleStateItems.filter(item => item.status === status).length }))
     .filter(item => item.count);
-  const officialRecords = TRANSPARENCY.filter(item => item.url).length;
-  const coveragePct = Math.round((officialRecords / Math.max(TRANSPARENCY.length, 1)) * 100);
+  const officialRecords = allStateItems.filter(item => item.url).length;
+  const coveragePct = Math.round((officialRecords / Math.max(allStateItems.length, 1)) * 100);
+  const renderTransparencyCard = item => (
+    <article key={`${item.state}-${item.title}`} className="design-secondary-card">
+      <div className="design-secondary-card-head">
+        <div>
+          <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>{item.state}</div>
+          <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{item.stateName}</div>
+        </div>
+        <TransparencyStatusBadge status={item.status} />
+      </div>
+      <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{item.instrument}</div>
+      <div style={{ fontSize: 11, color: "var(--text)", fontWeight: 900, lineHeight: 1.45 }}>{item.title}</div>
+      {item.citation && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 5, lineHeight: 1.45 }}>{item.citation}</div>}
+      <div style={{ fontSize: 9, color: "var(--text)", lineHeight: 1.6, marginTop: 8 }}>{item.summary}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+        {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Official source</a>}
+        <VerifiedStamp date={item.lastVerified} />
+      </div>
+    </article>
+  );
 
   return (
     <div>
@@ -2387,7 +2409,7 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
         title="Point-in-time state AI public-record adoption map"
         body={meta.scopeNote}
         meta={[
-          <StatTile key="rows" label="ROWS" value={items.length} tone="#b45309" />,
+          <StatTile key="states" label="STATES" value={allStateItems.length} tone="#b45309" />,
           <StatTile key="records" label="OFFICIAL RECORDS" value={`${coveragePct}%`} tone="#16a34a" />,
           <StatTile key="statuses" label="STATUSES" value={counts.length} />,
           <VerifiedStamp key="verified" date={meta.last_verified} />,
@@ -2406,8 +2428,8 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
       </section>
 
       <TransparencyMap
-        items={TRANSPARENCY}
-        visibleItems={items}
+        items={allStateItems}
+        visibleItems={visibleStateItems}
         officialRecords={officialRecords}
         coveragePct={coveragePct}
         mapView={mapView}
@@ -2423,31 +2445,21 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
         ))}
       </div>
 
-      {!items.length && (
+      {!visibleStateItems.length && !visibleDistrictItems.length && (
         <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No state transparency rows match the current filters.</div>
       )}
 
       <div className="design-framework-grid">
-        {items.map(item => (
-          <article key={`${item.state}-${item.title}`} className="design-secondary-card">
-            <div className="design-secondary-card-head">
-              <div>
-                <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>{item.state}</div>
-                <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{item.stateName}</div>
-              </div>
-              <TransparencyStatusBadge status={item.status} />
-            </div>
-            <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{item.instrument}</div>
-            <div style={{ fontSize: 11, color: "var(--text)", fontWeight: 900, lineHeight: 1.45 }}>{item.title}</div>
-            {item.citation && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 5, lineHeight: 1.45 }}>{item.citation}</div>}
-            <div style={{ fontSize: 9, color: "var(--text)", lineHeight: 1.6, marginTop: 8 }}>{item.summary}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
-              {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Official source</a>}
-              <VerifiedStamp date={item.lastVerified} />
-            </div>
-          </article>
-        ))}
+        {visibleStateItems.map(renderTransparencyCard)}
       </div>
+      {!!visibleDistrictItems.length && (
+        <section style={{ marginTop: 14 }}>
+          <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 8 }}>DISTRICT OF COLUMBIA</div>
+          <div className="design-framework-grid">
+            {visibleDistrictItems.map(renderTransparencyCard)}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -3148,8 +3160,8 @@ export default function App() {
       id: "transparency",
       label: "AI State Adoption Watch",
       iconKey: "landmark",
-      description: "State and DC public records for AI governance adoption status.",
-      stat: `${TRANSPARENCY.length} state/DC rows`,
+      description: "State public records for AI governance adoption status, with DC tracked separately.",
+      stat: `${TRANSPARENCY.filter(isTransparencyState).length} states + DC`,
       onClick: () => setMode("transparency"),
     },
   ];
@@ -3768,22 +3780,51 @@ export default function App() {
           text-transform: uppercase;
         }
         .transparency-map-scroll {
-          overflow-x: auto;
-          padding-bottom: 4px;
+          max-width: 100%;
+          overflow: auto;
+          padding-bottom: 10px;
+          scrollbar-width: auto;
+          scrollbar-gutter: stable;
+          -webkit-overflow-scrolling: touch;
         }
         .transparency-geo-wrap {
-          overflow-x: auto;
-          padding-bottom: 4px;
+          max-width: 100%;
+          overflow: auto;
+          padding-bottom: 10px;
+          scrollbar-width: auto;
+          scrollbar-gutter: stable;
+          -webkit-overflow-scrolling: touch;
+        }
+        .transparency-map-scroll:focus-visible,
+        .transparency-geo-wrap:focus-visible {
+          outline: 2px solid var(--link);
+          outline-offset: 3px;
+        }
+        .transparency-map-scroll::-webkit-scrollbar,
+        .transparency-geo-wrap::-webkit-scrollbar {
+          width: 12px;
+          height: 12px;
+        }
+        .transparency-map-scroll::-webkit-scrollbar-thumb,
+        .transparency-geo-wrap::-webkit-scrollbar-thumb {
+          background: var(--border);
+          border: 3px solid var(--panel);
+          border-radius: 999px;
         }
         .transparency-geo-wrap svg {
-          min-width: 680px;
+          width: min(100%, 720px);
+          min-width: 620px;
+          max-width: 720px;
+          margin: 0 auto;
         }
         .transparency-map-grid {
           display: grid;
-          grid-template-columns: repeat(12, 48px);
-          grid-template-rows: repeat(7, 42px);
-          gap: 5px;
-          min-width: 631px;
+          grid-template-columns: repeat(12, 54px);
+          grid-template-rows: repeat(7, 46px);
+          gap: 6px;
+          min-width: 714px;
+          width: max-content;
+          margin: 0 auto;
           align-items: stretch;
         }
         .transparency-state-tile {
@@ -4202,7 +4243,9 @@ export default function App() {
                   </div>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
                     {TRANSPARENCY_STATUS_ORDER.map(status => {
-                      const count = status === "All" ? TRANSPARENCY.length : TRANSPARENCY.filter(item => item.status === status).length;
+                      const count = status === "All"
+                        ? TRANSPARENCY.filter(isTransparencyState).length
+                        : TRANSPARENCY.filter(item => isTransparencyState(item) && item.status === status).length;
                       return (
                         <button key={status} className="hb" onClick={() => setSelectedTransparencyStatus(status)} style={{
                           padding: "3px 10px", borderRadius: 3, fontSize: 9, fontFamily: "inherit",
