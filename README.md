@@ -179,3 +179,12 @@ Add setup and run steps for this repository.
 ## Project Status
 Active development.
 
+
+---
+
+## Part of the Cornerstone Method
+
+**Know â†’ Define â†’ Assess â†’ Shape â†’ Verify â†’ Visualize.** CloudIntelMatrix is the **Know** verb â€” verified capability and compliance facts feed every downstream decision.
+
+Siblings: [Architecture Anatomy](https://github.com/MW8-ai/architecture-anatomy) (Visualize â€” [live atlas](https://mw8-ai.github.io/architecture-anatomy/) Â· [exploded 3D](https://mw8-ai.github.io/architecture-anatomy/3d-prototype.html)) Â· Architect's Cornerstone (Define) Â· Architecture Review Framework + Review Skill (Assess) Â· Formwork (Shape) Â· Plumbline (Verify)
+
