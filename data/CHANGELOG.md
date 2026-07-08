@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-07 - AI state adoption map UX polish
+- Corrected transparency map metrics to count 50 states and treat District of Columbia separately without changing the source data.
+- Tuned tile and geographic map sizing, restored focusable native scroll behavior, removed geographic callout boxes and state-specific highlighting, and aligned Kentucky under Indiana in the tile grid.
+
 ## 2026-07-07 - Foundational and frontier releases rename
 - Renamed the former model-release watch UI, docs, client export label, and workbook heading to Foundational & Frontier Releases while preserving the existing `ai-watch` route for backward compatibility.
 
