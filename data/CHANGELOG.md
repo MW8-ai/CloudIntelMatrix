@@ -4,6 +4,10 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-11 - State AI transparency research tranches 1-3
+- Resolved 21 additional Unknown jurisdictions to Active from official state government sources, raising State AI Transparency coverage to 45 populated official-source records across the 50-state plus DC scaffold.
+- Remaining Unknown jurisdictions are Alaska, Florida, Hawaii, New Mexico, South Dakota, and Wyoming.
+
 ## 2026-07-08 - Overview landing visual refresh
 - Restyled the Overview landing page with a stronger intro panel, colorful visual cards, per-view metadata chips, and a larger matrix-scan header mark while preserving existing navigation and routes.
 

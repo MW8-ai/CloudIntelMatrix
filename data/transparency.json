@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "version": "1.2.0",
+    "version": "1.3.0",
     "description": "Point-in-time state AI governance and transparency record. Populated entries must cite official state sources; Unknown rows are launch scaffolding for future official-source review.",
-    "last_verified": "2026-07-08",
+    "last_verified": "2026-07-11",
     "scopeNote": "Planning and reference aid only. Entries summarize official state public records located for this project; they do not determine legal applicability, compliance status, or whether an agency has fully disclosed every AI use.",
     "federalContext": {
       "title": "Ensuring a National Policy Framework for Artificial Intelligence",
@@ -49,13 +49,13 @@
     {
       "state": "AR",
       "stateName": "Arkansas",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Governor's initiative",
+      "title": "AI and Analytics Center of Excellence and statewide AI acceptable-use policy",
+      "citation": "Office of the Governor of Arkansas, AI and Analytics Center of Excellence Government Effectiveness and Safety reports (2025-2026)",
+      "status": "Active",
+      "summary": "A Governor-launched AI and Analytics Center of Excellence delivered Government Effectiveness and Safety reports recommending a Chief AI Officer and NIST-based evaluation of AI systems. A statewide AI acceptable-use policy has been approved for implementation, starting at the Department of Shared Administrative Services, with a chief AI officer hire underway.",
+      "url": "https://governor.arkansas.gov/news_post/sanders-receives-ai-center-of-excellence-effectiveness-and-safety-report/",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "CA",
@@ -93,24 +93,24 @@
     {
       "state": "DE",
       "stateName": "Delaware",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "Delaware Artificial Intelligence Commission (HB 333)",
+      "citation": "Delaware House Bill 333 (2024); Del. Code Title 29, Chapter 90C, Subchapter IV",
+      "status": "Active",
+      "summary": "Creates the Delaware AI Commission within the Department of Technology and Information to recommend statewide AI processes and guidelines for executive, legislative, and judicial agencies and to conduct an inventory of all generative AI usage across the three branches. The Commission reports annually and operates an official site at ai.delaware.gov.",
+      "url": "https://legis.delaware.gov/BillDetail/140866",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "DC",
       "stateName": "District of Columbia",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Mayor's order",
+      "title": "Mayor's Order 2024-028: DC AI Values and AI Strategic Benchmarks",
+      "citation": "Government of the District of Columbia, Mayor's Order 2024-028 (February 8, 2024)",
+      "status": "Active",
+      "summary": "Articulates six AI values that District agencies must clear before deploying any AI tool, establishes an Advisory Group on AI Values Alignment and an OCTO-run AI Taskforce, and phases agency-specific AI strategic plans in cohorts through October 1, 2026.",
+      "url": "https://techplan.dc.gov/page/mayors-order-articulating-dc%E2%80%99s-artificial-intelligence-values-and-establishing-artificial",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "FL",
@@ -126,13 +126,13 @@
     {
       "state": "GA",
       "stateName": "Georgia",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency policy",
+      "title": "Enterprise AI Responsible Use Policy (PS-23-001) and AI Responsible Use Standard (SS-23-002)",
+      "citation": "Georgia Technology Authority, Enterprise AI Responsible Use Policy PS-23-001 and AI Responsible Use Standard SS-23-002",
+      "status": "Active",
+      "summary": "GTA-led enterprise framework requiring executive branch agencies to submit AI tools for GTA review and approval before procurement and deployment, with the AI Responsible Use Standard effective December 1, 2024. Georgia also operates an Office of Artificial Intelligence, an AI Advisory Council, a Chief Digital and AI Officer role, and the Horizons Innovation Lab.",
+      "url": "https://gta.georgia.gov/policies-and-programs/artificial-intelligence",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "HI",
@@ -148,13 +148,13 @@
     {
       "state": "ID",
       "stateName": "Idaho",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "S1227 (2026): Artificial intelligence in public education framework",
+      "citation": "Idaho S1227 (2026 session)",
+      "status": "Active",
+      "summary": "Statewide framework for AI use in Idaho public education: the State Department of Education must issue AI guidance, districts must adopt AI policies, and vendors must disclose AI functionality. Scope note: this governs government AI use in the education sector only; no general executive branch AI instrument was found for Idaho.",
+      "url": "https://legislature.idaho.gov/wp-content/uploads/sessioninfo/2026/legislation/S1227.pdf",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "IL",
@@ -181,46 +181,46 @@
     {
       "state": "IA",
       "stateName": "Iowa",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency policy",
+      "title": "State of Iowa Generative Artificial Intelligence Policy (ENTERPRISE PY-AI)",
+      "citation": "Iowa Department of Management, Generative Artificial Intelligence Policy ENTERPRISE PY-AI, effective March 31, 2025",
+      "status": "Active",
+      "summary": "Enterprise generative AI policy for supported entities: freely available AI tools are prohibited without prior written DOM approval, AI procurement must use standard state contract clauses and DOM consultation, AI-generated code must be identified and risk-assessed, and human fallback systems are required where AI fails. Entities remain accountable for decisions and materials produced with AI.",
+      "url": "https://dom.iowa.gov/media/785/download?inline=",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "KS",
       "stateName": "Kansas",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "Senate Substitute for HB 2313: AI platforms of concern prohibition",
+      "citation": "2025 Session Laws of Kansas, Chapter 84 (Senate Substitute for House Bill 2313)",
+      "status": "Active",
+      "summary": "Prohibits state agency devices and state networks from accessing AI platforms of concern, including DeepSeek and models controlled by countries of concern, and requires agencies to deactivate and delete existing accounts. Exceptions exist for law enforcement and cybersecurity investigations.",
+      "url": "https://sos.ks.gov/publications/sessionlaws/2025/Chapter-84-HB-2313.html",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "KY",
       "stateName": "Kentucky",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "SB 4 (2025): Government AI governance under KRS 42.720 to 42.742",
+      "citation": "Kentucky Acts Ch. 66 (2025), Senate Bill 4; KRS 42.722, 42.726, and a new section of KRS 42.720 to 42.742",
+      "status": "Active",
+      "summary": "Requires the Commonwealth Office of Technology to establish AI policy standards and creates the Artificial Intelligence Governance Committee, with ISO/IEC 42001-aligned standards, a centralized AI system registry, agency approval requirements, and public disclosure of AI use. Signed March 24, 2025 with an emergency clause, effective immediately.",
+      "url": "https://apps.legislature.ky.gov/recorddocuments/bill/25RS/sb4/bill.pdf",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "LA",
       "stateName": "Louisiana",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "EO JML 25-103, amended by JML 25-109: State Government's Use of AI",
+      "citation": "La. Executive Order JML 25-103 (2025), amended by JML 25-109; OTS Artificial Intelligence Acceptable Use Policy",
+      "status": "Active",
+      "summary": "Governor's order on state government AI use: agency AI use requires CIO approval (or agency head outside OTS scope), OTS must inventory all AI contracts, restricted data may not enter AI systems, and a temporary procurement pause ran to December 15, 2025. OTS followed with a statewide AI Acceptable Use Policy barring AI from independently making business decisions and requiring labeling of AI-generated content.",
+      "url": "https://www.doa.la.gov/media/tzqptbak/jml-25-109-amended-state-government-s-use-of-ai.pdf",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "ME",
@@ -258,13 +258,13 @@
     {
       "state": "MI",
       "stateName": "Michigan",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency policy",
+      "title": "DTMB Adoption and Usage of Artificial Intelligence: Guidelines and Responsibilities",
+      "citation": "Michigan Department of Technology, Management and Budget, Adoption and Usage of Artificial Intelligence Guidelines and Responsibilities",
+      "status": "Active",
+      "summary": "Statewide DTMB guidance requiring any external AI tool that stores, analyzes, or processes state data to obtain an Authority to Operate through the Michigan Security Accreditation Process, with centralized AI governance and intake through a DTMB AI Core Team. Michigan has deployed generative AI chatbots on Michigan.gov and MiLogin in phased rollouts.",
+      "url": "https://www.michigan.gov/dtmb/-/media/Project/Websites/dtmb/Law-and-Policies/Governance/State-of-MichiganDTMBAdoption-and-Usage-of-Artificial-IntelligenceGuidelines-and-Responsibilities--P.pdf",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "MN",
@@ -280,57 +280,57 @@
     {
       "state": "MS",
       "stateName": "Mississippi",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "EO 1584 (2025) and ITS Acceptable Use Policy for Artificial Intelligence",
+      "citation": "Miss. Executive Order No. 1584 (Jan. 8, 2025); Mississippi ITS Acceptable Use Policy for Artificial Intelligence (Nov. 25, 2025)",
+      "status": "Active",
+      "summary": "Mississippi's first AI executive order directed ITS to inventory all AI in state agencies, evaluate agency AI processes and procurement, and develop responsible use policy recommendations. ITS delivered the statewide AI Acceptable Use Policy framework and published the 2025 State Agency AI Inventory Report; a statutory AI Regulation Task Force (SB 2406) reports annually to the Legislature.",
+      "url": "https://www.its.ms.gov/services/innovating/AI-AUP",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "MO",
       "stateName": "Missouri",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "EO 26-02 (2026): AI strategic framework for Missouri government",
+      "citation": "Mo. Executive Order 26-02 (Gov. Kehoe, Jan. 2026)",
+      "status": "Active",
+      "summary": "Directs the Office of Administration Commissioner to develop a strategic framework for AI integration in Missouri government prioritizing expedited work, improved services, data privacy and security, human decision-making, transparency and accountability, and data quality, plus policy recommendations and AI training best practices. OA has a dedicated head of AI. Reported tier: confirmed via secondary coverage; capture the governor.mo.gov EO PDF to promote to Verified.",
+      "url": "https://governor.mo.gov/",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "MT",
       "stateName": "Montana",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "HB 178 (2025): Government use of artificial intelligence, MCA Title 2, Chapter 21",
+      "citation": "2025 Montana Laws, Chapter 427 (HB 178); Mont. Code Ann. Title 2, Chapter 21, Part 1",
+      "status": "Active",
+      "summary": "Prohibits government entities and state officers from using AI for cognitive manipulation, discriminatory classification, or broad surveillance, with narrow exceptions. Requires disclosure when AI is used in public interfaces or published materials, and human review with power to modify or reject any AI recommendation or decision affecting a person's rights.",
+      "url": "https://mca.legmt.gov/bills/mca/title_0020/chapter_0210/part_0010/sections_index.html",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "NE",
       "stateName": "Nebraska",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency standard",
+      "title": "NITC Standard 8-609: Artificial Intelligence",
+      "citation": "Nebraska Information Technology Commission, Technical Standards and Guidelines 8-609",
+      "status": "Active",
+      "summary": "Statewide standards for AI systems owned, used, or managed by the State of Nebraska: mandatory consultation with the OCIO security risk team, privacy and third-party risk assessments, restrictions on training AI with agency data, and ethics and fairness requirements for AI output.",
+      "url": "https://nitc.nebraska.gov/docs/8-609.pdf",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "NV",
       "stateName": "Nevada",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency policy",
+      "title": "Policy on the Responsible and Ethical Use of AI in Nevada State Government Executive Branch",
+      "citation": "Nevada Governor's Technology Office / OCIO, Policy on the Responsible and Ethical Use of Artificial Intelligence in Nevada State Government Executive Branch",
+      "status": "Active",
+      "summary": "OCIO-owned policy setting minimum standards for AI deployment across the executive branch: OCIO oversees implementation, the State Technology Governance Committee works with an AI Working Group on statewide coordination, and the State Information Security Committee develops the companion AI risk and security policy. Listed on the Governor's Technology Office governance page among current statewide policies.",
+      "url": "https://www.it.nv.gov/governance/",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "NH",
@@ -390,13 +390,13 @@
     {
       "state": "ND",
       "stateName": "North Dakota",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency policy",
+      "title": "NDIT Artificial Intelligence Policy and Guidelines",
+      "citation": "North Dakota Information Technology, Artificial Intelligence Guidelines supplementing the NDIT Artificial Intelligence Policy",
+      "status": "Active",
+      "summary": "Applies to all executive branch state agencies. Establishes an AI risk matrix, requires NDIT Governance, Risk, and Compliance assessment and executive leadership approval for enterprise AI use, and commits the state to consulting NIST guidance. A legislative interim AI and Data Center Committee was announced in mid 2026.",
+      "url": "https://www.ndit.nd.gov/about-us/it-governance/it-policies",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "OH",
@@ -445,24 +445,24 @@
     {
       "state": "RI",
       "stateName": "Rhode Island",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Executive order",
+      "title": "Executive Order 24-06: Artificial Intelligence and Data Centers of Excellence",
+      "citation": "State of Rhode Island Executive Order 24-06 (February 29, 2024)",
+      "status": "Active",
+      "summary": "Establishes the Rhode Island AI Task Force, a Center of Excellence for AI and Data under the Department of Administration and ETSS, a chief data officer role, and a statewide federated data platform. The Task Force assesses AI risks and opportunities and advises state policymakers.",
+      "url": "https://etss.ri.gov/data-and-ai/rhode-island-ai-task-force",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "SC",
       "stateName": "South Carolina",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Agency policy",
+      "title": "South Carolina State Agencies Artificial Intelligence Strategy (June 2024)",
+      "citation": "South Carolina Department of Administration, State Agencies Artificial Intelligence Strategy, June 2024",
+      "status": "Active",
+      "summary": "Statewide AI strategy for state agencies built on Protect, Promote, Pursue: AI governance policies aligned to the Division of Information Security standards, risk management processes, an AI Center of Excellence, and an AI Advisory Group. Developed by the state CIO and CISO with an AI Workgroup spanning 80 plus agencies; OTIS and DIS execute the roadmap.",
+      "url": "https://admin.sc.gov/sites/admin/files/Documents/OED/Final%20SC%20AI%20Strategy.pdf",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "SD",
@@ -478,13 +478,13 @@
     {
       "state": "TN",
       "stateName": "Tennessee",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "Tennessee Artificial Intelligence Advisory Council Act and Enterprise AI Policy",
+      "citation": "Tenn. Code Ann. Title 4, Chapter 3, Part 31 (HB 2325, 2024; amended 2025); Tennessee Enterprise Artificial Intelligence Policy 200-POL-007",
+      "status": "Active",
+      "summary": "Statutory AI Advisory Council co-chaired by the Finance and Administration Commissioner and the state CIO, paired with a NIST AI RMF-aligned Enterprise AI Policy and an AI Review Committee gating AI solutions. The Council's December 2025 action plan includes the state's first statewide inventory of government AI use cases and an annual statutory reporting requirement.",
+      "url": "https://www.tn.gov/finance/ai-council.html",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "TX",
@@ -511,13 +511,13 @@
     {
       "state": "VT",
       "stateName": "Vermont",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "3 V.S.A. Chapter 69: Division of Artificial Intelligence",
+      "citation": "2022 Act 132 (H.410); 3 V.S.A. sections 5021-5023",
+      "status": "Active",
+      "summary": "Establishes a statutory Division of Artificial Intelligence within the Agency of Digital Services to review all AI developed, employed, or procured in state government, with an annually updated state AI code of ethics, an AI Advisory Council, and review of the ADS automated decision systems inventory. The inventory is published, and the 2026 ADS annual report lists live AI systems in production. Effective July 1, 2022.",
+      "url": "https://legislature.vermont.gov/statutes/fullchapter/03/069",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "VA",
@@ -544,13 +544,13 @@
     {
       "state": "WV",
       "stateName": "West Virginia",
-      "instrument": "Unknown",
-      "title": "Official record not populated",
-      "citation": "",
-      "status": "Unknown",
-      "summary": "Launch scaffold row; no official state AI governance or transparency instrument has been populated in this dataset yet.",
-      "url": "",
-      "lastVerified": "2026-06-15"
+      "instrument": "Statute",
+      "title": "W. Va. Code 5A-6-9: Task Force on Artificial Intelligence",
+      "citation": "W. Va. Code 5A-6-9 (HB 5690, 2024)",
+      "status": "Active",
+      "summary": "Creates the West Virginia Task Force on Artificial Intelligence within the Office of the Governor to recommend which agencies should own AI policy, develop public sector AI best practices, and inventory current and proposed AI use within state agencies. The WV Office of Technology publishes responsible use guidance and maintains a list of approved AI tools.",
+      "url": "https://code.wvlegislature.gov/5A-6-9/",
+      "lastVerified": "2026-07-11"
     },
     {
       "state": "WI",
