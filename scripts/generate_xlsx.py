@@ -28,6 +28,8 @@ mdata = json.loads((DATA / "matrix.json").read_text())
 udata = json.loads((DATA / "upcoming.json").read_text())
 hdata = json.loads((DATA / "history.json").read_text())
 tdata = json.loads((DATA / "transparency.json").read_text())
+fdata = json.loads((DATA / "federal_transparency.json").read_text())
+idata = json.loads((DATA / "international_transparency.json").read_text())
 sdata = json.loads((DATA / "status.json").read_text())
 adata = json.loads((DATA / "ai_watch.json").read_text())
 
@@ -45,6 +47,10 @@ UPCOMING   = udata.get("upcoming", [])
 HISTORY    = hdata.get("history", [])
 TRANSPARENCY = tdata.get("mandates", [])
 TRANSPARENCY_META = tdata.get("_meta", {})
+FEDERAL_TRANSPARENCY = fdata.get("records", [])
+FEDERAL_TRANSPARENCY_META = fdata.get("_meta", {})
+INTERNATIONAL_TRANSPARENCY = idata.get("records", [])
+INTERNATIONAL_TRANSPARENCY_META = idata.get("_meta", {})
 STATUS_SOURCES = sdata.get("sources", [])
 AI_WATCH_SOURCES = adata.get("sources", [])
 CAP_MAP    = {cap["capability"]: cap for cap in CAPS}
@@ -580,6 +586,69 @@ def build_transparency_sheet(ws):
     for col, width in {"A":22, "B":14, "C":20, "D":36, "E":36, "F":70, "G":54, "H":12, "I":54}.items():
         ws.column_dimensions[col].width = width
 
+def build_ai_governance_sheet(ws, title, records, meta, accent="1E3A5F"):
+    """Federal and international AI governance records from official public sources."""
+    ws.sheet_view.showGridLines = False
+    ws.freeze_panes = "A4"
+    hdr(ws, title, len(AI_GOVERNANCE_EXPORT_HEADERS))
+
+    ws.merge_cells(start_row=2, start_column=1, end_row=2, end_column=len(AI_GOVERNANCE_EXPORT_HEADERS))
+    c = ws.cell(row=2, column=1, value=meta.get("scopeNote", ""))
+    c.fill = f("F8FAFC")
+    c.font = ft(size=8, italic=True, color="374151")
+    c.alignment = al("left", "center", wrap=True)
+    c.border = TB
+    ws.row_dimensions[2].height = 34
+
+    headers = ["Jurisdiction", "Region", "Instrument", "Title", "Citation", "Status", "Summary", "Official Source", "Status / Signatures", "Verified", "Notes"]
+    for ci, header in enumerate(headers, 1):
+        c = ws.cell(row=3, column=ci, value=header)
+        c.fill = f(accent)
+        c.font = Font(name="Arial", bold=True, size=8, color="FFFFFF")
+        c.alignment = al("center", "center")
+        c.border = TB
+    ws.row_dimensions[3].height = 18
+
+    status_bg = {
+        "Active": "D1FAE5",
+        "Reference": "DBEAFE",
+        "Revoked": "FEE2E2",
+        "Superseded": "FEE2E2",
+        "Binding treaty": "D1FAE5",
+        "Regional law": "DBEAFE",
+        "Non-binding framework": "FEF3C7",
+        "Resolution": "E5E7EB",
+        "Voluntary framework": "FEF3C7",
+        "Placeholder": "F8FAFC",
+    }
+    for ri, item in enumerate(records, 4):
+        bg = status_bg.get(item.get("status", ""), "F8FAFC")
+        vals = [
+            item.get("jurisdiction", ""),
+            item.get("region", ""),
+            item.get("instrument", ""),
+            item.get("title", ""),
+            item.get("citation", ""),
+            item.get("status", ""),
+            item.get("summary", ""),
+            item.get("url", ""),
+            item.get("statusUrl", ""),
+            item.get("lastVerified", ""),
+            item.get("notes", ""),
+        ]
+        for ci, value in enumerate(vals, 1):
+            c = ws.cell(row=ri, column=ci, value=value)
+            c.fill = f(bg)
+            c.font = ft(bold=(ci in [1, 6]), size=8, color="2563EB" if ci in [8, 9] and value else "111827")
+            c.alignment = al("left", "top" if ci in [4, 5, 7, 11] else "center", wrap=True)
+            c.border = TB
+            if ci in [8, 9] and value:
+                c.hyperlink = value
+        ws.row_dimensions[ri].height = 46
+
+    for col, width in {"A":28,"B":18,"C":24,"D":46,"E":38,"F":20,"G":72,"H":56,"I":56,"J":13,"K":42}.items():
+        ws.column_dimensions[col].width = width
+
 def build_upcoming_sheet(ws):
     ws.sheet_view.showGridLines = False
     hdr(ws, "Announced / Preview / Upcoming — Official Sources Only", 10)
@@ -748,6 +817,10 @@ HISTORY_EXPORT_HEADERS = [
 TRANSPARENCY_EXPORT_HEADERS = [
     "state", "stateName", "instrument", "title", "citation", "status",
     "summary", "url", "lastVerified",
+]
+AI_GOVERNANCE_EXPORT_HEADERS = [
+    "jurisdiction", "region", "instrument", "title", "citation", "status",
+    "summary", "url", "statusUrl", "lastVerified", "notes",
 ]
 STATUS_EXPORT_HEADERS = [
     "providerName", "category", "name", "summary", "statusUrl", "historyUrl",
@@ -1014,6 +1087,24 @@ def transparency_export_rows():
         for item in sorted(TRANSPARENCY, key=lambda entry: (entry.get("stateName", ""), entry.get("title", "")))
     ]
 
+def ai_governance_export_rows(records):
+    return [
+        {
+            "jurisdiction": item.get("jurisdiction", ""),
+            "region": item.get("region", ""),
+            "instrument": item.get("instrument", ""),
+            "title": item.get("title", ""),
+            "citation": item.get("citation", ""),
+            "status": item.get("status", ""),
+            "summary": item.get("summary", ""),
+            "url": item.get("url", ""),
+            "statusUrl": item.get("statusUrl", ""),
+            "lastVerified": item.get("lastVerified", ""),
+            "notes": item.get("notes", ""),
+        }
+        for item in sorted(records, key=lambda entry: (entry.get("jurisdiction", ""), entry.get("title", "")))
+    ]
+
 def status_export_rows():
     return [
         {
@@ -1057,6 +1148,8 @@ def write_view_csvs():
     write_view_csv("controls", COMPLIANCE_EXPORT_HEADERS, compliance_export_rows())
     write_view_csv("history", HISTORY_EXPORT_HEADERS, history_export_rows())
     write_view_csv("transparency", TRANSPARENCY_EXPORT_HEADERS, transparency_export_rows())
+    write_view_csv("federal-transparency", AI_GOVERNANCE_EXPORT_HEADERS, ai_governance_export_rows(FEDERAL_TRANSPARENCY))
+    write_view_csv("international-transparency", AI_GOVERNANCE_EXPORT_HEADERS, ai_governance_export_rows(INTERNATIONAL_TRANSPARENCY))
     write_view_csv("status", STATUS_EXPORT_HEADERS, status_export_rows())
     write_view_csv("ai-watch", AI_WATCH_EXPORT_HEADERS, ai_watch_export_rows())
     write_view_csv("residency", RESIDENCY_EXPORT_HEADERS, residency_export_rows())
@@ -1092,6 +1185,24 @@ build_history_sheet(ws_history)
 
 ws_transparency = wb.create_sheet("Transparency")
 build_transparency_sheet(ws_transparency)
+
+ws_federal_ai = wb.create_sheet("Federal AI")
+build_ai_governance_sheet(
+    ws_federal_ai,
+    "Federal AI Transparency - Official Federal Sources",
+    FEDERAL_TRANSPARENCY,
+    FEDERAL_TRANSPARENCY_META,
+    accent="1D4ED8",
+)
+
+ws_international_ai = wb.create_sheet("International AI")
+build_ai_governance_sheet(
+    ws_international_ai,
+    "International AI Transparency - Official Framework Sources",
+    INTERNATIONAL_TRANSPARENCY,
+    INTERNATIONAL_TRANSPARENCY_META,
+    accent="0E7490",
+)
 
 ws_up = wb.create_sheet("Upcoming & Future")
 build_upcoming_sheet(ws_up)

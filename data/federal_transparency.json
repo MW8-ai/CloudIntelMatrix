@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "description": "Federal AI transparency and governance public-record tracker. Entries summarize official federal sources only.",
+    "last_verified": "2026-07-12",
+    "scopeNote": "Planning and reference aid only. Entries identify federal AI executive orders, policy memoranda, and official plans relevant to federal AI governance. They do not determine legal applicability, compliance status, or preemption effect."
+  },
+  "records": [
+    {
+      "id": "eo-14179",
+      "jurisdiction": "United States",
+      "instrument": "Executive order",
+      "title": "Removing Barriers to American Leadership in Artificial Intelligence",
+      "citation": "Executive Order 14179, 90 FR 8741",
+      "status": "Active",
+      "summary": "Revokes prior AI directives identified as barriers to AI innovation and directs development of an AI Action Plan for United States AI leadership.",
+      "url": "https://www.federalregister.gov/documents/2025/01/31/2025-02172/removing-barriers-to-american-leadership-in-artificial-intelligence",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "omb-m-25-21",
+      "jurisdiction": "United States",
+      "instrument": "OMB memorandum",
+      "title": "Accelerating Federal Use of AI through Innovation, Governance, and Public Trust",
+      "citation": "OMB Memorandum M-25-21",
+      "status": "Active",
+      "summary": "Provides federal agency guidance for AI use, governance, risk management, and public trust following Executive Order 14179.",
+      "url": "https://www.whitehouse.gov/wp-content/uploads/2025/02/M-25-21-Accelerating-Federal-Use-of-AI-through-Innovation-Governance-and-Public-Trust.pdf",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "america-ai-action-plan-2025",
+      "jurisdiction": "United States",
+      "instrument": "Federal policy plan",
+      "title": "America's AI Action Plan",
+      "citation": "The White House, America's AI Action Plan, July 2025",
+      "status": "Reference",
+      "summary": "Federal policy plan issued under Executive Order 14179, focused on AI leadership, infrastructure, innovation, and security priorities.",
+      "url": "https://www.whitehouse.gov/wp-content/uploads/2025/07/Americas-AI-Action-Plan.pdf",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "eo-14365",
+      "jurisdiction": "United States",
+      "instrument": "Executive order",
+      "title": "Ensuring a National Policy Framework for Artificial Intelligence",
+      "citation": "Executive Order 14365, 90 FR 58499",
+      "status": "Active",
+      "summary": "Directs federal review and action toward a national AI policy framework and is the main federal-state AI governance context note used by the State AI Transparency view.",
+      "url": "https://www.federalregister.gov/documents/2025/12/16/2025-23092/ensuring-a-national-policy-framework-for-artificial-intelligence",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "advanced-ai-security-2026",
+      "jurisdiction": "United States",
+      "instrument": "Presidential action",
+      "title": "Promoting Advanced Artificial Intelligence Innovation and Security",
+      "citation": "The White House, Presidential Action, June 2026",
+      "status": "Active",
+      "summary": "Directs coordinated federal attention to advanced AI innovation and national-security considerations across executive departments and agencies.",
+      "url": "https://www.whitehouse.gov/presidential-actions/2026/06/promoting-advanced-artificial-intelligence-innovation-and-security/",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "eo-14110",
+      "jurisdiction": "United States",
+      "instrument": "Executive order",
+      "title": "Safe, Secure, and Trustworthy Development and Use of Artificial Intelligence",
+      "citation": "Executive Order 14110, 88 FR 75191",
+      "status": "Revoked",
+      "summary": "Prior federal AI executive order retained for lineage context because Executive Order 14179 revoked it.",
+      "url": "https://www.federalregister.gov/documents/2023/11/01/2023-24283/safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence",
+      "lastVerified": "2026-07-12"
+    }
+  ]
+}

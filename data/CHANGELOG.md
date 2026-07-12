@@ -4,6 +4,11 @@ Format: `[YYYY-MM-DD] Provider | Category | Capability — Change (source)`
 
 ---
 
+## 2026-07-12 - AI transparency detail drawers and federal/international scopes
+- Added official-source Federal AI Transparency records for selected executive orders, OMB guidance, and federal AI policy actions.
+- Added official-source International AI Transparency records for the Council of Europe AI Framework Convention, EU AI Act, OECD AI Recommendation, UN General Assembly AI resolution, and G7 Hiroshima AI Process.
+- Added state/federal/international transparency scope controls, right-side detail drawers, an international framework map placeholder, validation, CSV export, and XLSX workbook sheets.
+
 ## 2026-07-11 - State AI transparency research tranches 1-3
 - Resolved 21 additional Unknown jurisdictions to Active from official state government sources, raising State AI Transparency coverage to 45 populated official-source records across the 50-state plus DC scaffold.
 - Remaining Unknown jurisdictions are Alaska, Florida, Hawaii, New Mexico, South Dakota, and Wyoming.
