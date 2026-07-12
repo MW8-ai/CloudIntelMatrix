@@ -124,6 +124,20 @@ const TRANSPARENCY_COLUMNS = [
   "lastVerified",
 ];
 
+const AI_GOVERNANCE_COLUMNS = [
+  "jurisdiction",
+  "region",
+  "instrument",
+  "title",
+  "citation",
+  "status",
+  "summary",
+  "url",
+  "statusUrl",
+  "lastVerified",
+  "notes",
+];
+
 const STATUS_COLUMNS = [
   "providerName",
   "category",
@@ -624,6 +638,22 @@ export function buildTransparencyRows(items) {
   }));
 }
 
+export function buildAiGovernanceRows(items) {
+  return items.map(item => ({
+    jurisdiction: item.jurisdiction,
+    region: item.region || "",
+    instrument: item.instrument,
+    title: item.title,
+    citation: item.citation,
+    status: item.status,
+    summary: item.summary,
+    url: item.url,
+    statusUrl: item.statusUrl || "",
+    lastVerified: item.lastVerified,
+    notes: item.notes || "",
+  }));
+}
+
 export function buildStatusRows(items) {
   return items.map(item => ({
     providerName: item.providerName,
@@ -712,6 +742,14 @@ export function historyExport(items, meta) {
 
 export function transparencyExport(items) {
   return makeExportData("transparency", "State AI Transparency", TRANSPARENCY_COLUMNS, buildTransparencyRows(items));
+}
+
+export function federalTransparencyExport(items) {
+  return makeExportData("federal-transparency", "Federal AI Transparency", AI_GOVERNANCE_COLUMNS, buildAiGovernanceRows(items));
+}
+
+export function internationalTransparencyExport(items) {
+  return makeExportData("international-transparency", "International AI Transparency", AI_GOVERNANCE_COLUMNS, buildAiGovernanceRows(items));
 }
 
 export function statusExport(items) {

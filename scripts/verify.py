@@ -48,6 +48,15 @@ VALID_TRANSPARENCY_STATUS = {"Active", "Proposed", "Repealed", "None on record",
 VALID_STATUS_SOURCE_CATEGORY = {"cloud-provider", "adjacent-platform"}
 VALID_STATUS_SOURCE_PROVIDERS = {"aws", "azure", "gcp", "oci", "salesforce", "cloudflare"}
 VALID_AI_WATCH_CATEGORY = {"frontier-model-lab", "open-model-lab", "multimodal-model-lab"}
+VALID_FEDERAL_TRANSPARENCY_STATUS = {"Active", "Reference", "Revoked", "Superseded"}
+VALID_INTERNATIONAL_TRANSPARENCY_STATUS = {
+    "Binding treaty",
+    "Regional law",
+    "Non-binding framework",
+    "Resolution",
+    "Voluntary framework",
+    "Placeholder",
+}
 STATUS_SOURCE_DOMAINS = {
     "health.aws.amazon.com",
     "docs.aws.amazon.com",
@@ -220,6 +229,18 @@ AI_WATCH_MODEL_DETAIL_REQUIRED = [
     "lastVerified",
 ]
 AI_WATCH_MODEL_DETAIL_ALLOWED = set(AI_WATCH_MODEL_DETAIL_REQUIRED + ["releaseDate", "releaseNotesUrl"])
+AI_GOVERNANCE_RECORD_REQUIRED = [
+    "id",
+    "jurisdiction",
+    "instrument",
+    "title",
+    "citation",
+    "status",
+    "summary",
+    "url",
+    "lastVerified",
+]
+AI_GOVERNANCE_RECORD_ALLOWED = set(AI_GOVERNANCE_RECORD_REQUIRED + ["region", "statusUrl", "notes"])
 PROPOSAL_PROVIDER_FIELDS = {
     "service",
     "status",
@@ -1089,6 +1110,50 @@ def validate_transparency(tdata):
     return mandates, meta
 
 
+def validate_ai_governance_records(dataset, filename, valid_statuses):
+    require_fields(dataset, ["_meta", "records"], filename)
+    if not isinstance(dataset, dict):
+        return []
+
+    meta = dataset.get("_meta", {})
+    require_fields(meta, ["description", "last_verified", "scopeNote"], f"{filename}._meta")
+    if isinstance(meta, dict):
+        validate_date(meta.get("last_verified"), f"{filename}._meta.last_verified")
+        for field in ["description", "scopeNote"]:
+            if not str(meta.get(field, "")).strip():
+                err(f"{filename}._meta.{field} must not be empty")
+
+    records = dataset.get("records", [])
+    if not isinstance(records, list) or not records:
+        err(f"{filename}.records must be a non-empty array")
+        return []
+
+    seen_ids = set()
+    for record in records:
+        record_id = record.get("id", "MISSING") if isinstance(record, dict) else "MISSING"
+        require_fields(record, AI_GOVERNANCE_RECORD_REQUIRED, f"{filename} record '{record_id}'")
+        if not isinstance(record, dict):
+            continue
+        unexpected_fields = set(record) - AI_GOVERNANCE_RECORD_ALLOWED
+        if unexpected_fields:
+            err(f"{filename} record '{record_id}' contains unsupported fields: {sorted(unexpected_fields)}")
+        if record_id in seen_ids:
+            err(f"Duplicate {filename} record id: {record_id}")
+        seen_ids.add(record_id)
+        if record.get("status") not in valid_statuses:
+            err(f"{filename} record '{record_id}' invalid status: {record.get('status')}")
+        for field in ["jurisdiction", "instrument", "title", "citation", "summary"]:
+            if not str(record.get(field, "")).strip():
+                err(f"{filename} record '{record_id}'.{field} must not be empty")
+        validate_url(record.get("url"), f"{filename} record '{record_id}'.url", False)
+        validate_date(record.get("lastVerified"), f"{filename} record '{record_id}'.lastVerified")
+        if "statusUrl" in record:
+            validate_url(record.get("statusUrl"), f"{filename} record '{record_id}'.statusUrl", False)
+
+    info(f"{filename}: {len(records)} official AI governance record(s)")
+    return records
+
+
 def normalized_host(url):
     parsed = urlparse(str(url))
     host = parsed.netloc.lower()
@@ -1499,7 +1564,7 @@ def check_link(url, label, defer_timeout_warning=False):
     return None
 
 
-def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, ai_watch_sources, proposal_links):
+def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, federal_transparency, international_transparency, status_sources, ai_watch_sources, proposal_links):
     print("Checking source URLs (non-blocking)...")
     links = {}
     azure_pricing_timeouts = []
@@ -1532,6 +1597,12 @@ def run_link_checks(capabilities, upcoming, history, frameworks, control_lens, c
         add_link(mandate.get("url"), f"transparency/{mandate.get('state')}")
     federal_context = transparency_meta.get("federalContext", {}) if isinstance(transparency_meta, dict) else {}
     add_link(federal_context.get("url"), "transparency/federalContext")
+    for record in federal_transparency:
+        add_link(record.get("url"), f"federalTransparency/{record.get('id')}")
+        add_link(record.get("statusUrl"), f"federalTransparency/{record.get('id')}/statusUrl")
+    for record in international_transparency:
+        add_link(record.get("url"), f"internationalTransparency/{record.get('id')}")
+        add_link(record.get("statusUrl"), f"internationalTransparency/{record.get('id')}/statusUrl")
     for source in status_sources:
         for field in ["statusUrl", "historyUrl", "docsUrl"]:
             add_link(source.get(field), f"status/{source.get('id')}/{field}")
@@ -1592,20 +1663,26 @@ def main():
     history = []
     status_sources = []
     ai_watch_sources = []
+    federal_transparency = []
+    international_transparency = []
     if not args.schema_only:
         ai_watch_data = load(DATA / "ai_watch.json")
         upcoming_data = load(DATA / "upcoming.json")
         history_data = load(DATA / "history.json")
         transparency_data = load(DATA / "transparency.json")
+        federal_transparency_data = load(DATA / "federal_transparency.json")
+        international_transparency_data = load(DATA / "international_transparency.json")
         status_data = load(DATA / "status.json")
         sources_data = load(DATA / "sources.json")
-        if ai_watch_data is None or upcoming_data is None or history_data is None or transparency_data is None or status_data is None or sources_data is None:
+        if ai_watch_data is None or upcoming_data is None or history_data is None or transparency_data is None or federal_transparency_data is None or international_transparency_data is None or status_data is None or sources_data is None:
             print("\n".join(ERRORS))
             return 1
         ai_watch_sources = validate_ai_watch(ai_watch_data)
         upcoming = validate_upcoming(upcoming_data)
         history = validate_history(history_data)
         transparency, transparency_meta = validate_transparency(transparency_data)
+        federal_transparency = validate_ai_governance_records(federal_transparency_data, "federal_transparency.json", VALID_FEDERAL_TRANSPARENCY_STATUS)
+        international_transparency = validate_ai_governance_records(international_transparency_data, "international_transparency.json", VALID_INTERNATIONAL_TRANSPARENCY_STATUS)
         status_sources = validate_status_sources(status_data)
         if isinstance(sources_data, dict):
             info("sources.json: loaded")
@@ -1614,7 +1691,7 @@ def main():
         transparency_meta = {}
 
     if args.check_links and not ERRORS:
-        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, status_sources, ai_watch_sources, proposal_links)
+        run_link_checks(capabilities, upcoming, history, frameworks, control_lens, compliance_frameworks, transparency, transparency_meta, federal_transparency, international_transparency, status_sources, ai_watch_sources, proposal_links)
 
     print("\n" + "=" * 60)
     print("CLOUD INTELLIGENCE MATRIX - VERIFICATION REPORT")

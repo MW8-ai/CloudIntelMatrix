@@ -1,0 +1,71 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "description": "International AI transparency and governance public-record tracker. Entries summarize official treaty, regional law, and intergovernmental framework sources only.",
+    "last_verified": "2026-07-12",
+    "scopeNote": "Planning and reference aid only. This is not a legal-compliance map. The dataset separates binding instruments from non-binding principles, voluntary codes, and policy frameworks."
+  },
+  "records": [
+    {
+      "id": "coe-cets-225",
+      "jurisdiction": "Council of Europe",
+      "region": "International",
+      "instrument": "Treaty",
+      "title": "Framework Convention on Artificial Intelligence and Human Rights, Democracy and the Rule of Law",
+      "citation": "Council of Europe Treaty Series No. 225",
+      "status": "Binding treaty",
+      "summary": "First international legally binding treaty in the AI field, opened for signature on 5 September 2024 and focused on ensuring AI lifecycle activities are consistent with human rights, democracy, and the rule of law.",
+      "url": "https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence",
+      "statusUrl": "https://www.coe.int/en/web/Conventions/full-list/?module=signatures-by-treaty&treatynum=225",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "eu-ai-act",
+      "jurisdiction": "European Union",
+      "region": "European Union",
+      "instrument": "Regulation",
+      "title": "Artificial Intelligence Act",
+      "citation": "Regulation (EU) 2024/1689",
+      "status": "Regional law",
+      "summary": "European Union regulation laying down harmonised rules on artificial intelligence. It is regional law rather than a global treaty.",
+      "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "oecd-ai-principles",
+      "jurisdiction": "OECD",
+      "region": "International",
+      "instrument": "Recommendation",
+      "title": "OECD Recommendation of the Council on Artificial Intelligence",
+      "citation": "OECD Legal Instrument OECD/LEGAL/0449",
+      "status": "Non-binding framework",
+      "summary": "Intergovernmental AI principles adopted in 2019 and updated in 2024, with values-based principles and policy recommendations for trustworthy AI.",
+      "url": "https://legalinstruments.oecd.org/en/instruments/oecd-legal-0449",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "un-a-res-78-265",
+      "jurisdiction": "United Nations General Assembly",
+      "region": "International",
+      "instrument": "Resolution",
+      "title": "Seizing the opportunities of safe, secure and trustworthy artificial intelligence systems for sustainable development",
+      "citation": "A/RES/78/265",
+      "status": "Resolution",
+      "summary": "UN General Assembly resolution on safe, secure, and trustworthy AI systems for sustainable development, including international cooperation and human-rights considerations.",
+      "url": "https://digitallibrary.un.org/record/4043244/files/A_RES_78_265-EN.pdf",
+      "lastVerified": "2026-07-12"
+    },
+    {
+      "id": "g7-hiroshima-ai-process",
+      "jurisdiction": "G7",
+      "region": "International",
+      "instrument": "Voluntary code and guiding principles",
+      "title": "Hiroshima AI Process Comprehensive Policy Framework",
+      "citation": "G7 Leaders' Statement on the Hiroshima AI Process, 30 October 2023",
+      "status": "Voluntary framework",
+      "summary": "G7 framework built around priority-risk analysis, international guiding principles, a voluntary code of conduct for advanced AI developers, and project-based cooperation.",
+      "url": "https://digital-strategy.ec.europa.eu/en/library/g7-leaders-statement-hiroshima-ai-process",
+      "lastVerified": "2026-07-12"
+    }
+  ]
+}

@@ -3,6 +3,8 @@ import matrixData   from "../data/matrix.json";
 import upcomingData from "../data/upcoming.json";
 import historyData  from "../data/history.json";
 import transparencyData from "../data/transparency.json";
+import federalTransparencyData from "../data/federal_transparency.json";
+import internationalTransparencyData from "../data/international_transparency.json";
 import statusData from "../data/status.json";
 import aiWatchData from "../data/ai_watch.json";
 import {
@@ -10,7 +12,9 @@ import {
   controlExport,
   downloadCsv,
   downloadXlsx,
+  federalTransparencyExport,
   historyExport,
+  internationalTransparencyExport,
   matrixExport,
   patternExport,
   printExport,
@@ -52,6 +56,10 @@ const HISTORY = historyData.history || [];
 const HISTORY_META = historyData._meta || {};
 const TRANSPARENCY = transparencyData.mandates || [];
 const TRANSPARENCY_META = transparencyData._meta || {};
+const FEDERAL_TRANSPARENCY = federalTransparencyData.records || [];
+const FEDERAL_TRANSPARENCY_META = federalTransparencyData._meta || {};
+const INTERNATIONAL_TRANSPARENCY = internationalTransparencyData.records || [];
+const INTERNATIONAL_TRANSPARENCY_META = internationalTransparencyData._meta || {};
 const STATUS_SOURCES = statusData.sources || [];
 const STATUS_META = statusData._meta || {};
 const AI_WATCH_SOURCES = aiWatchData.sources || [];
@@ -70,8 +78,15 @@ const DEFAULT_MATRIX_AI_SCOPE = "All";
 const DEFAULT_MATRIX_DENSITY = "Detailed";
 const DEFAULT_TRANSPARENCY_STATUS = "All";
 const DEFAULT_TRANSPARENCY_MAP_VIEW = "grid";
+const DEFAULT_TRANSPARENCY_SCOPE = "state";
 const VALID_MODES = ["overview", "matrix", "patterns", "controls", "history", "provider-news", "status", "ai-watch", "transparency"];
 const TRANSPARENCY_MAP_VIEWS = ["grid", "geo"];
+const TRANSPARENCY_SCOPES = [
+  { id: "state", label: "State AI Transparency", shortLabel: "State", note: "50 states plus DC public records" },
+  { id: "federal", label: "Federal AI Transparency", shortLabel: "Federal", note: "U.S. federal orders, memos, and plans" },
+  { id: "international", label: "International AI Transparency", shortLabel: "International", note: "Treaty, regional-law, and intergovernmental frameworks" },
+];
+const VALID_TRANSPARENCY_SCOPES = TRANSPARENCY_SCOPES.map(scope => scope.id);
 const MATRIX_LENSES = [
   { id: "all", label: "Capability", note: "All capability rows" },
   { id: "diff", label: "Equivalency", note: "Side-by-side provider service mapping" },
@@ -242,7 +257,12 @@ function getInitialTransparencyMapView() {
   return TRANSPARENCY_MAP_VIEWS.includes(value) ? value : DEFAULT_TRANSPARENCY_MAP_VIEW;
 }
 
-function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus, selectedTransparencyMapView }) {
+function getInitialTransparencyScope() {
+  const value = getUrlSearchParams().get("tscope");
+  return VALID_TRANSPARENCY_SCOPES.includes(value) ? value : DEFAULT_TRANSPARENCY_SCOPE;
+}
+
+function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus, selectedTransparencyMapView, selectedTransparencyScope }) {
   if (typeof window === "undefined") return;
   const params = new URLSearchParams();
   if (mode !== DEFAULT_MODE) params.set("view", mode);
@@ -258,8 +278,11 @@ function syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory
   }
   if (selectedTier === null) params.set("tier", "all");
   else if (selectedTier !== DEFAULT_TIER) params.set("tier", selectedTier);
-  if (selectedTransparencyStatus !== DEFAULT_TRANSPARENCY_STATUS) params.set("state", selectedTransparencyStatus);
-  if (mode === "transparency" && selectedTransparencyMapView === "geo") params.set("tmap", "geo");
+  if (mode === "transparency") {
+    if (selectedTransparencyScope !== DEFAULT_TRANSPARENCY_SCOPE) params.set("tscope", selectedTransparencyScope);
+    if (selectedTransparencyScope === "state" && selectedTransparencyStatus !== DEFAULT_TRANSPARENCY_STATUS) params.set("state", selectedTransparencyStatus);
+    if (selectedTransparencyScope === "state" && selectedTransparencyMapView === "geo") params.set("tmap", "geo");
+  }
 
   const query = params.toString();
   const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
@@ -2284,7 +2307,7 @@ function HistoryViewDesign({ items, meta }) {
   );
 }
 
-function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, mapView, onMapViewChange }) {
+function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, mapView, onMapViewChange, onSelect }) {
   const itemByState = Object.fromEntries(items.map(item => [item.state, item]));
   const visibleStates = new Set(visibleItems.map(item => item.state));
 
@@ -2338,6 +2361,7 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
           visibleItems={visibleItems}
           statusStyles={TRANSPARENCY_STATUS_STYLES}
           unknownStyle={TRANSPARENCY_STATUS_STYLES.Unknown}
+          onSelect={onSelect}
         />
       ) : (
         <div className="transparency-map-scroll" tabIndex={0} aria-label="United States state AI transparency source map">
@@ -2362,29 +2386,18 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
                   <span>{item.status === "Unknown" ? "No doc" : item.status}</span>
                 </>
               );
-              return item.url ? (
-                <a
+              return (
+                <button
                   key={state}
+                  type="button"
                   className="transparency-state-tile"
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   title={label}
                   aria-label={label}
+                  onClick={() => onSelect(item)}
                   style={tileStyle}
                 >
                   {content}
-                </a>
-              ) : (
-                <span
-                  key={state}
-                  className="transparency-state-tile disabled"
-                  title={label}
-                  aria-label={label}
-                  style={tileStyle}
-                >
-                  {content}
-                </span>
+                </button>
               );
             })}
           </div>
@@ -2405,7 +2418,274 @@ function TransparencyMap({ items, visibleItems, officialRecords, coveragePct, ma
   );
 }
 
-function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
+function GovernanceStatusBadge({ status }) {
+  const palette = {
+    Active: { bg: "#e7f4ec", fg: "#13693f", border: "#bfe3cf" },
+    Reference: { bg: "#eff6ff", fg: "#1d4ed8", border: "#bfdbfe" },
+    Revoked: { bg: "#f8e8de", fg: "#a3471c", border: "#eccab5" },
+    Superseded: { bg: "#f8e8de", fg: "#a3471c", border: "#eccab5" },
+    "Binding treaty": { bg: "#e7f4ec", fg: "#13693f", border: "#bfe3cf" },
+    "Regional law": { bg: "#eff6ff", fg: "#1d4ed8", border: "#bfdbfe" },
+    "Non-binding framework": { bg: "#f8efda", fg: "#946610", border: "#ecd6a4" },
+    Resolution: { bg: "#f0f0ee", fg: "#4b5563", border: "#dededa" },
+    "Voluntary framework": { bg: "#f8efda", fg: "#946610", border: "#ecd6a4" },
+    Placeholder: { bg: "#f0f0ee", fg: "#6f717a", border: "#dededa" },
+  }[status] || { bg: "var(--panel-alt)", fg: "var(--muted)", border: "var(--border)" };
+  return (
+    <span style={{ fontSize: 8, padding: "3px 7px", borderRadius: 4, fontWeight: 800, letterSpacing: "0.06em", background: palette.bg, color: palette.fg, border: `1px solid ${palette.border}`, whiteSpace: "nowrap" }}>
+      {status}
+    </span>
+  );
+}
+
+function TransparencyScopeTabs({ scope, onScopeChange }) {
+  return (
+    <div className="transparency-scope-tabs" role="tablist" aria-label="AI transparency scope">
+      {TRANSPARENCY_SCOPES.map(item => {
+        const active = scope === item.id;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            className={`hb ${active ? "on" : ""}`}
+            role="tab"
+            aria-selected={active}
+            title={item.note}
+            onClick={() => onScopeChange(item.id)}
+          >
+            <span>{item.shortLabel}</span>
+            <small>{item.note}</small>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function transparencyDrawerLabel(item, scope) {
+  if (!item) return "AI transparency record";
+  if (scope === "state") return `${item.stateName} AI transparency record: ${item.title}`;
+  return `${item.jurisdiction} AI transparency record: ${item.title}`;
+}
+
+function TransparencyDetailDrawer({ item, scope, onClose }) {
+  if (!item) return null;
+  const isState = scope === "state";
+  const jurisdiction = isState ? item.stateName : item.jurisdiction;
+  const code = isState ? item.state : item.region;
+
+  return (
+    <>
+      <div
+        onClick={onClose}
+        aria-hidden="true"
+        style={{ position: "fixed", inset: 0, background: "rgba(15,15,14,.32)", backdropFilter: "blur(1.5px)", zIndex: 40 }}
+      />
+      <aside
+        role="dialog"
+        aria-label={transparencyDrawerLabel(item, scope)}
+        className="design-detail-panel"
+        style={{
+          position: "fixed", top: 0, right: 0, height: "100vh",
+          width: "min(460px, 92vw)", background: "var(--panel)",
+          borderLeft: "1px solid var(--border)", zIndex: 50,
+          boxShadow: "-8px 0 30px var(--shadow)",
+          display: "flex", flexDirection: "column",
+          animation: "cimSlide .26s cubic-bezier(.2,.7,.3,1) both",
+        }}
+      >
+        <div style={{ padding: "20px 22px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14, flexShrink: 0 }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap", marginBottom: 9 }}>
+              {isState ? <TransparencyStatusBadge status={item.status} /> : <GovernanceStatusBadge status={item.status} />}
+              {code && <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em" }}>{code}</span>}
+            </div>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, lineHeight: 1.25, color: "var(--text)" }}>{jurisdiction}</h2>
+            <div style={{ marginTop: 6, fontSize: 12, color: "var(--muted)", lineHeight: 1.45 }}>{item.instrument}</div>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="Close detail panel"
+            style={{ background: "var(--panel-alt)", border: "1px solid var(--border)", borderRadius: 8, width: 30, height: 30, cursor: "pointer", color: "var(--muted)", fontSize: 15, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+          >x</button>
+        </div>
+
+        <div style={{ overflowY: "auto", flex: 1, padding: "18px 22px" }}>
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Record title</div>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: "var(--text)", fontWeight: 800 }}>{item.title}</p>
+          </div>
+          {item.citation && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Citation</div>
+              <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "var(--ink2)" }}>{item.citation}</p>
+            </div>
+          )}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Summary</div>
+            <p style={{ margin: 0, fontSize: 13, lineHeight: 1.62, color: "var(--ink2)" }}>{item.summary}</p>
+          </div>
+          {item.notes && (
+            <div style={{ marginBottom: 16, padding: "10px 11px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--panel-alt)" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Notes</div>
+              <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "var(--ink2)" }}>{item.notes}</p>
+            </div>
+          )}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9, marginBottom: 16 }}>
+            <div style={{ background: "var(--panel-alt)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Last reviewed</div>
+              <VerifiedStamp date={item.lastVerified} />
+            </div>
+            <div style={{ background: "var(--panel-alt)", border: "1px solid var(--border)", borderRadius: 8, padding: "9px 10px" }}>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 8.5, textTransform: "uppercase", letterSpacing: ".1em", color: "var(--faint)", marginBottom: 5 }}>Scope</div>
+              <div style={{ fontSize: 11.5, color: "var(--ink2)", lineHeight: 1.4 }}>{TRANSPARENCY_SCOPES.find(entry => entry.id === scope)?.label || "AI Transparency"}</div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 7, flexWrap: "wrap" }}>
+            {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Official source</a>}
+            {item.statusUrl && <a href={item.statusUrl} target="_blank" rel="noopener noreferrer" className="design-source-link">Status / signatures</a>}
+          </div>
+        </div>
+
+        <div style={{ padding: "12px 22px", borderTop: "1px solid var(--border)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--faint)", flexShrink: 0 }}>
+          Official sources only. Summary is not legal advice.
+        </div>
+      </aside>
+    </>
+  );
+}
+
+function TransparencyRecordCard({ item, scope, onSelect }) {
+  const isState = scope === "state";
+  const title = isState ? item.stateName : item.jurisdiction;
+  const eyebrow = isState ? item.state : item.region || scope.toUpperCase();
+  const Badge = isState ? TransparencyStatusBadge : GovernanceStatusBadge;
+  return (
+    <article
+      key={`${item.id || item.state}-${item.title}`}
+      className="design-secondary-card transparency-record-card"
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelect(item)}
+      onKeyDown={event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect(item);
+        }
+      }}
+      aria-label={`Open details for ${title}: ${item.title}`}
+    >
+      <div className="design-secondary-card-head">
+        <div>
+          <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>{eyebrow}</div>
+          <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{title}</div>
+        </div>
+        <Badge status={item.status} />
+      </div>
+      <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{item.instrument}</div>
+      <div style={{ fontSize: 11, color: "var(--text)", fontWeight: 900, lineHeight: 1.45 }}>{item.title}</div>
+      {item.citation && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 5, lineHeight: 1.45 }}>{item.citation}</div>}
+      <div style={{ fontSize: 9, color: "var(--text)", lineHeight: 1.6, marginTop: 8 }}>{item.summary}</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+        <span className="design-source-link" aria-hidden="true">Open details</span>
+        <VerifiedStamp date={item.lastVerified} />
+      </div>
+    </article>
+  );
+}
+
+function FederalTransparencyView({ records, meta, onSelect }) {
+  return (
+    <>
+      <ViewHero
+        eyebrow="FEDERAL AI TRANSPARENCY"
+        title="Federal AI orders, memos, and policy records"
+        body={meta.scopeNote}
+        meta={[
+          <StatTile key="records" label="RECORDS" value={records.length} tone="#1d4ed8" />,
+          <VerifiedStamp key="verified" date={meta.last_verified} />,
+        ]}
+      />
+      {!records.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No federal transparency records match the current filters.</div>
+      )}
+      <div className="design-framework-grid">
+        {records.map(item => <TransparencyRecordCard key={item.id} item={item} scope="federal" onSelect={onSelect} />)}
+      </div>
+    </>
+  );
+}
+
+function InternationalMapPlaceholder({ records, onSelect }) {
+  const pins = [
+    { id: "coe-cets-225", x: 53, y: 34, label: "CoE" },
+    { id: "eu-ai-act", x: 50, y: 38, label: "EU" },
+    { id: "oecd-ai-principles", x: 48, y: 30, label: "OECD" },
+    { id: "un-a-res-78-265", x: 31, y: 38, label: "UN" },
+    { id: "g7-hiroshima-ai-process", x: 65, y: 37, label: "G7" },
+  ];
+  const recordById = Object.fromEntries(records.map(record => [record.id, record]));
+  return (
+    <section className="international-map-card">
+      <div>
+        <div style={{ color: "#0e7490", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>INTERNATIONAL MAP</div>
+        <div style={{ color: "var(--text)", fontSize: 13, fontWeight: 900, lineHeight: 1.3 }}>Treaty, regional law, and intergovernmental frameworks</div>
+        <div style={{ color: "var(--muted)", fontSize: 10, lineHeight: 1.55, marginTop: 4 }}>
+          Not a country compliance map yet. Pins mark the official frameworks currently tracked.
+        </div>
+      </div>
+      <div className="world-map-panel" role="img" aria-label="Stylized world map of tracked AI governance frameworks">
+        <svg viewBox="0 0 100 52" aria-hidden="true">
+          <path d="M8 18c7-9 18-10 27-6 5 3 9 7 14 6 7-1 12-9 23-7 9 2 17 9 20 17-8 0-16-3-24-1-9 3-16 11-28 9-11-2-13-11-22-11-4 0-8 2-10 4-3-3-3-7 0-11Z" />
+          <path d="M15 36c7 1 12 3 18 2 7-1 10-5 16-4 5 1 8 6 14 6 6 1 11-2 18-1-6 8-18 11-30 9-8-1-14-4-20-3-7 1-13 3-19-1-3-2-2-6 3-8Z" />
+        </svg>
+        {pins.map(pin => {
+          const record = recordById[pin.id];
+          if (!record) return null;
+          return (
+            <button
+              key={pin.id}
+              type="button"
+              className="world-map-pin"
+              style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+              onClick={() => onSelect(record)}
+              aria-label={`Open details for ${record.title}`}
+              title={record.title}
+            >
+              {pin.label}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function InternationalTransparencyView({ records, meta, onSelect }) {
+  return (
+    <>
+      <ViewHero
+        eyebrow="INTERNATIONAL AI TRANSPARENCY"
+        title="Global AI governance signals without pretending they are identical"
+        body={meta.scopeNote}
+        meta={[
+          <StatTile key="records" label="RECORDS" value={records.length} tone="#0e7490" />,
+          <VerifiedStamp key="verified" date={meta.last_verified} />,
+        ]}
+      />
+      <InternationalMapPlaceholder records={records} onSelect={onSelect} />
+      {!records.length && (
+        <div style={{ padding: "16px 0", fontSize: 10, color: "var(--muted)" }}>No international transparency records match the current filters.</div>
+      )}
+      <div className="design-framework-grid">
+        {records.map(item => <TransparencyRecordCard key={item.id} item={item} scope="international" onSelect={onSelect} />)}
+      </div>
+    </>
+  );
+}
+
+function TransparencyViewDesign({ items, meta, mapView, onMapViewChange, scope, onScopeChange, federalRecords, federalMeta, internationalRecords, internationalMeta }) {
+  const [selectedRecord, setSelectedRecord] = useState(null);
   const federalContext = meta.federalContext || {};
   const allStateItems = TRANSPARENCY.filter(isTransparencyState);
   const visibleStateItems = items.filter(isTransparencyState);
@@ -2416,28 +2696,34 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
     .filter(item => item.count);
   const officialRecords = allStateItems.filter(item => item.url).length;
   const coveragePct = Math.round((officialRecords / Math.max(allStateItems.length, 1)) * 100);
-  const renderTransparencyCard = item => (
-    <article key={`${item.state}-${item.title}`} className="design-secondary-card">
-      <div className="design-secondary-card-head">
-        <div>
-          <div style={{ fontSize: 9, color: "var(--link)", fontWeight: 900, letterSpacing: "0.1em", marginBottom: 5 }}>{item.state}</div>
-          <div style={{ fontSize: 13, color: "var(--text)", fontWeight: 900, lineHeight: 1.3 }}>{item.stateName}</div>
-        </div>
-        <TransparencyStatusBadge status={item.status} />
+
+  useEffect(() => {
+    setSelectedRecord(null);
+  }, [scope, items, federalRecords, internationalRecords]);
+
+  if (scope === "federal") {
+    return (
+      <div>
+        <TransparencyScopeTabs scope={scope} onScopeChange={onScopeChange} />
+        <FederalTransparencyView records={federalRecords} meta={federalMeta} onSelect={setSelectedRecord} />
+        <TransparencyDetailDrawer item={selectedRecord} scope={scope} onClose={() => setSelectedRecord(null)} />
       </div>
-      <div style={{ fontSize: 9, color: "var(--muted)", fontWeight: 900, letterSpacing: "0.08em", marginBottom: 5 }}>{item.instrument}</div>
-      <div style={{ fontSize: 11, color: "var(--text)", fontWeight: 900, lineHeight: 1.45 }}>{item.title}</div>
-      {item.citation && <div style={{ fontSize: 8, color: "var(--muted)", marginTop: 5, lineHeight: 1.45 }}>{item.citation}</div>}
-      <div style={{ fontSize: 9, color: "var(--text)", lineHeight: 1.6, marginTop: 8 }}>{item.summary}</div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
-        {item.url && <a href={item.url} target="_blank" rel="noopener noreferrer" className="design-source-link">Official source</a>}
-        <VerifiedStamp date={item.lastVerified} />
+    );
+  }
+
+  if (scope === "international") {
+    return (
+      <div>
+        <TransparencyScopeTabs scope={scope} onScopeChange={onScopeChange} />
+        <InternationalTransparencyView records={internationalRecords} meta={internationalMeta} onSelect={setSelectedRecord} />
+        <TransparencyDetailDrawer item={selectedRecord} scope={scope} onClose={() => setSelectedRecord(null)} />
       </div>
-    </article>
-  );
+    );
+  }
 
   return (
     <div>
+      <TransparencyScopeTabs scope={scope} onScopeChange={onScopeChange} />
       <ViewHero
         eyebrow="STATE AI TRANSPARENCY"
         title="Point-in-time state AI public-record adoption map"
@@ -2468,6 +2754,7 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
         coveragePct={coveragePct}
         mapView={mapView}
         onMapViewChange={onMapViewChange}
+        onSelect={setSelectedRecord}
       />
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
@@ -2484,16 +2771,17 @@ function TransparencyViewDesign({ items, meta, mapView, onMapViewChange }) {
       )}
 
       <div className="design-framework-grid">
-        {visibleStateItems.map(renderTransparencyCard)}
+        {visibleStateItems.map(item => <TransparencyRecordCard key={`${item.state}-${item.title}`} item={item} scope="state" onSelect={setSelectedRecord} />)}
       </div>
       {!!visibleDistrictItems.length && (
         <section style={{ marginTop: 14 }}>
           <div style={{ color: "#b45309", fontSize: 9, fontWeight: 900, letterSpacing: "0.1em", marginBottom: 8 }}>DISTRICT OF COLUMBIA</div>
           <div className="design-framework-grid">
-            {visibleDistrictItems.map(renderTransparencyCard)}
+            {visibleDistrictItems.map(item => <TransparencyRecordCard key={`${item.state}-${item.title}`} item={item} scope="state" onSelect={setSelectedRecord} />)}
           </div>
         </section>
       )}
+      <TransparencyDetailDrawer item={selectedRecord} scope={scope} onClose={() => setSelectedRecord(null)} />
     </div>
   );
 }
@@ -2777,6 +3065,7 @@ export default function App() {
   const [selectedTier, setSelectedTier] = useState(getInitialTier);
   const [selectedTransparencyStatus, setSelectedTransparencyStatus] = useState(getInitialTransparencyStatus);
   const [selectedTransparencyMapView, setSelectedTransparencyMapView] = useState(getInitialTransparencyMapView);
+  const [selectedTransparencyScope, setSelectedTransparencyScope] = useState(getInitialTransparencyScope);
   const themeVars = THEME_TOKENS[theme];
 
   useEffect(() => {
@@ -2788,8 +3077,8 @@ export default function App() {
   }, [theme]);
 
   useEffect(() => {
-    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus, selectedTransparencyMapView });
-  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedMatrixLens, selectedTier, selectedTransparencyMapView, selectedTransparencyStatus]);
+    syncFiltersToUrl({ mode, searchQuery, activeProviders, selectedCategory, selectedLayer, selectedMatrixLens, selectedMatrixAiScope, matrixDensity, selectedTier, selectedTransparencyStatus, selectedTransparencyMapView, selectedTransparencyScope });
+  }, [activeProviders, matrixDensity, mode, searchQuery, selectedCategory, selectedLayer, selectedMatrixAiScope, selectedMatrixLens, selectedTier, selectedTransparencyMapView, selectedTransparencyScope, selectedTransparencyStatus]);
 
   const toggleProvider = p =>
     setActiveProviders(prev => {
@@ -2986,6 +3275,39 @@ export default function App() {
     return items;
   }, [searchQuery, selectedTransparencyStatus]);
 
+  const filteredFederalTransparency = useMemo(() => {
+    let items = FEDERAL_TRANSPARENCY;
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.jurisdiction.toLowerCase().includes(q) ||
+        item.instrument.toLowerCase().includes(q) ||
+        item.title.toLowerCase().includes(q) ||
+        item.citation.toLowerCase().includes(q) ||
+        item.status.toLowerCase().includes(q) ||
+        item.summary.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [searchQuery]);
+
+  const filteredInternationalTransparency = useMemo(() => {
+    let items = INTERNATIONAL_TRANSPARENCY;
+    if (searchQuery.trim().length >= 2) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(item =>
+        item.jurisdiction.toLowerCase().includes(q) ||
+        item.region.toLowerCase().includes(q) ||
+        item.instrument.toLowerCase().includes(q) ||
+        item.title.toLowerCase().includes(q) ||
+        item.citation.toLowerCase().includes(q) ||
+        item.status.toLowerCase().includes(q) ||
+        item.summary.toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }, [searchQuery]);
+
   const filteredStatusSources = useMemo(() => {
     let items = STATUS_SOURCES;
     if (searchQuery.trim().length >= 2) {
@@ -3020,6 +3342,8 @@ export default function App() {
     if (mode === "controls") return controlExport(CONTROL_LENS, filteredControlFamilies, filteredComplianceFrameworks);
     if (mode === "history") return historyExport(filteredHistory, HISTORY_META);
     if (mode === "provider-news") return providerNewsExport(filteredProviderNews);
+    if (mode === "transparency" && selectedTransparencyScope === "federal") return federalTransparencyExport(filteredFederalTransparency);
+    if (mode === "transparency" && selectedTransparencyScope === "international") return internationalTransparencyExport(filteredInternationalTransparency);
     if (mode === "transparency") return transparencyExport(filteredTransparency);
     if (mode === "status") return statusExport(filteredStatusSources);
     if (mode === "ai-watch") return aiWatchExport(filteredAiWatchSources);
@@ -3027,7 +3351,7 @@ export default function App() {
     if (mode === "matrix" && selectedMatrixLens === "gov") return matrixExport("gov", "Government Availability and Parity", filteredMatrixCaps, activeProviders, selectedTier);
     if (mode === "matrix" && selectedMatrixLens === "ai") return matrixExport("ai", "AI Focus", filteredMatrixCaps, activeProviders, selectedTier);
     return matrixExport("matrix", "Capability Matrix", filteredMatrixCaps, activeProviders, selectedTier);
-  }, [activeProviders, filteredAiWatchSources, filteredComplianceFrameworks, filteredControlFamilies, filteredHistory, filteredMatrixCaps, filteredPatterns, filteredProviderNews, filteredStatusSources, filteredTransparency, mode, selectedMatrixLens, selectedTier]);
+  }, [activeProviders, filteredAiWatchSources, filteredComplianceFrameworks, filteredControlFamilies, filteredFederalTransparency, filteredHistory, filteredInternationalTransparency, filteredMatrixCaps, filteredPatterns, filteredProviderNews, filteredStatusSources, filteredTransparency, mode, selectedMatrixLens, selectedTier, selectedTransparencyScope]);
 
   const resultCount =
     mode === "patterns" ? filteredPatterns.length :
@@ -3036,6 +3360,8 @@ export default function App() {
     mode === "provider-news" ? filteredProviderNews.length :
     mode === "status" ? filteredStatusSources.length :
     mode === "ai-watch" ? filteredAiWatchSources.length :
+    mode === "transparency" && selectedTransparencyScope === "federal" ? filteredFederalTransparency.length :
+    mode === "transparency" && selectedTransparencyScope === "international" ? filteredInternationalTransparency.length :
     mode === "transparency" ? filteredTransparency.length :
     mode === "matrix" ? filteredMatrixCaps.length :
     filteredCaps.length;
@@ -3049,13 +3375,13 @@ export default function App() {
     { id: "provider-news", label: "Provider News",         iconKey: "activity",      desc: "Official provider announcements and upcoming changes" },
     { id: "status",       label: "Operational Status",    iconKey: "activity",      desc: "Official status pages and incident history" },
     { id: "ai-watch",     label: "Foundational & Frontier Releases", iconKey: "brain-circuit", desc: "Official foundational and frontier model release source index" },
-    { id: "transparency", label: "State AI Transparency", iconKey: "landmark",    desc: "State AI governance public record" },
+    { id: "transparency", label: "AI Transparency", iconKey: "landmark",    desc: "State, federal, and international AI governance public records" },
   ];
   const providerGridModes = ["matrix", "patterns"];
   const providerControlModes = ["matrix", "patterns", "history", "provider-news"];
   const showProviderControls = providerControlModes.includes(mode);
   const showCategoryFilterControls = ["patterns", "controls"].includes(mode);
-  const showTransparencyFilterControls = mode === "transparency";
+  const showTransparencyFilterControls = mode === "transparency" && selectedTransparencyScope === "state";
   const showSecondaryFilterControls = showCategoryFilterControls || showTransparencyFilterControls;
   const contentMinWidthPx = mode === "overview" ? 0 : (providerGridModes.includes(mode) && activeProviders.length > 3 ? 1040 : 780);
   const showMatrixDensityControl = selectedMatrixLens !== "diff" && selectedMatrixLens !== "ai";
@@ -3199,17 +3525,17 @@ export default function App() {
     },
     {
       id: "transparency",
-      label: "State AI Transparency",
+      label: "AI Transparency",
       iconKey: "landmark",
-      description: "State public records for AI governance adoption status, with DC tracked separately.",
-      stat: `${TRANSPARENCY.filter(isTransparencyState).length} states + DC`,
+      description: "State, federal, and international public records for AI governance and transparency.",
+      stat: `${TRANSPARENCY.filter(isTransparencyState).length} states + DC / ${FEDERAL_TRANSPARENCY.length} federal / ${INTERNATIONAL_TRANSPARENCY.length} intl`,
       updated: formatOverviewDate(TRANSPARENCY_META.last_verified),
       onClick: () => setMode("transparency"),
     },
   ].map(card => ({ ...OVERVIEW_CARD_VISUALS[card.id], ...card }));
 
   return (
-    <div style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
+    <div data-theme={theme} style={{ ...themeVars, colorScheme: theme, fontFamily: "'IBM Plex Sans', system-ui, sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)" }}>
       <style>{`
         * { box-sizing: border-box; }
         body { margin: 0; }
@@ -4057,6 +4383,44 @@ export default function App() {
           letter-spacing: 0.08em;
           text-transform: uppercase;
         }
+        .transparency-scope-tabs {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin: 0 0 14px;
+        }
+        .transparency-scope-tabs button {
+          display: grid;
+          gap: 3px;
+          min-width: 156px;
+          padding: 9px 10px;
+          border: 1px solid var(--border);
+          border-radius: 7px;
+          background: var(--panel);
+          color: var(--text);
+          text-align: left;
+          font-family: inherit;
+        }
+        .transparency-scope-tabs button.on {
+          border-color: var(--selected-border);
+          background: var(--selected-bg);
+          color: var(--selected-text);
+          box-shadow: inset 0 -2px 0 var(--selected-border);
+        }
+        .transparency-scope-tabs button span {
+          font-size: 11px;
+          font-weight: 900;
+        }
+        .transparency-scope-tabs button small {
+          color: var(--muted);
+          font-size: 8px;
+          font-weight: 800;
+          line-height: 1.3;
+        }
+        .transparency-scope-tabs button.on small {
+          color: var(--selected-text);
+          opacity: .82;
+        }
         .transparency-map-scroll {
           max-width: 100%;
           overflow: auto;
@@ -4106,6 +4470,8 @@ export default function App() {
           align-items: stretch;
         }
         .transparency-state-tile {
+          appearance: none;
+          padding: 0;
           display: grid;
           place-items: center;
           align-content: center;
@@ -4113,12 +4479,22 @@ export default function App() {
           min-width: 0;
           border: 1px solid;
           border-radius: 6px;
+          font-family: inherit;
           text-decoration: none;
+          text-align: center;
+          cursor: pointer;
           transition: transform .12s, opacity .12s;
         }
         .transparency-state-tile:not(.disabled):hover {
           transform: translateY(-1px);
           opacity: .88;
+        }
+        .transparency-state-tile:focus-visible,
+        .transparency-record-card:focus-visible,
+        .world-map-pin:focus-visible,
+        .transparency-geo-wrap g[role="button"]:focus-visible {
+          outline: 2px solid var(--link);
+          outline-offset: 3px;
         }
         .transparency-state-tile strong {
           font-family: 'IBM Plex Mono', monospace;
@@ -4140,6 +4516,66 @@ export default function App() {
         .transparency-state-tile.disabled {
           cursor: default;
         }
+        .transparency-record-card {
+          cursor: pointer;
+          transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+        }
+        .transparency-record-card:hover {
+          transform: translateY(-1px);
+          border-color: var(--selected-border);
+          box-shadow: 0 10px 22px var(--shadow);
+        }
+        .international-map-card {
+          display: grid;
+          grid-template-columns: minmax(220px, .72fr) minmax(260px, 1fr);
+          gap: 14px;
+          align-items: center;
+          margin: 0 0 14px;
+          padding: 14px;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: var(--panel);
+          box-shadow: 0 6px 18px var(--shadow);
+        }
+        .world-map-panel {
+          position: relative;
+          min-height: 190px;
+          overflow: hidden;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: linear-gradient(145deg, var(--panel-alt), var(--panel));
+        }
+        .world-map-panel svg {
+          width: 100%;
+          height: 100%;
+          min-height: 190px;
+          display: block;
+        }
+        .world-map-panel path {
+          fill: #d7e7ef;
+          stroke: #8fc2d3;
+          stroke-width: .45;
+        }
+        [data-theme="dark"] .world-map-panel path {
+          fill: #1e3a45;
+          stroke: #3f7f95;
+        }
+        .world-map-pin {
+          position: absolute;
+          transform: translate(-50%, -50%);
+          min-width: 31px;
+          height: 24px;
+          padding: 0 7px;
+          border: 1px solid #0e7490;
+          border-radius: 999px;
+          background: var(--panel);
+          color: #0e7490;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 9px;
+          font-weight: 900;
+          cursor: pointer;
+          box-shadow: 0 5px 12px var(--shadow);
+        }
         .transparency-map-legend {
           display: flex;
           gap: 6px;
@@ -4153,6 +4589,15 @@ export default function App() {
           font-size: 8px;
           font-family: 'IBM Plex Mono', monospace;
           font-weight: 900;
+        }
+        @media (max-width: 760px) {
+          .transparency-scope-tabs button {
+            flex: 1 1 100%;
+            min-width: 0;
+          }
+          .international-map-card {
+            grid-template-columns: 1fr;
+          }
         }
         .ai-focus-section-head {
           display: flex;
@@ -4433,7 +4878,7 @@ export default function App() {
             <input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search capability, pattern, state, service, tag..."
+              placeholder="Search capability, pattern, policy, state, service, tag..."
               style={{
                 width: "100%", padding: "7px 12px", borderRadius: 4,
                 border: "1px solid var(--border)", background: "var(--panel-alt)",
@@ -4721,10 +5166,16 @@ export default function App() {
             <TransparencyViewDesign
               items={filteredTransparency}
               meta={TRANSPARENCY_META}
-              mapView={selectedTransparencyMapView}
-              onMapViewChange={setSelectedTransparencyMapView}
-            />
-          )}
+        mapView={selectedTransparencyMapView}
+        onMapViewChange={setSelectedTransparencyMapView}
+        scope={selectedTransparencyScope}
+        onScopeChange={setSelectedTransparencyScope}
+        federalRecords={filteredFederalTransparency}
+        federalMeta={FEDERAL_TRANSPARENCY_META}
+        internationalRecords={filteredInternationalTransparency}
+        internationalMeta={INTERNATIONAL_TRANSPARENCY_META}
+      />
+    )}
         </div>
 
         {/* Tag legend */}
