@@ -180,11 +180,16 @@ Add setup and run steps for this repository.
 Active development.
 
 
+<!-- cornerstone-method:start -->
+
 ---
 
+<!-- CORNERSTONE-BLOCK:BEGIN (managed by cornerstone-method/scripts/stamp.py - do not edit by hand) -->
 ## Part of the Cornerstone Method
 
-**Know â†’ Define â†’ Assess â†’ Shape â†’ Verify â†’ Visualize.** CloudIntelMatrix is the **Know** verb â€” verified capability and compliance facts feed every downstream decision.
+**Know → Define → Assess → Shape → Verify → Visualize → Record.** **CloudIntelMatrix** is the **Know** verb - Verified multi-cloud capability and compliance facts. Three-tier source policy, environment-scoped FedRAMP, dodIL boundary discriminator.
 
-Siblings: [Architecture Anatomy](https://github.com/MW8-ai/architecture-anatomy) (Visualize â€” [live atlas](https://mw8-ai.github.io/architecture-anatomy/) Â· [exploded 3D](https://mw8-ai.github.io/architecture-anatomy/3d-prototype.html)) Â· Architect's Cornerstone (Define) Â· Architecture Review Framework + Review Skill (Assess) Â· Formwork (Shape) Â· Plumbline (Verify)
+Siblings: Architect's Cornerstone (Define) · Architecture Review Framework + Review Skill (Assess) · [Formwork (Shape)](https://github.com/MW8-ai/formwork) · [Plumbline (Verify)](https://github.com/MW8-ai/plumbline) · [Architecture Anatomy (Visualize)](https://github.com/MW8-ai/architecture-anatomy) ([live](https://mw8-ai.github.io/architecture-anatomy/)) · Ledger (Record)
 
+Hub: [The Cornerstone Method](https://github.com/MW8-ai/cornerstone-method)
+<!-- CORNERSTONE-BLOCK:END -->
