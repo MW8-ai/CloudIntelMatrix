@@ -1,0 +1,426 @@
+{
+  "_meta": {
+    "schema": "cloudintel-proposals-v1",
+    "description": "Review worklist for official-source fact proposals. Work items are not claims.",
+    "generatedOn": "2026-07-27",
+    "approved": false,
+    "targetFields": [
+      "govAvailability"
+    ],
+    "matrixVersion": "3.21.0",
+    "matrixLastVerified": "2026-07-04",
+    "sourceRule": "Only official primary sources are valid. Leave proposals empty when no source supports a change."
+  },
+  "workItems": [
+    {
+      "capability": "Generative AI / Foundation Models",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Generative AI",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Official regulated-environment documentation establishes selected platform presence for AWS, Azure, and Google Cloud; mapped portfolio breadth, required models and features, OCI support, and all commercial-to-regulated parity still require direct validation. Oracle documents OCI Generative AI commercially. It was not identified in the reviewed U.S. Government Cloud service endpoint inventory, so regulated availability and parity remain unknown. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle."
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "category": "AI / ML",
+      "provider": "gcp",
+      "service": "Vertex AI RAG Engine",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-reference/rag-api",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Official regulated-environment documentation establishes limited AWS knowledge-base support and Azure AI Search product presence. The mapped GCP RAG Engine and OCI Agents Knowledge Bases remain unasserted for regulated use; authorization behavior and all parity remain to be verified. Google documents Vertex AI RAG Engine commercially, and its Assured Workloads catalog lists Vertex AI Vector Search in a specified control-package section. The catalog does not establish the mapped RAG Engine as that supported service, so RAG Engine availability and parity remain Unknown."
+    },
+    {
+      "capability": "Vector Retrieval & RAG Knowledge Bases",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Generative AI Agents Knowledge Bases",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/list-knowledge-bases.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Official regulated-environment documentation establishes limited AWS knowledge-base support and Azure AI Search product presence. The mapped GCP RAG Engine and OCI Agents Knowledge Bases remain unasserted for regulated use; authorization behavior and all parity remain to be verified. Oracle documents knowledge bases in OCI Generative AI Agents, including data-source and vector-store configuration. Generative AI Agents was not identified in the reviewed Oracle U.S. Government Cloud endpoint inventory, so availability and parity remain Unknown."
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "provider": "aws",
+      "service": "Agents for Amazon Bedrock",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/agents.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/general/latest/gr/bedrock.html",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/",
+        "https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/"
+      ],
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Agent tools, connectors, and MCP hosts are treated as orchestration dependencies rather than the serverless-compute platform itself. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row. AWS documents Agents for Amazon Bedrock commercially, while its current Agents and Agents runtime endpoint tables do not identify AWS GovCloud (US) Regions. Current government availability and parity therefore remain Unknown."
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "provider": "azure",
+      "service": "Microsoft Foundry Agent Service",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/foundry/agents/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/",
+        "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/"
+      ],
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Agent tools, connectors, and MCP hosts are treated as orchestration dependencies rather than the serverless-compute platform itself. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row. Microsoft documents Foundry Agent Service as the managed platform for building, deploying, and scaling AI agents. Microsoft also documents Logic Apps connectors, Azure Functions, OpenAPI tools, and Model Context Protocol servers as agent tools or MCP hosts, not the agent platform itself. The Azure Government roadmap lists Foundry Agent Service as Forecasted rather than GA, so current Azure Government availability and parity remain Unknown."
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "provider": "gcp",
+      "service": "Vertex AI Agent Engine",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Agent tools, connectors, and MCP hosts are treated as orchestration dependencies rather than the serverless-compute platform itself. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row. Google documents Vertex AI Agent Engine for deploying, managing, and scaling agents in production. This pass did not establish required Agent Engine functionality under a selected Assured Workloads control package, so availability and parity remain Unknown."
+    },
+    {
+      "capability": "AI Agents & Tool Orchestration",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI Generative AI Agents",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/generative-ai-agents/overview.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Official commercial documentation establishes agent-building and runtime capabilities. Agent tools, connectors, and MCP hosts are treated as orchestration dependencies rather than the serverless-compute platform itself. Microsoft's Azure Government roadmap identifies Foundry Agent Service as Forecasted; no current regulated-service availability or commercial-to-regulated parity is asserted for this cross-cloud agent row. Oracle documents OCI Generative AI Agents as an AI agent service with knowledge bases, tools, endpoints, and agent runtime concepts. It was not identified in the reviewed U.S. Government Cloud endpoint inventory, so availability and parity remain Unknown."
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "category": "AI / ML",
+      "provider": "gcp",
+      "service": "Compute Engine GPUs",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/compute/docs/gpus",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Official regulated-environment documentation establishes selected accelerated compute presence for AWS and Azure. Required accelerator families, quota, drivers, images, GCP and OCI accelerator scope, and all commercial-to-regulated parity still require validation. Google documents attaching GPUs and GPU machine types for Compute Engine AI workloads. Its Assured Workloads catalog identifies Compute Engine, but does not establish required GPU families or accelerator features for this mapping, so regulated availability and parity remain Unknown."
+    },
+    {
+      "capability": "Accelerated AI Compute & GPU Infrastructure",
+      "category": "AI / ML",
+      "provider": "oci",
+      "service": "OCI GPU Compute",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Compute/References/computeshapes.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Official regulated-environment documentation establishes selected accelerated compute presence for AWS and Azure. Required accelerator families, quota, drivers, images, GCP and OCI accelerator scope, and all commercial-to-regulated parity still require validation. Oracle documents GPU shapes in OCI Compute for accelerated workloads. The reviewed government endpoint inventory establishes Compute endpoints but not specific GPU shapes, quotas, or parity, so this new accelerated-compute row remains Unknown for regulated availability."
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "category": "Security & Compliance",
+      "provider": "azure",
+      "service": "Microsoft Sentinel",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/sentinel/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/",
+        "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/"
+      ],
+      "sourceNotes": "The mapped security-analytics approaches are not functional equivalents; availability and parity claims require confirmation for each component used in a regulated design."
+    },
+    {
+      "capability": "Security Information & Event Management (SIEM)",
+      "category": "Security & Compliance",
+      "provider": "gcp",
+      "service": "Google Chronicle SIEM",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/chronicle/docs",
+      "govDocsUrl": "https://cloud.google.com/assured-workloads/docs",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "The mapped security-analytics approaches are not functional equivalents; availability and parity claims require confirmation for each component used in a regulated design."
+    },
+    {
+      "capability": "Data Warehouse / Analytics Platform",
+      "category": "Data & Analytics",
+      "provider": "oci",
+      "service": "OCI Autonomous Data Warehouse",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/Database/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Official regulated-environment documentation establishes selected AWS, Azure, and Google analytics-platform presence. Google documentation confirms BigQuery ML, Gemini in BigQuery, and generative AI functions, supporting the existing AI_CAPABLE classification for this analytics capability. Required query, sharing, governance, AI/ML-adjacent features, OCI Autonomous Data Warehouse support, and all commercial-to-regulated parity remain to be validated. Oracle documents OCI database services commercially, but this pass did not establish Autonomous Data Warehouse support in the reviewed government service inventory as a distinct mapped product. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle."
+    },
+    {
+      "capability": "DevOps / CI-CD Platform",
+      "category": "Developer Platform",
+      "provider": "azure",
+      "service": "Azure DevOps + GitHub Enterprise",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/devops/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/",
+        "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/"
+      ],
+      "sourceNotes": "Delivery-service availability and supply-chain controls must be checked in the selected regulated environment; this row makes no cross-provider parity claim."
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "category": "Developer Platform",
+      "provider": "aws",
+      "service": "Terraform AWS Provider / AWS CloudFormation",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/prescriptive-guidance/latest/choose-iac-tool/terraform.html",
+      "govDocsUrl": null,
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/",
+        "https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/"
+      ],
+      "sourceNotes": "Official provider documentation establishes Terraform and native infrastructure-as-code workflows. This row does not assert that each managed target resource, module, runner, or policy feature is supported or equivalent in a government or regulated environment. AWS Prescriptive Guidance documents Terraform as an infrastructure-as-code option for provisioning AWS resources. Confirm provider endpoints, supported GovCloud target services, state handling, and policy integrations for the selected boundary."
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "category": "Developer Platform",
+      "provider": "azure",
+      "service": "Terraform on Azure / Bicep",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/developer/terraform/overview",
+      "govDocsUrl": null,
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/",
+        "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/"
+      ],
+      "sourceNotes": "Official provider documentation establishes Terraform and native infrastructure-as-code workflows. This row does not assert that each managed target resource, module, runner, or policy feature is supported or equivalent in a government or regulated environment. Microsoft documents Terraform on Azure for provisioning and managing Azure infrastructure and documents Bicep as its native declarative language. Confirm Azure Government API versions, resource providers, policy behavior, state storage, and pipeline dependencies separately."
+    },
+    {
+      "capability": "Infrastructure as Code & Policy as Code",
+      "category": "Developer Platform",
+      "provider": "gcp",
+      "service": "Terraform on Google Cloud / Infrastructure Manager",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/docs/terraform",
+      "govDocsUrl": null,
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Official provider documentation establishes Terraform and native infrastructure-as-code workflows. This row does not assert that each managed target resource, module, runner, or policy feature is supported or equivalent in a government or regulated environment. Google Cloud documents Terraform support and Infrastructure Manager deployments for Terraform configurations. Confirm allowed Assured Workloads products, provider resources, deployment identity, state/storage design, and organization-policy behavior per control package."
+    },
+    {
+      "capability": "CDN & Edge Application Protection",
+      "category": "Networking",
+      "provider": "aws",
+      "service": "Amazon CloudFront + AWS WAF",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/",
+        "https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/"
+      ],
+      "sourceNotes": "CloudFront is the CDN anchor and AWS WAF is a separately billed protection service; verify region, edge, log, certificate, WAF, and regulated-workload constraints for the design."
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "category": "Hybrid / Edge",
+      "provider": "aws",
+      "service": "AWS Outposts",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/outposts/",
+      "govDocsUrl": "https://aws.amazon.com/govcloud-us/",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/",
+        "https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/"
+      ],
+      "sourceNotes": "Public documentation establishes AWS Outposts and AWS GovCloud offerings; confirm the required regulated deployment availability and service set with AWS before selection."
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "category": "Hybrid / Edge",
+      "provider": "azure",
+      "service": "Azure Arc",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/azure-arc/",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/",
+        "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/"
+      ],
+      "sourceNotes": "Azure Arc documentation covers hybrid management; verify current Azure Government availability for the exact Arc-enabled resource types and extensions required."
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "category": "Hybrid / Edge",
+      "provider": "gcp",
+      "service": "Google Distributed Cloud",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/distributed-cloud/docs",
+      "govDocsUrl": "https://cloud.google.com/distributed-cloud/hosted/docs/latest/gdch",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Google documents connected and air-gapped Distributed Cloud variants; determine applicable regulatory authorization and supported services for the deployment."
+    },
+    {
+      "capability": "Hybrid & On-Premises Extension",
+      "category": "Hybrid / Edge",
+      "provider": "oci",
+      "service": "OCI Roving Edge Infrastructure",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/roving-edge-infrastructure/rvr/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Oracle documents Roving Edge Infrastructure commercially, but this pass did not identify the mapped Roving Edge offering in the reviewed U.S. Government Cloud service inventory; regulated availability therefore remains unknown. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle."
+    },
+    {
+      "capability": "Cloud Cost Management & FinOps",
+      "category": "Cost Governance",
+      "provider": "aws",
+      "service": "AWS Billing and Cost Management",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/what-is-costmanagement.html",
+      "govDocsUrl": "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/using-govcloud.html",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.aws.amazon.com/govcloud-us/latest/UserGuide/",
+        "https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/"
+      ],
+      "sourceNotes": "AWS documents cost-management tooling and GovCloud separately; verify which billing, reporting, and optimization features are required and available for GovCloud accounts. AWS Cost Explorer added Amazon Q-powered cost explanations for commercial Regions in June 2026, while AWS FinOps Agent entered preview and explicitly excludes AWS GovCloud (US) and AWS China Regions during preview."
+    },
+    {
+      "capability": "Event Streaming & Messaging",
+      "category": "Integration & Messaging",
+      "provider": "azure",
+      "service": "Azure Event Grid",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://learn.microsoft.com/en-us/azure/event-grid/overview",
+      "govDocsUrl": "https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-product-roadmap",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://learn.microsoft.com/en-us/azure/azure-government/",
+        "https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/"
+      ],
+      "sourceNotes": "Microsoft maintains Azure Government service availability separately; verify Event Grid features and integrations on the current roadmap for the target environment."
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "category": "Hybrid / Edge",
+      "provider": "gcp",
+      "service": "Migrate to Virtual Machines",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://cloud.google.com/migrate/virtual-machines/docs",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Migration and target-service support within Assured Workloads depends on the control package and architecture; confirm the required path before moving regulated data. A dedicated public pricing page for Migrate to Virtual Machines was not identified during this review."
+    },
+    {
+      "capability": "Cloud Migration Tooling",
+      "category": "Hybrid / Edge",
+      "provider": "oci",
+      "service": "Oracle Cloud Migrations",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.oracle.com/en-us/iaas/Content/cloud-migration/home.htm",
+      "govDocsUrl": "https://docs.oracle.com/en-us/iaas/Content/gov-cloud/govfedramp.htm",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://docs.oracle.com/en-us/iaas/Content/General/Concepts/govfedramp.htm"
+      ],
+      "sourceNotes": "Oracle documents Oracle Cloud Migrations commercially. This initial pass did not establish the exact mapped migration service in the reviewed U.S. Government Cloud inventory, so regulated availability remains unknown. This initial OCI mapping does not assert service-specific pricing or compliance scope; verify required OCI region, commercial features, contractual scope, and regulated parity directly with Oracle."
+    },
+    {
+      "capability": "Backup & Disaster Recovery",
+      "category": "Storage",
+      "provider": "gcp",
+      "service": "Backup and DR Service",
+      "field": "govAvailability",
+      "currentValue": "Unknown",
+      "docsUrl": "https://docs.cloud.google.com/backup-disaster-recovery/docs/concepts/backup-dr",
+      "govDocsUrl": "https://docs.cloud.google.com/assured-workloads/docs/supported-products",
+      "reason": "Current value is Unknown and needs official-source review.",
+      "sourceHints": [
+        "https://cloud.google.com/assured-workloads/docs",
+        "https://cloud.google.com/about/locations"
+      ],
+      "sourceNotes": "Google documents managed backup and recovery plus backup-vault features for supported workloads; validate resource support, location, encryption, and Assured Workloads control-package compatibility."
+    }
+  ],
+  "proposals": []
+}
