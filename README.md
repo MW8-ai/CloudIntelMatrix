@@ -156,6 +156,35 @@ python scripts/check_upcoming.py  # Scan for updates
 
 ---
 
+## Query CLI — Know, callable
+
+The same verified facts the site renders, answerable from a shell or a CI job.
+No dependencies beyond the standard library.
+
+```bash
+python scripts/cim_query.py list --category "AI / ML"     # what's tracked
+python scripts/cim_query.py show "Generative AI"          # one capability, all providers
+python scripts/cim_query.py providers "Object Storage"    # provider comparison
+
+# Where can a workload legally live? Filter by government availability.
+python scripts/cim_query.py gov --capability "Generative AI" --level Partial
+```
+
+`gov` exits non-zero when nothing meets the requested level, so it doubles as a
+**policy gate** — drop it in CI to fail a build that assumes a capability its
+target environment doesn't offer:
+
+```bash
+# Fail unless Azure offers Managed Kubernetes in government at all.
+npm run query -- gov --capability "Kubernetes" --level Limited --provider azure
+```
+
+Add `--json` to any command for machine-readable output (for the Method's
+adapters and downstream tooling). `npm run query -- …` and
+`npm run test:query` are the packaged entry points.
+
+---
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). All contributions require an official source URL. PRs that fail `verify.py` will not be merged.

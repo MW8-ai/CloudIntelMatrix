@@ -37,6 +37,9 @@ jobs:
       - name: Validate data contract
         run: python scripts/verify.py
 
+      - name: Query CLI tests
+        run: python scripts/test_cim_query.py
+
       - name: Validate design view model
         run: npm run verify:view-model
 

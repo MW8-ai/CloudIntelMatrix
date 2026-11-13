@@ -10,7 +10,9 @@
     "verify": "python scripts/verify.py",
     "verify:view-model": "node scripts/verify_view_model.mjs",
     "generate-xlsx": "python scripts/generate_xlsx.py",
-    "check-updates": "python scripts/check_upcoming.py"
+    "check-updates": "python scripts/check_upcoming.py",
+    "query": "python scripts/cim_query.py",
+    "test:query": "python scripts/test_cim_query.py"
   },
   "dependencies": {
     "react": "^18.3.0",
