@@ -39,7 +39,7 @@ jobs:
           python scripts/check_upcoming.py --days "$REVIEW_DAYS" --output issue_body.md > /dev/null
 
       - name: Create review issue unless one already exists today
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           ISSUE_TITLE: ${{ steps.summary.outputs.title }}
         with:
